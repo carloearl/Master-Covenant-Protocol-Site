@@ -1,0 +1,36 @@
+{
+  "name": "QRGenHistory",
+  "type": "object",
+  "properties": {
+    "code_id": {
+      "type": "string",
+      "description": "Unique identifier for the QR code"
+    },
+    "payload": {
+      "type": "string",
+      "description": "The data/URL encoded in the QR code"
+    },
+    "size": {
+      "type": "number",
+      "description": "QR code size in pixels"
+    },
+    "creator_id": {
+      "type": "string",
+      "description": "Email or ID of the user who created the code"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "safe",
+        "suspicious",
+        "blocked"
+      ],
+      "default": "safe"
+    }
+  },
+  "required": [
+    "code_id",
+    "payload",
+    "creator_id"
+  ]
+}
