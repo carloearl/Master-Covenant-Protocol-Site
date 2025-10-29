@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -65,6 +66,9 @@ export default function Layout({ children, currentPageName }) {
                   <DropdownMenuItem asChild className="text-gray-300 hover:text-white focus:text-white focus:bg-cyan-500/20">
                     <Link to={createPageUrl("Blockchain")}>Blockchain Security</Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="text-gray-300 hover:text-white focus:text-white focus:bg-cyan-500/20">
+                    <Link to={createPageUrl("GlyphBot")}>GlyphBot AI</Link>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 
@@ -115,6 +119,11 @@ export default function Layout({ children, currentPageName }) {
                     Security Tools
                   </Button>
                 </Link>
+                <Link to={createPageUrl("GlyphBot")} onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className="w-full justify-start text-gray-300">
+                    GlyphBot AI
+                  </Button>
+                </Link>
                 <Link to={createPageUrl("Pricing")} onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" className="w-full justify-start text-gray-300">
                     Pricing
@@ -162,6 +171,7 @@ export default function Layout({ children, currentPageName }) {
                 <Link to={createPageUrl("SecurityTools")} className="text-gray-400 hover:text-cyan-400">Security Tools</Link>
                 <Link to={createPageUrl("QRGenerator")} className="text-gray-400 hover:text-cyan-400">QR Generator</Link>
                 <Link to={createPageUrl("Blockchain")} className="text-gray-400 hover:text-cyan-400">Blockchain</Link>
+                <Link to={createPageUrl("GlyphBot")} className="text-gray-400 hover:text-cyan-400">GlyphBot AI</Link>
               </div>
             </div>
 

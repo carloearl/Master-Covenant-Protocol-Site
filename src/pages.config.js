@@ -10,6 +10,7 @@ import Contact from './pages/Contact';
 import NUPSLogin from './pages/NUPSLogin';
 import NUPSStaff from './pages/NUPSStaff';
 import NUPSOwner from './pages/NUPSOwner';
+import GlyphBot from './pages/GlyphBot';
 import Layout from './Layout.jsx';
 
 
@@ -26,6 +27,7 @@ export const PAGES = {
     "NUPSLogin": NUPSLogin,
     "NUPSStaff": NUPSStaff,
     "NUPSOwner": NUPSOwner,
+    "GlyphBot": GlyphBot,
 }
 
 export const pagesConfig = {
