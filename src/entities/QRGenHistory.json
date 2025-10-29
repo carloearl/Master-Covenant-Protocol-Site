@@ -10,6 +10,10 @@
       "type": "string",
       "description": "The data/URL encoded in the QR code"
     },
+    "payload_sha256": {
+      "type": "string",
+      "description": "SHA-256 hash of the payload"
+    },
     "size": {
       "type": "number",
       "description": "QR code size in pixels"
@@ -26,6 +30,57 @@
         "blocked"
       ],
       "default": "safe"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "url",
+        "text",
+        "email",
+        "phone",
+        "sms",
+        "wifi"
+      ],
+      "default": "url"
+    },
+    "image_format": {
+      "type": "string",
+      "enum": [
+        "png",
+        "svg",
+        "jpg"
+      ],
+      "default": "png"
+    },
+    "error_correction": {
+      "type": "string",
+      "enum": [
+        "L",
+        "M",
+        "Q",
+        "H"
+      ],
+      "default": "M",
+      "description": "Error correction level: L(7%), M(15%), Q(25%), H(30%)"
+    },
+    "foreground_color": {
+      "type": "string",
+      "default": "#000000",
+      "description": "QR code foreground color (hex)"
+    },
+    "background_color": {
+      "type": "string",
+      "default": "#FFFFFF",
+      "description": "QR code background color (hex)"
+    },
+    "has_logo": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether a custom logo is embedded"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "URL of the embedded logo image"
     }
   },
   "required": [
