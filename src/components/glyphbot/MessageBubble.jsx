@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Copy, Zap, CheckCircle2, AlertCircle, Loader2, ChevronRight, Clock } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
-const FunctionDisplay = ({ toolCall }) => {
+function FunctionDisplay({ toolCall }) {
     const [expanded, setExpanded] = useState(false);
     const name = toolCall?.name || 'Function';
     const status = toolCall?.status || 'pending';
@@ -91,7 +91,7 @@ const FunctionDisplay = ({ toolCall }) => {
             )}
         </div>
     );
-};
+}
 
 export default function MessageBubble({ message }) {
     const isUser = message.role === 'user';
@@ -168,7 +168,7 @@ export default function MessageBubble({ message }) {
                     </div>
                 )}
                 
-                {message.tool_calls?.length > 0 && (
+                {message.tool_calls && message.tool_calls.length > 0 && (
                     <div className="space-y-1 mt-2">
                         {message.tool_calls.map((toolCall, idx) => (
                             <FunctionDisplay key={idx} toolCall={toolCall} />
@@ -176,7 +176,7 @@ export default function MessageBubble({ message }) {
                     </div>
                 )}
 
-                {message.file_urls?.length > 0 && (
+                {message.file_urls && message.file_urls.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-2">
                         {message.file_urls.map((url, idx) => (
                             <a

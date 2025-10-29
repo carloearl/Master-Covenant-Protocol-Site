@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Brain, Send, Plus, Upload, Trash2, MessageSquare, 
   Sparkles, Shield, Code, FileText, User
@@ -11,7 +11,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import MessageBubble from "../components/glyphbot/MessageBubble";
 import ConversationList from "../components/glyphbot/ConversationList";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PersonaSelector from "../components/glyphbot/PersonaSelector";
 import CodeExecutor from "../components/glyphbot/CodeExecutor";
 import SecurityScanner from "../components/glyphbot/SecurityScanner";
@@ -128,7 +127,6 @@ export default function GlyphBot() {
     setIsLoading(true);
     const messageContent = inputMessage.trim();
     
-    // Add persona context if not default
     let finalContent = messageContent;
     if (selectedPersona !== "default") {
       const personaContexts = {
@@ -137,7 +135,7 @@ export default function GlyphBot() {
         "security-auditor": "As a security auditor focused on compliance and risk assessment, ",
         "smart-contract-auditor": "As a blockchain security expert specializing in smart contracts, "
       };
-      finalContent = (personaContexts[selectedPersona] || "") + messageContent;
+      finalContent = personaContexts[selectedPersona] + messageContent;
     }
     
     setInputMessage("");
@@ -173,7 +171,6 @@ export default function GlyphBot() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header */}
       <header className="bg-gray-900 border-b border-cyan-500/20 p-4">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -188,10 +185,12 @@ export default function GlyphBot() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-gray-400" />
-              <span className="text-sm">{user?.email}</span>
-            </div>
+            {user && (
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4 text-gray-400" />
+                <span className="text-sm">{user.email}</span>
+              </div>
+            )}
             <a
               href={base44.agents.getWhatsAppConnectURL('glyphbot')}
               target="_blank"
@@ -214,12 +213,9 @@ export default function GlyphBot() {
             <TabsTrigger value="audit">Audit Generator</TabsTrigger>
           </TabsList>
 
-          {/* Chat Tab */}
           <TabsContent value="chat">
             <div className="grid lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-              {/* Sidebar */}
               <div className="lg:col-span-1 space-y-4">
-                {/* Persona Selector */}
                 <Card className="bg-gray-900 border-gray-800">
                   <CardHeader>
                     <CardTitle className="text-base">AI Persona</CardTitle>
@@ -232,7 +228,6 @@ export default function GlyphBot() {
                   </CardContent>
                 </Card>
 
-                {/* Conversations */}
                 <Card className="bg-gray-900 border-gray-800">
                   <CardHeader>
                     <div className="flex items-center justify-between">
@@ -256,7 +251,6 @@ export default function GlyphBot() {
                   </CardContent>
                 </Card>
 
-                {/* Features */}
                 <Card className="bg-gradient-to-br from-cyan-500/10 to-blue-600/10 border-cyan-500/30">
                   <CardHeader>
                     <CardTitle className="text-base">Capabilities</CardTitle>
@@ -282,7 +276,6 @@ export default function GlyphBot() {
                 </Card>
               </div>
 
-              {/* Main Chat */}
               <div className="lg:col-span-3">
                 <Card className="bg-gray-900 border-gray-800 h-[calc(100vh-12rem)]">
                   <CardHeader className="border-b border-gray-800">
@@ -309,7 +302,6 @@ export default function GlyphBot() {
                   </CardHeader>
                   
                   <CardContent className="flex flex-col h-[calc(100%-5rem)]">
-                    {/* Messages */}
                     <div className="flex-1 overflow-y-auto space-y-4 py-4">
                       {!currentConversation ? (
                         <div className="h-full flex items-center justify-center">
@@ -345,7 +337,6 @@ export default function GlyphBot() {
                       )}
                     </div>
 
-                    {/* Input Area */}
                     <div className="border-t border-gray-800 pt-4">
                       {selectedFiles.length > 0 && (
                         <div className="mb-3 flex flex-wrap gap-2">
@@ -406,17 +397,14 @@ export default function GlyphBot() {
             </div>
           </TabsContent>
 
-          {/* Code Executor Tab */}
           <TabsContent value="executor">
             <CodeExecutor />
           </TabsContent>
 
-          {/* Security Scanner Tab */}
           <TabsContent value="scanner">
             <SecurityScanner />
           </TabsContent>
 
-          {/* Audit Generator Tab */}
           <TabsContent value="audit">
             <AuditGenerator />
           </TabsContent>
