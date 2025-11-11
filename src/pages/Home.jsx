@@ -1,11 +1,22 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";
 
 export default function Home() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+
+  const handleEmailSubmit = (e) => {
+    e.preventDefault();
+    if (email) {
+      navigate(createPageUrl("Consultation") + `?email=${encodeURIComponent(email)}`);
+    }
+  };
+
   const stats = [
     { 
       label: "IP Theft Crisis", 
@@ -13,12 +24,12 @@ export default function Home() {
       image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b55c5807c_08f33231-115f-4c95-9719-682f4e9679cc-Copy-Copy-Copy-Copy-Copy-Copy.jpg"
     },
     { 
-      label: "Market Opportunity", 
+      label: "Market", 
       value: "$10T+",
       image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/8cd0364f8_Whisk_2bd57b9a449d359968944ab33f98257edr-Copy.jpg"
     },
     { 
-      label: "Insurance Coverage", 
+      label: "Insurance", 
       value: "$14M",
       image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/eab90f603_Whisk_a031d7a8f4d67e79d2d4deb5ac0e0183eg.jpg"
     },
@@ -113,30 +124,35 @@ export default function Home() {
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-blue-400 via-blue-600 to-blue-700 bg-clip-text text-transparent">
-                Universal Security Platform
-              </span>
+              <span className="text-white">Universal Security Platform</span>
               <br />
-              <span className="text-white">with Smart Contracts</span>
+              <span className="text-white">with <span className="bg-gradient-to-r from-blue-400 via-blue-600 to-blue-700 bg-clip-text text-transparent">Smart Contracts</span></span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-white mb-8 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
               Next-generation cybersecurity platform pioneering AI-contract integration technology with quantum-resistant encryption.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Link to={createPageUrl("Consultation")}>
-                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-lg px-8">
+            <form onSubmit={handleEmailSubmit} className="max-w-2xl mx-auto mb-12">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-400 h-12 text-lg flex-1"
+                  required
+                />
+                <Button 
+                  type="submit"
+                  size="lg" 
+                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-lg px-8 h-12"
+                >
                   Book Consultation
                   <ChevronRight className="w-5 h-5 ml-2" />
                 </Button>
-              </Link>
-              <Link to={createPageUrl("MasterCovenant")}>
-                <Button size="lg" variant="outline" className="border-blue-500/50 hover:bg-blue-500/10 text-white text-lg px-8">
-                  Explore Master Covenant
-                </Button>
-              </Link>
-            </div>
+              </div>
+            </form>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {stats.map((stat, index) => (
