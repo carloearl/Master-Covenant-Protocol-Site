@@ -15,6 +15,7 @@ import PersonaSelector from "../components/glyphbot/PersonaSelector";
 import CodeExecutor from "../components/glyphbot/CodeExecutor";
 import SecurityScanner from "../components/glyphbot/SecurityScanner";
 import AuditGenerator from "../components/glyphbot/AuditGenerator";
+import FreeTrialGuard from "../components/FreeTrialGuard";
 
 export default function GlyphBot() {
   const [user, setUser] = useState(null);
@@ -170,7 +171,8 @@ export default function GlyphBot() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white relative">
+    <FreeTrialGuard serviceName="GlyphBot">
+      <div className="min-h-screen bg-black text-white relative">
       {/* Background */}
       <div className="fixed inset-0 opacity-20 pointer-events-none">
         <img
@@ -419,5 +421,6 @@ export default function GlyphBot() {
         </Tabs>
       </div>
     </div>
+    </FreeTrialGuard>
   );
 }

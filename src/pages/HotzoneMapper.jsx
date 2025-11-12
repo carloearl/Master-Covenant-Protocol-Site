@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, MapPin, Crosshair, Download, Trash2, Save, AlertTriangle } from "lucide-react";
+import FreeTrialGuard from "../components/FreeTrialGuard";
 
 export default function HotzoneMapper() {
   const [image, setImage] = useState(null);
@@ -198,7 +198,8 @@ export default function HotzoneMapper() {
   };
 
   return (
-    <div className="bg-black text-white min-h-screen py-20 relative">
+    <FreeTrialGuard serviceName="HotzoneMapper">
+      <div className="bg-black text-white min-h-screen py-20 relative">
       <div className="fixed inset-0 opacity-20 pointer-events-none">
         <img
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/8cd0364f8_Whisk_2bd57b9a449d359968944ab33f98257edr-Copy.jpg"
@@ -453,5 +454,6 @@ export default function HotzoneMapper() {
         </div>
       </div>
     </div>
+    </FreeTrialGuard>
   );
 }

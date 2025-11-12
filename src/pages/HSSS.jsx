@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -14,6 +13,7 @@ import {
   Upload, MapPin, Crosshair, Download, Trash2, Save, AlertTriangle,
   Shield, Activity, Eye, Target, Bell, FileText, TrendingUp
 } from "lucide-react";
+import FreeTrialGuard from "../components/FreeTrialGuard";
 
 export default function HSSS() {
   const queryClient = useQueryClient();
@@ -284,7 +284,8 @@ export default function HSSS() {
   const criticalThreatCount = threats.filter(t => t.severity === 'critical').length;
 
   return (
-    <div className="bg-black text-white min-h-screen py-20 relative">
+    <FreeTrialGuard serviceName="HSSS">
+      <div className="bg-black text-white min-h-screen py-20 relative">
       <div className="fixed inset-0 opacity-20 pointer-events-none">
         <img
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/8cd0364f8_Whisk_2bd57b9a449d359968944ab33f98257edr-Copy.jpg"
@@ -845,5 +846,6 @@ export default function HSSS() {
         </div>
       </div>
     </div>
+    </FreeTrialGuard>
   );
 }
