@@ -24,6 +24,7 @@ import Payment from './pages/Payment';
 import PaymentSuccess from './pages/PaymentSuccess';
 import StripeSetup from './pages/StripeSetup';
 import Dashboard from './pages/Dashboard';
+import Admin from './pages/Admin';
 import Layout from './Layout.jsx';
 
 
@@ -54,6 +55,7 @@ export const PAGES = {
     "PaymentSuccess": PaymentSuccess,
     "StripeSetup": StripeSetup,
     "Dashboard": Dashboard,
+    "Admin": Admin,
 }
 
 export const pagesConfig = {
