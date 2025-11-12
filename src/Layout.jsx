@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -106,6 +105,12 @@ export default function Layout({ children, currentPageName }) {
                 </Button>
               </Link>
 
+              <Link to={createPageUrl("SecurityDocs")}>
+                <Button variant="ghost" className={isActive("SecurityDocs") ? "text-blue-400" : "text-white hover:text-blue-400"}>
+                  Security
+                </Button>
+              </Link>
+
               <Link to={createPageUrl("Contact")}>
                 <Button variant="ghost" className={isActive("Contact") ? "text-blue-400" : "text-white hover:text-blue-400"}>
                   Contact
@@ -192,6 +197,11 @@ export default function Layout({ children, currentPageName }) {
                     Pricing
                   </Button>
                 </Link>
+                <Link to={createPageUrl("SecurityDocs")} onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className="w-full justify-start text-white">
+                    Security
+                  </Button>
+                </Link>
                 <Link to={createPageUrl("Contact")} onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" className="w-full justify-start text-white">
                     Contact
@@ -265,6 +275,7 @@ export default function Layout({ children, currentPageName }) {
               <div className="flex flex-col gap-2 text-sm">
                 <Link to={createPageUrl("Home")} className="text-white hover:text-blue-400 transition-colors">About Us</Link>
                 <Link to={createPageUrl("Pricing")} className="text-white hover:text-blue-400 transition-colors">Pricing</Link>
+                <Link to={createPageUrl("SecurityDocs")} className="text-white hover:text-blue-400 transition-colors">Security</Link>
                 <Link to={createPageUrl("Contact")} className="text-white hover:text-blue-400 transition-colors">Contact</Link>
                 <Link to={createPageUrl("Consultation")} className="text-white hover:text-blue-400 transition-colors">Book Consultation</Link>
               </div>
@@ -273,9 +284,9 @@ export default function Layout({ children, currentPageName }) {
             <div>
               <h3 className="font-semibold mb-4 text-white">Legal</h3>
               <div className="flex flex-col gap-2 text-sm">
-                <Link to={createPageUrl("Home")} className="text-white hover:text-blue-400 transition-colors">Privacy Policy</Link>
-                <Link to={createPageUrl("Home")} className="text-white hover:text-blue-400 transition-colors">Terms of Service</Link>
-                <Link to={createPageUrl("Home")} className="text-white hover:text-blue-400 transition-colors">Security</Link>
+                <Link to={createPageUrl("Privacy")} className="text-white hover:text-blue-400 transition-colors">Privacy Policy</Link>
+                <Link to={createPageUrl("Terms")} className="text-white hover:text-blue-400 transition-colors">Terms of Service</Link>
+                <Link to={createPageUrl("SecurityDocs")} className="text-white hover:text-blue-400 transition-colors">Security Documentation</Link>
               </div>
             </div>
           </div>

@@ -19,6 +19,7 @@ import NotFound from './pages/NotFound';
 import ConsultationSuccess from './pages/ConsultationSuccess';
 import HotzoneMapper from './pages/HotzoneMapper';
 import HSSS from './pages/HSSS';
+import SecurityDocs from './pages/SecurityDocs';
 import Layout from './Layout.jsx';
 
 
@@ -44,6 +45,7 @@ export const PAGES = {
     "ConsultationSuccess": ConsultationSuccess,
     "HotzoneMapper": HotzoneMapper,
     "HSSS": HSSS,
+    "SecurityDocs": SecurityDocs,
 }
 
 export const pagesConfig = {
