@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -132,6 +133,12 @@ export default function Layout({ children, currentPageName }) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-gray-900 border-blue-500/20">
+                    <DropdownMenuItem asChild className="text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20 cursor-pointer">
+                      <Link to={createPageUrl("Dashboard")}>
+                        <User className="w-4 h-4 mr-2" />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem className="text-white focus:bg-blue-500/20">
                       {user.email}
                     </DropdownMenuItem>
@@ -172,6 +179,13 @@ export default function Layout({ children, currentPageName }) {
                     Home
                   </Button>
                 </Link>
+                {user && (
+                  <Link to={createPageUrl("Dashboard")} onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start text-white">
+                      Dashboard
+                    </Button>
+                  </Link>
+                )}
                 <Link to={createPageUrl("MasterCovenant")} onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" className="w-full justify-start text-white">
                     Master Covenant

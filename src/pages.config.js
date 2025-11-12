@@ -23,6 +23,7 @@ import SecurityDocs from './pages/SecurityDocs';
 import Payment from './pages/Payment';
 import PaymentSuccess from './pages/PaymentSuccess';
 import StripeSetup from './pages/StripeSetup';
+import Dashboard from './pages/Dashboard';
 import Layout from './Layout.jsx';
 
 
@@ -52,6 +53,7 @@ export const PAGES = {
     "Payment": Payment,
     "PaymentSuccess": PaymentSuccess,
     "StripeSetup": StripeSetup,
+    "Dashboard": Dashboard,
 }
 
 export const pagesConfig = {
