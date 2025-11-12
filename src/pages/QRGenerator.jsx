@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Loader2, Shield, AlertTriangle, Info, Upload, Image as ImageIcon, Palette, HelpCircle, Link as LinkIcon, Type, Mail, Phone, Wifi, User, MapPin, Calendar } from "lucide-react";
 import SecurityStatus from "../components/qr/SecurityStatus";
-import SteganographicQR from "../components/qr/SteganographicQR"; // Added import
+import SteganographicQR from "../components/qr/SteganographicQR";
+import FreeTrialGuard from "../components/FreeTrialGuard";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -739,7 +739,8 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
   const currentTypeConfig = qrTypes.find(t => t.id === qrType);
 
   return (
-    <div className="min-h-screen bg-black text-white py-20">
+    <FreeTrialGuard serviceName="QRGenerator">
+      <div className="min-h-screen bg-black text-white py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
@@ -1089,5 +1090,6 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
         </div>
       </div>
     </div>
+    </FreeTrialGuard>
   );
 }
