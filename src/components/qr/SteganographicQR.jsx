@@ -29,8 +29,11 @@ export default function SteganographicQR({ qrPayload, qrGenerated }) {
 
     setCoverImage(file);
     const reader = new FileReader();
-    reader.onloadend = () => {
+    reader.onload = () => {
       setCoverImageUrl(reader.result);
+    };
+    reader.onerror = () => {
+      alert('Error reading file');
     };
     reader.readAsDataURL(file);
   };
@@ -43,26 +46,36 @@ export default function SteganographicQR({ qrPayload, qrGenerated }) {
 
   const binaryToString = (binary) => {
     const bytes = binary.match(/.{8}/g);
+    if (!bytes) return '';
     return bytes.map(byte => String.fromCharCode(parseInt(byte, 2))).join('');
   };
 
   const encodeQRInImage = async () => {
-    if (!coverImage || !qrPayload) return;
+    if (!coverImage || !qrPayload || !coverImageUrl) return;
 
     setIsEncoding(true);
 
     try {
       const img = new Image();
-      img.src = coverImageUrl;
+      img.crossOrigin = "anonymous";
       
-      await new Promise((resolve) => {
-        img.onload = resolve;
+      const loadPromise = new Promise((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error('Failed to load image'));
       });
+
+      img.src = coverImageUrl;
+      await loadPromise;
 
       const canvas = document.createElement('canvas');
       canvas.width = img.width;
       canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      
+      if (!ctx) {
+        throw new Error('Could not get canvas context');
+      }
+      
       ctx.drawImage(img, 0, 0);
 
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -106,14 +119,16 @@ export default function SteganographicQR({ qrPayload, qrGenerated }) {
       
       // Convert to blob and create download URL
       canvas.toBlob((blob) => {
-        const url = URL.createObjectURL(blob);
-        setStegoImage(url);
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          setStegoImage(url);
+        }
         setIsEncoding(false);
       }, 'image/png');
 
     } catch (error) {
       console.error('Encoding error:', error);
-      alert('Error encoding QR code into image');
+      alert('Error encoding QR code into image: ' + error.message);
       setIsEncoding(false);
     }
   };
@@ -124,57 +139,72 @@ export default function SteganographicQR({ qrPayload, qrGenerated }) {
 
     try {
       const reader = new FileReader();
-      reader.onload = async (e) => {
-        const img = new Image();
-        img.src = e.target.result;
-        
-        await new Promise((resolve) => {
-          img.onload = resolve;
-        });
-
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const pixels = imageData.data;
-
-        // Extract binary data from LSB
-        let binaryData = '';
-        for (let i = 0; i < pixels.length; i += 4) {
-          // Red channel
-          binaryData += (pixels[i] & 1).toString();
-          // Green channel
-          binaryData += (pixels[i + 1] & 1).toString();
-          // Blue channel
-          binaryData += (pixels[i + 2] & 1).toString();
-        }
-
-        // Convert binary to string
-        const extractedText = binaryToString(binaryData);
-        
-        // Find delimiter
-        const delimiter = '<<<END>>>';
-        const delimiterIndex = extractedText.indexOf(delimiter);
-        
-        if (delimiterIndex === -1) {
-          alert('No hidden QR data found in this image');
-          setIsDecoding(false);
-          return;
-        }
-
-        const hiddenData = extractedText.substring(0, delimiterIndex);
-        setDecodedData(hiddenData);
-        setExtractedImage(e.target.result);
-        setIsDecoding(false);
-      };
+      
+      const readPromise = new Promise((resolve, reject) => {
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = () => reject(new Error('Failed to read file'));
+      });
       
       reader.readAsDataURL(file);
+      const dataUrl = await readPromise;
+
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      
+      const loadPromise = new Promise((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error('Failed to load image'));
+      });
+
+      img.src = dataUrl;
+      await loadPromise;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      
+      if (!ctx) {
+        throw new Error('Could not get canvas context');
+      }
+      
+      ctx.drawImage(img, 0, 0);
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const pixels = imageData.data;
+
+      // Extract binary data from LSB
+      let binaryData = '';
+      for (let i = 0; i < pixels.length; i += 4) {
+        // Red channel
+        binaryData += (pixels[i] & 1).toString();
+        // Green channel
+        binaryData += (pixels[i + 1] & 1).toString();
+        // Blue channel
+        binaryData += (pixels[i + 2] & 1).toString();
+      }
+
+      // Convert binary to string
+      const extractedText = binaryToString(binaryData);
+      
+      // Find delimiter
+      const delimiter = '<<<END>>>';
+      const delimiterIndex = extractedText.indexOf(delimiter);
+      
+      if (delimiterIndex === -1) {
+        alert('No hidden QR data found in this image');
+        setIsDecoding(false);
+        return;
+      }
+
+      const hiddenData = extractedText.substring(0, delimiterIndex);
+      setDecodedData(hiddenData);
+      setExtractedImage(dataUrl);
+      setIsDecoding(false);
+      
     } catch (error) {
       console.error('Decoding error:', error);
-      alert('Error decoding image');
+      alert('Error decoding image: ' + error.message);
       setIsDecoding(false);
     }
   };
@@ -243,7 +273,12 @@ export default function SteganographicQR({ qrPayload, qrGenerated }) {
                   {coverImageUrl ? (
                     <div className="space-y-3">
                       <div className="border-2 border-gray-700 rounded-lg p-4 bg-gray-800">
-                        <img src={coverImageUrl} alt="Cover" className="max-w-full max-h-48 mx-auto rounded" />
+                        <img 
+                          src={coverImageUrl} 
+                          alt="Cover" 
+                          className="max-w-full max-h-48 mx-auto rounded"
+                          crossOrigin="anonymous"
+                        />
                       </div>
                       <Button
                         onClick={() => fileInputRef.current?.click()}
@@ -297,7 +332,12 @@ export default function SteganographicQR({ qrPayload, qrGenerated }) {
 
                     <div className="border-2 border-green-500/30 rounded-lg p-4 bg-gray-800">
                       <Label className="text-white text-sm mb-2 block">Steganographic Image</Label>
-                      <img src={stegoImage} alt="Steganographic" className="max-w-full max-h-48 mx-auto rounded mb-3" />
+                      <img 
+                        src={stegoImage} 
+                        alt="Steganographic" 
+                        className="max-w-full max-h-48 mx-auto rounded mb-3"
+                        crossOrigin="anonymous"
+                      />
                       <p className="text-xs text-gray-400 text-center">
                         Looks normal, but contains hidden QR data
                       </p>
@@ -365,7 +405,12 @@ export default function SteganographicQR({ qrPayload, qrGenerated }) {
                 {extractedImage && (
                   <div className="border-2 border-gray-700 rounded-lg p-4 bg-gray-800">
                     <Label className="text-white text-sm mb-2 block">Original Image</Label>
-                    <img src={extractedImage} alt="Extracted" className="max-w-full max-h-32 mx-auto rounded" />
+                    <img 
+                      src={extractedImage} 
+                      alt="Extracted" 
+                      className="max-w-full max-h-32 mx-auto rounded"
+                      crossOrigin="anonymous"
+                    />
                   </div>
                 )}
 
