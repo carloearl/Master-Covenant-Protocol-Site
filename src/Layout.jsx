@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -287,7 +286,8 @@ export default function Layout({ children, currentPageName }) {
             <div>
               <h3 className="font-semibold mb-4 text-white">Company</h3>
               <div className="flex flex-col gap-2 text-sm">
-                <Link to={createPageUrl("Home")} className="text-white hover:text-blue-400 transition-colors">About Us</Link>
+                <Link to={createPageUrl("About")} className="text-white hover:text-blue-400 transition-colors">About Us</Link>
+                <Link to={createPageUrl("Roadmap")} className="text-white hover:text-blue-400 transition-colors">Roadmap</Link>
                 <Link to={createPageUrl("Pricing")} className="text-white hover:text-blue-400 transition-colors">Pricing</Link>
                 <Link to={createPageUrl("SecurityDocs")} className="text-white hover:text-blue-400 transition-colors">Security</Link>
                 <Link to={createPageUrl("Contact")} className="text-white hover:text-blue-400 transition-colors">Contact</Link>
@@ -305,8 +305,29 @@ export default function Layout({ children, currentPageName }) {
             </div>
           </div>
           
-          <div className="mt-8 pt-8 border-t border-gray-800 text-center text-sm text-white">
-            <p>© 2025 GlyphLock. All rights reserved. Quantum-resistant security for the future.</p>
+          <div className="mt-8 pt-8 border-t border-gray-800 text-center">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
+              <div className="text-sm text-white">
+                <p>© 2025 GlyphLock Security LLC. All rights reserved.</p>
+                <p className="text-gray-400 mt-1">Quantum-resistant security for the future.</p>
+              </div>
+              <div className="text-sm space-y-1 text-white">
+                <p>El Mirage, Arizona • Established May 2025</p>
+                <p>
+                  <a href="https://www.glyphlock.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 transition-colors">
+                    www.glyphlock.com
+                  </a>
+                </p>
+                <p className="text-gray-400">
+                  <a href="mailto:glyphlock@gmail.com" className="hover:text-blue-400 transition-colors">glyphlock@gmail.com</a>
+                  {" • "}
+                  <a href="tel:+14242466499" className="hover:text-blue-400 transition-colors">(424) 246-6499</a>
+                </p>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500">
+              Proof Above Persuasion • $340K D&B Verified Revenue • $14M Liability Coverage
+            </p>
           </div>
         </div>
       </footer>

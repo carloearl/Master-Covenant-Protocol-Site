@@ -38,7 +38,8 @@ export default function Contact() {
               <CardContent className="pt-8">
                 <Mail className="w-10 h-10 text-blue-400 mx-auto mb-4" />
                 <h3 className="font-bold mb-2 text-white">Email</h3>
-                <p className="text-white text-sm">contact@glyphlock.com</p>
+                <p className="text-white text-sm">glyphlock@gmail.com</p>
+                <p className="text-gray-400 text-xs mt-1">carloearl@glyphlock.com</p>
               </CardContent>
             </Card>
 
@@ -46,7 +47,7 @@ export default function Contact() {
               <CardContent className="pt-8">
                 <Phone className="w-10 h-10 text-blue-400 mx-auto mb-4" />
                 <h3 className="font-bold mb-2 text-white">Phone</h3>
-                <p className="text-white text-sm">+1 (555) 123-4567</p>
+                <p className="text-white text-sm">(424) 246-6499</p>
               </CardContent>
             </Card>
 
@@ -54,7 +55,8 @@ export default function Contact() {
               <CardContent className="pt-8">
                 <MapPin className="w-10 h-10 text-blue-400 mx-auto mb-4" />
                 <h3 className="font-bold mb-2 text-white">Office</h3>
-                <p className="text-white text-sm">San Francisco, CA</p>
+                <p className="text-white text-sm">El Mirage, Arizona</p>
+                <p className="text-gray-400 text-xs mt-1">Established May 2025</p>
               </CardContent>
             </Card>
           </div>
