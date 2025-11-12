@@ -9,11 +9,11 @@ import {
   Users, LogOut, MapPin, BarChart3, Calendar
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import NUPSInventoryManagement from "../components/nups/InventoryManagement";
-import NUPSLocationManagement from "../components/nups/LocationManagement";
-import NUPSStaffManagement from "../components/nups/StaffManagement";
-import NUPSAdvancedReporting from "../components/nups/AdvancedReporting";
-import NUPSLoyaltyProgram from "../components/nups/LoyaltyProgram";
+import NUPSInventoryManagement from "../components/nups/InventoryManagement.jsx";
+import NUPSLocationManagement from "../components/nups/LocationManagement.jsx";
+import NUPSStaffManagement from "../components/nups/StaffManagement.jsx";
+import NUPSAdvancedReporting from "../components/nups/AdvancedReporting.jsx";
+import NUPSLoyaltyProgram from "../components/nups/LoyaltyProgram.jsx";
 
 export default function NUPSManager() {
   const [user, setUser] = useState(null);
