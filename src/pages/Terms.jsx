@@ -1,283 +1,146 @@
 import React from "react";
-import { FileText, Shield, AlertTriangle, Scale, CreditCard, UserX } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 import { Card, CardContent } from "@/components/ui/card";
+import { FileText, Shield, CreditCard, AlertTriangle } from "lucide-react";
 
 export default function Terms() {
-  const sections = [
-    {
-      icon: FileText,
-      title: "1. Acceptance of Terms",
-      content: `By accessing and using GlyphLock's platform and services, you agree to be bound by these Terms of Service. 
-      If you do not agree to these terms, you may not use our services. These terms constitute a legally binding agreement 
-      between you and GlyphLock Inc.`
-    },
-    {
-      icon: Shield,
-      title: "2. Services Description",
-      content: `GlyphLock provides cybersecurity services including but not limited to: Master Covenant AI binding system, 
-      QR code security generation, steganography tools, blockchain security, GlyphBot AI assistant, and N.U.P.S. POS system. 
-      Services are provided "as is" with continuous improvements and updates.`
-    },
-    {
-      icon: UserX,
-      title: "3. User Accounts",
-      subsections: [
-        "You must provide accurate and complete registration information",
-        "You are responsible for maintaining the security of your account credentials",
-        "You must notify us immediately of any unauthorized access",
-        "One person or entity may not maintain multiple accounts",
-        "We reserve the right to suspend or terminate accounts that violate these terms",
-        "You must be at least 18 years old to create an account"
-      ]
-    },
-    {
-      icon: Scale,
-      title: "4. Acceptable Use Policy",
-      subsections: [
-        "You may not use our services for illegal activities",
-        "You may not attempt to breach or compromise our security systems",
-        "You may not reverse engineer or decompile our software",
-        "You may not use our platform to distribute malware or conduct attacks",
-        "You may not scrape, copy, or redistribute our content without permission",
-        "You may not impersonate others or provide false information"
-      ]
-    },
-    {
-      icon: CreditCard,
-      title: "5. Payment Terms",
-      subsections: [
-        "Subscription fees are billed in advance on a monthly or annual basis",
-        "All fees are non-refundable except as required by law",
-        "We reserve the right to change pricing with 30 days notice",
-        "Failed payments may result in service suspension",
-        "Enterprise contracts are subject to separate agreements",
-        "Taxes are calculated based on your billing address"
-      ]
-    },
-    {
-      icon: AlertTriangle,
-      title: "6. Liability Limitations",
-      content: `GlyphLock provides services with $14M liability coverage as specified in service agreements. 
-      We are not liable for indirect, incidental, or consequential damages. Our total liability is limited to 
-      the amount paid by you in the 12 months preceding the claim. Some jurisdictions do not allow these 
-      limitations, so they may not apply to you.`
-    }
-  ];
-
   return (
-    <div className="bg-black text-white min-h-screen py-20">
+    <div className="min-h-screen bg-black text-white py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center mx-auto mb-6">
-              <Scale className="w-8 h-8 text-white" />
+              <FileText className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-5xl font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Terms of <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Service</span>
             </h1>
-            <p className="text-gray-400 text-lg">
-              Last updated: January 2025
-            </p>
-            <p className="text-gray-300 mt-4">
-              Please read these terms carefully before using GlyphLock's services.
-            </p>
+            <p className="text-gray-400">Last updated: October 20, 2025</p>
           </div>
 
-          {/* Sections */}
-          <div className="space-y-8 mb-16">
-            {sections.map((section, index) => (
-              <Card key={index} className="bg-gray-900 border-gray-800">
-                <CardContent className="p-8">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <section.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-2xl font-bold mb-4 text-white">{section.title}</h2>
-                      {section.content && (
-                        <p className="text-gray-300 leading-relaxed">{section.content}</p>
-                      )}
-                      {section.subsections && (
-                        <ul className="space-y-2">
-                          {section.subsections.map((item, idx) => (
-                            <li key={idx} className="flex items-start gap-3 text-gray-300">
-                              <span className="text-blue-400 mt-1.5">•</span>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <Card className="bg-gray-900 border-gray-800 mb-8">
+            <CardContent className="p-8 space-y-8">
+              <p className="text-white">
+                These Terms of Service ("Terms") govern your access to and use of GlyphLock Security LLC's ("GlyphLock," "we," "us," or "our") cybersecurity platform, services, and products. By accessing or using our services, you agree to be bound by these Terms.
+              </p>
+
+              <section>
+                <h2 className="text-2xl font-bold text-white mb-4">1. Acceptance of Terms</h2>
+                <p className="text-gray-300 mb-4">
+                  By creating an account, accessing our platform, or using any of our services (including Master Covenant System, N.U.P.S. platform, QR tools, security monitoring, and consultation services), you acknowledge that you have read, understood, and agree to be bound by these Terms and our Privacy Policy.
+                </p>
+                <p className="text-gray-300">
+                  If you are using our services on behalf of an organization, you represent that you have the authority to bind that organization to these Terms.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                  <Shield className="w-6 h-6 text-blue-400" />
+                  2. Services Description
+                </h2>
+                
+                <h3 className="text-xl font-semibold text-white mb-3 mt-6">2.1 Master Covenant System</h3>
+                <p className="text-gray-300 mb-4">Our pioneering AI-contract binding technology that legally binds 5 AI systems to enforceable contracts with cryptographic proof, quantum-resistant encryption, and automated compliance monitoring.</p>
+
+                <h3 className="text-xl font-semibold text-white mb-3">2.2 N.U.P.S. Platform</h3>
+                <p className="text-gray-300 mb-4">Navigate United Platform System - a three-tier POS portal management system with admin, manager, and user access levels, real-time analytics, and payment processing integration.</p>
+
+                <h3 className="text-xl font-semibold text-white mb-3">2.3 Security Monitoring</h3>
+                <p className="text-gray-300 mb-4">Real-time threat detection, system health monitoring, and comprehensive security event tracking powered by the Master Covenant System.</p>
+
+                <h3 className="text-xl font-semibold text-white mb-3">2.4 QR Tools & Hotzone Mapping</h3>
+                <p className="text-gray-300">Secure QR code generation, management, and interactive hotzone image mapping tools for enterprise applications.</p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-white mb-4">3. Account Registration and Security</h2>
+                <p className="text-gray-300 mb-4">To access certain features, you must create an account. You agree to:</p>
+                <ul className="list-disc list-inside space-y-2 text-gray-300 mb-4">
+                  <li>Provide accurate, current, and complete information</li>
+                  <li>Maintain and promptly update your account information</li>
+                  <li>Maintain the security of your password and account</li>
+                  <li>Immediately notify us of any unauthorized access or security breach</li>
+                  <li>Accept responsibility for all activities under your account</li>
+                </ul>
+                <p className="text-gray-300">We reserve the right to suspend or terminate accounts that violate these Terms or pose security risks to our platform or other users.</p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                  <CreditCard className="w-6 h-6 text-blue-400" />
+                  4. Payment Terms
+                </h2>
+                <p className="text-gray-300 mb-4">Pricing for our services:</p>
+                <ul className="list-disc list-inside space-y-2 text-gray-300 mb-4">
+                  <li>Master Covenant: $2,500 per project</li>
+                  <li>N.U.P.S. Platform: $5,000 per implementation</li>
+                  <li>Full-stack Development: $3,500</li>
+                  <li>UI/UX Design: $2,000</li>
+                  <li>Data Security Solutions: $4,000</li>
+                  <li>Comprehensive Package: $10,000</li>
+                </ul>
+                <p className="text-gray-300 mb-4">Payment terms:</p>
+                <ul className="list-disc list-inside space-y-2 text-gray-300">
+                  <li>All payments are processed securely through Stripe</li>
+                  <li>Consultation fees must be paid in advance of scheduled services</li>
+                  <li>Subscription services are billed monthly or annually as selected</li>
+                  <li>Refunds are provided in accordance with our refund policy</li>
+                  <li>We reserve the right to modify pricing with 30 days' notice</li>
+                </ul>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                  <AlertTriangle className="w-6 h-6 text-yellow-400" />
+                  5. Acceptable Use Policy
+                </h2>
+                <p className="text-gray-300 mb-4">You agree NOT to use our services to:</p>
+                <ul className="list-disc list-inside space-y-2 text-gray-300">
+                  <li>Violate any applicable laws or regulations</li>
+                  <li>Infringe on intellectual property rights</li>
+                  <li>Transmit malware, viruses, or harmful code</li>
+                  <li>Attempt to gain unauthorized access to our systems or other users' data</li>
+                  <li>Reverse engineer, decompile, or attempt to extract source code</li>
+                  <li>Use automated systems to access our services without authorization</li>
+                  <li>Interfere with or disrupt the integrity or performance of our services</li>
+                  <li>Engage in fraudulent activities or misrepresent your identity</li>
+                </ul>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-white mb-4">8. Liability and Insurance</h2>
+                <p className="text-gray-300 mb-4">GlyphLock maintains $14 million in liability coverage for security incidents and data breaches. Our coverage includes:</p>
+                <ul className="list-disc list-inside space-y-2 text-gray-300 mb-4">
+                  <li>Cyber liability insurance for data breaches</li>
+                  <li>Professional liability for service delivery</li>
+                  <li>Errors and omissions coverage</li>
+                  <li>Third-party liability protection</li>
+                </ul>
+                <p className="text-gray-300">However, to the maximum extent permitted by law, GlyphLock shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, use, or goodwill.</p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-white mb-4">15. Contact Information</h2>
+                <p className="text-gray-300 mb-4">For questions about these Terms of Service, contact:</p>
+                <div className="bg-gray-800 p-6 rounded-lg space-y-2">
+                  <p className="text-white font-semibold">GlyphLock Security LLC</p>
+                  <p className="text-gray-300">El Mirage, Arizona</p>
+                  <p className="text-gray-300">Email: legal@glyphlock.com</p>
+                  <p className="text-gray-300">Support: support@glyphlock.com</p>
+                  <p className="text-gray-300">Phone: (424) 246-6499</p>
+                  <p className="text-gray-300">Web: <a href="https://www.glyphlock.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">www.glyphlock.com</a></p>
+                </div>
+              </section>
+            </CardContent>
+          </Card>
+
+          <div className="text-center">
+            <Link to={createPageUrl("Home")}>
+              <span className="text-blue-400 hover:text-blue-300 transition-colors">← Back to Home</span>
+            </Link>
           </div>
-
-          {/* Additional Terms */}
-          <Card className="bg-gray-900 border-gray-800 mb-8">
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-bold mb-4 text-white">7. Intellectual Property</h2>
-              <p className="text-gray-300 mb-4">
-                All content, features, and functionality of GlyphLock services are owned by GlyphLock Inc. and 
-                protected by international copyright, trademark, and other intellectual property laws.
-              </p>
-              <ul className="space-y-2 text-gray-300">
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>You retain ownership of data you upload to our platform</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>You grant us a license to process your data to provide services</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>Our Master Covenant technology is proprietary and patent-pending</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>Unauthorized use of our trademarks is prohibited</span>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-900 border-gray-800 mb-8">
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-bold mb-4 text-white">8. Data Security & Privacy</h2>
-              <p className="text-gray-300 mb-4">
-                We implement industry-leading security measures to protect your data:
-              </p>
-              <ul className="space-y-2 text-gray-300">
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>AES-256 encryption for data at rest</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>TLS 1.3 for data in transit</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>SOC 2 Type II certified infrastructure</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>Regular security audits and penetration testing</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>See our Privacy Policy for complete details</span>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-900 border-gray-800 mb-8">
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-bold mb-4 text-white">9. Termination</h2>
-              <p className="text-gray-300 mb-4">
-                Either party may terminate the service agreement:
-              </p>
-              <ul className="space-y-2 text-gray-300">
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span><strong>You:</strong> Cancel your subscription at any time from your account dashboard</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span><strong>Us:</strong> Suspend or terminate accounts that violate these terms</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>Upon termination, your access to services will cease</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>You may export your data within 30 days of termination</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>No refunds for unused subscription periods unless required by law</span>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-900 border-gray-800 mb-8">
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-bold mb-4 text-white">10. Master Covenant Specific Terms</h2>
-              <p className="text-gray-300 mb-4">
-                For services utilizing our Master Covenant AI binding system:
-              </p>
-              <ul className="space-y-2 text-gray-300">
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>AI systems are bound to legally enforceable contracts</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>$14M liability coverage applies to AI-related incidents</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>Cryptographic proof of compliance is maintained on blockchain</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>Enterprise clients receive dedicated covenant documents</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>Claims must be filed within 90 days of incident</span>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-900 border-gray-800 mb-16">
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-bold mb-4 text-white">11. Governing Law & Disputes</h2>
-              <p className="text-gray-300 mb-4">
-                These Terms are governed by the laws of the State of California, USA:
-              </p>
-              <ul className="space-y-2 text-gray-300">
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>Disputes will be resolved through binding arbitration</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>Arbitration will be conducted in San Francisco, CA</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>You waive the right to participate in class-action lawsuits</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-400 mt-1.5">•</span>
-                  <span>Small claims court remains available for qualifying disputes</span>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          {/* Contact */}
-          <Card className="bg-gradient-to-br from-blue-500/10 to-blue-700/10 border-blue-500/30">
-            <CardContent className="p-8 text-center">
-              <h2 className="text-2xl font-bold mb-4 text-white">Questions About These Terms?</h2>
-              <p className="text-gray-300 mb-6">
-                If you have any questions about these Terms of Service, please contact our legal team:
-              </p>
-              <div className="space-y-2 text-gray-300">
-                <p><strong>Email:</strong> legal@glyphlock.com</p>
-                <p><strong>Address:</strong> GlyphLock Inc., San Francisco, CA</p>
-                <p><strong>Response Time:</strong> Within 48 hours</p>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
