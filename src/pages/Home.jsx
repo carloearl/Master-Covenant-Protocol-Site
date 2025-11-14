@@ -145,7 +145,7 @@ export default function Home() {
         </button>
       }
 
-      {/* Hero Video Section - Mobile Optimized */}
+      {/* Hero Video Section - Full Video Visible */}
       <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-black">
         <video
           autoPlay
@@ -153,7 +153,7 @@ export default function Home() {
           muted
           playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="w-full h-full object-contain"
           style={{ filter: 'brightness(1.1) contrast(1.1)' }}>
           <source src="https://i.imgur.com/zs3sPzJ.mp4" type="video/mp4" />
         </video>
