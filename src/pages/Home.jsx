@@ -54,7 +54,7 @@ export default function Home() {
       title: "QR Security",
       description: "Secure QR generation with AI threat detection and custom branding.",
       link: "QRGenerator",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a2446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
       price: "$49.99",
       icon: Lock
     },
@@ -161,7 +161,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black pointer-events-none" />
         
         {/* GlyphLock Logo Overlay - Covering Veo Watermark */}
-        <div className="absolute top-1/2 right-[35%] transform -translate-y-1/2 z-10">
+        <div className="absolute top-1/2 left-[60%] transform -translate-x-1/2 -translate-y-1/2 z-10">
           <img 
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png"
             alt="GlyphLock"
