@@ -36,56 +36,56 @@ export default function Home() {
       title: "N.U.P.S. POS",
       description: "Enterprise point-of-sale system with three-tier access control and real-time analytics.",
       link: "NUPSLogin",
-      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/a86b74f69_data-security-encryption-protection.jpg",
       price: "Enterprise"
     },
     {
       title: "GlyphBot AI",
       description: "Advanced AI assistant with code execution, security scanning, and automated auditing.",
       link: "GlyphBot",
-      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9774d266e_openai-logo-inspired-abstract.png",
       price: "$50/mo"
     },
     {
       title: "QR Security",
       description: "Secure QR generation with AI threat detection and custom branding capabilities.",
       link: "QRGenerator",
-      image: "https://images.unsplash.com/photo-1616432043562-3671ea2e5242?w=800&h=600&fit=crop",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
       price: "$49.99"
     },
     {
       title: "Steganography",
       description: "Hide encrypted data within images using LSB encoding for covert communications.",
       link: "Steganography",
-      image: "https://images.unsplash.com/photo-1633265486064-086b219458ec?w=800&h=600&fit=crop",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/a86b74f69_data-security-encryption-protection.jpg",
       price: "$149.99"
     },
     {
       title: "Blockchain Security",
       description: "SHA-256/512 hashing, Merkle trees, and immutable verification systems.",
       link: "Blockchain",
-      image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=600&fit=crop",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
       price: "$99.99"
     },
     {
       title: "Hotzone Mapper",
       description: "Interactive vulnerability mapping with severity tracking and threat analysis.",
       link: "HotzoneMapper",
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9774d266e_openai-logo-inspired-abstract.png",
       price: "$99.99"
     },
     {
       title: "HSSS Surveillance",
       description: "Real-time threat monitoring with AI detection and incident tracking.",
       link: "HSSS",
-      image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=800&h=600&fit=crop",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/a86b74f69_data-security-encryption-protection.jpg",
       price: "Enterprise"
     },
     {
       title: "Security Suite",
       description: "Comprehensive security tools with quantum-resistant encryption.",
       link: "SecurityTools",
-      image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=600&fit=crop",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
       price: "Custom"
     }
   ];

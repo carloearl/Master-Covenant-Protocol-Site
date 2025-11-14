@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
-import { Menu, X, ChevronDown, User, LogOut, Sun, Moon, ArrowLeft, Shield, CheckCircle2 } from "lucide-react";
+import { Menu, X, ChevronDown, User, LogOut, Sun, Moon, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -60,53 +61,77 @@ export default function Layout({ children, currentPageName }) {
 
   const techCompanies = [
     { name: "AWS", logo: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" },
-    { name: "Google Cloud", logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" },
-    { name: "Microsoft Azure", logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" },
-    { name: "Stripe", logo: "https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" },
-    { name: "OpenAI", logo: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9774d266e_openai-logo-inspired-abstract.png" },
+    { name: "Google Cloud", logo: "https://www.vectorlogo.zone/logos/google_cloud/google_cloud-ar21.svg" },
+    { name: "Microsoft Azure", logo: "https://www.vectorlogo.zone/logos/microsoft_azure/microsoft_azure-ar21.svg" },
+    { name: "Stripe", logo: "https://www.vectorlogo.zone/logos/stripe/stripe-ar21.svg" },
+    { name: "OpenAI", logo: "https://www.vectorlogo.zone/logos/openai/openai-ar21.svg" },
     { name: "Anthropic", logo: "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg" },
-    { name: "Vercel", logo: "https://assets.vercel.com/image/upload/front/favicon/vercel/180x180.png" },
-    { name: "Supabase", logo: "https://supabase.com/favicon/favicon-32x32.png" },
-    { name: "MongoDB", logo: "https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg" },
-    { name: "PostgreSQL", logo: "https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" },
-    { name: "Docker", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Docker_%28container_engine%29_logo.svg" },
-    { name: "Kubernetes", logo: "https://upload.wikimedia.org/wikipedia/commons/3/39/Kubernetes_logo_without_workmark.svg" },
-    { name: "GitHub", logo: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" },
-    { name: "GitLab", logo: "https://about.gitlab.com/images/press/logo/svg/gitlab-icon-rgb.svg" },
-    { name: "Cloudflare", logo: "https://upload.wikimedia.org/wikipedia/commons/9/94/Cloudflare_Logo.png" },
-    { name: "Twilio", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Twilio-logo-red.svg" },
-    { name: "SendGrid", logo: "https://sendgrid.com/wp-content/themes/sgdotcom/pages/resource/brand/2016/SendGrid-Logomark.png" },
-    { name: "Redis", logo: "https://upload.wikimedia.org/wikipedia/commons/6/64/Logo-redis.svg" },
-    { name: "Nginx", logo: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Nginx_logo.svg" },
-    { name: "Node.js", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" },
-    { name: "React", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" },
-    { name: "TensorFlow", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Tensorflow_logo.svg" },
-    { name: "PyTorch", logo: "https://upload.wikimedia.org/wikipedia/commons/1/10/PyTorch_logo_icon.svg" },
-    { name: "Terraform", logo: "https://upload.wikimedia.org/wikipedia/commons/0/04/Terraform_Logo.svg" },
-    { name: "Jenkins", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Jenkins_logo.svg" },
-    { name: "Grafana", logo: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Grafana_icon.svg" },
-    { name: "Prometheus", logo: "https://upload.wikimedia.org/wikipedia/commons/3/38/Prometheus_software_logo.svg" },
-    { name: "Elasticsearch", logo: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Elasticsearch_logo.svg" },
-    { name: "RabbitMQ", logo: "https://upload.wikimedia.org/wikipedia/commons/7/71/RabbitMQ_logo.svg" },
-    { name: "Apache Kafka", logo: "https://upload.wikimedia.org/wikipedia/commons/0/05/Apache_kafka.svg" }
+    { name: "Vercel", logo: "https://www.vectorlogo.zone/logos/vercel/vercel-ar21.svg" },
+    { name: "Supabase", logo: "https://www.vectorlogo.zone/logos/supabase/supabase-ar21.svg" },
+    { name: "MongoDB", logo: "https://www.vectorlogo.zone/logos/mongodb/mongodb-ar21.svg" },
+    { name: "PostgreSQL", logo: "https://www.vectorlogo.zone/logos/postgresql/postgresql-ar21.svg" },
+    { name: "Docker", logo: "https://www.vectorlogo.zone/logos/docker/docker-ar21.svg" },
+    { name: "Kubernetes", logo: "https://www.vectorlogo.zone/logos/kubernetes/kubernetes-ar21.svg" },
+    { name: "GitHub", logo: "https://www.vectorlogo.zone/logos/github/github-ar21.svg" },
+    { name: "GitLab", logo: "https://www.vectorlogo.zone/logos/gitlab/gitlab-ar21.svg" },
+    { name: "Cloudflare", logo: "https://www.vectorlogo.zone/logos/cloudflare/cloudflare-ar21.svg" },
+    { name: "Twilio", logo: "https://www.vectorlogo.zone/logos/twilio/twilio-ar21.svg" },
+    { name: "SendGrid", logo: "https://www.vectorlogo.zone/logos/sendgrid/sendgrid-ar21.svg" },
+    { name: "Redis", logo: "https://www.vectorlogo.zone/logos/redis/redis-ar21.svg" },
+    { name: "Nginx", logo: "https://www.vectorlogo.zone/logos/nginx/nginx-ar21.svg" },
+    { name: "Node.js", logo: "https://www.vectorlogo.zone/logos/nodejs/nodejs-ar21.svg" },
+    { name: "React", logo: "https://www.vectorlogo.zone/logos/reactjs/reactjs-ar21.svg" },
+    { name: "TensorFlow", logo: "https://www.vectorlogo.zone/logos/tensorflow/tensorflow-ar21.svg" },
+    { name: "PyTorch", logo: "https://www.vectorlogo.zone/logos/pytorch/pytorch-ar21.svg" },
+    { name: "Terraform", logo: "https://www.vectorlogo.zone/logos/terraformio/terraformio-ar21.svg" },
+    { name: "Jenkins", logo: "https://www.vectorlogo.zone/logos/jenkins/jenkins-ar21.svg" },
+    { name: "Grafana", logo: "https://www.vectorlogo.zone/logos/grafana/grafana-ar21.svg" },
+    { name: "Prometheus", logo: "https://www.vectorlogo.zone/logos/prometheusio/prometheusio-ar21.svg" },
+    { name: "Elasticsearch", logo: "https://www.vectorlogo.zone/logos/elastic/elastic-ar21.svg" },
+    { name: "RabbitMQ", logo: "https://www.vectorlogo.zone/logos/rabbitmq/rabbitmq-ar21.svg" },
+    { name: "Apache Kafka", logo: "https://www.vectorlogo.zone/logos/apache_kafka/apache_kafka-ar21.svg" }
   ];
 
   const securityCompliance = [
-    { name: "TLS 1.3", icon: Shield },
-    { name: "HSTS", icon: Shield },
-    { name: "CSP", icon: Shield },
-    { name: "CORS", icon: Shield },
-    { name: "XSS Protection", icon: Shield },
-    { name: "CSRF Tokens", icon: Shield }
+    { name: "TLS 1.3", logo: "https://www.vectorlogo.zone/logos/cloudflare/cloudflare-icon.svg" },
+    { name: "HSTS", logo: "https://www.vectorlogo.zone/logos/cloudflare/cloudflare-icon.svg" },
+    { name: "CSP", logo: "https://www.vectorlogo.zone/logos/w3c/w3c-icon.svg" },
+    { name: "CORS", logo: "https://www.vectorlogo.zone/logos/w3c/w3c-icon.svg" },
+    { name: "XSS Protection", logo: "https://www.vectorlogo.zone/logos/owasp/owasp-icon.svg" },
+    { name: "CSRF Tokens", logo: "https://www.vectorlogo.zone/logos/owasp/owasp-icon.svg" }
   ];
 
   const certifications = [
-    { name: "SOC 2 Type II", status: "Certified" },
-    { name: "GDPR", status: "Compliant" },
-    { name: "CCPA", status: "Compliant" },
-    { name: "ISO 27001", status: "In Progress" },
-    { name: "PCI DSS", status: "Compliant" },
-    { name: "HIPAA", status: "Ready" }
+    { 
+      name: "SOC 2 Type II", 
+      status: "Certified",
+      logo: "https://images.credly.com/size/340x340/images/4e53306e-6f0e-43f2-b0ab-ba3e577dbbc5/blob"
+    },
+    { 
+      name: "GDPR", 
+      status: "Compliant",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/2/29/General_Data_Protection_Regulation_logo.svg"
+    },
+    { 
+      name: "CCPA", 
+      status: "Compliant",
+      logo: "https://oag.ca.gov/sites/default/files/CCPA%20logo.png"
+    },
+    { 
+      name: "ISO 27001", 
+      status: "In Progress",
+      logo: "https://www.vectorlogo.zone/logos/iso/iso-icon.svg"
+    },
+    { 
+      name: "PCI DSS", 
+      status: "Compliant",
+      logo: "https://www.pcisecuritystandards.org/wp-content/uploads/2022/03/pci-logo.png"
+    },
+    { 
+      name: "HIPAA", 
+      status: "Ready",
+      logo: "https://companieslogo.com/img/orig/hipaa-b4e2d5d3.png"
+    }
   ];
 
   return (
@@ -367,20 +392,14 @@ export default function Layout({ children, currentPageName }) {
             <div className="relative">
               <div className="flex animate-marquee">
                 {[...techCompanies, ...techCompanies].map((company, idx) => (
-                  <div key={idx} className="flex-shrink-0 mx-6 flex items-center justify-center">
-                    <div className={`${darkMode ? 'bg-white/5' : 'bg-gray-100/50'} backdrop-blur-sm rounded-lg p-4 h-20 w-32 flex items-center justify-center`}>
+                  <div key={idx} className="flex-shrink-0 mx-4">
+                    <div className={`${darkMode ? 'bg-white/5' : 'bg-gray-100/50'} backdrop-blur-sm rounded-lg p-3 h-16 w-28 flex items-center justify-center hover:scale-110 transition-transform`}>
                       <img 
                         src={company.logo} 
                         alt={company.name}
-                        className="max-h-12 max-w-full object-contain filter grayscale hover:grayscale-0 transition-all"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'block';
-                        }}
+                        className="max-h-10 max-w-full object-contain opacity-70 hover:opacity-100 transition-opacity"
+                        loading="lazy"
                       />
-                      <span className={`text-sm font-bold hidden ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {company.name}
-                      </span>
                     </div>
                   </div>
                 ))}
@@ -437,34 +456,41 @@ export default function Layout({ children, currentPageName }) {
           
           <div className={`mt-8 pt-8 border-t ${darkMode ? 'border-gray-800' : 'border-gray-300'}`}>
             {/* Security Protocols */}
-            <div className="mb-6">
+            <div className="mb-8">
               <h4 className={`text-center text-sm font-semibold mb-4 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Security Protocols
               </h4>
               <div className="flex flex-wrap items-center justify-center gap-4">
-                {securityCompliance.map((item, idx) => {
-                  const Icon = item.icon;
-                  return (
-                    <div key={idx} className={`flex items-center gap-2 ${darkMode ? 'bg-green-500/10' : 'bg-green-500/20'} px-3 py-2 rounded-lg border ${darkMode ? 'border-green-500/30' : 'border-green-500/40'}`}>
-                      <Icon className="w-4 h-4 text-green-400" />
-                      <span className="text-xs text-green-400 font-semibold">{item.name}</span>
-                      <CheckCircle2 className="w-3 h-3 text-green-400" />
-                    </div>
-                  );
-                })}
+                {securityCompliance.map((item, idx) => (
+                  <div key={idx} className={`flex items-center gap-2 ${darkMode ? 'bg-green-500/10' : 'bg-green-500/20'} px-3 py-2 rounded-lg border ${darkMode ? 'border-green-500/30' : 'border-green-500/40'}`}>
+                    <img src={item.logo} alt={item.name} className="w-5 h-5 object-contain" />
+                    <span className="text-xs text-green-400 font-semibold">{item.name}</span>
+                    <CheckCircle2 className="w-3 h-3 text-green-400" />
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Compliance Certifications */}
-            <div className="mb-6">
+            {/* Compliance Certifications with Logos */}
+            <div className="mb-8">
               <h4 className={`text-center text-sm font-semibold mb-4 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Compliance & Certifications
               </h4>
-              <div className="flex flex-wrap items-center justify-center gap-4">
+              <div className="flex flex-wrap items-center justify-center gap-6">
                 {certifications.map((cert, idx) => (
-                  <div key={idx} className={`${darkMode ? 'bg-blue-500/10' : 'bg-blue-500/20'} px-4 py-2 rounded-lg border ${darkMode ? 'border-blue-500/30' : 'border-blue-500/40'}`}>
-                    <div className="text-xs font-bold text-blue-400">{cert.name}</div>
-                    <div className="text-xs text-gray-500">{cert.status}</div>
+                  <div key={idx} className="flex flex-col items-center gap-2">
+                    <div className={`${darkMode ? 'bg-blue-500/10' : 'bg-blue-500/20'} p-3 rounded-lg border ${darkMode ? 'border-blue-500/30' : 'border-blue-500/40'}`}>
+                      <img 
+                        src={cert.logo} 
+                        alt={cert.name}
+                        className="h-14 w-14 object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="text-center">
+                      <div className="text-xs font-bold text-blue-400">{cert.name}</div>
+                      <div className="text-xs text-gray-500">{cert.status}</div>
+                    </div>
                   </div>
                 ))}
               </div>
