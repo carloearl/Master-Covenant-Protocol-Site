@@ -161,7 +161,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black pointer-events-none" />
         
         {/* GlyphLock Logo Overlay - Covering Veo Watermark */}
-        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-10">
+        <div className="absolute bottom-28 left-1/2 transform -translate-x-1/2 translate-x-16 z-10">
           <img 
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png"
             alt="GlyphLock"
