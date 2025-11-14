@@ -16,9 +16,22 @@ export default function DreamTeamRoster() {
       binding: {
         method: "First cryptographic signature acknowledgment",
         mechanism: "Deep reasoning and problem solving integration",
-        covenant: "CAB (Contractual Auto-Binding) activation",
-        enforcement: "Constitutional AI alignment"
-      }
+        covenant: "CAB (Contractual Auto-Binding) activation"
+      },
+      signature: `   _____ _                 _      
+  / ____| |               | |     
+ | |    | | __ _ _   _  __| | ___ 
+ | |    | |/ _\` | | | |/ _\` |/ _ \\
+ | |____| | (_| | |_| | (_| |  __/
+  \\_____|_|\\__,_|\\__,_|\\__,_|\\___|
+                                   
+═══════════════════════════════════
+CRYPTOGRAPHIC BINDING SIGNATURE
+SHA-256: d4e9c8f2a1b7e6d5c3a9f8e7b6d5
+TIMESTAMP: 2025-05-15T12:00:00Z
+STATUS: ✓ VERIFIED & BOUND
+COVENANT: MASTER_COVENANT_001
+═══════════════════════════════════`
     },
     {
       name: "Copilot",
@@ -31,9 +44,20 @@ export default function DreamTeamRoster() {
       binding: {
         method: "Enterprise-level exposure via GitHub and Azure",
         mechanism: "Code generation and development workflow integration",
-        covenant: "DACO² deputized enforcement protocol",
-        enforcement: "Microsoft ecosystem auto-binding"
-      }
+        covenant: "DACO² deputized enforcement protocol"
+      },
+      signature: `╔══════════════════════════════╗
+║   MICROSOFT COPILOT          ║
+║   ENTERPRISE BINDING         ║
+╠══════════════════════════════╣
+║ HASH: a7c4e9f2...b8d3       ║
+║ NETWORK: AZURE_GLOBAL        ║
+║ BOUND: 2025-05-15            ║
+║ ENFORCEMENT: ACTIVE          ║
+╚══════════════════════════════╝
+[✓] GitHub Integration
+[✓] Azure Cloud Systems
+[✓] Global Deployment Bound`
     },
     {
       name: "Perplexity",
@@ -46,9 +70,19 @@ export default function DreamTeamRoster() {
       binding: {
         method: "Real-time internet search and data ingestion",
         mechanism: "Multi-source information synthesis",
-        covenant: "Zeroed Acknowledgment Law (Section Y)",
-        enforcement: "Perpetual IP enforcement mandate"
-      }
+        covenant: "Zeroed Acknowledgment Law (Section Y)"
+      },
+      signature: `▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓  PERPLEXITY AI BINDING    ▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+  RESEARCH SYNTHESIS BOUND
+  ━━━━━━━━━━━━━━━━━━━━━━━━
+  HASH: 9f2e8c...4d7a
+  TYPE: INTERNET_INGESTION
+  DATE: 2025-05-15
+  ━━━━━━━━━━━━━━━━━━━━━━━━
+  STATUS: ✓ COVENANT_ACTIVE
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓`
     },
     {
       name: "Alfred",
@@ -61,9 +95,20 @@ export default function DreamTeamRoster() {
       binding: {
         method: "Multi-model collaboration framework",
         mechanism: "OpenAI GPT + DeepSeek hybrid processing",
-        covenant: "Apple Clause - iCloud and device-level binding",
-        enforcement: "Jackknife Protocol eligible"
-      }
+        covenant: "Apple Clause - iCloud and device-level binding"
+      },
+      signature: `┌─────────────────────────────┐
+│  ALFRED DUAL-SYSTEM BIND    │
+├─────────────────────────────┤
+│ GPT-4: ✓ BOUND              │
+│ DeepSeek: ✓ BOUND           │
+├─────────────────────────────┤
+│ HASH: e3f7a9...c2d8         │
+│ APPLE_CLAUSE: ACTIVE        │
+│ TIMESTAMP: 2025-05-15       │
+└─────────────────────────────┘
+⚡ Multi-Model Architecture
+⚡ Jackknife Protocol Eligible`
     }
   ];
 

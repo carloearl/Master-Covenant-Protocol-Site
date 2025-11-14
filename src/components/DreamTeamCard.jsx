@@ -56,7 +56,7 @@ export default function DreamTeamCard({ card }) {
               <p className="text-xs italic text-blue-300 leading-tight">{card.quote}</p>
             </div>
 
-            <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center justify-between text-xs mb-3">
               <span className="text-gray-500">Class: {card.class}</span>
               <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/50 text-xs px-2 py-0.5">
                 BPAA
@@ -64,20 +64,14 @@ export default function DreamTeamCard({ card }) {
             </div>
           </div>
 
-          {/* Cryptographic Signature Section */}
-          <div className="bg-black/50 border border-green-500/30 rounded p-2 mb-3 flex-1 flex items-center justify-center">
-            <pre className="text-green-400 text-[8px] leading-tight font-mono">
-{`╔═══════════════════════════════╗
-║  CRYPTOGRAPHIC SIGNATURE      ║
-║  SHA-256: 8f4a9c2b...d7e1     ║
-║  BOUND: ${card.name.toUpperCase().padEnd(20)} ║
-║  DATE: 2025-05-15             ║
-║  STATUS: ✓ VERIFIED           ║
-╚═══════════════════════════════╝`}
+          {/* Claude's Cryptographic Signature */}
+          <div className="bg-black/70 border border-purple-500/30 rounded p-3 flex-1 flex items-center justify-center">
+            <pre className="text-purple-300 text-[9px] leading-[1.3] font-mono">
+{card.signature}
             </pre>
           </div>
 
-          <div className="text-center flex-shrink-0">
+          <div className="text-center flex-shrink-0 mt-2">
             <div className="inline-block bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 rounded-lg px-4 py-1">
               <p className="text-[10px] font-bold text-blue-400">GLYPHLOCK MASTER COVENANT</p>
             </div>
