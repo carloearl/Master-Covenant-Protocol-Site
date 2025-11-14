@@ -58,6 +58,32 @@ export default function Layout({ children, currentPageName }) {
 
   const canGoBack = window.history.length > 1 && location.pathname !== createPageUrl("Home");
 
+  const techCompanies = [
+    { name: "AWS", logo: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" },
+    { name: "Google Cloud", logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" },
+    { name: "Microsoft Azure", logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" },
+    { name: "Stripe", logo: "https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" },
+    { name: "OpenAI", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
+    { name: "Anthropic", logo: "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg" },
+    { name: "Vercel", logo: "https://assets.vercel.com/image/upload/front/favicon/vercel/180x180.png" },
+    { name: "Supabase", logo: "https://supabase.com/favicon/favicon-32x32.png" },
+    { name: "MongoDB", logo: "https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg" },
+    { name: "PostgreSQL", logo: "https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" },
+    { name: "Docker", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Docker_%28container_engine%29_logo.svg" },
+    { name: "Kubernetes", logo: "https://upload.wikimedia.org/wikipedia/commons/3/39/Kubernetes_logo_without_workmark.svg" },
+    { name: "GitHub", logo: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" },
+    { name: "GitLab", logo: "https://about.gitlab.com/images/press/logo/svg/gitlab-icon-rgb.svg" },
+    { name: "Cloudflare", logo: "https://upload.wikimedia.org/wikipedia/commons/9/94/Cloudflare_Logo.png" },
+    { name: "Twilio", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Twilio-logo-red.svg" },
+    { name: "SendGrid", logo: "https://sendgrid.com/wp-content/themes/sgdotcom/pages/resource/brand/2016/SendGrid-Logomark.png" },
+    { name: "Redis", logo: "https://upload.wikimedia.org/wikipedia/commons/6/64/Logo-redis.svg" },
+    { name: "Nginx", logo: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Nginx_logo.svg" },
+    { name: "Node.js", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" },
+    { name: "React", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" },
+    { name: "TensorFlow", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Tensorflow_logo.svg" },
+    { name: "PyTorch", logo: "https://upload.wikimedia.org/wikipedia/commons/1/10/PyTorch_logo_icon.svg" }
+  ];
+
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-black text-white' : 'bg-gray-50 text-gray-900'} relative`}>
       {/* Navigation */}
@@ -314,6 +340,35 @@ export default function Layout({ children, currentPageName }) {
       {/* Footer */}
       <footer className={`${darkMode ? 'bg-gray-900/60' : 'bg-white/60'} backdrop-blur-xl border-t ${darkMode ? 'border-blue-500/20' : 'border-blue-500/30'} py-12 relative z-10`}>
         <div className="container mx-auto px-4">
+          {/* Technology Partners Marquee */}
+          <div className="mb-12 overflow-hidden">
+            <h3 className={`text-center text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+              Powered by <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Industry Leaders</span>
+            </h3>
+            <div className="relative">
+              <div className="flex animate-marquee">
+                {[...techCompanies, ...techCompanies].map((company, idx) => (
+                  <div key={idx} className="flex-shrink-0 mx-6 flex items-center justify-center">
+                    <div className={`${darkMode ? 'bg-white/5' : 'bg-gray-100/50'} backdrop-blur-sm rounded-lg p-4 h-20 w-32 flex items-center justify-center`}>
+                      <img 
+                        src={company.logo} 
+                        alt={company.name}
+                        className="max-h-12 max-w-full object-contain filter grayscale hover:grayscale-0 transition-all"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'block';
+                        }}
+                      />
+                      <span className={`text-sm font-bold hidden ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                        {company.name}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
@@ -361,8 +416,41 @@ export default function Layout({ children, currentPageName }) {
             </div>
           </div>
           
-          <div className={`mt-8 pt-8 border-t ${darkMode ? 'border-gray-800' : 'border-gray-300'} text-center`}>
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
+          <div className={`mt-8 pt-8 border-t ${darkMode ? 'border-gray-800' : 'border-gray-300'}`}>
+            {/* Compliance Badges */}
+            <div className="mb-8">
+              <h4 className={`text-center text-sm font-semibold mb-4 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Compliance & Certifications
+              </h4>
+              <div className="flex flex-wrap items-center justify-center gap-6">
+                <div className="flex flex-col items-center gap-2">
+                  <img src="https://logos-world.net/wp-content/uploads/2021/02/SOC-2-Logo.png" alt="SOC 2" className="h-12 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                  <span className="text-xs text-gray-500">SOC 2 Type II</span>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/8/85/GDPR_logo.png" alt="GDPR" className="h-12 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                  <span className="text-xs text-gray-500">GDPR Compliant</span>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <img src="https://oag.ca.gov/sites/default/files/CCPA%20logo.png" alt="CCPA" className="h-12 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                  <span className="text-xs text-gray-500">CCPA Compliant</span>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/ISO_IEC_27001_logo.svg" alt="ISO 27001" className="h-12 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                  <span className="text-xs text-gray-500">ISO 27001</span>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <img src="https://www.pcisecuritystandards.org/wp-content/uploads/2022/03/pci-logo.png" alt="PCI DSS" className="h-12 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                  <span className="text-xs text-gray-500">PCI DSS</span>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <img src="https://companieslogo.com/img/orig/hipaa-b4e2d5d3.png" alt="HIPAA" className="h-12 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                  <span className="text-xs text-gray-500">HIPAA Ready</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4 text-center">
               <div className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 <p>© 2025 GlyphLock Security LLC. All rights reserved.</p>
               </div>
@@ -380,12 +468,29 @@ export default function Layout({ children, currentPageName }) {
                 </p>
               </div>
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 text-center">
               $340K D&B Verified Revenue • $14M Liability Coverage
             </p>
           </div>
         </div>
       </footer>
+
+      <style jsx>{`
+        @keyframes marquee {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        .animate-marquee {
+          animation: marquee 40s linear infinite;
+        }
+        .animate-marquee:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </div>
   );
 }
