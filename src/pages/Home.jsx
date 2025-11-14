@@ -77,7 +77,7 @@ export default function Home() {
       title: "Hotzone Mapper",
       description: "Interactive vulnerability mapping with severity tracking.",
       link: "HotzoneMapper",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9774d266e_openai-logo-inspired-abstract.png",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/7e319a981_Whisk_429a6543b81e30d9bab4065457f3b62ddr.jpg",
       price: "$99.99",
       icon: Shield
     },
@@ -85,7 +85,7 @@ export default function Home() {
       title: "HSSS Surveillance",
       description: "Real-time threat monitoring with AI detection.",
       link: "HSSS",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/a86b74f69_data-security-encryption-protection.jpg",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/144d647a1_Whisk_938e90eff0a4d8da277467baf360248edr.jpg",
       price: "Enterprise",
       icon: Eye
     },
@@ -93,7 +93,7 @@ export default function Home() {
       title: "Security Suite",
       description: "Comprehensive security tools with quantum-resistant encryption.",
       link: "SecurityTools",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
+      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=600&fit=crop",
       price: "Custom",
       icon: Shield
     }
