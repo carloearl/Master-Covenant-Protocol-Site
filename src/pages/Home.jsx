@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -164,7 +165,7 @@ export default function Home() {
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png"
             alt="GlyphLock"
-            className="h-16 w-auto opacity-40" />
+            className="h-16 w-auto" />
 
         </div>
       </section>
