@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronRight, Shield, ArrowUp, Lock, Eye, Zap, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import AnimatedBackground from "@/components/AnimatedBackground";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -130,6 +131,8 @@ export default function Home() {
 
   return (
     <div className="bg-black text-white relative overflow-hidden">
+      <AnimatedBackground />
+      
       {/* Back to Top Button */}
       {showBackToTop && (
         <button
@@ -141,8 +144,8 @@ export default function Home() {
         </button>
       )}
 
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Hero Video Section - Full screen, no text overlay */}
+      <section className="relative h-screen w-full overflow-hidden">
         <video 
           autoPlay 
           loop 
@@ -152,9 +155,12 @@ export default function Home() {
         >
           <source src="https://glyph-merge-pro-glyphlock.replit.app/assets/hero-video-CxU5xRpe.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70" />
-        
-        <div className="relative z-20 container mx-auto px-4 py-20">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
+      </section>
+
+      {/* Hero Content - Below Video */}
+      <section className="relative py-24 z-10">
+        <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto text-center">
             <Badge className="mb-6 bg-blue-500/20 text-blue-400 border-blue-500/50 px-6 py-2 text-sm backdrop-blur-md">
               <Shield className="w-4 h-4 mr-2" />
@@ -169,7 +175,7 @@ export default function Home() {
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
+            <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
               Enterprise-grade cybersecurity with AI integration, quantum-resistant encryption, and zero-trust architecture
             </p>
 
