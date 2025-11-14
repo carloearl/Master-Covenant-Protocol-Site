@@ -4,7 +4,7 @@ import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChevronRight, Shield, ArrowUp, Lock, Eye, Zap, CheckCircle2 } from "lucide-react";
+import { ChevronRight, Shield, ArrowUp, Lock, Eye, Zap, CheckCircle2, FileText, Scale } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import AnimatedBackground from "@/components/AnimatedBackground";
 
@@ -37,7 +37,7 @@ export default function Home() {
       title: "N.U.P.S. POS",
       description: "Enterprise point-of-sale with three-tier access control and real-time analytics.",
       link: "NUPSLogin",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/a86b74f69_data-security-encryption-protection.jpg",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9be80d6ca_Whisk_43831818b9d5e77953345c3626f3d976eg.jpg",
       price: "Enterprise",
       icon: Shield
     },
@@ -45,7 +45,7 @@ export default function Home() {
       title: "GlyphBot AI",
       description: "AI assistant with code execution, security scanning, and automated auditing.",
       link: "GlyphBot",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9774d266e_openai-logo-inspired-abstract.png",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/7e319a981_Whisk_429a6543b81e30d9bab4065457f3b62ddr.jpg",
       price: "$50/mo",
       icon: Zap
     },
@@ -53,7 +53,7 @@ export default function Home() {
       title: "QR Security",
       description: "Secure QR generation with AI threat detection and custom branding.",
       link: "QRGenerator",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b6f63d51b_Whisk_b9fd7532ee1e87a9152439bac427f256dr.jpg",
       price: "$49.99",
       icon: Lock
     },
@@ -61,7 +61,7 @@ export default function Home() {
       title: "Steganography",
       description: "Hide encrypted data within images using LSB encoding.",
       link: "Steganography",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/a86b74f69_data-security-encryption-protection.jpg",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/144d647a1_Whisk_938e90eff0a4d8da277467baf360248edr.jpg",
       price: "$149.99",
       icon: Eye
     },
@@ -69,7 +69,7 @@ export default function Home() {
       title: "Blockchain Security",
       description: "SHA-256/512 hashing, Merkle trees, and immutable verification.",
       link: "Blockchain",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b6f63d51b_Whisk_b9fd7532ee1e87a9152439bac427f256dr.jpg",
       price: "$99.99",
       icon: Lock
     },
@@ -77,7 +77,7 @@ export default function Home() {
       title: "Hotzone Mapper",
       description: "Interactive vulnerability mapping with severity tracking.",
       link: "HotzoneMapper",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9774d266e_openai-logo-inspired-abstract.png",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/7e319a981_Whisk_429a6543b81e30d9bab4065457f3b62ddr.jpg",
       price: "$99.99",
       icon: Shield
     },
@@ -85,7 +85,7 @@ export default function Home() {
       title: "HSSS Surveillance",
       description: "Real-time threat monitoring with AI detection.",
       link: "HSSS",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/a86b74f69_data-security-encryption-protection.jpg",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/144d647a1_Whisk_938e90eff0a4d8da277467baf360248edr.jpg",
       price: "Enterprise",
       icon: Eye
     },
@@ -93,7 +93,7 @@ export default function Home() {
       title: "Security Suite",
       description: "Comprehensive security tools with quantum-resistant encryption.",
       link: "SecurityTools",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b6f63d51b_Whisk_b9fd7532ee1e87a9152439bac427f256dr.jpg",
       price: "Custom",
       icon: Shield
     }
@@ -206,6 +206,90 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Master Covenant Section */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <Badge className="mb-6 bg-blue-500/20 text-blue-400 border-blue-500/50 px-6 py-2 text-sm backdrop-blur-md">
+                <Scale className="w-4 h-4 mr-2" />
+                Revolutionary Legal Framework
+              </Badge>
+              <h2 className="text-4xl md:text-6xl font-bold mb-6">
+                <span className="bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">Master Covenant</span>
+              </h2>
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                The world's first AI-enforced binding agreement. A revolutionary legal framework that combines smart contracts with traditional law.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              <div className="relative group overflow-hidden rounded-2xl">
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b0a1e2ef9_Whisk_05f17d65a57cf59bf1a4fdd31ffd7d8edr-Copy.jpg"
+                  alt="AI Covenant Binding"
+                  className="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-8">
+                  <h3 className="text-2xl font-bold text-white mb-3">AI-Enforced Agreements</h3>
+                  <p className="text-gray-300">Automated enforcement through blockchain and AI verification</p>
+                </div>
+              </div>
+
+              <div className="relative group overflow-hidden rounded-2xl">
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/e2aed6aef_Whisk_65cb3b2c5bdc26b9c3d4d3986ceae795dr.jpg"
+                  alt="First Ever AI Covenant"
+                  className="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-8">
+                  <h3 className="text-2xl font-bold text-white mb-3">Legally Binding Framework</h3>
+                  <p className="text-gray-300">Recognized by law firms and enforceable in court</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="glass-card backdrop-blur-xl bg-black/30 border-blue-500/30 p-8 rounded-2xl">
+              <div className="grid md:grid-cols-3 gap-8 mb-8">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-blue-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <FileText className="w-8 h-8 text-blue-400" />
+                  </div>
+                  <h4 className="text-xl font-bold text-white mb-2">Smart Contract Integration</h4>
+                  <p className="text-gray-400 text-sm">Blockchain-verified terms and conditions</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-blue-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <Scale className="w-8 h-8 text-blue-400" />
+                  </div>
+                  <h4 className="text-xl font-bold text-white mb-2">Legal Compliance</h4>
+                  <p className="text-gray-400 text-sm">Meets all regulatory requirements</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-blue-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <Shield className="w-8 h-8 text-blue-400" />
+                  </div>
+                  <h4 className="text-xl font-bold text-white mb-2">Ironclad Protection</h4>
+                  <p className="text-gray-400 text-sm">Immutable and tamper-proof agreements</p>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <Link to={createPageUrl("MasterCovenant")}>
+                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
+                    View Master Covenant
+                    <ChevronRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="py-24 relative">
         <div className="container mx-auto px-4 relative z-10">
@@ -237,51 +321,51 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="relative group overflow-hidden rounded-2xl">
               <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg"
-                alt="Quantum Encryption"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b6f63d51b_Whisk_b9fd7532ee1e87a9152439bac427f256dr.jpg"
+                alt="Smart Contract"
                 className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex items-end p-8">
                 <div>
                   <div className="flex items-center gap-3 mb-3">
                     <Lock className="w-7 h-7 text-blue-400" />
-                    <h3 className="text-2xl font-bold text-white">Quantum Encryption</h3>
+                    <h3 className="text-2xl font-bold text-white">Smart Contracts</h3>
                   </div>
-                  <p className="text-gray-300">Future-proof security against quantum computing threats</p>
+                  <p className="text-gray-300">Automated, secure, and transparent agreements</p>
                 </div>
               </div>
             </div>
 
             <div className="relative group overflow-hidden rounded-2xl">
               <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/a86b74f69_data-security-encryption-protection.jpg"
-                alt="Data Security"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/7e319a981_Whisk_429a6543b81e30d9bab4065457f3b62ddr.jpg"
+                alt="Full Stack Development"
                 className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex items-end p-8">
                 <div>
                   <div className="flex items-center gap-3 mb-3">
                     <Shield className="w-7 h-7 text-blue-400" />
-                    <h3 className="text-2xl font-bold text-white">Multi-Layer Defense</h3>
+                    <h3 className="text-2xl font-bold text-white">Full Stack Security</h3>
                   </div>
-                  <p className="text-gray-300">Advanced encryption and data protection protocols</p>
+                  <p className="text-gray-300">End-to-end protection for your entire stack</p>
                 </div>
               </div>
             </div>
 
             <div className="relative group overflow-hidden rounded-2xl">
               <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9774d266e_openai-logo-inspired-abstract.png"
-                alt="AI Integration"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/144d647a1_Whisk_938e90eff0a4d8da277467baf360248edr.jpg"
+                alt="Web Development"
                 className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex items-end p-8">
                 <div>
                   <div className="flex items-center gap-3 mb-3">
                     <Eye className="w-7 h-7 text-blue-400" />
-                    <h3 className="text-2xl font-bold text-white">AI-Powered Detection</h3>
+                    <h3 className="text-2xl font-bold text-white">Secure Development</h3>
                   </div>
-                  <p className="text-gray-300">Real-time threat intelligence and automated response</p>
+                  <p className="text-gray-300">Build with security at the foundation</p>
                 </div>
               </div>
             </div>
