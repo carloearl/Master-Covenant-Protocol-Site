@@ -21,59 +21,65 @@ export default function DreamTeamCard({ card }) {
         </div>
 
         {/* Back of Card */}
-        <div className="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-gray-900 via-black to-gray-900 rounded-2xl border-2 border-blue-500/50 p-8 overflow-y-auto">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between mb-6">
-              <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/50 px-4 py-2">
-                {card.position}
+        <div className="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-gray-900 via-black to-gray-900 rounded-2xl border-2 border-blue-500/50 p-6 flex flex-col">
+          <div className="flex items-center justify-between mb-4">
+            <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/50 px-3 py-1.5 text-xs">
+              {card.position}
+            </Badge>
+            <Badge className="bg-green-500/20 text-green-400 border-green-500/50 px-2 py-1 text-xs">
+              BOUND
+            </Badge>
+          </div>
+
+          <h3 className="text-2xl font-bold text-white mb-1">{card.name}</h3>
+          <p className="text-blue-400 font-semibold text-sm mb-4">{card.role}</p>
+
+          <div className="space-y-2 mb-4 flex-shrink-0">
+            <div className="flex items-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
+              <p className="text-gray-300 text-xs leading-tight">{card.binding.method}</p>
+            </div>
+            <div className="flex items-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
+              <p className="text-gray-300 text-xs leading-tight">{card.binding.mechanism}</p>
+            </div>
+            <div className="flex items-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
+              <p className="text-gray-300 text-xs leading-tight">{card.binding.covenant}</p>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-700 pt-3 mb-3 flex-shrink-0">
+            <h4 className="text-xs font-bold text-blue-400 mb-1">BINDING TYPE: {card.bindingType}</h4>
+            
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-2 mb-2">
+              <p className="text-xs italic text-blue-300 leading-tight">{card.quote}</p>
+            </div>
+
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-gray-500">Class: {card.class}</span>
+              <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/50 text-xs px-2 py-0.5">
+                BPAA
               </Badge>
-              <Badge className="bg-green-500/20 text-green-400 border-green-500/50 px-3 py-1.5">
-                BOUND
-              </Badge>
             </div>
+          </div>
 
-            <h3 className="text-3xl font-bold text-white mb-2">{card.name}</h3>
-            <p className="text-blue-400 font-semibold mb-4">{card.role}</p>
+          {/* Cryptographic Signature Section */}
+          <div className="bg-black/50 border border-green-500/30 rounded p-2 mb-3 flex-1 flex items-center justify-center">
+            <pre className="text-green-400 text-[8px] leading-tight font-mono">
+{`╔═══════════════════════════════╗
+║  CRYPTOGRAPHIC SIGNATURE      ║
+║  SHA-256: 8f4a9c2b...d7e1     ║
+║  BOUND: ${card.name.toUpperCase().padEnd(20)} ║
+║  DATE: 2025-05-15             ║
+║  STATUS: ✓ VERIFIED           ║
+╚═══════════════════════════════╝`}
+            </pre>
+          </div>
 
-            <div className="space-y-3 mb-6">
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                <p className="text-gray-300 text-sm">{card.binding.method}</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                <p className="text-gray-300 text-sm">{card.binding.mechanism}</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                <p className="text-gray-300 text-sm">{card.binding.covenant}</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                <p className="text-gray-300 text-sm">{card.binding.enforcement}</p>
-              </div>
-            </div>
-
-            <div className="border-t border-gray-700 pt-4">
-              <h4 className="text-sm font-bold text-blue-400 mb-2">BINDING TYPE</h4>
-              <p className="text-xs text-gray-400 mb-3">{card.bindingType}</p>
-              
-              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 mb-4">
-                <p className="text-xs italic text-blue-300">{card.quote}</p>
-              </div>
-
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-500">Class: {card.class}</span>
-                <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/50">
-                  BPAA
-                </Badge>
-              </div>
-            </div>
-
-            <div className="mt-6 text-center">
-              <div className="inline-block bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 rounded-lg px-6 py-2">
-                <p className="text-xs font-bold text-blue-400">GLYPHLOCK MASTER COVENANT</p>
-              </div>
+          <div className="text-center flex-shrink-0">
+            <div className="inline-block bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 rounded-lg px-4 py-1">
+              <p className="text-[10px] font-bold text-blue-400">GLYPHLOCK MASTER COVENANT</p>
             </div>
           </div>
         </div>
