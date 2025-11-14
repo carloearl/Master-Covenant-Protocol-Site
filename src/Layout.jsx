@@ -59,21 +59,9 @@ export default function Layout({ children, currentPageName }) {
   const canGoBack = window.history.length > 1 && location.pathname !== createPageUrl("Home");
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-black text-white' : 'bg-gray-50 text-gray-900'}`}>
-      {/* Fixed Neural/Nebula Background */}
-      <div 
-        className="fixed inset-0 z-0 pointer-events-none"
-        style={{
-          backgroundImage: 'url(https://glyph-merge-pro-glyphlock.replit.app/assets/Whisk_b8d67ccda4c29cba08049ef6abdb02e9dr%20-%20Copy_1761014300850-75J3e_IN.jpeg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          opacity: 0.5
-        }}
-      />
-
+    <div className={`min-h-screen ${darkMode ? 'bg-black text-white' : 'bg-gray-50 text-gray-900'} relative`}>
       {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 ${darkMode ? 'bg-black/60' : 'bg-white/60'} backdrop-blur-xl border-b ${darkMode ? 'border-blue-500/20' : 'border-blue-500/30'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 ${darkMode ? 'bg-black/40' : 'bg-white/40'} backdrop-blur-xl border-b ${darkMode ? 'border-blue-500/20' : 'border-blue-500/30'}`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-20">
             {/* Back Arrow + Logo */}
@@ -123,7 +111,7 @@ export default function Layout({ children, currentPageName }) {
                     Services <ChevronDown className="w-4 h-4 ml-1" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className={`${darkMode ? 'bg-gray-900 border-blue-500/20' : 'bg-white border-blue-500/30'} backdrop-blur-xl`}>
+                <DropdownMenuContent className={`${darkMode ? 'bg-gray-900/90 border-blue-500/20' : 'bg-white/90 border-blue-500/30'} backdrop-blur-xl`}>
                   <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
                     <Link to={createPageUrl("SecurityTools")}>Security Tools</Link>
                   </DropdownMenuItem>
@@ -186,7 +174,7 @@ export default function Layout({ children, currentPageName }) {
                       {user.full_name || user.email}
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className={`${darkMode ? 'bg-gray-900 border-blue-500/20' : 'bg-white border-blue-500/30'} backdrop-blur-xl`}>
+                  <DropdownMenuContent className={`${darkMode ? 'bg-gray-900/90 border-blue-500/20' : 'bg-white/90 border-blue-500/30'} backdrop-blur-xl`}>
                     <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
                       <Link to={createPageUrl("Dashboard")}>
                         <User className="w-4 h-4 mr-2" />
@@ -324,7 +312,7 @@ export default function Layout({ children, currentPageName }) {
       <GlyphBotJr darkMode={darkMode} />
 
       {/* Footer */}
-      <footer className={`${darkMode ? 'bg-gray-900/80' : 'bg-white/80'} backdrop-blur-xl border-t ${darkMode ? 'border-blue-500/20' : 'border-blue-500/30'} py-12 relative z-10`}>
+      <footer className={`${darkMode ? 'bg-gray-900/60' : 'bg-white/60'} backdrop-blur-xl border-t ${darkMode ? 'border-blue-500/20' : 'border-blue-500/30'} py-12 relative z-10`}>
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>

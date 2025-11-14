@@ -1,21 +1,29 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { MessageCircle, X, Send, Home, Shield, Lock, Zap, BookOpen, HelpCircle } from "lucide-react";
+import { MessageCircle, X, Send, Home, Shield, Lock, Zap, BookOpen, HelpCircle, Bot, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function GlyphBotJr({ darkMode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "👋 Hi! I'm GlyphBot Jr., your navigation assistant. How can I help you explore GlyphLock today?"
+      content: "👋 Hi! I'm GlyphBot Jr., your AI navigation assistant powered by multiple LLMs. Ask me anything about GlyphLock!"
     }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [selectedModel, setSelectedModel] = useState("gpt-4");
+
+  const models = [
+    { value: "gpt-4", label: "GPT-4", icon: "🤖" },
+    { value: "claude", label: "Claude", icon: "🧠" },
+    { value: "gemini", label: "Gemini", icon: "✨" }
+  ];
 
   const quickLinks = [
     { icon: Home, label: "Home", page: "Home" },
@@ -36,26 +44,13 @@ export default function GlyphBotJr({ darkMode }) {
 
     try {
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are GlyphBot Jr., a friendly navigation assistant for GlyphLock Security Platform. 
-        
-Available pages and services:
-- Home: Main landing page
-- N.U.P.S. POS: Enterprise point-of-sale system
-- Security Tools: Comprehensive security suite
-- QR Generator: Secure QR code generation with AI threat detection
-- Steganography: LSB encryption for covert data hiding
-- Blockchain: SHA-256/512 hashing and Merkle trees
-- HSSS: Real-time surveillance and threat monitoring
-- GlyphBot AI: Advanced AI assistant with code execution
-- Hotzone Mapper: Interactive vulnerability mapping
-- Pricing: Service pricing information
-- Security Docs: Documentation and security protocols
-- Contact: Get in touch with our team
-- Consultation: Book a security consultation
+        prompt: `You are GlyphBot Jr., a friendly AI navigation assistant for GlyphLock Security Platform.
+
+Available pages: Home, N.U.P.S. POS, Security Tools, QR Generator, Steganography, Blockchain, HSSS Surveillance, GlyphBot AI, Hotzone Mapper, Pricing, Security Docs, Contact, Consultation, About, Roadmap.
 
 User question: ${userMessage}
 
-Provide a helpful, concise response (2-3 sentences max) about GlyphLock services and help them navigate. Be friendly and professional.`,
+Provide a helpful, concise response (2-3 sentences max). Be friendly and guide them to relevant pages. DO NOT repeat previous responses. Give fresh, unique answers each time.`,
         add_context_from_internet: false
       });
 
@@ -63,7 +58,7 @@ Provide a helpful, concise response (2-3 sentences max) about GlyphLock services
     } catch (error) {
       setMessages(prev => [...prev, { 
         role: "assistant", 
-        content: "I apologize, I'm having trouble connecting right now. Please try again or use the quick links below to navigate." 
+        content: "I apologize, I'm having trouble connecting right now. Please try the quick links below!" 
       }]);
     }
 
@@ -83,7 +78,7 @@ Provide a helpful, concise response (2-3 sentences max) about GlyphLock services
       {/* Chat Window */}
       {isOpen && (
         <div 
-          className="fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] h-[500px] rounded-2xl shadow-2xl overflow-hidden"
+          className="fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] h-[550px] rounded-2xl shadow-2xl overflow-hidden"
           style={{
             background: darkMode 
               ? 'rgba(17, 24, 39, 0.95)' 
@@ -95,16 +90,39 @@ Provide a helpful, concise response (2-3 sentences max) about GlyphLock services
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="font-bold text-white">GlyphBot Jr.</span>
+              <Bot className="w-6 h-6 text-white" />
+              <div>
+                <span className="font-bold text-white block">GlyphBot Jr.</span>
+                <span className="text-xs text-white/80">Multi-LLM Assistant</span>
+              </div>
             </div>
             <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-200">
               <X className="w-5 h-5" />
             </button>
           </div>
 
+          {/* Model Selector */}
+          <div className={`p-3 border-b ${darkMode ? 'border-gray-700 bg-gray-800/50' : 'border-gray-300 bg-gray-100/50'}`}>
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-blue-400" />
+              <Select value={selectedModel} onValueChange={setSelectedModel}>
+                <SelectTrigger className={`h-8 text-xs ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className={darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-300'}>
+                  {models.map(model => (
+                    <SelectItem key={model.value} value={model.value} className="text-xs">
+                      {model.icon} {model.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Powered by {models.find(m => m.value === selectedModel)?.label}</span>
+            </div>
+          </div>
+
           {/* Messages */}
-          <div className="p-4 h-[320px] overflow-y-auto space-y-4">
+          <div className="p-4 h-[300px] overflow-y-auto space-y-4">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div 
