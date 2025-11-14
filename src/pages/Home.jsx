@@ -145,20 +145,20 @@ export default function Home() {
         </button>
       )}
 
-      {/* Hero Video Section - Full screen, no overlay */}
-      <section className="relative h-screen w-full overflow-hidden">
+      {/* Hero Video Section - 1080p optimized */}
+      <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-black">
         <video 
           autoPlay 
           loop 
           muted 
           playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="max-w-[1920px] max-h-[1080px] w-auto h-auto"
           style={{ filter: 'brightness(1.1) contrast(1.1)' }}
         >
           <source src="https://i.imgur.com/zs3sPzJ.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black pointer-events-none" />
       </section>
 
       {/* Hero Content - Below Video */}
