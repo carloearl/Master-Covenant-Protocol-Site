@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -34,116 +33,116 @@ export default function Home() {
   };
 
   const services = [
-  {
-    title: "N.U.P.S. POS",
-    description: "Enterprise point-of-sale with three-tier access control and real-time analytics.",
-    link: "NUPSLogin",
-    image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b6f63d51b_Whisk_b9fd7532ee1e87a9152439bac427f256dr.jpg",
-    price: "Enterprise",
-    icon: Shield
-  },
-  {
-    title: "GlyphBot AI",
-    description: "AI assistant with code execution, security scanning, and automated auditing.",
-    link: "GlyphBot",
-    image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9774d266e_openai-logo-inspired-abstract.png",
-    price: "$50/mo",
-    icon: Zap
-  },
-  {
-    title: "QR Security",
-    description: "Secure QR generation with AI threat detection and custom branding.",
-    link: "QRGenerator",
-    image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
-    price: "$49.99",
-    icon: Lock
-  },
-  {
-    title: "Steganography",
-    description: "Hide encrypted data within images using LSB encoding.",
-    link: "Steganography",
-    image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/a86b74f69_data-security-encryption-protection.jpg",
-    price: "$149.99",
-    icon: Eye
-  },
-  {
-    title: "Blockchain Security",
-    description: "SHA-256/512 hashing, Merkle trees, and immutable verification.",
-    link: "Blockchain",
-    image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9be80d6ca_Whisk_43831818b9d5e77953345c3626f3d976eg.jpg",
-    price: "$99.99",
-    icon: Lock
-  },
-  {
-    title: "Hotzone Mapper",
-    description: "Interactive vulnerability mapping with severity tracking.",
-    link: "HotzoneMapper",
-    image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/7e319a981_Whisk_429a6543b81e30d9bab4065457f3b62ddr.jpg",
-    price: "$99.99",
-    icon: Shield
-  },
-  {
-    title: "HSSS Surveillance",
-    description: "Real-time threat monitoring with AI detection.",
-    link: "HSSS",
-    image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/144d647a1_Whisk_938e90eff0a4d8da277467baf360248edr.jpg",
-    price: "Enterprise",
-    icon: Eye
-  },
-  {
-    title: "Security Suite",
-    description: "Comprehensive security tools with quantum-resistant encryption.",
-    link: "SecurityTools",
-    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=600&fit=crop",
-    price: "Custom",
-    icon: Shield
-  }];
-
+    {
+      title: "N.U.P.S. POS",
+      description: "Enterprise point-of-sale with three-tier access control and real-time analytics.",
+      link: "NUPSLogin",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b6f63d51b_Whisk_b9fd7532ee1e87a9152439bac427f256dr.jpg",
+      price: "Enterprise",
+      icon: Shield
+    },
+    {
+      title: "GlyphBot AI",
+      description: "AI assistant with code execution, security scanning, and automated auditing.",
+      link: "GlyphBot",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9774d266e_openai-logo-inspired-abstract.png",
+      price: "$50/mo",
+      icon: Zap
+    },
+    {
+      title: "QR Security",
+      description: "Secure QR generation with AI threat detection and custom branding.",
+      link: "QRGenerator",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
+      price: "$49.99",
+      icon: Lock
+    },
+    {
+      title: "Steganography",
+      description: "Hide encrypted data within images using LSB encoding.",
+      link: "Steganography",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/a86b74f69_data-security-encryption-protection.jpg",
+      price: "$149.99",
+      icon: Eye
+    },
+    {
+      title: "Blockchain Security",
+      description: "SHA-256/512 hashing, Merkle trees, and immutable verification.",
+      link: "Blockchain",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9be80d6ca_Whisk_43831818b9d5e77953345c3626f3d976eg.jpg",
+      price: "$99.99",
+      icon: Lock
+    },
+    {
+      title: "Hotzone Mapper",
+      description: "Interactive vulnerability mapping with severity tracking.",
+      link: "HotzoneMapper",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/7e319a981_Whisk_429a6543b81e30d9bab4065457f3b62ddr.jpg",
+      price: "$99.99",
+      icon: Shield
+    },
+    {
+      title: "HSSS Surveillance",
+      description: "Real-time threat monitoring with AI detection.",
+      link: "HSSS",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/144d647a1_Whisk_938e90eff0a4d8da277467baf360248edr.jpg",
+      price: "Enterprise",
+      icon: Eye
+    },
+    {
+      title: "Security Suite",
+      description: "Comprehensive security tools with quantum-resistant encryption.",
+      link: "SecurityTools",
+      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=600&fit=crop",
+      price: "Custom",
+      icon: Shield
+    }
+  ];
 
   const stats = [
-  { value: "99.97%", label: "Threat Detection" },
-  { value: "24/7", label: "AI Monitoring" },
-  { value: "256-bit", label: "Encryption" },
-  { value: "<1ms", label: "Response Time" }];
-
+    { value: "99.97%", label: "Threat Detection" },
+    { value: "24/7", label: "AI Monitoring" },
+    { value: "256-bit", label: "Encryption" },
+    { value: "<1ms", label: "Response Time" }
+  ];
 
   const features = [
-  {
-    icon: Shield,
-    title: "Quantum-Resistant",
-    description: "Next-gen encryption that withstands quantum computing attacks"
-  },
-  {
-    icon: Zap,
-    title: "AI-Powered",
-    description: "Machine learning algorithms detect threats in real-time"
-  },
-  {
-    icon: Lock,
-    title: "Zero-Trust Security",
-    description: "Every access request is verified and authenticated"
-  },
-  {
-    icon: Eye,
-    title: "24/7 Monitoring",
-    description: "Continuous surveillance with instant threat response"
-  }];
-
+    {
+      icon: Shield,
+      title: "Quantum-Resistant",
+      description: "Next-gen encryption that withstands quantum computing attacks"
+    },
+    {
+      icon: Zap,
+      title: "AI-Powered",
+      description: "Machine learning algorithms detect threats in real-time"
+    },
+    {
+      icon: Lock,
+      title: "Zero-Trust Security",
+      description: "Every access request is verified and authenticated"
+    },
+    {
+      icon: Eye,
+      title: "24/7 Monitoring",
+      description: "Continuous surveillance with instant threat response"
+    }
+  ];
 
   return (
     <div className="bg-black text-white relative overflow-hidden">
       <AnimatedBackground />
       
       {/* Back to Top Button */}
-      {showBackToTop &&
-      <button
-        onClick={scrollToTop}
-        className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 glow-royal-blue"
-        aria-label="Back to top">
-
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 glow-royal-blue"
+          aria-label="Back to top"
+        >
           <ArrowUp className="w-6 h-6" />
         </button>
-      }
+      )}
 
       {/* Hero Video Section - 1080p optimized */}
       <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-black">
@@ -152,21 +151,21 @@ export default function Home() {
           loop
           muted
           playsInline
-          preload="auto" className="rounded-[10px] max-w-[1920px] max-h-[1080px] w-auto h-auto"
-
-          style={{ filter: 'brightness(1.1) contrast(1.1)' }}>
-
+          preload="auto"
+          className="rounded-[10px] max-w-[1920px] max-h-[1080px] w-auto h-auto"
+          style={{ filter: 'brightness(1.1) contrast(1.1)' }}
+        >
           <source src="https://i.imgur.com/zs3sPzJ.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black pointer-events-none" />
         
         {/* GlyphLock Logo Overlay - Covering Veo Watermark */}
-        <div className="absolute bottom-[18%] right-[6%] z-10">
+        <div className="absolute bottom-[10%] right-[3%] z-10">
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png"
             alt="GlyphLock"
-            className="h-12 w-auto opacity-95" />
-
+            className="h-16 w-auto opacity-95"
+          />
         </div>
       </section>
 
@@ -207,12 +206,12 @@ export default function Home() {
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-              {stats.map((stat, idx) =>
-              <div key={idx} className="glass-card backdrop-blur-xl bg-black/20 border-blue-500/30 p-6 rounded-xl">
+              {stats.map((stat, idx) => (
+                <div key={idx} className="glass-card backdrop-blur-xl bg-black/20 border-blue-500/30 p-6 rounded-xl">
                   <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">{stat.value}</div>
                   <div className="text-sm text-gray-300">{stat.label}</div>
                 </div>
-              )}
+              ))}
             </div>
           </div>
         </div>
@@ -241,8 +240,8 @@ export default function Home() {
                 <img
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b0a1e2ef9_Whisk_05f17d65a57cf59bf1a4fdd31ffd7d8edr-Copy.jpg"
                   alt="AI Covenant Binding"
-                  className="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-700" />
-
+                  className="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-700"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-8">
                   <h3 className="text-2xl font-bold text-white mb-3">AI-Enforced Agreements</h3>
@@ -254,8 +253,8 @@ export default function Home() {
                 <img
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/e2aed6aef_Whisk_65cb3b2c5bdc26b9c3d4d3986ceae795dr.jpg"
                   alt="First Ever AI Covenant"
-                  className="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-700" />
-
+                  className="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-700"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-8">
                   <h3 className="text-2xl font-bold text-white mb-3">Legally Binding Framework</h3>
@@ -323,9 +322,9 @@ export default function Home() {
                     <Icon className="w-8 h-8 text-blue-400" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-white">{feature.title}</h3>
-                  <p className="text-gray-400}>{feature.description}</p>
-                </div>);
-
+                  <p className="text-gray-400">{feature.description}</p>
+                </div>
+              );
             })}
           </div>
 
@@ -335,8 +334,8 @@ export default function Home() {
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/11242d8a3_Whisk_ecd15257dc62aafae4b457b73ff01aa9dr.jpg"
                 alt="Smart Contract"
-                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700" />
-
+                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex items-end p-8">
                 <div>
                   <div className="flex items-center gap-3 mb-3">
@@ -352,8 +351,8 @@ export default function Home() {
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/f5f3a5e3b_Whisk_d839f8faee191cd9bbb4d6b3701c0a99dr.jpg"
                 alt="Full Stack Development"
-                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700" />
-
+                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex items-end p-8">
                 <div>
                   <div className="flex items-center gap-3 mb-3">
@@ -369,8 +368,8 @@ export default function Home() {
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/a0f9663fa_Whisk_df925aca34d95e09a3b4274e0bd16f08dr.jpg"
                 alt="Web Development"
-                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700" />
-
+                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex items-end p-8">
                 <div>
                   <div className="flex items-center gap-3 mb-3">
@@ -407,8 +406,8 @@ export default function Home() {
                       <img
                         src={service.image}
                         alt={service.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/70 to-transparent" />
                       <div className="absolute top-3 right-3">
                         <Badge className="bg-blue-500/90 text-white border-blue-500 font-semibold">
@@ -430,8 +429,8 @@ export default function Home() {
                       </p>
                     </CardContent>
                   </Card>
-                </Link>);
-
+                </Link>
+              );
             })}
           </div>
         </div>
@@ -484,13 +483,13 @@ export default function Home() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="glass-input backdrop-blur-xl bg-black/30 border-blue-500/50 text-white placeholder:text-gray-400 h-14 text-lg flex-1"
-                  required />
-
+                  required
+                />
                 <Button
                   type="submit"
                   size="lg"
-                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white h-14 px-8 text-lg glow-royal-blue">
-
+                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white h-14 px-8 text-lg glow-royal-blue"
+                >
                   Get Started Free
                   <ChevronRight className="w-5 h-5 ml-2" />
                 </Button>
@@ -514,6 +513,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </div>);
-
+    </div>
+  );
 }
