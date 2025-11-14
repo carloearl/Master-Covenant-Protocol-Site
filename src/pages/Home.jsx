@@ -160,8 +160,8 @@ export default function Home() {
             <source src="https://i.imgur.com/zs3sPzJ.mp4" type="video/mp4" />
           </video>
           
-          {/* GlyphLock Logo - Positioned at video's bottom-right corner */}
-          <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 z-10">
+          {/* GlyphLock Logo - Moved down and right by approximately 1 inch */}
+          <div className="absolute z-10" style={{ bottom: '-80px', right: '-80px' }}>
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png"
               alt="GlyphLock"
