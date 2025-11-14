@@ -145,7 +145,7 @@ export default function Home() {
         </button>
       )}
 
-      {/* Hero Video Section - Full screen with centered logo overlay */}
+      {/* Hero Video Section - Full screen, no overlay */}
       <section className="relative h-screen w-full overflow-hidden">
         <video 
           autoPlay 
@@ -157,17 +157,6 @@ export default function Home() {
           <source src="https://i.imgur.com/zs3sPzJ.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
-        
-        {/* Centered Logo Overlay to Cover Tagline */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d92107808_glyphlock-3d-logo.png"
-              alt="GlyphLock"
-              className="h-64 w-auto mx-auto drop-shadow-2xl animate-pulse"
-            />
-          </div>
-        </div>
       </section>
 
       {/* Hero Content - Below Video */}
