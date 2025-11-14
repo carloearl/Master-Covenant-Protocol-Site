@@ -29,7 +29,29 @@ export default function TechStackCarousel() {
     { name: "Jenkins", logo: "https://www.vectorlogo.zone/logos/jenkins/jenkins-ar21.svg" },
     { name: "Grafana", logo: "https://www.vectorlogo.zone/logos/grafana/grafana-ar21.svg" },
     { name: "Prometheus", logo: "https://www.vectorlogo.zone/logos/prometheusio/prometheusio-ar21.svg" },
-    { name: "Elasticsearch", logo: "https://www.vectorlogo.zone/logos/elastic/elastic-ar21.svg" }
+    { name: "Elasticsearch", logo: "https://www.vectorlogo.zone/logos/elastic/elastic-ar21.svg" },
+    { name: "Ansible", logo: "https://www.vectorlogo.zone/logos/ansible/ansible-ar21.svg" },
+    { name: "DigitalOcean", logo: "https://www.vectorlogo.zone/logos/digitalocean/digitalocean-ar21.svg" },
+    { name: "Heroku", logo: "https://www.vectorlogo.zone/logos/heroku/heroku-ar21.svg" },
+    { name: "Netlify", logo: "https://www.vectorlogo.zone/logos/netlify/netlify-ar21.svg" },
+    { name: "Firebase", logo: "https://www.vectorlogo.zone/logos/firebase/firebase-ar21.svg" },
+    { name: "Salesforce", logo: "https://www.vectorlogo.zone/logos/salesforce/salesforce-ar21.svg" },
+    { name: "Zoom", logo: "https://www.vectorlogo.zone/logos/zoom/zoom-ar21.svg" },
+    { name: "Slack", logo: "https://www.vectorlogo.zone/logos/slack/slack-ar21.svg" },
+    { name: "Atlassian", logo: "https://www.vectorlogo.zone/logos/atlassian/atlassian-ar21.svg" },
+    { name: "Cisco", logo: "https://www.vectorlogo.zone/logos/cisco/cisco-ar21.svg" },
+    { name: "VMware", logo: "https://www.vectorlogo.zone/logos/vmware/vmware-ar21.svg" },
+    { name: "Red Hat", logo: "https://www.vectorlogo.zone/logos/redhat/redhat-ar21.svg" },
+    { name: "NVIDIA", logo: "https://www.vectorlogo.zone/logos/nvidia/nvidia-ar21.svg" },
+    { name: "Intel", logo: "https://www.vectorlogo.zone/logos/intel/intel-ar21.svg" },
+    { name: "AMD", logo: "https://www.vectorlogo.zone/logos/amd/amd-ar21.svg" },
+    { name: "Dell", logo: "https://www.vectorlogo.zone/logos/dell/dell-ar21.svg" },
+    { name: "HP", logo: "https://www.vectorlogo.zone/logos/hp/hp-ar21.svg" },
+    { name: "Splunk", logo: "https://www.vectorlogo.zone/logos/splunk/splunk-ar21.svg" },
+    { name: "Datadog", logo: "https://www.vectorlogo.zone/logos/datadoghq/datadoghq-ar21.svg" },
+    { name: "New Relic", logo: "https://www.vectorlogo.zone/logos/newrelic/newrelic-ar21.svg" },
+    { name: "PagerDuty", logo: "https://www.vectorlogo.zone/logos/pagerduty/pagerduty-ar21.svg" },
+    { name: "Auth0", logo: "https://www.vectorlogo.zone/logos/auth0/auth0-ar21.svg" }
   ];
 
   return (
@@ -38,9 +60,9 @@ export default function TechStackCarousel() {
         Trusted By <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Industry Leaders</span>
       </h3>
       <div className="relative">
-        <div className="flex animate-marquee">
-          {[...techCompanies, ...techCompanies].map((company, idx) => (
-            <div key={idx} className="flex-shrink-0 mx-4">
+        <div className="flex animate-marquee-fast">
+          {[...techCompanies, ...techCompanies, ...techCompanies].map((company, idx) => (
+            <div key={idx} className="flex-shrink-0 mx-3">
               <div className="backdrop-blur-sm rounded-lg p-3 h-16 w-28 flex items-center justify-center hover:bg-white/5 transition-all">
                 <img 
                   src={company.logo} 
@@ -55,18 +77,19 @@ export default function TechStackCarousel() {
       </div>
 
       <style jsx>{`
-        @keyframes marquee {
+        @keyframes marquee-fast {
           0% {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-50%);
+            transform: translateX(-33.333%);
           }
         }
-        .animate-marquee {
-          animation: marquee 50s linear infinite;
+        .animate-marquee-fast {
+          animation: marquee-fast 40s linear infinite;
+          will-change: transform;
         }
-        .animate-marquee:hover {
+        .animate-marquee-fast:hover {
           animation-play-state: paused;
         }
       `}</style>
