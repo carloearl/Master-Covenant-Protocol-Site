@@ -92,45 +92,26 @@ export default function Layout({ children, currentPageName }) {
     { name: "Apache Kafka", logo: "https://www.vectorlogo.zone/logos/apache_kafka/apache_kafka-ar21.svg" }
   ];
 
-  const securityCompliance = [
-    { name: "TLS 1.3", logo: "https://www.vectorlogo.zone/logos/cloudflare/cloudflare-icon.svg" },
-    { name: "HSTS", logo: "https://www.vectorlogo.zone/logos/cloudflare/cloudflare-icon.svg" },
-    { name: "CSP", logo: "https://www.vectorlogo.zone/logos/w3c/w3c-icon.svg" },
-    { name: "CORS", logo: "https://www.vectorlogo.zone/logos/w3c/w3c-icon.svg" },
-    { name: "XSS Protection", logo: "https://www.vectorlogo.zone/logos/owasp/owasp-icon.svg" },
-    { name: "CSRF Tokens", logo: "https://www.vectorlogo.zone/logos/owasp/owasp-icon.svg" }
-  ];
-
   const certifications = [
     { 
-      name: "SOC 2 Type II", 
-      status: "Certified",
-      logo: "https://images.credly.com/size/340x340/images/4e53306e-6f0e-43f2-b0ab-ba3e577dbbc5/blob"
+      name: "SOC 2", 
+      logo: "https://logos-world.net/wp-content/uploads/2021/02/SOC-2-Logo.png"
     },
     { 
       name: "GDPR", 
-      status: "Compliant",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/2/29/General_Data_Protection_Regulation_logo.svg"
-    },
-    { 
-      name: "CCPA", 
-      status: "Compliant",
-      logo: "https://oag.ca.gov/sites/default/files/CCPA%20logo.png"
+      logo: "https://gdpr.eu/wp-content/uploads/2019/01/gdpr-logo.png"
     },
     { 
       name: "ISO 27001", 
-      status: "In Progress",
-      logo: "https://www.vectorlogo.zone/logos/iso/iso-icon.svg"
+      logo: "https://upload.wikimedia.org/wikipedia/commons/e/e6/ISO_27001_logo.svg"
     },
     { 
       name: "PCI DSS", 
-      status: "Compliant",
-      logo: "https://www.pcisecuritystandards.org/wp-content/uploads/2022/03/pci-logo.png"
+      logo: "https://upload.wikimedia.org/wikipedia/commons/8/8f/PCI_DSS_Logo.svg"
     },
     { 
       name: "HIPAA", 
-      status: "Ready",
-      logo: "https://companieslogo.com/img/orig/hipaa-b4e2d5d3.png"
+      logo: "https://www.hhs.gov/sites/default/files/hhs-logo.svg"
     }
   ];
 
@@ -407,7 +388,7 @@ export default function Layout({ children, currentPageName }) {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <img 
@@ -416,7 +397,7 @@ export default function Layout({ children, currentPageName }) {
                   className="h-8 w-auto"
                 />
               </div>
-              <p className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Next-generation cybersecurity platform with quantum-resistant encryption and AI integration.
               </p>
             </div>
@@ -424,90 +405,62 @@ export default function Layout({ children, currentPageName }) {
             <div>
               <h3 className={`font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Services</h3>
               <div className="flex flex-col gap-2 text-sm">
-                <Link to={createPageUrl("NUPSLogin")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>N.U.P.S. POS</Link>
-                <Link to={createPageUrl("SecurityTools")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>Security Tools</Link>
-                <Link to={createPageUrl("QRGenerator")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>QR Generator</Link>
-                <Link to={createPageUrl("Blockchain")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>Blockchain</Link>
-                <Link to={createPageUrl("GlyphBot")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>GlyphBot AI</Link>
+                <Link to={createPageUrl("NUPSLogin")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>N.U.P.S. POS</Link>
+                <Link to={createPageUrl("SecurityTools")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Security Tools</Link>
+                <Link to={createPageUrl("QRGenerator")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>QR Generator</Link>
+                <Link to={createPageUrl("Blockchain")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Blockchain</Link>
+                <Link to={createPageUrl("GlyphBot")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>GlyphBot AI</Link>
               </div>
             </div>
 
             <div>
               <h3 className={`font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Company</h3>
               <div className="flex flex-col gap-2 text-sm">
-                <Link to={createPageUrl("About")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>About Us</Link>
-                <Link to={createPageUrl("Roadmap")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>Roadmap</Link>
-                <Link to={createPageUrl("Pricing")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>Pricing</Link>
-                <Link to={createPageUrl("SecurityDocs")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>Security</Link>
-                <Link to={createPageUrl("Contact")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>Contact</Link>
-                <Link to={createPageUrl("Consultation")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>Book Consultation</Link>
+                <Link to={createPageUrl("About")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>About Us</Link>
+                <Link to={createPageUrl("Roadmap")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Roadmap</Link>
+                <Link to={createPageUrl("Pricing")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Pricing</Link>
+                <Link to={createPageUrl("SecurityDocs")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Security</Link>
+                <Link to={createPageUrl("Contact")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Contact</Link>
               </div>
             </div>
 
             <div>
               <h3 className={`font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Legal</h3>
               <div className="flex flex-col gap-2 text-sm">
-                <Link to={createPageUrl("Privacy")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>Privacy Policy</Link>
-                <Link to={createPageUrl("Terms")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>Terms of Service</Link>
-                <Link to={createPageUrl("SecurityDocs")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>Security Documentation</Link>
+                <Link to={createPageUrl("Privacy")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Privacy Policy</Link>
+                <Link to={createPageUrl("Terms")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Terms of Service</Link>
+                <Link to={createPageUrl("SecurityDocs")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Security Documentation</Link>
               </div>
             </div>
           </div>
           
-          <div className={`mt-8 pt-8 border-t ${darkMode ? 'border-gray-800' : 'border-gray-300'}`}>
-            {/* Security Protocols */}
+          <div className={`pt-8 border-t ${darkMode ? 'border-gray-800' : 'border-gray-300'}`}>
+            {/* Security & Compliance */}
             <div className="mb-8">
-              <h4 className={`text-center text-sm font-semibold mb-4 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Security Protocols
+              <h4 className={`text-center text-sm font-semibold mb-6 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Security & Compliance
               </h4>
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                {securityCompliance.map((item, idx) => (
-                  <div key={idx} className={`flex items-center gap-2 ${darkMode ? 'bg-green-500/10' : 'bg-green-500/20'} px-3 py-2 rounded-lg border ${darkMode ? 'border-green-500/30' : 'border-green-500/40'}`}>
-                    <img src={item.logo} alt={item.name} className="w-5 h-5 object-contain" />
-                    <span className="text-xs text-green-400 font-semibold">{item.name}</span>
-                    <CheckCircle2 className="w-3 h-3 text-green-400" />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Compliance Certifications with Logos */}
-            <div className="mb-8">
-              <h4 className={`text-center text-sm font-semibold mb-4 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Compliance & Certifications
-              </h4>
-              <div className="flex flex-wrap items-center justify-center gap-6">
+              <div className="flex flex-wrap items-center justify-center gap-8">
                 {certifications.map((cert, idx) => (
                   <div key={idx} className="flex flex-col items-center gap-2">
-                    <div className={`${darkMode ? 'bg-blue-500/10' : 'bg-blue-500/20'} p-3 rounded-lg border ${darkMode ? 'border-blue-500/30' : 'border-blue-500/40'}`}>
-                      <img 
-                        src={cert.logo} 
-                        alt={cert.name}
-                        className="h-14 w-14 object-contain"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="text-center">
-                      <div className="text-xs font-bold text-blue-400">{cert.name}</div>
-                      <div className="text-xs text-gray-500">{cert.status}</div>
-                    </div>
+                    <img 
+                      src={cert.logo} 
+                      alt={cert.name}
+                      className="h-16 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
+                      loading="lazy"
+                    />
                   </div>
                 ))}
               </div>
             </div>
 
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
-              <div className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+              <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 <p>© 2025 GlyphLock Security LLC. All rights reserved.</p>
               </div>
-              <div className={`text-sm space-y-1 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+              <div className={`text-sm space-y-1 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 <p>El Mirage, Arizona • Established May 2025</p>
                 <p>
-                  <a href="https://www.glyphlock.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 transition-colors">
-                    www.glyphlock.com
-                  </a>
-                </p>
-                <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
                   <a href="mailto:glyphlock@gmail.com" className="hover:text-blue-400 transition-colors">glyphlock@gmail.com</a>
                   {" • "}
                   <a href="tel:+14242466499" className="hover:text-blue-400 transition-colors">(424) 246-6499</a>
