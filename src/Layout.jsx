@@ -154,6 +154,28 @@ export default function Layout({ children, currentPageName }) {
                 </Button>
               </Link>
 
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className={`${darkMode ? 'text-white' : 'text-gray-900'} hover:text-blue-400`}>
+                    Company <ChevronDown className="w-4 h-4 ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className={`${darkMode ? 'bg-gray-900/90 border-blue-500/20' : 'bg-white/90 border-blue-500/30'} backdrop-blur-xl`}>
+                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
+                    <Link to={createPageUrl("About")}>About Us</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
+                    <Link to={createPageUrl("Roadmap")}>Roadmap</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
+                    <Link to={createPageUrl("MasterCovenant")}>Master Covenant</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
+                    <Link to={createPageUrl("DreamTeam")}>Dream Team</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               <Link to={createPageUrl("NUPSLogin")}>
                 <Button variant="ghost" className={isActive("NUPSLogin") ? "text-blue-400" : `${darkMode ? 'text-white' : 'text-gray-900'} hover:text-blue-400`}>
                   N.U.P.S. POS
@@ -282,6 +304,26 @@ export default function Layout({ children, currentPageName }) {
                 <Link to={createPageUrl("Home")} onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                     Home
+                  </Button>
+                </Link>
+                <Link to={createPageUrl("About")} onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                    About Us
+                  </Button>
+                </Link>
+                <Link to={createPageUrl("Roadmap")} onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                    Roadmap
+                  </Button>
+                </Link>
+                <Link to={createPageUrl("MasterCovenant")} onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                    Master Covenant
+                  </Button>
+                </Link>
+                <Link to={createPageUrl("DreamTeam")} onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                    Dream Team
                   </Button>
                 </Link>
                 <Link to={createPageUrl("NUPSLogin")} onClick={() => setMobileMenuOpen(false)}>
@@ -418,6 +460,8 @@ export default function Layout({ children, currentPageName }) {
               <div className="flex flex-col gap-2 text-sm">
                 <Link to={createPageUrl("About")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>About Us</Link>
                 <Link to={createPageUrl("Roadmap")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Roadmap</Link>
+                <Link to={createPageUrl("MasterCovenant")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Master Covenant</Link>
+                <Link to={createPageUrl("DreamTeam")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Dream Team</Link>
                 <Link to={createPageUrl("Pricing")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Pricing</Link>
                 <Link to={createPageUrl("SecurityDocs")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Security</Link>
                 <Link to={createPageUrl("Contact")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Contact</Link>
