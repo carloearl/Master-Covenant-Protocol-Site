@@ -103,15 +103,15 @@ export default function Home() {
   const stats = [
   { value: "99.97%", label: "Threat Detection" },
   { value: "24/7", label: "AI Monitoring" },
-  { value: "256-bit", label: "Encryption" },
+  { value: "AES-256", label: "Encryption" },
   { value: "<1ms", label: "Response Time" }];
 
 
   const features = [
   {
     icon: Shield,
-    title: "Quantum-Resistant",
-    description: "Next-gen encryption that withstands quantum computing attacks"
+    title: "Post-Quantum Ready",
+    description: "Hybrid PQC key exchange with AES-256 encryption for future-proof security"
   },
   {
     icon: Zap,
@@ -176,7 +176,7 @@ export default function Home() {
           <div className="max-w-5xl mx-auto text-center">
             <Badge className="mb-6 bg-blue-500/20 text-blue-400 border-blue-500/50 px-6 py-2 text-sm backdrop-blur-md">
               <Shield className="w-4 h-4 mr-2" />
-              Quantum-Resistant Security Platform
+              Post-Quantum Ready (Hybrid)
             </Badge>
             
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
@@ -187,9 +187,21 @@ export default function Home() {
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto leading-relaxed">
               Enterprise-grade cybersecurity with AI integration, quantum-resistant encryption, and zero-trust architecture
             </p>
+            
+            <div className="flex items-center justify-center gap-3 mb-12 text-sm text-blue-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4" />
+                <span className="font-semibold">AES-256</span>
+              </div>
+              <span className="text-gray-500">•</span>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4" />
+                <span className="font-semibold">PQC Key Exchange</span>
+              </div>
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <Link to={createPageUrl("Consultation")}>
