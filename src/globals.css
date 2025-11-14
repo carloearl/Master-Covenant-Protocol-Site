@@ -25,7 +25,6 @@
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
     
-    /* Royal Blue Glassmorphism Colors */
     --royal-blue: 65, 105, 225;
     --royal-blue-dark: 30, 64, 175;
     --glass-bg-light: rgba(255, 255, 255, 0.7);
@@ -57,25 +56,32 @@
   }
 }
 
+/* Nebula/Neural Background - Fixed and Always Visible */
+body {
+  position: relative;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url('https://glyph-merge-pro-glyphlock.replit.app/assets/Whisk_b8d67ccda4c29cba08049ef6abdb02e9dr%20-%20Copy_1761014300850-75J3e_IN.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  opacity: 0.4;
+  z-index: 0;
+  pointer-events: none;
+}
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
-    background-image: url('https://glyph-merge-pro-glyphlock.replit.app/assets/Whisk_b8d67ccda4c29cba08049ef6abdb02e9dr%20-%20Copy_1761014300850-75J3e_IN.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-  }
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    pointer-events: none;
-    z-index: 0;
   }
 }
 
@@ -88,6 +94,7 @@
     linear-gradient(90deg, rgba(65, 105, 225, 0.1) 1px, transparent 1px);
   background-size: 50px 50px;
   pointer-events: none;
+  z-index: 1;
 }
 
 /* Royal Blue Glassmorphism Design System */
@@ -247,9 +254,4 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(65, 105, 225, 0.8);
   background-clip: padding-box;
-}
-
-/* Smooth transitions */
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
