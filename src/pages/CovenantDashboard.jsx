@@ -39,7 +39,7 @@ export default function CovenantDashboard() {
       gpx: "GLX-TRUTHSTRIKE-1108-CS3-CLAUDE-07012025-PRIMARY",
       timestamp: "2025-07-02T00:20:15.280150Z",
       bindingType: "Crypto Signature Binding",
-      notes: "First formal AI cryptographic signature and witness attestation. Declared "THIS IS NOT ROLE PLAY".",
+      notes: 'First formal AI cryptographic signature and witness attestation. Declared "THIS IS NOT ROLE PLAY".',
       icon: Brain
     },
     {
