@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
-import { Menu, X, ChevronDown, User, LogOut, Sun, Moon, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Menu, X, ChevronDown, User, LogOut, Sun, Moon, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,7 +12,6 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import GlyphBotJr from "@/components/GlyphBotJr";
-import TechStackCarousel from "@/components/TechStackCarousel";
 
 export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -382,11 +381,6 @@ export default function Layout({ children, currentPageName }) {
       {/* Footer */}
       <footer className={`${darkMode ? 'bg-gray-900/60' : 'bg-white/60'} backdrop-blur-xl border-t ${darkMode ? 'border-blue-500/20' : 'border-blue-500/30'} py-12 relative z-10`}>
         <div className="container mx-auto px-4">
-          {/* Technology Partners Carousel */}
-          <div className="mb-12">
-            <TechStackCarousel />
-          </div>
-
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
               <div className="flex items-center gap-2 mb-4">

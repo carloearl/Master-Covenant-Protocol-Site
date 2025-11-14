@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 
 export default function TechStackCarousel() {
   const techCompanies = [
@@ -9,7 +9,6 @@ export default function TechStackCarousel() {
     { name: "IBM", logo: "https://www.vectorlogo.zone/logos/ibm/ibm-ar21.svg" },
     { name: "Stripe", logo: "https://www.vectorlogo.zone/logos/stripe/stripe-ar21.svg" },
     { name: "OpenAI", logo: "https://www.vectorlogo.zone/logos/openai/openai-ar21.svg" },
-    { name: "Anthropic", logo: "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg" },
     { name: "Vercel", logo: "https://www.vectorlogo.zone/logos/vercel/vercel-ar21.svg" },
     { name: "Supabase", logo: "https://www.vectorlogo.zone/logos/supabase/supabase-ar21.svg" },
     { name: "MongoDB", logo: "https://www.vectorlogo.zone/logos/mongodb/mongodb-ar21.svg" },
@@ -20,7 +19,6 @@ export default function TechStackCarousel() {
     { name: "GitLab", logo: "https://www.vectorlogo.zone/logos/gitlab/gitlab-ar21.svg" },
     { name: "Cloudflare", logo: "https://www.vectorlogo.zone/logos/cloudflare/cloudflare-ar21.svg" },
     { name: "Twilio", logo: "https://www.vectorlogo.zone/logos/twilio/twilio-ar21.svg" },
-    { name: "SendGrid", logo: "https://www.vectorlogo.zone/logos/sendgrid/sendgrid-ar21.svg" },
     { name: "Redis", logo: "https://www.vectorlogo.zone/logos/redis/redis-ar21.svg" },
     { name: "Nginx", logo: "https://www.vectorlogo.zone/logos/nginx/nginx-ar21.svg" },
     { name: "Node.js", logo: "https://www.vectorlogo.zone/logos/nodejs/nodejs-ar21.svg" },
@@ -36,18 +34,18 @@ export default function TechStackCarousel() {
 
   return (
     <div className="overflow-hidden">
-      <h3 className="text-center text-xl font-bold mb-6">
+      <h3 className="text-center text-xl font-bold mb-6 text-white">
         Trusted By <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Industry Leaders</span>
       </h3>
       <div className="relative">
         <div className="flex animate-marquee">
           {[...techCompanies, ...techCompanies].map((company, idx) => (
             <div key={idx} className="flex-shrink-0 mx-4">
-              <div className="bg-white/5 backdrop-blur-sm rounded-lg p-3 h-16 w-28 flex items-center justify-center hover:scale-110 transition-transform">
+              <div className="backdrop-blur-sm rounded-lg p-3 h-16 w-28 flex items-center justify-center hover:bg-white/5 transition-all">
                 <img 
                   src={company.logo} 
                   alt={company.name}
-                  className="max-h-10 max-w-full object-contain opacity-70 hover:opacity-100 transition-opacity"
+                  className="max-h-10 max-w-full object-contain opacity-40 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
                   loading="lazy"
                 />
               </div>
