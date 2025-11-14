@@ -145,34 +145,24 @@ export default function Home() {
         </button>
       }
 
-      {/* Hero Video Section - 1080p optimized */}
-      <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-black">
+      {/* Hero Video Section - Full screen, no overlay */}
+      <section className="relative h-screen w-full overflow-hidden">
         <video
           autoPlay
           loop
           muted
           playsInline
-          preload="auto" className="rounded-[10px] max-w-[1920px] max-h-[1080px] w-auto h-auto"
-
-          style={{ filter: 'brightness(1.1) contrast(1.1)' }}>
+          className="absolute inset-0 w-full h-full object-cover">
 
           <source src="https://i.imgur.com/zs3sPzJ.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black pointer-events-none" />
-        
-        {/* GlyphLock Logo Overlay - Covering Veo Watermark */}
-        <div className="absolute bottom-[24%] right-[18%] z-10">
-          <img
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png"
-            alt="GlyphLock"
-            className="h-16 w-auto opacity-40" />
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
       </section>
 
       {/* Hero Content - Below Video */}
       <section className="relative py-24 z-10">
         <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto text-center">
+          <div className="bg-slate-600 opacity-40 h-16 w-auto">
             <Badge className="mb-6 bg-blue-500/20 text-blue-400 border-blue-500/50 px-6 py-2 text-sm backdrop-blur-md">
               <Shield className="w-4 h-4 mr-2" />
               Quantum-Resistant Security Platform
@@ -323,8 +313,8 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-white">{feature.title}</h3>
                   <p className="text-gray-400">{feature.description}</p>
-                </div>
-              );
+                </div>);
+
             })}
           </div>
 
@@ -429,8 +419,8 @@ export default function Home() {
                       </p>
                     </CardContent>
                   </Card>
-                </Link>
-              );
+                </Link>);
+
             })}
           </div>
         </div>
@@ -513,6 +503,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>);
+
 }
