@@ -91,32 +91,32 @@ export default function Home() {
   return (
     <div className="bg-black text-white">
       {/* Hero Section - Full Screen Video */}
-      <section className="relative h-screen overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <video 
           autoPlay 
           loop 
           muted 
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ objectPosition: 'center' }}
+          className="absolute inset-0 w-full h-full object-contain md:object-cover bg-black"
         >
           <source src="https://glyph-merge-pro-glyphlock.replit.app/assets/hero-video-CxU5xRpe.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black" />
-        
-        {/* Hero Content Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="container mx-auto px-4 text-center">
-            <Badge variant="outline" className="border-blue-500/50 bg-blue-500/10 text-blue-400 px-4 py-2 text-sm font-mono mb-6">
-              <Shield className="w-4 h-4 mr-2" />
-              Quantum-Resistant Security Platform
-            </Badge>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
+      </section>
+
+      {/* Tagline Section - Below Video */}
+      <section className="relative bg-black py-16 z-10 border-t border-blue-500/20">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-5xl mx-auto">
+            <p className="text-gray-400 text-lg md:text-xl font-medium tracking-wider uppercase mb-6">
+              Invisible Layers. Infinite Possibilities. Absolute Protection.
+            </p>
             
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
-              <span className="text-white">Invisible Security.</span>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+              <span className="text-white">Universal Security Platform</span>
               <br />
               <span className="bg-gradient-to-r from-blue-400 via-blue-600 to-blue-700 bg-clip-text text-transparent">
-                Infinite Protection.
+                with Smart Contracts
               </span>
             </h1>
 

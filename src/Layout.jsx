@@ -116,7 +116,7 @@ export default function Layout({ children, currentPageName }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className={`${darkMode ? 'bg-gray-900 border-blue-500/20' : 'bg-white border-blue-500/30'} backdrop-blur-xl`}>
                   <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
-                    <Link to={createPageUrl("MasterCovenant")}>Master Covenant</Link>
+                    <Link to={createPageUrl("NUPSLogin")}>N.U.P.S. POS System</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
                     <Link to={createPageUrl("SecurityTools")}>Security Tools</Link>
@@ -244,9 +244,9 @@ export default function Layout({ children, currentPageName }) {
                     </Button>
                   </Link>
                 )}
-                <Link to={createPageUrl("MasterCovenant")} onClick={() => setMobileMenuOpen(false)}>
+                <Link to={createPageUrl("NUPSLogin")} onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Master Covenant
+                    N.U.P.S. POS System
                   </Button>
                 </Link>
                 <Link to={createPageUrl("SecurityTools")} onClick={() => setMobileMenuOpen(false)}>
@@ -337,7 +337,7 @@ export default function Layout({ children, currentPageName }) {
             <div>
               <h3 className={`font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Services</h3>
               <div className="flex flex-col gap-2 text-sm">
-                <Link to={createPageUrl("MasterCovenant")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>Master Covenant</Link>
+                <Link to={createPageUrl("NUPSLogin")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>N.U.P.S. POS</Link>
                 <Link to={createPageUrl("SecurityTools")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>Security Tools</Link>
                 <Link to={createPageUrl("QRGenerator")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>QR Generator</Link>
                 <Link to={createPageUrl("Blockchain")} className={`${darkMode ? 'text-white' : 'text-gray-700'} hover:text-blue-400 transition-colors`}>Blockchain</Link>
@@ -371,7 +371,6 @@ export default function Layout({ children, currentPageName }) {
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
               <div className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 <p>© 2025 GlyphLock Security LLC. All rights reserved.</p>
-                <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mt-1`}>Quantum-resistant security for the future.</p>
               </div>
               <div className={`text-sm space-y-1 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 <p>El Mirage, Arizona • Established May 2025</p>
@@ -388,7 +387,7 @@ export default function Layout({ children, currentPageName }) {
               </div>
             </div>
             <p className="text-xs text-gray-500">
-              Proof Above Persuasion • $340K D&B Verified Revenue • $14M Liability Coverage
+              $340K D&B Verified Revenue • $14M Liability Coverage
             </p>
           </div>
         </div>
