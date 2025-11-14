@@ -34,35 +34,35 @@ export default function GlyphBotJr({ darkMode }) {
       label: "Home", 
       page: "Home",
       info: "Return to the main landing page. Explore GlyphLock's quantum security platform and see our 5 bound AI systems.",
-      glow: "rgba(59, 130, 246, 0.6)"
+      glow: "rgba(65, 105, 225, 0.8)"
     },
     { 
       icon: Shield, 
       label: "Security Tools", 
       page: "SecurityTools",
       info: "Access our suite of cybersecurity tools: QR Generator, Steganography, Blockchain verification, and Hotzone Mapper.",
-      glow: "rgba(34, 197, 94, 0.6)"
+      glow: "rgba(65, 105, 225, 0.8)"
     },
     { 
       icon: Zap, 
       label: "Master Covenant", 
       page: "MasterCovenant",
       info: "Legal AI binding system with $14M liability coverage. Five AI systems bound through cryptographic proof.",
-      glow: "rgba(234, 179, 8, 0.6)"
+      glow: "rgba(65, 105, 225, 0.8)"
     },
     { 
       icon: Mail, 
       label: "Contact", 
       page: "Contact",
       info: "Get in touch with our team. Email, phone, and office location in El Mirage, Arizona.",
-      glow: "rgba(168, 85, 247, 0.6)"
+      glow: "rgba(65, 105, 225, 0.8)"
     },
     { 
       icon: FileText, 
       label: "Pricing", 
       page: "Pricing",
       info: "View pricing for all GlyphLock services. Enterprise solutions, security tools, and consultation packages.",
-      glow: "rgba(236, 72, 153, 0.6)"
+      glow: "rgba(65, 105, 225, 0.8)"
     },
   ];
 
@@ -149,6 +149,9 @@ Respond naturally and helpfully. If suggesting a page, mention it by name.
         onClick={() => setIsOpen(true)}
         size="lg"
         className="fixed bottom-6 right-6 z-50 rounded-full w-16 h-16 shadow-2xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white animate-pulse hover:animate-none"
+        style={{
+          boxShadow: '0 0 30px rgba(65, 105, 225, 0.8), 0 0 60px rgba(65, 105, 225, 0.6)'
+        }}
       >
         <Bot className="w-8 h-8" />
       </Button>
@@ -156,28 +159,47 @@ Respond naturally and helpfully. If suggesting a page, mention it by name.
   }
 
   return (
-    <Card className={`fixed bottom-6 right-6 z-50 w-96 h-[600px] shadow-2xl ${
-      darkMode 
-        ? 'bg-gray-900/95 border-blue-500/30' 
-        : 'bg-white/95 border-blue-500/40'
-    } backdrop-blur-xl`}>
-      <CardHeader className="flex flex-row items-center justify-between border-b border-blue-500/20 pb-3">
+    <Card 
+      className="fixed bottom-6 right-6 z-50 w-96 h-[600px] shadow-2xl border-2"
+      style={{
+        background: 'rgba(65, 105, 225, 0.15)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderColor: 'rgba(65, 105, 225, 0.4)',
+        boxShadow: '0 0 40px rgba(65, 105, 225, 0.3), inset 0 0 20px rgba(65, 105, 225, 0.1)'
+      }}
+    >
+      <CardHeader 
+        className="flex flex-row items-center justify-between pb-3"
+        style={{
+          background: 'rgba(65, 105, 225, 0.25)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(65, 105, 225, 0.3)'
+        }}
+      >
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/50">
+          <div 
+            className="w-10 h-10 rounded-full flex items-center justify-center"
+            style={{
+              background: 'linear-gradient(135deg, rgba(65, 105, 225, 0.9), rgba(30, 64, 175, 0.9))',
+              boxShadow: '0 0 20px rgba(65, 105, 225, 0.6)'
+            }}
+          >
             <Bot className="w-6 h-6 text-white" />
           </div>
           <div>
-            <CardTitle className={`text-lg ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+            <CardTitle className="text-lg font-bold text-white">
               GlyphBot Jr.
             </CardTitle>
-            <p className="text-xs text-gray-400">Navigation Assistant</p>
+            <p className="text-xs text-white/90 font-medium">Navigation Assistant</p>
           </div>
         </div>
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setIsOpen(false)}
-          className={darkMode ? 'text-white hover:text-red-400' : 'text-gray-900 hover:text-red-600'}
+          className="text-white hover:text-red-400 hover:bg-white/10"
         >
           <X className="w-5 h-5" />
         </Button>
@@ -185,7 +207,12 @@ Respond naturally and helpfully. If suggesting a page, mention it by name.
 
       <CardContent className="p-4 h-[calc(100%-140px)] flex flex-col">
         {/* Quick Links with Flip Effect */}
-        <div className="flex flex-wrap gap-2 mb-3 pb-3 border-b border-blue-500/20">
+        <div 
+          className="flex flex-wrap gap-2 mb-3 pb-3"
+          style={{
+            borderBottom: '1px solid rgba(65, 105, 225, 0.3)'
+          }}
+        >
           {quickLinks.map((link, idx) => (
             <div key={idx} className="relative group" style={{ perspective: '1000px' }}>
               <div
@@ -201,12 +228,12 @@ Respond naturally and helpfully. If suggesting a page, mention it by name.
                 >
                   <button
                     onClick={() => handleButtonClick(idx)}
-                    className={`relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                      darkMode 
-                        ? 'bg-gray-800/80 border border-blue-500/30 text-white' 
-                        : 'bg-white/80 border border-blue-500/50 text-gray-900'
-                    } backdrop-blur-sm overflow-hidden group-hover:scale-105`}
+                    className="relative px-3 py-2 rounded-lg text-sm font-bold transition-all duration-300 text-white overflow-hidden group-hover:scale-105"
                     style={{
+                      background: 'rgba(65, 105, 225, 0.3)',
+                      backdropFilter: 'blur(16px)',
+                      WebkitBackdropFilter: 'blur(16px)',
+                      border: '1px solid rgba(65, 105, 225, 0.5)',
                       boxShadow: `0 0 20px ${link.glow}, 0 0 40px ${link.glow}`,
                       animation: 'pulse-glow 2s ease-in-out infinite'
                     }}
@@ -220,19 +247,22 @@ Respond naturally and helpfully. If suggesting a page, mention it by name.
                     />
                     
                     <div className="relative flex items-center gap-2">
-                      <link.icon className="w-4 h-4 flex-shrink-0" />
+                      <link.icon className="w-4 h-4 flex-shrink-0 text-white" />
                       <span
-                        className="transition-all duration-300 group-hover:blur-0"
+                        className="transition-all duration-300 group-hover:blur-0 font-bold text-white"
                         style={{
                           filter: 'blur(3px)',
-                          textShadow: `0 0 10px ${link.glow}`
+                          textShadow: `0 0 10px ${link.glow}, 0 0 20px ${link.glow}`
                         }}
                       >
                         {link.label}
                       </span>
                       <span
-                        className="absolute left-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        style={{ filter: 'blur(0px)' }}
+                        className="absolute left-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold text-white"
+                        style={{ 
+                          filter: 'blur(0px)',
+                          textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                        }}
                       >
                         {link.label}
                       </span>
@@ -249,17 +279,20 @@ Respond naturally and helpfully. If suggesting a page, mention it by name.
                   }}
                 >
                   <div
-                    className={`w-full h-full p-3 rounded-lg text-xs ${
-                      darkMode 
-                        ? 'bg-gray-800/95 border border-blue-500/40 text-white' 
-                        : 'bg-white/95 border border-blue-500/60 text-gray-900'
-                    } backdrop-blur-xl shadow-xl`}
+                    className="w-full h-full p-3 rounded-lg text-xs shadow-xl"
+                    style={{
+                      background: 'rgba(65, 105, 225, 0.4)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                      border: '1px solid rgba(65, 105, 225, 0.6)',
+                      boxShadow: '0 0 30px rgba(65, 105, 225, 0.4)'
+                    }}
                   >
                     <div className="flex items-start gap-2 mb-2">
-                      <Info className="w-4 h-4 flex-shrink-0 text-blue-400 mt-0.5" />
-                      <div className="font-semibold">{link.label}</div>
+                      <Info className="w-4 h-4 flex-shrink-0 text-white mt-0.5" />
+                      <div className="font-bold text-white">{link.label}</div>
                     </div>
-                    <p className={`text-xs leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <p className="text-xs leading-relaxed text-white/95 font-medium">
                       {link.info}
                     </p>
                     <Link 
@@ -271,7 +304,12 @@ Respond naturally and helpfully. If suggesting a page, mention it by name.
                     >
                       <Button
                         size="sm"
-                        className="w-full mt-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs"
+                        className="w-full mt-2 text-xs font-bold text-white"
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(65, 105, 225, 0.8), rgba(30, 64, 175, 0.8))',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          boxShadow: '0 4px 10px rgba(65, 105, 225, 0.5)'
+                        }}
                       >
                         Go to {link.label}
                       </Button>
@@ -293,13 +331,26 @@ Respond naturally and helpfully. If suggesting a page, mention it by name.
               <div
                 className={`max-w-[80%] rounded-lg px-3 py-2 ${
                   msg.role === 'user'
-                    ? darkMode
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-blue-500 text-white'
-                    : darkMode
-                      ? 'bg-gray-800/80 text-white border border-blue-500/20'
-                      : 'bg-gray-100 text-gray-900 border border-blue-500/30'
+                    ? 'text-white font-semibold'
+                    : 'text-white font-medium'
                 }`}
+                style={
+                  msg.role === 'user'
+                    ? {
+                        background: 'linear-gradient(135deg, rgba(65, 105, 225, 0.7), rgba(30, 64, 175, 0.7))',
+                        backdropFilter: 'blur(16px)',
+                        WebkitBackdropFilter: 'blur(16px)',
+                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        boxShadow: '0 4px 12px rgba(65, 105, 225, 0.4)'
+                      }
+                    : {
+                        background: 'rgba(65, 105, 225, 0.2)',
+                        backdropFilter: 'blur(16px)',
+                        WebkitBackdropFilter: 'blur(16px)',
+                        border: '1px solid rgba(65, 105, 225, 0.4)',
+                        boxShadow: '0 2px 8px rgba(65, 105, 225, 0.2)'
+                      }
+                }
               >
                 <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
               </div>
@@ -307,15 +358,19 @@ Respond naturally and helpfully. If suggesting a page, mention it by name.
           ))}
           {loading && (
             <div className="flex justify-start">
-              <div className={`rounded-lg px-3 py-2 ${
-                darkMode 
-                  ? 'bg-gray-800/80 border border-blue-500/20' 
-                  : 'bg-gray-100 border border-blue-500/30'
-              }`}>
+              <div 
+                className="rounded-lg px-3 py-2"
+                style={{
+                  background: 'rgba(65, 105, 225, 0.2)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(65, 105, 225, 0.4)'
+                }}
+              >
                 <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                  <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                 </div>
               </div>
             </div>
@@ -331,16 +386,25 @@ Respond naturally and helpfully. If suggesting a page, mention it by name.
             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Ask me anything..."
             disabled={loading}
-            className={`flex-1 ${
-              darkMode 
-                ? 'bg-gray-800/80 border-blue-500/30 text-white placeholder:text-gray-500' 
-                : 'bg-white border-blue-500/50 text-gray-900 placeholder:text-gray-400'
-            }`}
+            className="flex-1 font-semibold"
+            style={{
+              background: 'rgba(0, 0, 0, 0.7)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(65, 105, 225, 0.5)',
+              color: '#ffffff',
+              boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 10px rgba(65, 105, 225, 0.3)'
+            }}
           />
           <Button
             onClick={handleSend}
             disabled={loading || !input.trim()}
-            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
+            className="font-bold text-white"
+            style={{
+              background: 'linear-gradient(135deg, rgba(65, 105, 225, 0.8), rgba(30, 64, 175, 0.8))',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              boxShadow: '0 4px 10px rgba(65, 105, 225, 0.5)'
+            }}
           >
             <Send className="w-4 h-4" />
           </Button>
@@ -350,11 +414,16 @@ Respond naturally and helpfully. If suggesting a page, mention it by name.
       <style>{`
         @keyframes pulse-glow {
           0%, 100% {
-            box-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color);
+            box-shadow: 0 0 20px rgba(65, 105, 225, 0.8), 0 0 40px rgba(65, 105, 225, 0.8);
           }
           50% {
-            box-shadow: 0 0 30px var(--glow-color), 0 0 60px var(--glow-color);
+            box-shadow: 0 0 30px rgba(65, 105, 225, 1), 0 0 60px rgba(65, 105, 225, 1);
           }
+        }
+
+        input::placeholder {
+          color: rgba(255, 255, 255, 0.6) !important;
+          font-weight: 600;
         }
       `}</style>
     </Card>
