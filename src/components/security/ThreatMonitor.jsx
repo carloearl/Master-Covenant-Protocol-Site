@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { AlertTriangle, Search, Filter, RefreshCw } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SeverityBadge from "@/components/shared/SeverityBadge";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import EmptyState from "@/components/shared/EmptyState";
 import { getStatusColor } from "@/components/utils/securityUtils";
 
 export default function ThreatMonitor() {
@@ -76,9 +78,13 @@ export default function ThreatMonitor() {
 
           <div className="grid gap-4">
             {isLoading ? (
-              <div className="text-center py-8 text-gray-500">Loading threats...</div>
+              <LoadingSpinner message="Loading threats..." />
             ) : filteredThreats.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">No threats found</div>
+              <EmptyState 
+                icon={AlertTriangle}
+                title="No threats found"
+                description={searchTerm || severityFilter !== "all" ? "Try adjusting your filters" : "Your system is secure"}
+              />
             ) : (
               filteredThreats.map((threat) => (
                 <Card key={threat.id} className="bg-gray-800 border-gray-700">

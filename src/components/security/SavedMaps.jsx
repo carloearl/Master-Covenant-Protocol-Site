@@ -4,6 +4,8 @@ import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Map } from "lucide-react";
 import SeverityBadge from "@/components/shared/SeverityBadge";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import EmptyState from "@/components/shared/EmptyState";
 
 export default function SavedMaps() {
   const { data: maps = [], isLoading } = useQuery({
@@ -22,9 +24,13 @@ export default function SavedMaps() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="text-center py-8 text-gray-500">Loading maps...</div>
+            <LoadingSpinner message="Loading maps..." />
           ) : maps.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">No saved maps yet</div>
+            <EmptyState 
+              icon={Map}
+              title="No saved maps yet"
+              description="Create your first security map using the Hotzone Mapper tab"
+            />
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {maps.map((map) => (
