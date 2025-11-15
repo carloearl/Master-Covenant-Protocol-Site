@@ -1,17 +1,17 @@
 import React, { useState, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { Loader2, Shield, Info, Upload, Image as ImageIcon, Palette } from "lucide-react";
+import { Loader2, Shield, Info, Upload, Image as ImageIcon } from "lucide-react";
 import SecurityStatus from "@/components/qr/SecurityStatus";
 import SteganographicQR from "@/components/qr/SteganographicQR";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import QRTypeSelector from "@/components/crypto/QRTypeSelector";
 import QRTypeForm from "@/components/crypto/QRTypeForm";
+import ColorPaletteSelector from "@/components/crypto/ColorPaletteSelector";
 import { generateSHA256, performStaticURLChecks } from "@/components/utils/securityUtils";
 
 export default function QRGeneratorTab() {
@@ -81,13 +81,8 @@ export default function QRGeneratorTab() {
 
   const handleLogoUpload = async (e) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      alert('Please upload an image file');
-      return;
-    }
-    if (file.size > 2 * 1024 * 1024) {
-      alert('Logo file must be under 2MB');
+    if (!file || !file.type.startsWith('image/') || file.size > 2 * 1024 * 1024) {
+      alert('Please upload a valid image under 2MB');
       return;
     }
     setLogoFile(file);
@@ -102,7 +97,6 @@ export default function QRGeneratorTab() {
       const { file_url } = await base44.integrations.Core.UploadFile({ file: logoFile });
       return file_url;
     } catch (error) {
-      console.error("Logo upload failed:", error);
       return null;
     }
   };
@@ -110,18 +104,8 @@ export default function QRGeneratorTab() {
   const performNLPAnalysis = async (payload) => {
     setScanningStage("Running NLP analysis...");
     try {
-      const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `Analyze this URL/email for security threats: "${payload}"
-
-Perform comprehensive security analysis:
-1. DOMAIN TRUST (0-100): Check reputation, detect typosquatting, verify legitimate TLDs
-2. NLP PHISHING (0-100): Detect urgency phrases, impersonation, credential harvesting
-3. ENTITY LEGITIMACY (0-100): Verify brand identity, check SSL patterns
-4. URL FEATURES (0-100): Check for javascript:, data URIs, obfuscation
-
-Calculate: final_score = (domain_trust * 0.4) + (sentiment_score * 0.25) + (entity_legitimacy * 0.2) + (url_features * 0.15)
-
-Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineering`,
+      return await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyze for security threats: "${payload}". Return domain_trust, sentiment_score, entity_legitimacy, url_features (each 0-100), final_score, risk_level, threat_types, phishing_indicators, analysis_details, ml_version`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -138,13 +122,11 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
           }
         }
       });
-      return result;
-    } catch (error) {
+    } catch {
       return {
         domain_trust: 50, sentiment_score: 50, entity_legitimacy: 50, url_features: 50,
         final_score: 50, risk_level: "medium", threat_types: ["Analysis Error"],
-        phishing_indicators: ["Unable to complete full NLP analysis"],
-        analysis_details: "NLP scan encountered an error", ml_version: "1.0.0"
+        phishing_indicators: ["Analysis incomplete"], ml_version: "1.0.0"
       };
     }
   };
@@ -152,7 +134,7 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
   const generateQR = async () => {
     const payload = buildQRPayload();
     if (!payload) {
-      alert("Please fill in the required fields");
+      alert("Please fill in required fields");
       return;
     }
     
@@ -165,12 +147,11 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
       let combinedResult = null;
 
       if (needsSecurity) {
-        setScanningStage("Performing static checks...");
+        setScanningStage("Performing checks...");
         await new Promise(resolve => setTimeout(resolve, 500));
         const staticResult = performStaticURLChecks(payload);
         const nlpResult = await performNLPAnalysis(payload);
         
-        setScanningStage("Calculating risk score...");
         const finalScore = Math.round(
           (nlpResult.domain_trust * 0.4) +
           (nlpResult.sentiment_score * 0.25) +
@@ -178,68 +159,42 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
           (nlpResult.url_features * 0.15)
         );
 
-        const allIndicators = [...staticResult.issues, ...(nlpResult.phishing_indicators || [])];
-
         combinedResult = {
           ...nlpResult,
           final_score: Math.min(finalScore, staticResult.score),
-          phishing_indicators: allIndicators,
+          phishing_indicators: [...staticResult.issues, ...(nlpResult.phishing_indicators || [])],
           risk_level: finalScore >= 80 ? "safe" : finalScore >= 65 ? "medium" : "high"
         };
 
         setSecurityResult(combinedResult);
 
         if (combinedResult.final_score < 65) {
-          setScanningStage("Code blocked by security policy");
           const newCodeId = `qr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-          const payloadHash = await generateSHA256(payload);
-
           await base44.entities.QRThreatLog.create({
             incident_id: `threat_${Date.now()}`,
             code_id: newCodeId,
-            attack_type: combinedResult.threat_types?.[0] || "High Risk URL",
-            payload: payload,
-            threat_description: `Policy gate blocked: Score ${combinedResult.final_score}/100`,
-            resolved: false,
-            severity: combinedResult.risk_level === "critical" ? "critical" : "high"
+            attack_type: combinedResult.threat_types?.[0] || "High Risk",
+            payload,
+            threat_description: `Blocked: Score ${combinedResult.final_score}/100`,
+            severity: "high"
           });
-
-          await base44.entities.QRGenHistory.create({
-            code_id: newCodeId,
-            payload: payload,
-            payload_sha256: payloadHash,
-            size: size,
-            creator_id: "guest",
-            status: "blocked",
-            type: qrType,
-            image_format: "png"
-          });
-          
           setIsScanning(false);
           return;
         }
       }
 
-      setScanningStage("Generating QR code...");
-      
-      let uploadedLogoUrl = null;
-      if (logoFile) {
-        uploadedLogoUrl = await uploadLogoToServer();
-      }
-
+      let uploadedLogoUrl = logoFile ? await uploadLogoToServer() : null;
       setQrGenerated(true);
 
       const newCodeId = `qr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       setCodeId(newCodeId);
-      const payloadHash = await generateSHA256(payload);
-
       const palette = colorPalettes.find(p => p.id === selectedPalette);
 
       await base44.entities.QRGenHistory.create({
         code_id: newCodeId,
-        payload: payload,
-        payload_sha256: payloadHash,
-        size: size,
+        payload,
+        payload_sha256: await generateSHA256(payload),
+        size,
         creator_id: "guest",
         status: combinedResult ? (combinedResult.final_score >= 80 ? "safe" : "suspicious") : "safe",
         type: qrType,
@@ -266,7 +221,6 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
       }
     } catch (error) {
       console.error("QR generation error:", error);
-      setScanningStage("Error during generation");
     } finally {
       setIsScanning(false);
     }
@@ -295,7 +249,7 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
         <Alert className="bg-blue-500/10 border-blue-500/30">
           <Info className="h-4 w-4 text-blue-400" />
           <AlertDescription className="text-white">
-            <strong>Security Protocol Active:</strong> URLs and emails are scanned by AI. Payloads under 65/100 are blocked.
+            <strong>Security Active:</strong> URLs/emails scanned by AI. Scores under 65/100 are blocked.
           </AlertDescription>
         </Alert>
       )}
@@ -326,17 +280,17 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
               <Button
                 onClick={generateQR}
                 disabled={isScanning}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700"
               >
                 {isScanning ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    {scanningStage || "Generating..."}
+                    {scanningStage}
                   </>
                 ) : (
                   <>
                     <Shield className="w-4 h-4 mr-2" />
-                    Generate QR Code
+                    Generate QR
                   </>
                 )}
               </Button>
@@ -384,20 +338,20 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
                     variant="outline"
                     className="w-full border-blue-500/50 hover:bg-blue-500/10 text-white"
                   >
-                    ⬇️ Download QR Code
+                    ⬇️ Download
                   </Button>
                 </div>
-              ) : securityResult && securityResult.final_score < 65 ? (
+              ) : securityResult?.final_score < 65 ? (
                 <div className="h-96 flex items-center justify-center border-2 border-dashed border-red-700 rounded-lg bg-red-500/5">
                   <div className="text-center p-6">
                     <div className="text-5xl mb-4">🚫</div>
-                    <p className="text-red-400 font-semibold mb-2">Policy Gate Blocked</p>
+                    <p className="text-red-400 font-semibold">Blocked</p>
                     <p className="text-sm text-white">Score: {securityResult.final_score}/100</p>
                   </div>
                 </div>
               ) : (
                 <div className="h-96 flex items-center justify-center border-2 border-dashed border-gray-700 rounded-lg">
-                  <p className="text-gray-500">Fill the form and click Generate</p>
+                  <p className="text-gray-500">Generate to preview</p>
                 </div>
               )}
             </CardContent>
@@ -405,65 +359,21 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
         </div>
 
         <div className="lg:col-span-1 space-y-6">
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2 text-sm">
-                <Palette className="w-4 h-4" />
-                Colors
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-2">
-                {colorPalettes.filter(p => p.id !== "custom").map(palette => (
-                  <button
-                    key={palette.id}
-                    onClick={() => setSelectedPalette(palette.id)}
-                    className={`p-2 rounded-lg border transition-all ${
-                      selectedPalette === palette.id ? 'border-blue-500 bg-blue-500/10' : 'border-gray-700 hover:border-gray-600'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="w-4 h-4 rounded border border-gray-600" style={{ backgroundColor: palette.fg }} />
-                      <div className="w-4 h-4 rounded border border-gray-600" style={{ backgroundColor: palette.bg }} />
-                    </div>
-                    <div className="text-xs font-semibold text-white">{palette.name}</div>
-                  </button>
-                ))}
-              </div>
-              <div className="mt-3 p-2 bg-gray-800 rounded-lg border border-gray-700">
-                <Label className="text-white text-xs mb-2 block">Custom</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  <Input
-                    type="color"
-                    value={customColors.fg}
-                    onChange={(e) => {
-                      setCustomColors({...customColors, fg: e.target.value});
-                      setSelectedPalette("custom");
-                    }}
-                    className="h-8 bg-gray-700 border-gray-600"
-                  />
-                  <Input
-                    type="color"
-                    value={customColors.bg}
-                    onChange={(e) => {
-                      setCustomColors({...customColors, bg: e.target.value});
-                      setSelectedPalette("custom");
-                    }}
-                    className="h-8 bg-gray-700 border-gray-600"
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <ColorPaletteSelector
+            selectedPalette={selectedPalette}
+            setSelectedPalette={setSelectedPalette}
+            customColors={customColors}
+            setCustomColors={setCustomColors}
+          />
 
           <Card className="bg-gray-900 border-gray-800">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2 text-sm">
                 <ImageIcon className="w-4 h-4" />
-                Logo
+                Logo (Optional)
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -476,7 +386,7 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
                 <div className="space-y-2">
                   <div className="bg-gray-800 p-3 rounded-lg border border-gray-700 flex items-center gap-2">
                     <img src={logoUrl} alt="Logo" className="w-12 h-12 object-contain rounded" />
-                    <p className="text-xs text-white font-medium">Logo uploaded</p>
+                    <p className="text-xs text-white font-medium">Uploaded</p>
                   </div>
                   <Button
                     onClick={() => {
@@ -485,7 +395,7 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
                     }}
                     variant="outline"
                     size="sm"
-                    className="w-full border-red-500/50 text-red-400 hover:bg-red-500/10 text-xs"
+                    className="w-full border-red-500/50 text-red-400 text-xs"
                   >
                     Remove
                   </Button>
@@ -495,10 +405,10 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
                   onClick={() => fileInputRef.current?.click()}
                   variant="outline"
                   size="sm"
-                  className="w-full border-blue-500/50 hover:bg-blue-500/10 text-white text-xs"
+                  className="w-full border-blue-500/50 text-white text-xs"
                 >
                   <Upload className="w-3 h-3 mr-2" />
-                  Upload Logo
+                  Upload
                 </Button>
               )}
             </CardContent>
@@ -506,18 +416,12 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
         </div>
       </div>
 
-      {securityResult && (
-        <div className="mt-8">
-          <SecurityStatus securityResult={securityResult} />
-        </div>
-      )}
+      {securityResult && <SecurityStatus securityResult={securityResult} />}
 
-      <div className="mt-8">
-        <SteganographicQR 
-          qrPayload={buildQRPayload()} 
-          qrGenerated={qrGenerated && (!securityResult || securityResult.final_score >= 65)}
-        />
-      </div>
+      <SteganographicQR 
+        qrPayload={buildQRPayload()} 
+        qrGenerated={qrGenerated && (!securityResult || securityResult.final_score >= 65)}
+      />
     </div>
   );
 }
