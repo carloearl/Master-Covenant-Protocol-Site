@@ -12,20 +12,19 @@ export const navigationConfig = {
         { label: "Dream Team", page: "DreamTeam" },
       ]
     },
-    { label: "N.U.P.S. POS", page: "NUPSLogin" },
     {
       label: "Services",
       dropdown: [
-        { label: "Complete Security Ecosystem", page: "SecurityTools" },
         { label: "QR Generator", page: "QRGenerator" },
         { label: "Steganography", page: "Steganography" },
         { label: "Blockchain Security", page: "Blockchain" },
         { label: "Security Operations", page: "SecurityOperations" },
-        { label: "GlyphBot AI", page: "GlyphBot" },
+        { label: "Complete Security Ecosystem", page: "SecurityTools" },
       ]
     },
+    { label: "GlyphBot AI", page: "GlyphBot" },
+    { label: "N.U.P.S. POS", page: "NUPSLogin" },
     { label: "Pricing", page: "Pricing" },
-    { label: "Security", page: "SecurityDocs" },
     { label: "Contact", page: "Contact" },
   ],
   
@@ -35,8 +34,6 @@ export const navigationConfig = {
       { label: "Roadmap", page: "Roadmap" },
       { label: "Master Covenant", page: "MasterCovenant" },
       { label: "Dream Team", page: "DreamTeam" },
-      { label: "Pricing", page: "Pricing" },
-      { label: "Security", page: "SecurityDocs" },
       { label: "Contact", page: "Contact" },
     ],
     services: [
@@ -46,8 +43,6 @@ export const navigationConfig = {
       { label: "Blockchain", page: "Blockchain" },
       { label: "Security Operations", page: "SecurityOperations" },
       { label: "GlyphBot AI", page: "GlyphBot" },
-    ],
-    apps: [
       { label: "N.U.P.S. POS", page: "NUPSLogin" },
     ],
     legal: [
