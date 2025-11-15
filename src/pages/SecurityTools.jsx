@@ -3,15 +3,15 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChevronRight, Shield, Lock, Eye, FileCode, Zap, Server } from "lucide-react";
+import { ChevronRight, Shield, Lock, Eye, Zap, Server, Activity } from "lucide-react";
 
 export default function SecurityTools() {
   const tools = [
     {
       title: "Visual Cryptography Suite",
-      description: "Generate secure, threat-aware QR codes and hide encrypted data within images using LSB encoding. Protect and transmit information in plain sight.",
+      description: "Generate secure, threat-aware QR codes and hide encrypted data within images using LSB encoding.",
       price: "$179.99",
-      link: "QRGenerator",
+      link: "VisualCryptography",
       icon: Eye,
       image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg"
     },
@@ -24,11 +24,11 @@ export default function SecurityTools() {
       image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9be80d6ca_Whisk_43831818b9d5e77953345c3626f3d976eg.jpg"
     },
     {
-      title: "HSSS Command Suite",
-      description: "Premier enterprise security platform combining interactive threat mapping with real-time AI surveillance and incident tracking.",
+      title: "Security Operations Center",
+      description: "Real-time threat monitoring, interactive mapping, and comprehensive security analytics.",
       price: "Enterprise",
-      link: "SecurityOperations",
-      icon: Shield,
+      link: "SecurityOperationsCenter",
+      icon: Activity,
       image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/7e319a981_Whisk_429a6543b81e30d9bab4065457f3b62ddr.jpg"
     },
     {
@@ -46,20 +46,11 @@ export default function SecurityTools() {
       link: "NUPSLogin",
       icon: Server,
       image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b6f63d51b_Whisk_b9fd7532ee1e87a9152439bac427f256dr.jpg"
-    },
-    {
-      title: "Smart Contracts",
-      description: "Generate and validate smart contracts with automated security auditing and deployment tools.",
-      price: "Coming Soon",
-      link: "SmartContracts",
-      icon: FileCode,
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/11242d8a3_Whisk_ecd15257dc62aafae4b457b73ff01aa9dr.jpg"
     }
   ];
 
   return (
     <div className="bg-black text-white min-h-screen">
-      {/* Hero */}
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-black" />
         <div className="absolute inset-0 opacity-10" style={{
@@ -82,7 +73,6 @@ export default function SecurityTools() {
         </div>
       </section>
 
-      {/* Tools Grid */}
       <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
@@ -107,10 +97,7 @@ export default function SecurityTools() {
                       <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">
                         {tool.title}
                       </h3>
-                      <span className={`text-sm font-semibold ${
-                        tool.price === "Free" ? "text-green-400" : 
-                        tool.price === "Coming Soon" ? "text-gray-400" : "text-blue-400"
-                      }`}>
+                      <span className="text-sm font-semibold text-blue-400">
                         {tool.price}
                       </span>
                     </div>
@@ -118,7 +105,7 @@ export default function SecurityTools() {
                       {tool.description}
                     </p>
                     <div className="flex items-center text-blue-400 text-sm font-semibold">
-                      {tool.price === "Coming Soon" ? "Learn More" : "Try Now"} <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      Try Now <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </CardContent>
                 </Card>
@@ -128,7 +115,6 @@ export default function SecurityTools() {
         </div>
       </section>
 
-      {/* Features */}
       <section className="py-20 bg-black">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
@@ -166,7 +152,6 @@ export default function SecurityTools() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
@@ -177,7 +162,7 @@ export default function SecurityTools() {
               Start using our professional security suites today
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to={createPageUrl("QRGenerator")}>
+              <Link to={createPageUrl("VisualCryptography")}>
                 <Button size="lg" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white">
                   Try Visual Cryptography
                 </Button>

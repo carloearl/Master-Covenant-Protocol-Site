@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -52,8 +53,8 @@ export default function Home() {
   },
   {
     title: "Visual Cryptography Suite",
-    description: "Generate secure, threat-aware QR codes and hide encrypted data within images using LSB encoding.",
-    link: "QRGenerator",
+    description: "Generate secure QR codes and hide encrypted data within images using LSB encoding.",
+    link: "VisualCryptography",
     image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
     price: "$179.99",
     icon: Eye
@@ -67,9 +68,9 @@ export default function Home() {
     icon: Lock
   },
   {
-    title: "HSSS Command Suite",
-    description: "Premier enterprise security platform combining interactive threat mapping with real-time AI surveillance and incident tracking.",
-    link: "SecurityOperations",
+    title: "Security Operations Center",
+    description: "Real-time threat monitoring, interactive mapping, and security analytics.",
+    link: "SecurityOperationsCenter",
     image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/7e319a981_Whisk_429a6543b81e30d9bab4065457f3b62ddr.jpg",
     price: "Enterprise",
     icon: Shield
