@@ -106,7 +106,7 @@ export default function TechStackCarousel() {
 
         .marquee-content {
           display: flex;
-          gap: 4rem;
+          gap: 3rem;
           align-items: center;
         }
 
@@ -124,26 +124,29 @@ export default function TechStackCarousel() {
 
         .logo-item {
           flex-shrink: 0;
-          width: 120px;
-          height: 60px;
+          width: 80px;
+          height: 40px;
           display: flex;
           align-items: center;
           justify-content: center;
+          padding: 4px;
         }
 
         .logo-img {
           max-width: 100%;
           max-height: 100%;
+          width: auto;
+          height: auto;
           object-fit: contain;
           filter: grayscale(100%) brightness(0) invert(1);
-          opacity: 0.6;
+          opacity: 0.85;
           transition: all 0.3s ease-in-out;
         }
 
         .logo-item:hover .logo-img {
           filter: grayscale(0%) brightness(1) invert(0);
           opacity: 1;
-          transform: scale(1.15);
+          transform: scale(1.2);
           filter: drop-shadow(0 0 15px #00BFFF);
         }
 
