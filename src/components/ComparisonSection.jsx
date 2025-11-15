@@ -28,19 +28,19 @@ export default function ComparisonSection() {
         </div>
 
         <div className="max-w-4xl mx-auto glass-royal rounded-2xl overflow-hidden border-blue-500/30">
-          <div className="grid grid-cols-3 bg-blue-500/10 p-4 border-b border-blue-500/30">
-            <div className="text-white/70 font-semibold">Feature</div>
+          <div className="grid grid-cols-3 bg-blue-500/20 p-4 border-b border-blue-500/30">
+            <div className="text-white font-semibold">Feature</div>
             <div className="text-center">
               <div className="text-white font-bold text-lg">GlyphLock</div>
             </div>
-            <div className="text-center text-white/70 font-semibold">Traditional Solutions</div>
+            <div className="text-center text-white font-semibold">Traditional Solutions</div>
           </div>
 
           {features.map((feature, idx) => (
             <div
               key={idx}
               className={`grid grid-cols-3 p-4 items-center ${
-                idx % 2 === 0 ? 'bg-black/20' : 'bg-black/10'
+                idx % 2 === 0 ? 'glass-dark' : 'bg-blue-500/5'
               } border-b border-blue-500/10`}
             >
               <div className="text-white font-medium">{feature.name}</div>

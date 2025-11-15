@@ -92,7 +92,7 @@ export default function InteractiveDemoSection() {
                   </div>
                 </div>
 
-                <div className="p-8 flex flex-col justify-center">
+                <div className="p-8 flex flex-col justify-center glass-dark">
                   <div className="bg-blue-500/20 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
                     <DemoIcon className="w-8 h-8 text-blue-400" />
                   </div>
