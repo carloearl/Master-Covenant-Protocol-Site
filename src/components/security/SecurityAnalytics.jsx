@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart3, TrendingUp, Shield, AlertTriangle } from "lucide-react";
+import StatCard from "@/components/shared/StatCard";
 
 export default function SecurityAnalytics() {
   const { data: threats = [] } = useQuery({
@@ -32,37 +33,10 @@ export default function SecurityAnalytics() {
   return (
     <div className="space-y-6">
       <div className="grid md:grid-cols-4 gap-6">
-        <Card className="bg-gradient-to-br from-blue-500/10 to-blue-700/10 border-blue-500/30">
-          <CardContent className="p-6 text-center">
-            <Shield className="w-10 h-10 text-blue-400 mx-auto mb-3" />
-            <div className="text-3xl font-bold text-white mb-1">{totalThreats}</div>
-            <div className="text-sm text-gray-400">Total Threats</div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-red-500/10 to-red-700/10 border-red-500/30">
-          <CardContent className="p-6 text-center">
-            <AlertTriangle className="w-10 h-10 text-red-400 mx-auto mb-3" />
-            <div className="text-3xl font-bold text-white mb-1">{criticalThreats}</div>
-            <div className="text-sm text-gray-400">Critical</div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-yellow-500/10 to-yellow-700/10 border-yellow-500/30">
-          <CardContent className="p-6 text-center">
-            <TrendingUp className="w-10 h-10 text-yellow-400 mx-auto mb-3" />
-            <div className="text-3xl font-bold text-white mb-1">{activeThreats}</div>
-            <div className="text-sm text-gray-400">Active</div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-green-500/10 to-green-700/10 border-green-500/30">
-          <CardContent className="p-6 text-center">
-            <BarChart3 className="w-10 h-10 text-green-400 mx-auto mb-3" />
-            <div className="text-3xl font-bold text-white mb-1">{resolutionRate}%</div>
-            <div className="text-sm text-gray-400">Resolution Rate</div>
-          </CardContent>
-        </Card>
+        <StatCard icon={Shield} value={totalThreats} label="Total Threats" color="blue" />
+        <StatCard icon={AlertTriangle} value={criticalThreats} label="Critical" color="red" />
+        <StatCard icon={TrendingUp} value={activeThreats} label="Active" color="yellow" />
+        <StatCard icon={BarChart3} value={`${resolutionRate}%`} label="Resolution Rate" color="green" />
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -72,8 +46,8 @@ export default function SecurityAnalytics() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {Object.entries(threatsByType).map(([type, count], idx) => (
-                <div key={idx} className="flex items-center justify-between">
+              {Object.entries(threatsByType).map(([type, count]) => (
+                <div key={type} className="flex items-center justify-between">
                   <span className="text-gray-300 text-sm">{type}</span>
                   <div className="flex items-center gap-3">
                     <div className="w-32 h-2 bg-gray-800 rounded-full overflow-hidden">
@@ -96,7 +70,7 @@ export default function SecurityAnalytics() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {Object.entries(threatsBySeverity).map(([severity, count], idx) => {
+              {Object.entries(threatsBySeverity).map(([severity, count]) => {
                 const colors = {
                   critical: "bg-red-500",
                   high: "bg-orange-500",
@@ -104,13 +78,13 @@ export default function SecurityAnalytics() {
                   low: "bg-blue-500"
                 };
                 return (
-                  <div key={idx} className="flex items-center justify-between">
+                  <div key={severity} className="flex items-center justify-between">
                     <span className="text-gray-300 text-sm capitalize">{severity}</span>
                     <div className="flex items-center gap-3">
                       <div className="w-32 h-2 bg-gray-800 rounded-full overflow-hidden">
                         <div 
                           className={`h-full ${colors[severity]}`}
-                          style={{ width: `${(count / totalThreats) * 100}%` }}
+                          style={{ width: `${totalThreats > 0 ? (count / totalThreats) * 100 : 0}%` }}
                         />
                       </div>
                       <span className="text-white font-semibold text-sm w-8">{count}</span>
