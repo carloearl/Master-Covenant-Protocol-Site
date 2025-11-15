@@ -171,7 +171,7 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl("Blockchain")}>Blockchain Security</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
-                    <Link to={createPageUrl("HSSS")}>HSSS Surveillance</Link>
+                    <Link to={createPageUrl("SecurityOperations")}>Security Operations</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
                     <Link to={createPageUrl("GlyphBot")}>GlyphBot AI</Link>
@@ -317,9 +317,9 @@ export default function Layout({ children, currentPageName }) {
                     Security Tools
                   </Button>
                 </Link>
-                <Link to={createPageUrl("HSSS")} onClick={() => setMobileMenuOpen(false)}>
+                <Link to={createPageUrl("SecurityOperations")} onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    HSSS Surveillance
+                    Security Operations
                   </Button>
                 </Link>
                 <Link to={createPageUrl("GlyphBot")} onClick={() => setMobileMenuOpen(false)}>

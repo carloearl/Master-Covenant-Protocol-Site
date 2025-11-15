@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -145,10 +146,27 @@ export default function SecurityOperations() {
     if (!canvas || !image) return;
 
     const ctx = canvas.getContext("2d");
-    canvas.width = image.width;
-    canvas.height = image.height;
+    // Calculate new dimensions to fit canvas while maintaining aspect ratio
+    const maxWidth = 800; // Example max width, adjust as needed
+    const maxHeight = 600; // Example max height, adjust as needed
 
-    ctx.drawImage(image, 0, 0);
+    let newWidth = image.width;
+    let newHeight = image.height;
+
+    if (newWidth > maxWidth) {
+      newHeight = (newHeight * maxWidth) / newWidth;
+      newWidth = maxWidth;
+    }
+
+    if (newHeight > maxHeight) {
+      newWidth = (newWidth * maxHeight) / newHeight;
+      newHeight = maxHeight;
+    }
+
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+
+    ctx.drawImage(image, 0, 0, newWidth, newHeight);
 
     hotspots.forEach((hotspot, index) => {
       const isSelected = selectedHotspot === index;
@@ -192,8 +210,14 @@ export default function SecurityOperations() {
 
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * canvas.width;
-    const y = ((e.clientY - rect.top) / rect.height) * canvas.height;
+    
+    // Calculate scaling factors
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+    // Get click coordinates relative to the canvas's drawing buffer size
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
 
     const clickedIndex = hotspots.findIndex(
       (h) => Math.sqrt((h.x - x) ** 2 + (h.y - y) ** 2) < 25
@@ -407,8 +431,7 @@ export default function SecurityOperations() {
                               </Button>
                             )}
                           </div>
-                        </div>
-                      </CardHeader>
+                        </CardHeader>
                       <CardContent>
                         {!image ? (
                           <div className="border-2 border-dashed border-gray-700 rounded-lg p-12 text-center">
@@ -422,12 +445,11 @@ export default function SecurityOperations() {
                             />
                           </div>
                         ) : (
-                          <div className="relative">
+                          <div className="relative w-full">
                             <canvas
                               ref={canvasRef}
                               onClick={handleCanvasClick}
-                              className="w-full border border-gray-700 rounded-lg cursor-crosshair"
-                              style={{ maxHeight: "600px", objectFit: "contain" }}
+                              className="w-full h-auto max-h-[600px] border border-gray-700 rounded-lg cursor-crosshair object-contain"
                             />
                             {isDrawing && (
                               <div className="absolute top-4 left-4 bg-red-500/20 backdrop-blur-md border border-red-500/50 rounded-lg p-3 text-sm text-white">
