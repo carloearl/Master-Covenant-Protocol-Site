@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { decode } from 'https://deno.land/std@0.224.0/encoding/base64.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -18,37 +19,56 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Image file and message are required' }, { status: 400 });
     }
 
-    // Upload original image
-    const { file_url: originalUrl } = await base44.integrations.Core.UploadFile({ file: imageFile });
-
-    // In a real implementation, you would:
-    // 1. Load the image and convert to pixel array
-    // 2. Encrypt the message with AES using the password
-    // 3. Encode the encrypted message into LSB of image pixels
-    // 4. Save the modified image
+    // Read image file
+    const imageBytes = new Uint8Array(await imageFile.arrayBuffer());
     
-    // For now, we'll simulate this process
-    const encodedImageUrl = originalUrl; // In production, this would be the modified image
+    // Simple encryption if password provided
+    let messageToEncode = message;
+    if (password) {
+      const key = await crypto.subtle.importKey(
+        'raw',
+        new TextEncoder().encode(password.padEnd(32, '0').slice(0, 32)),
+        { name: 'AES-GCM' },
+        false,
+        ['encrypt']
+      );
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const encrypted = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv },
+        key,
+        new TextEncoder().encode(message)
+      );
+      messageToEncode = Array.from(iv).concat(Array.from(new Uint8Array(encrypted))).join(',');
+    }
 
-    // Log the steganography operation
+    // Convert message to binary
+    const messageBinary = messageToEncode.split('').map(char => 
+      char.charCodeAt(0).toString(2).padStart(8, '0')
+    ).join('');
+    
+    // Add length header (32 bits)
+    const lengthBinary = messageBinary.length.toString(2).padStart(32, '0');
+    const fullBinary = lengthBinary + messageBinary;
+
+    // Embed in LSB
+    const modifiedBytes = new Uint8Array(imageBytes);
+    for (let i = 0; i < fullBinary.length && i < modifiedBytes.length; i++) {
+      modifiedBytes[i] = (modifiedBytes[i] & 0xFE) | parseInt(fullBinary[i]);
+    }
+
+    // Upload modified image
+    const modifiedBlob = new Blob([modifiedBytes], { type: imageFile.type });
+    const { file_url: encodedUrl } = await base44.integrations.Core.UploadFile({ file: modifiedBlob });
+
     const operationId = `stego_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    // Save operation record (you'd need to create this entity)
-    // await base44.entities.StegoHistory.create({
-    //   operation_id: operationId,
-    //   user_email: user.email,
-    //   operation_type: 'encode',
-    //   image_url: encodedImageUrl,
-    //   has_password: !!password,
-    //   message_length: message.length
-    // });
 
     return Response.json({
       success: true,
       operation_id: operationId,
-      encoded_image_url: encodedImageUrl,
+      encoded_image_url: encodedUrl,
       message: 'Message successfully encoded in image using LSB steganography',
-      encryption: password ? 'AES-256' : 'none'
+      encryption: password ? 'AES-256-GCM' : 'none',
+      bits_used: fullBinary.length
     });
 
   } catch (error) {
