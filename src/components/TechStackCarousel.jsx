@@ -139,7 +139,7 @@ export default function TechStackCarousel() {
           width: 70px;
           height: 35px;
           object-fit: contain;
-          filter: grayscale(100%) brightness(0) invert(1);
+          filter: brightness(0) invert(1);
           opacity: 0.7;
           transition: all 0.3s ease-in-out;
         }
@@ -154,7 +154,7 @@ export default function TechStackCarousel() {
         }
 
         .logo-item:hover .logo-img {
-          filter: grayscale(0%) brightness(1) invert(0);
+          filter: none;
           opacity: 1;
           transform: scale(1.15);
         }
