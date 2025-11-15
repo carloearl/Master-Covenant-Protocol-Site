@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -16,14 +15,6 @@ import {
   CheckCircle2, XCircle, Clock, TrendingUp, Mail
 } from "lucide-react";
 import FreeTrialGuard from "@/components/FreeTrialGuard";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 export default function SecurityOperations() {
   const queryClient = useQueryClient();
@@ -86,6 +77,9 @@ export default function SecurityOperations() {
     onSuccess: () => {
       queryClient.invalidateQueries(['hotzone-maps']);
       alert('Map saved successfully!');
+    },
+    onError: (error) => {
+      alert(`Failed to save map: ${error.message}`);
     }
   });
 
@@ -93,6 +87,10 @@ export default function SecurityOperations() {
     mutationFn: (data) => base44.functions.invoke('detectThreat', data),
     onSuccess: () => {
       queryClient.invalidateQueries(['hotzone-threats']);
+      alert('Threat analysis complete!');
+    },
+    onError: (error) => {
+      alert(`Threat detection failed: ${error.message}`);
     }
   });
 
@@ -101,19 +99,24 @@ export default function SecurityOperations() {
     onSuccess: () => {
       alert('Alerts sent successfully!');
       setAlertRecipients("");
+    },
+    onError: (error) => {
+      alert(`Failed to send alerts: ${error.message}`);
     }
   });
 
   const generateReportMutation = useMutation({
     mutationFn: (data) => base44.functions.invoke('generateSecurityReport', data),
     onSuccess: (response) => {
-      // Download report as JSON
       const blob = new Blob([JSON.stringify(response.data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = `security-report-${Date.now()}.json`;
       a.click();
+    },
+    onError: (error) => {
+      alert(`Failed to generate report: ${error.message}`);
     }
   });
 
@@ -146,27 +149,10 @@ export default function SecurityOperations() {
     if (!canvas || !image) return;
 
     const ctx = canvas.getContext("2d");
-    // Calculate new dimensions to fit canvas while maintaining aspect ratio
-    const maxWidth = 800; // Example max width, adjust as needed
-    const maxHeight = 600; // Example max height, adjust as needed
+    canvas.width = image.width;
+    canvas.height = image.height;
 
-    let newWidth = image.width;
-    let newHeight = image.height;
-
-    if (newWidth > maxWidth) {
-      newHeight = (newHeight * maxWidth) / newWidth;
-      newWidth = maxWidth;
-    }
-
-    if (newHeight > maxHeight) {
-      newWidth = (newWidth * maxHeight) / newHeight;
-      newHeight = maxHeight;
-    }
-
-    canvas.width = newWidth;
-    canvas.height = newHeight;
-
-    ctx.drawImage(image, 0, 0, newWidth, newHeight);
+    ctx.drawImage(image, 0, 0);
 
     hotspots.forEach((hotspot, index) => {
       const isSelected = selectedHotspot === index;
@@ -210,14 +196,8 @@ export default function SecurityOperations() {
 
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
-    
-    // Calculate scaling factors
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-
-    // Get click coordinates relative to the canvas's drawing buffer size
-    const x = (e.clientX - rect.left) * scaleX;
-    const y = (e.clientY - rect.top) * scaleY;
+    const x = ((e.clientX - rect.left) / rect.width) * canvas.width;
+    const y = ((e.clientY - rect.top) / rect.height) * canvas.height;
 
     const clickedIndex = hotspots.findIndex(
       (h) => Math.sqrt((h.x - x) ** 2 + (h.y - y) ** 2) < 25
@@ -280,7 +260,6 @@ export default function SecurityOperations() {
       return;
     }
 
-    // Convert canvas to blob
     canvasRef.current.toBlob((blob) => {
       saveMapMutation.mutate({
         ...mapConfig,
@@ -304,7 +283,6 @@ export default function SecurityOperations() {
     img.src = map.image_url;
   };
 
-  // Filter threats
   const filteredThreats = threats.filter(threat => {
     const matchesFilter = threatFilter === 'all' || threat.severity === threatFilter;
     const matchesSearch = !searchQuery || 
@@ -313,7 +291,6 @@ export default function SecurityOperations() {
     return matchesFilter && matchesSearch;
   });
 
-  // Statistics
   const stats = {
     total: threats.length,
     critical: threats.filter(t => t.severity === 'critical').length,
@@ -327,7 +304,6 @@ export default function SecurityOperations() {
       <div className="min-h-screen bg-black text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
-            {/* Header */}
             <div className="text-center mb-12">
               <Badge variant="outline" className="border-red-500/50 bg-red-500/10 text-red-400 mb-6">
                 <Shield className="w-4 h-4 mr-2" />
@@ -341,7 +317,6 @@ export default function SecurityOperations() {
               </p>
             </div>
 
-            {/* Stats Cards */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
               <Card className="bg-gray-900 border-gray-800">
                 <CardContent className="pt-6 text-center">
@@ -380,7 +355,6 @@ export default function SecurityOperations() {
               </Card>
             </div>
 
-            {/* Main Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="grid w-full grid-cols-4 bg-gray-900 mb-8">
                 <TabsTrigger value="mapper">
@@ -401,7 +375,6 @@ export default function SecurityOperations() {
                 </TabsTrigger>
               </TabsList>
 
-              {/* Mapper Tab */}
               <TabsContent value="mapper">
                 <div className="grid lg:grid-cols-3 gap-6">
                   <div className="lg:col-span-2">
@@ -431,7 +404,8 @@ export default function SecurityOperations() {
                               </Button>
                             )}
                           </div>
-                        </CardHeader>
+                        </div>
+                      </CardHeader>
                       <CardContent>
                         {!image ? (
                           <div className="border-2 border-dashed border-gray-700 rounded-lg p-12 text-center">
@@ -449,7 +423,7 @@ export default function SecurityOperations() {
                             <canvas
                               ref={canvasRef}
                               onClick={handleCanvasClick}
-                              className="w-full h-auto max-h-[600px] border border-gray-700 rounded-lg cursor-crosshair object-contain"
+                              className="w-full h-auto max-h-[600px] border border-gray-700 rounded-lg cursor-crosshair"
                             />
                             {isDrawing && (
                               <div className="absolute top-4 left-4 bg-red-500/20 backdrop-blur-md border border-red-500/50 rounded-lg p-3 text-sm text-white">
@@ -464,7 +438,6 @@ export default function SecurityOperations() {
                   </div>
 
                   <div className="space-y-6">
-                    {/* Map Config */}
                     {image && (
                       <Card className="bg-gray-900 border-gray-800">
                         <CardHeader>
@@ -511,7 +484,6 @@ export default function SecurityOperations() {
                       </Card>
                     )}
 
-                    {/* Hotspot Editor */}
                     {selectedHotspot !== null && (
                       <Card className="bg-gray-900 border-gray-800">
                         <CardHeader>
@@ -593,11 +565,9 @@ export default function SecurityOperations() {
                 </div>
               </TabsContent>
 
-              {/* Surveillance Tab */}
               <TabsContent value="surveillance">
                 <div className="grid lg:grid-cols-3 gap-6">
                   <div className="lg:col-span-2 space-y-6">
-                    {/* Filters */}
                     <Card className="bg-gray-900 border-gray-800">
                       <CardContent className="pt-6">
                         <div className="flex gap-4">
@@ -625,7 +595,6 @@ export default function SecurityOperations() {
                       </CardContent>
                     </Card>
 
-                    {/* Threat List */}
                     <div className="space-y-4">
                       {filteredThreats.map((threat) => (
                         <Card 
@@ -671,7 +640,6 @@ export default function SecurityOperations() {
                     </div>
                   </div>
 
-                  {/* Threat Details Sidebar */}
                   <div>
                     {selectedThreat ? (
                       <Card className="bg-gray-900 border-gray-800 sticky top-24">
@@ -762,7 +730,6 @@ export default function SecurityOperations() {
                 </div>
               </TabsContent>
 
-              {/* Saved Maps Tab */}
               <TabsContent value="maps">
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {maps.map((map) => (
@@ -794,7 +761,6 @@ export default function SecurityOperations() {
                 </div>
               </TabsContent>
 
-              {/* Analytics Tab */}
               <TabsContent value="analytics">
                 <div className="grid md:grid-cols-2 gap-6">
                   <Card className="bg-gray-900 border-gray-800">
@@ -811,7 +777,7 @@ export default function SecurityOperations() {
                           <div className="w-full bg-gray-800 rounded-full h-2">
                             <div 
                               className="bg-red-500 h-2 rounded-full" 
-                              style={{ width: `${(stats.critical / stats.total) * 100}%` }}
+                              style={{ width: `${stats.total > 0 ? (stats.critical / stats.total) * 100 : 0}%` }}
                             />
                           </div>
                         </div>
@@ -823,7 +789,7 @@ export default function SecurityOperations() {
                           <div className="w-full bg-gray-800 rounded-full h-2">
                             <div 
                               className="bg-orange-500 h-2 rounded-full" 
-                              style={{ width: `${(stats.high / stats.total) * 100}%` }}
+                              style={{ width: `${stats.total > 0 ? (stats.high / stats.total) * 100 : 0}%` }}
                             />
                           </div>
                         </div>
