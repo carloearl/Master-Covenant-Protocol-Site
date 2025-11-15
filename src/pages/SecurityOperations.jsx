@@ -15,10 +15,11 @@ import {
   CheckCircle2, XCircle, Clock, TrendingUp, Mail
 } from "lucide-react";
 import FreeTrialGuard from "@/components/FreeTrialGuard";
+import LiveThreatMonitor from "@/components/security/LiveThreatMonitor";
 
 export default function SecurityOperations() {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState("mapper");
+  const [activeTab, setActiveTab] = useState("surveillance");
   
   // Mapper state
   const [image, setImage] = useState(null);
@@ -46,15 +47,17 @@ export default function SecurityOperations() {
   const [selectedThreat, setSelectedThreat] = useState(null);
   const [alertRecipients, setAlertRecipients] = useState("");
 
-  // Queries
+  // Queries with auto-refresh
   const { data: maps = [], isLoading: mapsLoading } = useQuery({
     queryKey: ['hotzone-maps'],
-    queryFn: () => base44.entities.HotzoneMap.list('-updated_date', 50)
+    queryFn: () => base44.entities.HotzoneMap.list('-updated_date', 50),
+    refetchInterval: 30000 // Refresh every 30 seconds
   });
 
-  const { data: threats = [], isLoading: threatsLoading } = useQuery({
+  const { data: threats = [], isLoading: threatsLoading, refetch: refetchThreats } = useQuery({
     queryKey: ['hotzone-threats'],
-    queryFn: () => base44.entities.HotzoneThreat.list('-updated_date', 100)
+    queryFn: () => base44.entities.HotzoneThreat.list('-updated_date', 100),
+    refetchInterval: 5000 // Refresh every 5 seconds for live monitoring
   });
 
   // Mutations
@@ -313,7 +316,7 @@ export default function SecurityOperations() {
                 Security <span className="bg-gradient-to-r from-red-400 to-orange-600 bg-clip-text text-transparent">Operations Center</span>
               </h1>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Interactive security mapping with real-time threat monitoring and AI detection
+                Real-time threat monitoring with AI detection and instant response capabilities
               </p>
             </div>
 
@@ -355,15 +358,20 @@ export default function SecurityOperations() {
               </Card>
             </div>
 
+            {/* Live Threat Monitor */}
+            <div className="mb-8">
+              <LiveThreatMonitor threats={threats} onRefresh={refetchThreats} />
+            </div>
+
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="grid w-full grid-cols-4 bg-gray-900 mb-8">
-                <TabsTrigger value="mapper">
-                  <MapPin className="w-4 h-4 mr-2" />
-                  Mapper
-                </TabsTrigger>
                 <TabsTrigger value="surveillance">
                   <Eye className="w-4 h-4 mr-2" />
                   Surveillance
+                </TabsTrigger>
+                <TabsTrigger value="mapper">
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Mapper
                 </TabsTrigger>
                 <TabsTrigger value="maps">
                   <Save className="w-4 h-4 mr-2" />
@@ -374,6 +382,171 @@ export default function SecurityOperations() {
                   Analytics
                 </TabsTrigger>
               </TabsList>
+
+              <TabsContent value="surveillance">
+                <div className="grid lg:grid-cols-3 gap-6">
+                  <div className="lg:col-span-2 space-y-6">
+                    <Card className="bg-gray-900 border-gray-800">
+                      <CardContent className="pt-6">
+                        <div className="flex gap-4">
+                          <div className="flex-1">
+                            <Input
+                              placeholder="Search threats..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              className="bg-gray-800 border-gray-700 text-white"
+                            />
+                          </div>
+                          <Select value={threatFilter} onValueChange={setThreatFilter}>
+                            <SelectTrigger className="w-40 bg-gray-800 border-gray-700 text-white">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-800 border-gray-700">
+                              <SelectItem value="all">All Severity</SelectItem>
+                              <SelectItem value="critical">Critical</SelectItem>
+                              <SelectItem value="high">High</SelectItem>
+                              <SelectItem value="medium">Medium</SelectItem>
+                              <SelectItem value="low">Low</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <div className="space-y-4">
+                      {filteredThreats.map((threat) => (
+                        <Card 
+                          key={threat.id} 
+                          className={`bg-gray-900 border-gray-800 cursor-pointer transition-all ${
+                            selectedThreat?.id === threat.id ? 'border-blue-500' : 'hover:border-gray-700'
+                          }`}
+                          onClick={() => setSelectedThreat(threat)}
+                        >
+                          <CardContent className="pt-6">
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <Badge className={
+                                    threat.severity === 'critical' ? 'bg-red-500/20 text-red-400' :
+                                    threat.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
+                                    threat.severity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                                    'bg-green-500/20 text-green-400'
+                                  }>
+                                    {threat.severity}
+                                  </Badge>
+                                  <Badge variant="outline" className="text-xs">
+                                    {threat.threat_type}
+                                  </Badge>
+                                  {threat.resolved && (
+                                    <Badge className="bg-green-500/20 text-green-400">
+                                      Resolved
+                                    </Badge>
+                                  )}
+                                </div>
+                                <h3 className="font-semibold text-white text-lg">{threat.hotspot_name}</h3>
+                                <p className="text-gray-400 text-sm mt-1">{threat.description}</p>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-sm text-gray-500">
+                                  {new Date(threat.created_date).toLocaleDateString()}
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    {selectedThreat ? (
+                      <Card className="bg-gray-900 border-gray-800 sticky top-24">
+                        <CardHeader>
+                          <CardTitle className="text-white">Threat Details</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <div>
+                            <Label className="text-gray-400 text-xs">Location</Label>
+                            <p className="text-white font-semibold">{selectedThreat.hotspot_name}</p>
+                          </div>
+                          <div>
+                            <Label className="text-gray-400 text-xs">Type</Label>
+                            <p className="text-white">{selectedThreat.threat_type}</p>
+                          </div>
+                          <div>
+                            <Label className="text-gray-400 text-xs">Severity</Label>
+                            <Badge className={
+                              selectedThreat.severity === 'critical' ? 'bg-red-500/20 text-red-400' :
+                              selectedThreat.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
+                              selectedThreat.severity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                              'bg-green-500/20 text-green-400'
+                            }>
+                              {selectedThreat.severity}
+                            </Badge>
+                          </div>
+                          <div>
+                            <Label className="text-gray-400 text-xs">Status</Label>
+                            <p className="text-white">{selectedThreat.status}</p>
+                          </div>
+                          <div>
+                            <Label className="text-gray-400 text-xs">Detection Method</Label>
+                            <p className="text-white">{selectedThreat.detection_method}</p>
+                          </div>
+                          
+                          <div className="pt-4 border-t border-gray-800 space-y-3">
+                            <div>
+                              <Label className="text-white text-sm mb-2 block">Send Alert</Label>
+                              <Input
+                                placeholder="email1@example.com, email2@example.com"
+                                value={alertRecipients}
+                                onChange={(e) => setAlertRecipients(e.target.value)}
+                                className="bg-gray-800 border-gray-700 text-white mb-2"
+                              />
+                              <Button
+                                onClick={() => {
+                                  const recipients = alertRecipients.split(',').map(e => e.trim()).filter(Boolean);
+                                  if (recipients.length > 0) {
+                                    sendAlertMutation.mutate({
+                                      threat_id: selectedThreat.id,
+                                      recipients: recipients,
+                                      alert_type: 'security_incident',
+                                      severity: selectedThreat.severity
+                                    });
+                                  }
+                                }}
+                                disabled={sendAlertMutation.isPending || !alertRecipients}
+                                className="w-full bg-red-600 text-white"
+                                size="sm"
+                              >
+                                <Mail className="w-4 h-4 mr-2" />
+                                Send Alert
+                              </Button>
+                            </div>
+                            
+                            <Button
+                              onClick={() => generateReportMutation.mutate({ map_id: selectedThreat.map_id })}
+                              disabled={generateReportMutation.isPending}
+                              variant="outline"
+                              className="w-full border-blue-500/50 text-blue-400"
+                              size="sm"
+                            >
+                              <FileText className="w-4 h-4 mr-2" />
+                              Generate Report
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      <Card className="bg-gray-900 border-gray-800">
+                        <CardContent className="pt-6 text-center">
+                          <Eye className="w-12 h-12 text-gray-600 mx-auto mb-3" />
+                          <p className="text-gray-400">Select a threat to view details</p>
+                        </CardContent>
+                      </Card>
+                    )}
+                  </div>
+                </div>
+              </TabsContent>
 
               <TabsContent value="mapper">
                 <div className="grid lg:grid-cols-3 gap-6">
@@ -558,171 +731,6 @@ export default function SecurityOperations() {
                             <Shield className="w-4 h-4 mr-2" />
                             AI Threat Analysis
                           </Button>
-                        </CardContent>
-                      </Card>
-                    )}
-                  </div>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="surveillance">
-                <div className="grid lg:grid-cols-3 gap-6">
-                  <div className="lg:col-span-2 space-y-6">
-                    <Card className="bg-gray-900 border-gray-800">
-                      <CardContent className="pt-6">
-                        <div className="flex gap-4">
-                          <div className="flex-1">
-                            <Input
-                              placeholder="Search threats..."
-                              value={searchQuery}
-                              onChange={(e) => setSearchQuery(e.target.value)}
-                              className="bg-gray-800 border-gray-700 text-white"
-                            />
-                          </div>
-                          <Select value={threatFilter} onValueChange={setThreatFilter}>
-                            <SelectTrigger className="w-40 bg-gray-800 border-gray-700 text-white">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-gray-800 border-gray-700">
-                              <SelectItem value="all">All Severity</SelectItem>
-                              <SelectItem value="critical">Critical</SelectItem>
-                              <SelectItem value="high">High</SelectItem>
-                              <SelectItem value="medium">Medium</SelectItem>
-                              <SelectItem value="low">Low</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <div className="space-y-4">
-                      {filteredThreats.map((threat) => (
-                        <Card 
-                          key={threat.id} 
-                          className={`bg-gray-900 border-gray-800 cursor-pointer transition-all ${
-                            selectedThreat?.id === threat.id ? 'border-blue-500' : 'hover:border-gray-700'
-                          }`}
-                          onClick={() => setSelectedThreat(threat)}
-                        >
-                          <CardContent className="pt-6">
-                            <div className="flex items-start justify-between mb-3">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <Badge className={
-                                    threat.severity === 'critical' ? 'bg-red-500/20 text-red-400' :
-                                    threat.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
-                                    threat.severity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                                    'bg-green-500/20 text-green-400'
-                                  }>
-                                    {threat.severity}
-                                  </Badge>
-                                  <Badge variant="outline" className="text-xs">
-                                    {threat.threat_type}
-                                  </Badge>
-                                  {threat.resolved && (
-                                    <Badge className="bg-green-500/20 text-green-400">
-                                      Resolved
-                                    </Badge>
-                                  )}
-                                </div>
-                                <h3 className="font-semibold text-white text-lg">{threat.hotspot_name}</h3>
-                                <p className="text-gray-400 text-sm mt-1">{threat.description}</p>
-                              </div>
-                              <div className="text-right">
-                                <div className="text-sm text-gray-500">
-                                  {new Date(threat.created_date).toLocaleDateString()}
-                                </div>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    {selectedThreat ? (
-                      <Card className="bg-gray-900 border-gray-800 sticky top-24">
-                        <CardHeader>
-                          <CardTitle className="text-white">Threat Details</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <div>
-                            <Label className="text-gray-400 text-xs">Location</Label>
-                            <p className="text-white font-semibold">{selectedThreat.hotspot_name}</p>
-                          </div>
-                          <div>
-                            <Label className="text-gray-400 text-xs">Type</Label>
-                            <p className="text-white">{selectedThreat.threat_type}</p>
-                          </div>
-                          <div>
-                            <Label className="text-gray-400 text-xs">Severity</Label>
-                            <Badge className={
-                              selectedThreat.severity === 'critical' ? 'bg-red-500/20 text-red-400' :
-                              selectedThreat.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
-                              selectedThreat.severity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                              'bg-green-500/20 text-green-400'
-                            }>
-                              {selectedThreat.severity}
-                            </Badge>
-                          </div>
-                          <div>
-                            <Label className="text-gray-400 text-xs">Status</Label>
-                            <p className="text-white">{selectedThreat.status}</p>
-                          </div>
-                          <div>
-                            <Label className="text-gray-400 text-xs">Detection Method</Label>
-                            <p className="text-white">{selectedThreat.detection_method}</p>
-                          </div>
-                          
-                          <div className="pt-4 border-t border-gray-800 space-y-3">
-                            <div>
-                              <Label className="text-white text-sm mb-2 block">Send Alert</Label>
-                              <Input
-                                placeholder="email1@example.com, email2@example.com"
-                                value={alertRecipients}
-                                onChange={(e) => setAlertRecipients(e.target.value)}
-                                className="bg-gray-800 border-gray-700 text-white mb-2"
-                              />
-                              <Button
-                                onClick={() => {
-                                  const recipients = alertRecipients.split(',').map(e => e.trim()).filter(Boolean);
-                                  if (recipients.length > 0) {
-                                    sendAlertMutation.mutate({
-                                      threat_id: selectedThreat.id,
-                                      recipients: recipients,
-                                      alert_type: 'security_incident',
-                                      severity: selectedThreat.severity
-                                    });
-                                  }
-                                }}
-                                disabled={sendAlertMutation.isPending || !alertRecipients}
-                                className="w-full bg-red-600 text-white"
-                                size="sm"
-                              >
-                                <Mail className="w-4 h-4 mr-2" />
-                                Send Alert
-                              </Button>
-                            </div>
-                            
-                            <Button
-                              onClick={() => generateReportMutation.mutate({ map_id: selectedThreat.map_id })}
-                              disabled={generateReportMutation.isPending}
-                              variant="outline"
-                              className="w-full border-blue-500/50 text-blue-400"
-                              size="sm"
-                            >
-                              <FileText className="w-4 h-4 mr-2" />
-                              Generate Report
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ) : (
-                      <Card className="bg-gray-900 border-gray-800">
-                        <CardContent className="pt-6 text-center">
-                          <Eye className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                          <p className="text-gray-400">Select a threat to view details</p>
                         </CardContent>
                       </Card>
                     )}
