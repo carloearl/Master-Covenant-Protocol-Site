@@ -46,13 +46,10 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await base44.auth.logout(createPageUrl("Home"));
-    } catch (err) {
-      console.error("Logout error:", err);
-      window.location.href = createPageUrl("Home");
-    }
+  const handleLogout = () => {
+    setUser(null);
+    setMobileMenuOpen(false);
+    base44.auth.logout();
   };
 
   const toggleTheme = () => {
@@ -243,10 +240,7 @@ export default function Layout({ children, currentPageName }) {
                 </Link>
                 {user ? (
                   <Button 
-                    onClick={async () => {
-                      setMobileMenuOpen(false);
-                      await handleLogout();
-                    }}
+                    onClick={handleLogout}
                     variant="outline" 
                     className="w-full mt-2 border-red-500/50 text-red-400"
                   >
