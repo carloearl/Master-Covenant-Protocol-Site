@@ -69,14 +69,14 @@ export default function TechStackCarousel() {
       </div>
 
       {/* Row 1 - Scrolls Left */}
-      <div className="relative mb-8 marquee-container">
-        <div className="flex animate-marquee-left gap-8">
+      <div className="relative mb-8 marquee-container py-4">
+        <div className="flex animate-marquee-left gap-12">
           {[...row1Companies, ...row1Companies].map((company, idx) => (
-            <div key={idx} className="flex-shrink-0 logo-wrapper">
+            <div key={idx} className="flex-shrink-0 logo-wrapper min-w-[120px] flex items-center justify-center">
               <img 
                 src={company.logo} 
                 alt={company.name}
-                className="h-12 w-auto object-contain tech-logo"
+                className="h-16 w-auto object-contain tech-logo"
                 loading="lazy"
                 onError={(e) => {
                   e.target.style.display = 'none';
@@ -88,14 +88,14 @@ export default function TechStackCarousel() {
       </div>
 
       {/* Row 2 - Scrolls Right */}
-      <div className="relative marquee-container">
-        <div className="flex animate-marquee-right gap-8">
+      <div className="relative marquee-container py-4">
+        <div className="flex animate-marquee-right gap-12">
           {[...row2Companies, ...row2Companies].map((company, idx) => (
-            <div key={idx} className="flex-shrink-0 logo-wrapper">
+            <div key={idx} className="flex-shrink-0 logo-wrapper min-w-[120px] flex items-center justify-center">
               <img 
                 src={company.logo} 
                 alt={company.name}
-                className="h-12 w-auto object-contain tech-logo"
+                className="h-16 w-auto object-contain tech-logo"
                 loading="lazy"
                 onError={(e) => {
                   e.target.style.display = 'none';
@@ -141,14 +141,16 @@ export default function TechStackCarousel() {
         }
         
         .tech-logo {
-          filter: brightness(0) invert(1);
-          transition: all 0.3s ease-in-out;
+          filter: grayscale(100%) brightness(0.6) contrast(1.2);
+          opacity: 0.7;
+          transition: all 0.4s ease-in-out;
         }
         
         .logo-wrapper:hover .tech-logo {
-          filter: brightness(1) invert(0);
-          transform: scale(1.1);
-          filter: drop-shadow(0 0 10px #00BFFF);
+          filter: grayscale(0%) brightness(1) contrast(1);
+          opacity: 1;
+          transform: scale(1.15);
+          filter: drop-shadow(0 0 15px #00BFFF);
         }
       `}</style>
     </div>
