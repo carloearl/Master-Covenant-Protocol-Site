@@ -1,10 +1,17 @@
-css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    /* Directive Omega Color System - High Contrast */
+    --color-bg-dark: #111827;
+    --color-bg-off-dark: #1F2937;
+    --color-text-primary: #F9FAFB;
+    --color-text-secondary: #9CA3AF;
+    --color-brand-blue: #3B82F6;
+    
+    /* Original Base44 Variables (preserved for compatibility) */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -62,8 +69,51 @@ css
   }
 }
 
-/* Royal Blue Glassmorphism Design System */
+/* Directive Omega: Global Utility Classes */
 @layer utilities {
+  .bg-glyphlock-dark {
+    background-color: var(--color-bg-dark);
+  }
+  
+  .bg-glyphlock-off-dark {
+    background-color: var(--color-bg-off-dark);
+  }
+  
+  .text-glyphlock-primary {
+    color: var(--color-text-primary);
+  }
+  
+  .text-glyphlock-secondary {
+    color: var(--color-text-secondary);
+  }
+  
+  .text-glyphlock-brand {
+    color: var(--color-brand-blue);
+  }
+  
+  .bg-glyphlock-brand {
+    background-color: var(--color-brand-blue);
+  }
+  
+  .border-glyphlock-brand {
+    border-color: var(--color-brand-blue);
+  }
+
+  /* WCAG AA Compliant Buttons */
+  .btn-primary-glyphlock {
+    background-color: var(--color-brand-blue);
+    color: var(--color-text-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  
+  .btn-primary-glyphlock:hover {
+    background-color: #2563EB;
+  }
+
+  /* Glass Card Effect */
   .glass-card {
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(20px);

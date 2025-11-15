@@ -33,6 +33,8 @@ import DreamTeam from './pages/DreamTeam';
 import VisualCryptography from './pages/VisualCryptography';
 import SecurityOperationsCenter from './pages/SecurityOperationsCenter';
 import GovernanceHub from './pages/GovernanceHub';
+import EntertainerCheckIn from './pages/EntertainerCheckIn';
+import VIPContract from './pages/VIPContract';
 import Layout from './Layout.jsx';
 
 
@@ -72,6 +74,8 @@ export const PAGES = {
     "VisualCryptography": VisualCryptography,
     "SecurityOperationsCenter": SecurityOperationsCenter,
     "GovernanceHub": GovernanceHub,
+    "EntertainerCheckIn": EntertainerCheckIn,
+    "VIPContract": VIPContract,
 }
 
 export const pagesConfig = {
