@@ -30,6 +30,7 @@ import RefactorTaskList from './pages/RefactorTaskList';
 import IntegrationPlan from './pages/IntegrationPlan';
 import SecurityOperations from './pages/SecurityOperations';
 import DreamTeam from './pages/DreamTeam';
+import VisualCryptography from './pages/VisualCryptography';
 import Layout from './Layout.jsx';
 
 
@@ -66,6 +67,7 @@ export const PAGES = {
     "IntegrationPlan": IntegrationPlan,
     "SecurityOperations": SecurityOperations,
     "DreamTeam": DreamTeam,
+    "VisualCryptography": VisualCryptography,
 }
 
 export const pagesConfig = {
