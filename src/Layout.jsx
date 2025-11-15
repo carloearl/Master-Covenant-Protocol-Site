@@ -66,25 +66,25 @@ export default function Layout({ children, currentPageName }) {
       {/* Navigation with strong glassmorphism */}
       <nav className="fixed top-0 left-0 right-0 z-[100] glass-royal border-b border-blue-500/50 shadow-xl">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-20">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-3">
               {canGoBack && (
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="sm"
                   onClick={() => navigate(-1)}
-                  className="glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30"
+                  className="glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30 text-xs"
                 >
-                  <ArrowLeft className="w-5 h-5" />
+                  <ArrowLeft className="w-4 h-4" />
                 </Button>
               )}
-              <Link to={createPageUrl("Home")} className="flex items-center gap-3 group">
+              <Link to={createPageUrl("Home")} className="flex items-center gap-2 group">
                 <img 
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d92107808_glyphlock-3d-logo.png"
                   alt="GlyphLock"
-                  className="h-12 w-auto transform group-hover:scale-110 transition-transform"
+                  className="h-8 w-auto transform group-hover:scale-110 transition-transform"
                 />
-                <h1 className="text-2xl font-bold text-white">
+                <h1 className="text-base font-bold text-white">
                   GlyphLock
                 </h1>
               </Link>
@@ -96,13 +96,13 @@ export default function Layout({ children, currentPageName }) {
                   return (
                     <DropdownMenu key={item.label}>
                       <DropdownMenuTrigger asChild>
-                        <Button className="glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30">
-                          {item.label} <ChevronDown className="w-4 h-4 ml-1" />
+                        <Button size="sm" className="glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30 text-xs">
+                          {item.label} <ChevronDown className="w-3 h-3 ml-1" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="glass-royal border-blue-500/50 shadow-2xl z-[110]">
                         {item.dropdown.map((subItem) => (
-                          <DropdownMenuItem key={subItem.page} asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer">
+                          <DropdownMenuItem key={subItem.page} asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer text-xs">
                             <Link to={createPageUrl(subItem.page)}>{subItem.label}</Link>
                           </DropdownMenuItem>
                         ))}
@@ -112,15 +112,15 @@ export default function Layout({ children, currentPageName }) {
                 }
                 return (
                   <Link key={item.page} to={createPageUrl(item.page)}>
-                    <Button className={isActive(item.page) ? "glass-royal border border-blue-500/50 text-blue-400 bg-blue-500/30" : "glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30"}>
+                    <Button size="sm" className={isActive(item.page) ? "glass-royal border border-blue-500/50 text-blue-400 bg-blue-500/30 text-xs" : "glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30 text-xs"}>
                       {item.label}
                     </Button>
                   </Link>
                 );
               })}
 
-              <Link to={createPageUrl("Consultation")} className="ml-4">
-                <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white glow-royal shadow-xl">
+              <Link to={createPageUrl("Consultation")} className="ml-2">
+                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white glow-royal shadow-xl text-xs">
                   Get Started
                 </Button>
               </Link>
@@ -128,34 +128,34 @@ export default function Layout({ children, currentPageName }) {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button className="ml-2 glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30">
-                      <User className="w-4 h-4 mr-2" />
+                    <Button size="sm" className="ml-1 glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30 text-xs">
+                      <User className="w-3 h-3 mr-1" />
                       {user.full_name || user.email}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="glass-royal border-blue-500/50 shadow-2xl z-[110]">
-                    <DropdownMenuItem asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer">
+                    <DropdownMenuItem asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer text-xs">
                       <Link to={createPageUrl("Dashboard")}>
-                        <User className="w-4 h-4 mr-2" />
+                        <User className="w-3 h-3 mr-2" />
                         Dashboard
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="text-white/70 focus:bg-blue-500/20">
+                    <DropdownMenuItem className="text-white/70 focus:bg-blue-500/20 text-xs">
                       {user.email}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-blue-500/30" />
                     <DropdownMenuItem 
                       onClick={handleLogout}
-                      className="text-red-400 hover:text-red-300 hover:bg-red-500/20 focus:text-red-300 focus:bg-red-500/20 cursor-pointer"
+                      className="text-red-400 hover:text-red-300 hover:bg-red-500/20 focus:text-red-300 focus:bg-red-500/20 cursor-pointer text-xs"
                     >
-                      <LogOut className="w-4 h-4 mr-2" />
+                      <LogOut className="w-3 h-3 mr-2" />
                       Logout
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Link to={createPageUrl("Login")} className="ml-2">
-                  <Button className="glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30">
+                <Link to={createPageUrl("Login")} className="ml-1">
+                  <Button size="sm" className="glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30 text-xs">
                     Sign In
                   </Button>
                 </Link>
@@ -167,7 +167,7 @@ export default function Layout({ children, currentPageName }) {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="text-white p-2 glass-royal border border-blue-500/30 rounded-lg"
               >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
           </div>
@@ -179,12 +179,12 @@ export default function Layout({ children, currentPageName }) {
                   if (item.dropdown) {
                     return (
                       <React.Fragment key={item.label}>
-                        <div className="px-2 py-1 font-semibold text-blue-400">
+                        <div className="px-2 py-1 font-semibold text-blue-400 text-xs">
                           {item.label}
                         </div>
                         {item.dropdown.map((subItem) => (
                           <Link key={subItem.page} to={createPageUrl(subItem.page)} onClick={() => setMobileMenuOpen(false)}>
-                            <Button className="w-full justify-start pl-6 glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30">
+                            <Button size="sm" className="w-full justify-start pl-6 glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30 text-xs">
                               {subItem.label}
                             </Button>
                           </Link>
@@ -194,7 +194,7 @@ export default function Layout({ children, currentPageName }) {
                   }
                   return (
                     <Link key={item.page} to={createPageUrl(item.page)} onClick={() => setMobileMenuOpen(false)}>
-                      <Button className="w-full justify-start glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30">
+                      <Button size="sm" className="w-full justify-start glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30 text-xs">
                         {item.label}
                       </Button>
                     </Link>
@@ -202,27 +202,28 @@ export default function Layout({ children, currentPageName }) {
                 })}
                 {user && (
                   <Link to={createPageUrl("Dashboard")} onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full justify-start glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30">
+                    <Button size="sm" className="w-full justify-start glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30 text-xs">
                       Dashboard
                     </Button>
                   </Link>
                 )}
                 <Link to={createPageUrl("Consultation")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white mt-2 shadow-xl">
+                  <Button size="sm" className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white mt-2 shadow-xl text-xs">
                     Get Started
                   </Button>
                 </Link>
                 {user ? (
                   <Button 
+                    size="sm"
                     onClick={handleLogout}
-                    className="w-full mt-2 glass-royal border border-red-500/50 text-red-400 hover:bg-red-500/20"
+                    className="w-full mt-2 glass-royal border border-red-500/50 text-red-400 hover:bg-red-500/20 text-xs"
                   >
-                    <LogOut className="w-4 h-4 mr-2" />
+                    <LogOut className="w-3 h-3 mr-2" />
                     Logout
                   </Button>
                 ) : (
                   <Link to={createPageUrl("Login")} onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full mt-2 glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30">
+                    <Button size="sm" className="w-full mt-2 glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30 text-xs">
                       Sign In
                     </Button>
                   </Link>
@@ -233,7 +234,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </nav>
 
-      <main className="pt-24 pb-8 relative z-10">
+      <main className="pt-20 pb-8 relative z-10">
         {children}
       </main>
 
