@@ -40,19 +40,6 @@
     @apply bg-black text-white;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
-
-  /* Force white text everywhere */
-  p, span, div, label, h1, h2, h3, h4, h5, h6, li, a, button {
-    color: white !important;
-  }
-
-  input, textarea, select {
-    color: white !important;
-  }
-
-  input::placeholder, textarea::placeholder {
-    color: rgba(255, 255, 255, 0.5) !important;
-  }
 }
 
 @layer components {
@@ -69,6 +56,7 @@
       0 8px 32px rgba(65, 105, 225, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.1),
       0 0 20px rgba(65, 105, 225, 0.1) !important;
+    color: white !important;
   }
 
   .glass-dark {
@@ -80,6 +68,7 @@
       0 8px 32px rgba(0, 0, 0, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.05),
       0 0 15px rgba(65, 105, 225, 0.15) !important;
+    color: white !important;
   }
 
   .glass-input {
@@ -101,6 +90,7 @@
     -webkit-backdrop-filter: blur(20px) !important;
     border: 1px solid rgba(65, 105, 225, 0.3) !important;
     box-shadow: 0 8px 32px rgba(65, 105, 225, 0.2) !important;
+    color: white !important;
   }
 
   .glass-card-dark {
@@ -109,6 +99,7 @@
     -webkit-backdrop-filter: blur(20px) !important;
     border: 1px solid rgba(65, 105, 225, 0.4) !important;
     box-shadow: 0 8px 32px rgba(65, 105, 225, 0.3) !important;
+    color: white !important;
   }
 
   .glow-royal {
@@ -119,7 +110,7 @@
   }
 }
 
-/* FORCE GLASSMORPHISM ON ALL CARDS - HIGHEST PRIORITY */
+/* FORCE GLASSMORPHISM ON ALL CARDS */
 div[class*="card"],
 div[class*="Card"],
 [role="dialog"],
@@ -135,6 +126,14 @@ div[class*="Card"],
     0 8px 32px rgba(65, 105, 225, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 0 20px rgba(65, 105, 225, 0.1) !important;
+}
+
+/* Card text should be white on dark glass backgrounds */
+div[class*="card"] *,
+div[class*="Card"] *,
+[role="dialog"] *,
+[data-radix-dialog-content] * {
+  color: white !important;
 }
 
 /* FORCE GLASSMORPHISM ON ALL INPUTS */
@@ -158,19 +157,13 @@ select {
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5) !important;
 }
 
-input[type="text"]::placeholder,
-input[type="email"]::placeholder,
-input[type="password"]::placeholder,
-input[type="number"]::placeholder,
-input[type="tel"]::placeholder,
-input[type="url"]::placeholder,
-input[type="search"]::placeholder,
+input::placeholder,
 textarea::placeholder {
   color: rgba(255, 255, 255, 0.5) !important;
 }
 
-/* FORCE GLASSMORPHISM ON ALL BUTTONS */
-button:not([class*="gradient"]) {
+/* FORCE GLASSMORPHISM ON BUTTONS - with proper text colors */
+button:not([class*="gradient"]):not([class*="bg-gradient"]) {
   background: linear-gradient(135deg, 
     rgba(65, 105, 225, 0.15) 0%, 
     rgba(30, 64, 175, 0.1) 100%
@@ -181,7 +174,11 @@ button:not([class*="gradient"]) {
   color: white !important;
 }
 
-button:not([class*="gradient"]):hover {
+button:not([class*="gradient"]):not([class*="bg-gradient"]) * {
+  color: white !important;
+}
+
+button:not([class*="gradient"]):not([class*="bg-gradient"]):hover {
   background: linear-gradient(135deg, 
     rgba(65, 105, 225, 0.25) 0%, 
     rgba(30, 64, 175, 0.2) 100%
@@ -189,8 +186,14 @@ button:not([class*="gradient"]):hover {
   border-color: rgba(65, 105, 225, 0.6) !important;
 }
 
-/* Keep gradient buttons as they are but ensure white text */
-button[class*="gradient"] {
+/* Gradient buttons keep white text */
+button[class*="gradient"],
+button[class*="bg-gradient"] {
+  color: white !important;
+}
+
+button[class*="gradient"] *,
+button[class*="bg-gradient"] * {
   color: white !important;
 }
 
@@ -215,17 +218,22 @@ div[class*="popover"] {
     0 0 20px rgba(65, 105, 225, 0.1) !important;
 }
 
-/* FORCE WHITE TEXT ON DROPDOWN ITEMS */
+/* Menu items should be white on glass backgrounds */
 [role="menuitem"],
 [role="option"],
 button[role="menuitem"] {
   color: white !important;
 }
 
+[role="menuitem"] *,
+[role="option"] *,
+button[role="menuitem"] * {
+  color: white !important;
+}
+
 [role="menuitem"]:hover,
 [role="option"]:hover {
   background: rgba(65, 105, 225, 0.2) !important;
-  color: white !important;
 }
 
 /* FORCE GLASSMORPHISM ON BADGES */
@@ -241,12 +249,7 @@ div[class*="badge"] {
   color: white !important;
 }
 
-/* FORCE WHITE TEXT ON ALL ELEMENTS */
-* {
-  color: white !important;
-}
-
-/* Exception for elements that should have blue/colored text */
+/* Preserve colored text classes */
 .text-blue-400,
 .text-blue-500,
 .text-blue-600,
@@ -256,8 +259,16 @@ div[class*="badge"] {
 [class*="text-yellow"],
 [class*="text-purple"],
 [class*="text-orange"],
-[class*="gradient"] {
+.bg-clip-text {
   color: inherit !important;
+}
+
+/* Gradient text should keep its colors */
+[style*="background-clip: text"],
+[style*="-webkit-background-clip: text"],
+.bg-clip-text {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
 }
 
 /* Scrollbar styling */
@@ -298,7 +309,7 @@ div[class*="badge"] {
   color: white !important;
 }
 
-.prose p, .prose li, .prose span {
+.prose * {
   color: white !important;
 }
 
@@ -388,6 +399,15 @@ input[type="radio"] {
   }
 }
 
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
@@ -396,18 +416,26 @@ input[type="radio"] {
   animation: pulse-glow 3s ease-in-out infinite;
 }
 
-/* Override any white backgrounds */
-[class*="bg-white"] {
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+/* Ensure proper text contrast everywhere */
+body {
+  color: white !important;
+}
+
+/* Main content areas */
+main {
+  color: white !important;
+}
+
+/* Override any white/gray backgrounds with glass */
+[class*="bg-white"],
+[class*="bg-gray"] {
   background: linear-gradient(135deg, 
     rgba(65, 105, 225, 0.15) 0%, 
     rgba(30, 64, 175, 0.1) 100%
   ) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.4) !important;
-}
-
-/* Override any gray backgrounds */
-[class*="bg-gray"] {
-  background: rgba(0, 0, 0, 0.6) !important;
   backdrop-filter: blur(20px) !important;
 }
