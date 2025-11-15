@@ -16,7 +16,7 @@ import PersonaSelector from "../components/glyphbot/PersonaSelector";
 import CodeExecutor from "../components/glyphbot/CodeExecutor";
 import SecurityScanner from "../components/glyphbot/SecurityScanner";
 import AuditGenerator from "../components/glyphbot/AuditGenerator";
-import FreeTrialGuard from "../components/FreeTrialGuard";
+import FreeTrialGuard from "@/components/FreeTrialGuard";
 
 export default function GlyphBot() {
   const [user, setUser] = useState(null);

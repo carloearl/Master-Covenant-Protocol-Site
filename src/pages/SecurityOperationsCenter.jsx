@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Shield, Map, Activity, BarChart3 } from "lucide-react";
@@ -9,7 +10,7 @@ import FreeTrialGuard from "@/components/FreeTrialGuard";
 
 export default function SecurityOperationsCenter() {
   return (
-    <FreeTrialGuard serviceName="SecurityOperations">
+    <FreeTrialGuard serviceName="HSSS">
       <div className="min-h-screen bg-black text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
