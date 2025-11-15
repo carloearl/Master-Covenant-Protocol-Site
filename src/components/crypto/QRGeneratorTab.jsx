@@ -5,15 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { Loader2, Shield, AlertTriangle, Info, Upload, Image as ImageIcon, Palette } from "lucide-react";
+import { Loader2, Shield, Info, Upload, Image as ImageIcon, Palette } from "lucide-react";
 import SecurityStatus from "@/components/qr/SecurityStatus";
 import SteganographicQR from "@/components/qr/SteganographicQR";
-import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import QRTypeSelector from "@/components/crypto/QRTypeSelector";
 import QRTypeForm from "@/components/crypto/QRTypeForm";
-import { generateSHA256, performStaticURLChecks } from "@/utils/securityUtils";
+import { generateSHA256, performStaticURLChecks } from "@/components/utils/securityUtils";
 
 export default function QRGeneratorTab() {
   const [qrType, setQrType] = useState("url");

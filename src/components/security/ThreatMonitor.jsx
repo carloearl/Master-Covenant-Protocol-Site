@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { AlertTriangle, Search, Filter, RefreshCw } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SeverityBadge from "@/components/shared/SeverityBadge";
-import { getStatusColor } from "@/utils/securityUtils";
+import { getStatusColor } from "@/components/utils/securityUtils";
 
 export default function ThreatMonitor() {
   const [searchTerm, setSearchTerm] = useState("");

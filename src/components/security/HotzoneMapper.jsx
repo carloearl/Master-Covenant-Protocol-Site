@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Upload, Save, MapPin, AlertTriangle } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Upload, Save, MapPin } from "lucide-react";
+import SeverityBadge from "@/components/shared/SeverityBadge";
+import FileUploader from "@/components/shared/FileUploader";
 
 export default function HotzoneMapper() {
   const [mapName, setMapName] = useState("");
@@ -17,7 +18,6 @@ export default function HotzoneMapper() {
   const [imageUrl, setImageUrl] = useState(null);
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
   const [hotspots, setHotspots] = useState([]);
-  const [selectedHotspot, setSelectedHotspot] = useState(null);
   const [hotspotForm, setHotspotForm] = useState({
     name: "",
     description: "",
@@ -83,7 +83,7 @@ export default function HotzoneMapper() {
       canvas.height = img.height;
       ctx.drawImage(img, 0, 0);
 
-      hotspots.forEach((hotspot, idx) => {
+      hotspots.forEach((hotspot) => {
         const color = hotspot.severity === "critical" ? "#ef4444" :
                      hotspot.severity === "high" ? "#f97316" :
                      hotspot.severity === "medium" ? "#eab308" : "#3b82f6";
@@ -132,16 +132,6 @@ export default function HotzoneMapper() {
       setHotspots([]);
     }
   });
-
-  const getSeverityColor = (severity) => {
-    switch(severity) {
-      case "critical": return "bg-red-500/20 text-red-400 border-red-500/50";
-      case "high": return "bg-orange-500/20 text-orange-400 border-orange-500/50";
-      case "medium": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/50";
-      case "low": return "bg-blue-500/20 text-blue-400 border-blue-500/50";
-      default: return "bg-gray-500/20 text-gray-400 border-gray-500/50";
-    }
-  };
 
   return (
     <div className="grid lg:grid-cols-3 gap-6">
@@ -283,9 +273,7 @@ export default function HotzoneMapper() {
               {hotspots.map((hotspot, idx) => (
                 <div key={idx} className="flex items-center justify-between bg-gray-800 p-2 rounded">
                   <span className="text-white text-sm">{hotspot.name}</span>
-                  <Badge className={getSeverityColor(hotspot.severity)}>
-                    {hotspot.severity}
-                  </Badge>
+                  <SeverityBadge severity={hotspot.severity} />
                 </div>
               ))}
             </CardContent>
