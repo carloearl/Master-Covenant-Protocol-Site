@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import GlyphBotJr from "@/components/GlyphBotJr";
-import { navigationConfig } from "@/config/navigation";
+import { navigationConfig } from "@/components/NavigationConfig";
 
 export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
