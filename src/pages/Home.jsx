@@ -356,28 +356,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Social Proof */}
+      {/* Security Metrics */}
       <section className="py-24 relative">
         <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Trusted by <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Industry Leaders</span>
-            </h2>
-            <p className="text-xl text-gray-400">Built on enterprise infrastructure you can rely on</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div className="glass-card backdrop-blur-xl bg-black/30 border-blue-500/30 p-8 rounded-2xl text-center">
-              <div className="text-5xl font-bold text-blue-400 mb-2">500+</div>
-              <div className="text-gray-400">Enterprise Clients</div>
+              <div className="text-5xl font-bold mb-2" style={{ color: '#00BFFF' }}>1.5PB+</div>
+              <div className="text-gray-300">Petabytes of Threat Data Analyzed</div>
             </div>
             <div className="glass-card backdrop-blur-xl bg-black/30 border-blue-500/30 p-8 rounded-2xl text-center">
-              <div className="text-5xl font-bold text-blue-400 mb-2">99.97%</div>
-              <div className="text-gray-400">Uptime Guarantee</div>
+              <div className="text-5xl font-bold mb-2" style={{ color: '#00BFFF' }}>4 Million+</div>
+              <div className="text-gray-300">Malicious Events Neutralized</div>
             </div>
             <div className="glass-card backdrop-blur-xl bg-black/30 border-blue-500/30 p-8 rounded-2xl text-center">
-              <div className="text-5xl font-bold text-blue-400 mb-2">24/7</div>
-              <div className="text-gray-400">Security Monitoring</div>
+              <div className="text-5xl font-bold mb-2" style={{ color: '#00BFFF' }}>120+</div>
+              <div className="text-gray-300">Zero-Day Vulnerabilities Identified</div>
             </div>
           </div>
         </div>
