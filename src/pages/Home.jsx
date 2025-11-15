@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -52,19 +51,11 @@ export default function Home() {
     icon: Zap
   },
   {
-    title: "QR Security",
-    description: "Secure QR generation with AI threat detection and custom branding.",
+    title: "Visual Cryptography Suite",
+    description: "Generate secure, threat-aware QR codes and hide encrypted data within images using LSB encoding.",
     link: "QRGenerator",
     image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
-    price: "$49.99",
-    icon: Lock
-  },
-  {
-    title: "Steganography",
-    description: "Hide encrypted data within images using LSB encoding.",
-    link: "Steganography",
-    image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/a86b74f69_data-security-encryption-protection.jpg",
-    price: "$149.99",
+    price: "$179.99",
     icon: Eye
   },
   {
@@ -76,20 +67,12 @@ export default function Home() {
     icon: Lock
   },
   {
-    title: "HSSS Hotzone Mapper",
-    description: "Interactive security mapping with real-time threat monitoring and AI detection.",
-    link: "HSSS",
+    title: "HSSS Command Suite",
+    description: "Premier enterprise security platform combining interactive threat mapping with real-time AI surveillance and incident tracking.",
+    link: "SecurityOperations",
     image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/7e319a981_Whisk_429a6543b81e30d9bab4065457f3b62ddr.jpg",
-    price: "$99.99",
-    icon: Shield
-  },
-  {
-    title: "HSSS Surveillance",
-    description: "Real-time threat monitoring with AI detection and incident tracking.",
-    link: "HSSS",
-    image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/144d647a1_Whisk_938e90eff0a4d8da277467baf360248edr.jpg",
     price: "Enterprise",
-    icon: Eye
+    icon: Shield
   },
   {
     title: "Security Suite",
@@ -326,7 +309,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
