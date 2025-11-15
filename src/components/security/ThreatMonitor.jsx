@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Search, Filter, RefreshCw } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import SeverityBadge from "@/components/shared/SeverityBadge";
+import { getStatusColor } from "@/utils/securityUtils";
 
 export default function ThreatMonitor() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,26 +27,6 @@ export default function ThreatMonitor() {
     const matchesSeverity = severityFilter === "all" || threat.severity === severityFilter;
     return matchesSearch && matchesSeverity;
   });
-
-  const getSeverityColor = (severity) => {
-    switch(severity) {
-      case "critical": return "bg-red-500/20 text-red-400 border-red-500/50";
-      case "high": return "bg-orange-500/20 text-orange-400 border-orange-500/50";
-      case "medium": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/50";
-      case "low": return "bg-blue-500/20 text-blue-400 border-blue-500/50";
-      default: return "bg-gray-500/20 text-gray-400 border-gray-500/50";
-    }
-  };
-
-  const getStatusColor = (status) => {
-    switch(status) {
-      case "detected": return "bg-red-500/20 text-red-400 border-red-500/50";
-      case "investigating": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/50";
-      case "contained": return "bg-blue-500/20 text-blue-400 border-blue-500/50";
-      case "resolved": return "bg-green-500/20 text-green-400 border-green-500/50";
-      default: return "bg-gray-500/20 text-gray-400 border-gray-500/50";
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -98,8 +80,8 @@ export default function ThreatMonitor() {
             ) : filteredThreats.length === 0 ? (
               <div className="text-center py-8 text-gray-500">No threats found</div>
             ) : (
-              filteredThreats.map((threat, idx) => (
-                <Card key={idx} className="bg-gray-800 border-gray-700">
+              filteredThreats.map((threat) => (
+                <Card key={threat.id} className="bg-gray-800 border-gray-700">
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
@@ -110,9 +92,7 @@ export default function ThreatMonitor() {
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <Badge className={getSeverityColor(threat.severity)}>
-                          {threat.severity}
-                        </Badge>
+                        <SeverityBadge severity={threat.severity} />
                         <Badge className={getStatusColor(threat.status)}>
                           {threat.status}
                         </Badge>

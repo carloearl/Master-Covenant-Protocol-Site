@@ -11,9 +11,9 @@ import SteganographicQR from "@/components/qr/SteganographicQR";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import QRTypeSelector from "@/components/crypto/QRTypeSelector";
 import QRTypeForm from "@/components/crypto/QRTypeForm";
+import { generateSHA256, performStaticURLChecks } from "@/utils/securityUtils";
 
 export default function QRGeneratorTab() {
   const [qrType, setQrType] = useState("url");
@@ -108,36 +108,6 @@ export default function QRGeneratorTab() {
     }
   };
 
-  const performStaticChecks = (payload) => {
-    let score = 100;
-    const issues = [];
-    try {
-      const urlObj = new URL(payload);
-      if (urlObj.protocol !== 'https:') {
-        score -= 30;
-        issues.push("Non-HTTPS protocol detected");
-      }
-      const suspiciousTlds = ['.tk', '.ml', '.ga', '.cf', '.gq', '.xyz', '.top'];
-      if (suspiciousTlds.some(tld => urlObj.hostname.endsWith(tld))) {
-        score -= 20;
-        issues.push("Suspicious TLD");
-      }
-      if (/^\d+\.\d+\.\d+\.\d+$/.test(urlObj.hostname)) {
-        score -= 25;
-        issues.push("Naked IP address");
-      }
-      const shorteners = ['bit.ly', 'tinyurl.com', 't.co', 'goo.gl', 'ow.ly'];
-      if (shorteners.some(s => urlObj.hostname.includes(s))) {
-        score -= 15;
-        issues.push("URL shortener detected");
-      }
-    } catch (e) {
-      score = 0;
-      issues.push("Invalid URL format");
-    }
-    return { score: Math.max(0, score), issues };
-  };
-
   const performNLPAnalysis = async (payload) => {
     setScanningStage("Running NLP analysis...");
     try {
@@ -161,7 +131,7 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
             entity_legitimacy: { type: "number" },
             url_features: { type: "number" },
             final_score: { type: "number" },
-            risk_level: { type: "string", enum: ["safe", "low", "medium", "high", "critical"] },
+            risk_level: { type: "string" },
             threat_types: { type: "array", items: { type: "string" } },
             phishing_indicators: { type: "array", items: { type: "string" } },
             analysis_details: { type: "string" },
@@ -198,7 +168,7 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
       if (needsSecurity) {
         setScanningStage("Performing static checks...");
         await new Promise(resolve => setTimeout(resolve, 500));
-        const staticResult = performStaticChecks(payload);
+        const staticResult = performStaticURLChecks(payload);
         const nlpResult = await performNLPAnalysis(payload);
         
         setScanningStage("Calculating risk score...");
@@ -301,14 +271,6 @@ Identify threats: Quishing, QRLjacking, Phishing, Typosquatting, Social Engineer
     } finally {
       setIsScanning(false);
     }
-  };
-
-  const generateSHA256 = async (text) => {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   };
 
   const getQRUrl = () => {
