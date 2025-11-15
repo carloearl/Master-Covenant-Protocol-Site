@@ -26,8 +26,6 @@ import StripeSetup from './pages/StripeSetup';
 import Dashboard from './pages/Dashboard';
 import Admin from './pages/Admin';
 import NUPSManager from './pages/NUPSManager';
-import DreamTeam from './pages/DreamTeam';
-import CovenantDashboard from './pages/CovenantDashboard';
 import RefactorTaskList from './pages/RefactorTaskList';
 import IntegrationPlan from './pages/IntegrationPlan';
 import SecurityOperations from './pages/SecurityOperations';
@@ -63,8 +61,6 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "Admin": Admin,
     "NUPSManager": NUPSManager,
-    "DreamTeam": DreamTeam,
-    "CovenantDashboard": CovenantDashboard,
     "RefactorTaskList": RefactorTaskList,
     "IntegrationPlan": IntegrationPlan,
     "SecurityOperations": SecurityOperations,

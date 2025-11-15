@@ -1,3 +1,4 @@
+
 // Single Source of Truth for All Site Navigation
 export const navigationConfig = {
   main: [
@@ -8,8 +9,6 @@ export const navigationConfig = {
         { label: "About Us", page: "About" },
         { label: "Roadmap", page: "Roadmap" },
         { label: "Master Covenant", page: "MasterCovenant" },
-        { label: "Covenant Dashboard", page: "CovenantDashboard" },
-        { label: "Dream Team", page: "DreamTeam" },
       ]
     },
     {
@@ -33,7 +32,6 @@ export const navigationConfig = {
       { label: "About Us", page: "About" },
       { label: "Roadmap", page: "Roadmap" },
       { label: "Master Covenant", page: "MasterCovenant" },
-      { label: "Dream Team", page: "DreamTeam" },
       { label: "Contact", page: "Contact" },
     ],
     services: [
