@@ -30,6 +30,7 @@ import DreamTeam from './pages/DreamTeam';
 import CovenantDashboard from './pages/CovenantDashboard';
 import RefactorTaskList from './pages/RefactorTaskList';
 import IntegrationPlan from './pages/IntegrationPlan';
+import SecurityOperations from './pages/SecurityOperations';
 import Layout from './Layout.jsx';
 
 
@@ -66,6 +67,7 @@ export const PAGES = {
     "CovenantDashboard": CovenantDashboard,
     "RefactorTaskList": RefactorTaskList,
     "IntegrationPlan": IntegrationPlan,
+    "SecurityOperations": SecurityOperations,
 }
 
 export const pagesConfig = {
