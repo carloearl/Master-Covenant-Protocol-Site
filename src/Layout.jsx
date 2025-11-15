@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -91,12 +92,9 @@ export default function Layout({ children, currentPageName }) {
                   alt="GlyphLock"
                   className="h-12 w-auto transform group-hover:scale-110 transition-transform"
                 />
-                <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                    GlyphLock
-                  </h1>
-                  <p className={`text-xs ${darkMode ? 'text-white' : 'text-gray-600'}`}>Quantum Security</p>
-                </div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                  GlyphLock
+                </h1>
               </Link>
             </div>
 
