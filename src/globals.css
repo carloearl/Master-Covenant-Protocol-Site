@@ -41,8 +41,8 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 
-  /* Force white text and proper contrast everywhere */
-  p, span, div, label, h1, h2, h3, h4, h5, h6, li, a {
+  /* Force white text everywhere */
+  p, span, div, label, h1, h2, h3, h4, h5, h6, li, a, button {
     @apply text-white;
   }
 
@@ -122,11 +122,62 @@
   .text-glyphlock {
     color: white !important;
   }
+}
 
-  /* Button overrides */
-  button {
-    @apply text-white;
-  }
+/* Global Button Styles */
+button {
+  @apply text-white;
+}
+
+button[class*="bg-gradient"] {
+  @apply text-white;
+}
+
+/* Card overrides - apply glassmorphism to all cards */
+[class*="card"] {
+  @apply glass-royal border-blue-500/30;
+}
+
+/* Input field overrides - glassmorphism for all inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+input[type="date"],
+input[type="time"],
+textarea,
+select {
+  @apply glass-input text-white;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="number"]::placeholder,
+input[type="tel"]::placeholder,
+input[type="url"]::placeholder,
+input[type="search"]::placeholder,
+textarea::placeholder {
+  @apply text-white/50;
+}
+
+/* Dropdown menus - glassmorphism */
+[role="menu"],
+[role="listbox"],
+[data-radix-popper-content-wrapper] {
+  @apply glass-royal border-blue-500/30;
+}
+
+/* Button variants with glassmorphism */
+button[class*="outline"] {
+  @apply glass-royal border-blue-500/50 text-white hover:bg-blue-500/20;
+}
+
+button[class*="ghost"] {
+  @apply text-white hover:bg-blue-500/20 hover:text-blue-400;
 }
 
 /* Scrollbar styling */
@@ -208,4 +259,82 @@
 
 .animate-pulse-glow {
   animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Badge styles */
+[class*="badge"] {
+  @apply glass-royal border-blue-500/50 text-white;
+}
+
+/* Dialog/Modal styles */
+[role="dialog"] {
+  @apply glass-royal border-blue-500/30;
+}
+
+/* Tabs */
+[role="tablist"] button {
+  @apply text-white/70 hover:text-white;
+}
+
+[role="tablist"] button[data-state="active"] {
+  @apply text-white glass-royal border-blue-500/50;
+}
+
+/* Alert/Toast components */
+[role="alert"],
+[role="status"] {
+  @apply glass-royal border-blue-500/30 text-white;
+}
+
+/* Progress bars */
+[role="progressbar"] {
+  @apply glass-royal border-blue-500/30;
+}
+
+/* Tables */
+table {
+  @apply glass-royal border-blue-500/30;
+}
+
+th {
+  @apply text-white bg-blue-500/20;
+}
+
+td {
+  @apply text-white;
+}
+
+tr:hover {
+  @apply bg-blue-500/10;
+}
+
+/* Accordion */
+[data-radix-accordion-item] {
+  @apply glass-royal border-blue-500/30;
+}
+
+/* Tooltip */
+[role="tooltip"] {
+  @apply glass-royal border-blue-500/30 text-white;
+}
+
+/* Separator */
+hr, [role="separator"] {
+  @apply border-blue-500/30;
+}
+
+/* Switch/Toggle */
+button[role="switch"] {
+  @apply glass-royal border-blue-500/30;
+}
+
+/* Slider */
+[role="slider"] {
+  @apply glass-royal border-blue-500/30;
+}
+
+/* Checkbox and Radio */
+input[type="checkbox"],
+input[type="radio"] {
+  @apply glass-royal border-blue-500/50;
 }
