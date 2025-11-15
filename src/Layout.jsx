@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import GlyphBotJr from "@/components/GlyphBotJr";
+import { navigationConfig } from "@/config/navigation";
 
 export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -59,26 +60,11 @@ export default function Layout({ children, currentPageName }) {
   const canGoBack = window.history.length > 1 && location.pathname !== createPageUrl("Home");
 
   const certifications = [
-    { 
-      name: "SOC 2", 
-      logo: "https://logos-world.net/wp-content/uploads/2021/02/SOC-2-Logo.png"
-    },
-    { 
-      name: "GDPR", 
-      logo: "https://gdpr.eu/wp-content/uploads/2019/01/gdpr-logo.png"
-    },
-    { 
-      name: "ISO 27001", 
-      logo: "https://upload.wikimedia.org/wikipedia/commons/e/e6/ISO_27001_logo.svg"
-    },
-    { 
-      name: "PCI DSS", 
-      logo: "https://upload.wikimedia.org/wikipedia/commons/8/8f/PCI_DSS_Logo.svg"
-    },
-    { 
-      name: "HIPAA", 
-      logo: "https://www.hhs.gov/sites/default/files/hhs-logo.svg"
-    }
+    { name: "SOC 2", logo: "https://logos-world.net/wp-content/uploads/2021/02/SOC-2-Logo.png" },
+    { name: "GDPR", logo: "https://gdpr.eu/wp-content/uploads/2019/01/gdpr-logo.png" },
+    { name: "ISO 27001", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e6/ISO_27001_logo.svg" },
+    { name: "PCI DSS", logo: "https://upload.wikimedia.org/wikipedia/commons/8/8f/PCI_DSS_Logo.svg" },
+    { name: "HIPAA", logo: "https://www.hhs.gov/sites/default/files/hhs-logo.svg" }
   ];
 
   return (
@@ -114,88 +100,33 @@ export default function Layout({ children, currentPageName }) {
             </div>
 
             <div className="hidden lg:flex items-center gap-1">
-              <Link to={createPageUrl("Home")}>
-                <Button variant="ghost" className={isActive("Home") ? "text-blue-400" : `${darkMode ? 'text-white' : 'text-gray-900'} hover:text-blue-400`}>
-                  Home
-                </Button>
-              </Link>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className={`${darkMode ? 'text-white' : 'text-gray-900'} hover:text-blue-400`}>
-                    Company <ChevronDown className="w-4 h-4 ml-1" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className={`${darkMode ? 'bg-gray-900/90 border-blue-500/20' : 'bg-white/90 border-blue-500/30'} backdrop-blur-xl`}>
-                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
-                    <Link to={createPageUrl("About")}>About Us</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
-                    <Link to={createPageUrl("Roadmap")}>Roadmap</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
-                    <Link to={createPageUrl("MasterCovenant")}>Master Covenant</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
-                    <Link to={createPageUrl("CovenantDashboard")}>Covenant Dashboard</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
-                    <Link to={createPageUrl("DreamTeam")}>Dream Team</Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <Link to={createPageUrl("NUPSLogin")}>
-                <Button variant="ghost" className={isActive("NUPSLogin") ? "text-blue-400" : `${darkMode ? 'text-white' : 'text-gray-900'} hover:text-blue-400`}>
-                  N.U.P.S. POS
-                </Button>
-              </Link>
-              
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className={`${darkMode ? 'text-white' : 'text-gray-900'} hover:text-blue-400`}>
-                    Services <ChevronDown className="w-4 h-4 ml-1" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className={`${darkMode ? 'bg-gray-900/90 border-blue-500/20' : 'bg-white/90 border-blue-500/30'} backdrop-blur-xl`}>
-                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
-                    <Link to={createPageUrl("SecurityTools")}>Security Tools</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
-                    <Link to={createPageUrl("QRGenerator")}>QR Generator</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
-                    <Link to={createPageUrl("Steganography")}>Steganography</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
-                    <Link to={createPageUrl("Blockchain")}>Blockchain Security</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
-                    <Link to={createPageUrl("SecurityOperations")}>Security Operations</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
-                    <Link to={createPageUrl("GlyphBot")}>GlyphBot AI</Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <Link to={createPageUrl("Pricing")}>
-                <Button variant="ghost" className={isActive("Pricing") ? "text-blue-400" : `${darkMode ? 'text-white' : 'text-gray-900'} hover:text-blue-400`}>
-                  Pricing
-                </Button>
-              </Link>
-
-              <Link to={createPageUrl("SecurityDocs")}>
-                <Button variant="ghost" className={isActive("SecurityDocs") ? "text-blue-400" : `${darkMode ? 'text-white' : 'text-gray-900'} hover:text-blue-400`}>
-                  Security
-                </Button>
-              </Link>
-
-              <Link to={createPageUrl("Contact")}>
-                <Button variant="ghost" className={isActive("Contact") ? "text-blue-400" : `${darkMode ? 'text-white' : 'text-gray-900'} hover:text-blue-400`}>
-                  Contact
-                </Button>
-              </Link>
+              {navigationConfig.main.map((item) => {
+                if (item.dropdown) {
+                  return (
+                    <DropdownMenu key={item.label}>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className={`${darkMode ? 'text-white' : 'text-gray-900'} hover:text-blue-400`}>
+                          {item.label} <ChevronDown className="w-4 h-4 ml-1" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className={`${darkMode ? 'bg-gray-900/90 border-blue-500/20' : 'bg-white/90 border-blue-500/30'} backdrop-blur-xl`}>
+                        {item.dropdown.map((subItem) => (
+                          <DropdownMenuItem key={subItem.page} asChild className={`${darkMode ? 'text-white hover:text-blue-400 focus:text-blue-400 focus:bg-blue-500/20' : 'text-gray-900 hover:text-blue-600 focus:text-blue-600 focus:bg-blue-500/10'} cursor-pointer`}>
+                            <Link to={createPageUrl(subItem.page)}>{subItem.label}</Link>
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  );
+                }
+                return (
+                  <Link key={item.page} to={createPageUrl(item.page)}>
+                    <Button variant="ghost" className={isActive(item.page) ? "text-blue-400" : `${darkMode ? 'text-white' : 'text-gray-900'} hover:text-blue-400`}>
+                      {item.label}
+                    </Button>
+                  </Link>
+                );
+              })}
 
               <Button
                 variant="ghost"
@@ -270,41 +201,31 @@ export default function Layout({ children, currentPageName }) {
           {mobileMenuOpen && (
             <div className={`lg:hidden py-4 border-t ${darkMode ? 'border-blue-500/20' : 'border-blue-500/30'}`}>
               <div className="flex flex-col gap-2">
-                <Link to={createPageUrl("Home")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Home
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("About")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    About Us
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("Roadmap")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Roadmap
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("MasterCovenant")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Master Covenant
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("CovenantDashboard")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Covenant Dashboard
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("DreamTeam")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Dream Team
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("NUPSLogin")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    N.U.P.S. POS
-                  </Button>
-                </Link>
+                {navigationConfig.main.map((item) => {
+                  if (item.dropdown) {
+                    return (
+                      <React.Fragment key={item.label}>
+                        <div className={`px-2 py-1 font-semibold ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          {item.label}
+                        </div>
+                        {item.dropdown.map((subItem) => (
+                          <Link key={subItem.page} to={createPageUrl(subItem.page)} onClick={() => setMobileMenuOpen(false)}>
+                            <Button variant="ghost" className={`w-full justify-start pl-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                              {subItem.label}
+                            </Button>
+                          </Link>
+                        ))}
+                      </React.Fragment>
+                    );
+                  }
+                  return (
+                    <Link key={item.page} to={createPageUrl(item.page)} onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                        {item.label}
+                      </Button>
+                    </Link>
+                  );
+                })}
                 {user && (
                   <Link to={createPageUrl("Dashboard")} onClick={() => setMobileMenuOpen(false)}>
                     <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -312,36 +233,6 @@ export default function Layout({ children, currentPageName }) {
                     </Button>
                   </Link>
                 )}
-                <Link to={createPageUrl("SecurityTools")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Security Tools
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("SecurityOperations")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Security Operations
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("GlyphBot")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    GlyphBot AI
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("Pricing")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Pricing
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("SecurityDocs")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Security
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("Contact")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className={`w-full justify-start ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Contact
-                  </Button>
-                </Link>
                 <Link to={createPageUrl("Consultation")} onClick={() => setMobileMenuOpen(false)}>
                   <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white mt-2">
                     Book Consultation
@@ -398,39 +289,38 @@ export default function Layout({ children, currentPageName }) {
             <div>
               <h3 className={`font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Services</h3>
               <div className="flex flex-col gap-2 text-sm">
-                <Link to={createPageUrl("NUPSLogin")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>N.U.P.S. POS</Link>
-                <Link to={createPageUrl("SecurityTools")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Security Tools</Link>
-                <Link to={createPageUrl("QRGenerator")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>QR Generator</Link>
-                <Link to={createPageUrl("Blockchain")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Blockchain</Link>
-                <Link to={createPageUrl("GlyphBot")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>GlyphBot AI</Link>
+                {navigationConfig.footer.services.map((item) => (
+                  <Link key={item.page} to={createPageUrl(item.page)} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>
+                    {item.label}
+                  </Link>
+                ))}
               </div>
             </div>
 
             <div>
               <h3 className={`font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Company</h3>
               <div className="flex flex-col gap-2 text-sm">
-                <Link to={createPageUrl("About")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>About Us</Link>
-                <Link to={createPageUrl("Roadmap")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Roadmap</Link>
-                <Link to={createPageUrl("MasterCovenant")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Master Covenant</Link>
-                <Link to={createPageUrl("DreamTeam")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Dream Team</Link>
-                <Link to={createPageUrl("Pricing")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Pricing</Link>
-                <Link to={createPageUrl("SecurityDocs")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Security</Link>
-                <Link to={createPageUrl("Contact")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Contact</Link>
+                {navigationConfig.footer.company.map((item) => (
+                  <Link key={item.page} to={createPageUrl(item.page)} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>
+                    {item.label}
+                  </Link>
+                ))}
               </div>
             </div>
 
             <div>
               <h3 className={`font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Legal</h3>
               <div className="flex flex-col gap-2 text-sm">
-                <Link to={createPageUrl("Privacy")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Privacy Policy</Link>
-                <Link to={createPageUrl("Terms")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Terms of Service</Link>
-                <Link to={createPageUrl("SecurityDocs")} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>Security Documentation</Link>
+                {navigationConfig.footer.legal.map((item) => (
+                  <Link key={item.page} to={createPageUrl(item.page)} className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} hover:text-blue-400 transition-colors`}>
+                    {item.label}
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
           
           <div className={`pt-8 border-t ${darkMode ? 'border-gray-800' : 'border-gray-300'}`}>
-            {/* Security & Compliance */}
             <div className="mb-8">
               <h4 className={`text-center text-sm font-semibold mb-6 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Security & Compliance
