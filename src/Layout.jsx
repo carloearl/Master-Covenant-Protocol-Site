@@ -50,6 +50,7 @@ export default function Layout({ children, currentPageName }) {
 
   const isActive = (pageName) => location.pathname === createPageUrl(pageName);
   const canGoBack = window.history.length > 1 && location.pathname !== createPageUrl("Home");
+  const isConsultationPage = location.pathname === createPageUrl("Consultation");
 
   const certifications = [
     { name: "SOC 2", logo: "https://logos-world.net/wp-content/uploads/2021/02/SOC-2-Logo.png" },
@@ -67,13 +68,13 @@ export default function Layout({ children, currentPageName }) {
       <nav className="fixed top-0 left-0 right-0 z-[100] glass-royal border-b border-blue-500/50 shadow-xl">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               {canGoBack && (
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => navigate(-1)}
-                  className="glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30 h-8 w-8"
+                  className="glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </Button>
@@ -96,7 +97,7 @@ export default function Layout({ children, currentPageName }) {
                   return (
                     <DropdownMenu key={item.label}>
                       <DropdownMenuTrigger asChild>
-                        <Button className="glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30 text-xs h-8 px-3">
+                        <Button className="glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30 text-sm h-9 px-3">
                           {item.label} <ChevronDown className="w-3 h-3 ml-1" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -112,24 +113,26 @@ export default function Layout({ children, currentPageName }) {
                 }
                 return (
                   <Link key={item.page} to={createPageUrl(item.page)}>
-                    <Button className={isActive(item.page) ? "glass-royal border border-blue-500/50 text-blue-400 bg-blue-500/30 text-xs h-8 px-3" : "glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30 text-xs h-8 px-3"}>
+                    <Button className={isActive(item.page) ? "glass-royal border border-blue-500/50 text-blue-400 bg-blue-500/30 text-sm h-9 px-3" : "glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30 text-sm h-9 px-3"}>
                       {item.label}
                     </Button>
                   </Link>
                 );
               })}
 
-              <Link to={createPageUrl("Consultation")} className="ml-3">
-                <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white glow-royal shadow-xl text-xs h-8 px-4">
-                  Book Consultation
-                </Button>
-              </Link>
+              {!isConsultationPage && (
+                <Link to={createPageUrl("Consultation")} className="ml-4">
+                  <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white glow-royal shadow-xl text-sm h-9 px-4">
+                    Contact Sales
+                  </Button>
+                </Link>
+              )}
 
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button className="ml-2 glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30 text-xs h-8 px-3">
-                      <User className="w-3 h-3 mr-1" />
+                    <Button className="ml-2 glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30 text-sm h-9 px-3">
+                      <User className="w-3 h-3 mr-2" />
                       {user.full_name || user.email}
                     </Button>
                   </DropdownMenuTrigger>
@@ -155,7 +158,7 @@ export default function Layout({ children, currentPageName }) {
                 </DropdownMenu>
               ) : (
                 <Link to={createPageUrl("Login")} className="ml-2">
-                  <Button className="glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30 text-xs h-8 px-3">
+                  <Button className="glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30 text-sm h-9 px-3">
                     Sign In
                   </Button>
                 </Link>
@@ -207,11 +210,13 @@ export default function Layout({ children, currentPageName }) {
                     </Button>
                   </Link>
                 )}
-                <Link to={createPageUrl("Consultation")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white mt-2 shadow-xl text-sm">
-                    Book Consultation
-                  </Button>
-                </Link>
+                {!isConsultationPage && (
+                  <Link to={createPageUrl("Consultation")} onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white mt-2 shadow-xl text-sm">
+                      Contact Sales
+                    </Button>
+                  </Link>
+                )}
                 {user ? (
                   <Button 
                     onClick={handleLogout}
