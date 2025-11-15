@@ -63,8 +63,8 @@ export default function Layout({ children, currentPageName }) {
     <div className="min-h-screen bg-black text-white relative">
       <InteractiveNebula />
       
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-[100] glass-dark border-b border-blue-500/30">
+      {/* Navigation with strong glassmorphism */}
+      <nav className="fixed top-0 left-0 right-0 z-[100] glass-royal border-b border-blue-500/50 shadow-xl">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center gap-4">
@@ -73,7 +73,7 @@ export default function Layout({ children, currentPageName }) {
                   variant="ghost"
                   size="icon"
                   onClick={() => navigate(-1)}
-                  className="text-white hover:text-blue-400 hover:bg-blue-500/20"
+                  className="glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30"
                 >
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
@@ -96,13 +96,13 @@ export default function Layout({ children, currentPageName }) {
                   return (
                     <DropdownMenu key={item.label}>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="text-white hover:text-blue-400 hover:bg-blue-500/20">
+                        <Button className="glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30">
                           {item.label} <ChevronDown className="w-4 h-4 ml-1" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="glass-dark border-blue-500/30 z-[110]">
+                      <DropdownMenuContent className="glass-royal border-blue-500/50 shadow-2xl z-[110]">
                         {item.dropdown.map((subItem) => (
-                          <DropdownMenuItem key={subItem.page} asChild className="text-white hover:text-blue-400 hover:bg-blue-500/20 focus:text-blue-400 focus:bg-blue-500/20 cursor-pointer">
+                          <DropdownMenuItem key={subItem.page} asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer">
                             <Link to={createPageUrl(subItem.page)}>{subItem.label}</Link>
                           </DropdownMenuItem>
                         ))}
@@ -112,7 +112,7 @@ export default function Layout({ children, currentPageName }) {
                 }
                 return (
                   <Link key={item.page} to={createPageUrl(item.page)}>
-                    <Button variant="ghost" className={isActive(item.page) ? "text-blue-400 bg-blue-500/20" : "text-white hover:text-blue-400 hover:bg-blue-500/20"}>
+                    <Button className={isActive(item.page) ? "glass-royal border border-blue-500/50 text-blue-400 bg-blue-500/30" : "glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30"}>
                       {item.label}
                     </Button>
                   </Link>
@@ -120,7 +120,7 @@ export default function Layout({ children, currentPageName }) {
               })}
 
               <Link to={createPageUrl("Consultation")} className="ml-4">
-                <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white glow-royal">
+                <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white glow-royal shadow-xl">
                   Get Started
                 </Button>
               </Link>
@@ -128,13 +128,13 @@ export default function Layout({ children, currentPageName }) {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="ml-2 text-white hover:bg-blue-500/20">
+                    <Button className="ml-2 glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30">
                       <User className="w-4 h-4 mr-2" />
                       {user.full_name || user.email}
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="glass-dark border-blue-500/30 z-[110]">
-                    <DropdownMenuItem asChild className="text-white hover:text-blue-400 hover:bg-blue-500/20 focus:text-blue-400 focus:bg-blue-500/20 cursor-pointer">
+                  <DropdownMenuContent className="glass-royal border-blue-500/50 shadow-2xl z-[110]">
+                    <DropdownMenuItem asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer">
                       <Link to={createPageUrl("Dashboard")}>
                         <User className="w-4 h-4 mr-2" />
                         Dashboard
@@ -155,7 +155,7 @@ export default function Layout({ children, currentPageName }) {
                 </DropdownMenu>
               ) : (
                 <Link to={createPageUrl("Login")} className="ml-2">
-                  <Button variant="outline" className="border-blue-500/50 text-white hover:bg-blue-500/20">
+                  <Button className="glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30">
                     Sign In
                   </Button>
                 </Link>
@@ -165,7 +165,7 @@ export default function Layout({ children, currentPageName }) {
             <div className="flex items-center gap-2 lg:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-white p-2"
+                className="text-white p-2 glass-royal border border-blue-500/30 rounded-lg"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -173,7 +173,7 @@ export default function Layout({ children, currentPageName }) {
           </div>
 
           {mobileMenuOpen && (
-            <div className="lg:hidden py-4 border-t border-blue-500/30 glass-dark max-h-[calc(100vh-5rem)] overflow-y-auto">
+            <div className="lg:hidden py-4 border-t border-blue-500/30 glass-royal max-h-[calc(100vh-5rem)] overflow-y-auto">
               <div className="flex flex-col gap-2">
                 {navigationConfig.main.map((item) => {
                   if (item.dropdown) {
@@ -184,7 +184,7 @@ export default function Layout({ children, currentPageName }) {
                         </div>
                         {item.dropdown.map((subItem) => (
                           <Link key={subItem.page} to={createPageUrl(subItem.page)} onClick={() => setMobileMenuOpen(false)}>
-                            <Button variant="ghost" className="w-full justify-start pl-6 text-white hover:bg-blue-500/20">
+                            <Button className="w-full justify-start pl-6 glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30">
                               {subItem.label}
                             </Button>
                           </Link>
@@ -194,7 +194,7 @@ export default function Layout({ children, currentPageName }) {
                   }
                   return (
                     <Link key={item.page} to={createPageUrl(item.page)} onClick={() => setMobileMenuOpen(false)}>
-                      <Button variant="ghost" className="w-full justify-start text-white hover:bg-blue-500/20">
+                      <Button className="w-full justify-start glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30">
                         {item.label}
                       </Button>
                     </Link>
@@ -202,28 +202,27 @@ export default function Layout({ children, currentPageName }) {
                 })}
                 {user && (
                   <Link to={createPageUrl("Dashboard")} onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="ghost" className="w-full justify-start text-white hover:bg-blue-500/20">
+                    <Button className="w-full justify-start glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30">
                       Dashboard
                     </Button>
                   </Link>
                 )}
                 <Link to={createPageUrl("Consultation")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white mt-2">
+                  <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white mt-2 shadow-xl">
                     Get Started
                   </Button>
                 </Link>
                 {user ? (
                   <Button 
                     onClick={handleLogout}
-                    variant="outline" 
-                    className="w-full mt-2 border-red-500/50 text-red-400 hover:bg-red-500/20"
+                    className="w-full mt-2 glass-royal border border-red-500/50 text-red-400 hover:bg-red-500/20"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
                     Logout
                   </Button>
                 ) : (
                   <Link to={createPageUrl("Login")} onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full mt-2 border-blue-500/50 text-white hover:bg-blue-500/20">
+                    <Button className="w-full mt-2 glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30">
                       Sign In
                     </Button>
                   </Link>
@@ -240,8 +239,8 @@ export default function Layout({ children, currentPageName }) {
 
       <GlyphBotJr />
 
-      {/* Footer */}
-      <footer className="glass-dark border-t border-blue-500/30 py-12 relative z-10">
+      {/* Footer with glassmorphism */}
+      <footer className="glass-royal border-t border-blue-500/50 py-12 relative z-10 shadow-2xl">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
