@@ -1,59 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
-import DataTable from '@/components/dashboard/DataTable';
-import { navItems } from '@/components/dashboard/DashboardData';
-import { Loader2 } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
+import { Sun, Moon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import DataTable from "@/components/dashboard/DataTable";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
 
-export default function DashboardPage() {
+export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedModel, setSelectedModel] = useState(navItems[0].items[0]);
+  const [selectedModel, setSelectedModel] = useState(null);
   const [darkMode, setDarkMode] = useState(true);
 
   useEffect(() => {
     checkAuth();
-    const savedTheme = localStorage.getItem('glyphlock_theme');
-    if (savedTheme) {
-      setDarkMode(savedTheme === 'dark');
-    }
   }, []);
 
   const checkAuth = async () => {
     try {
+      const isAuth = await base44.auth.isAuthenticated();
+      if (!isAuth) {
+        base44.auth.redirectToLogin(window.location.pathname);
+        return;
+      }
       const userData = await base44.auth.me();
       setUser(userData);
+    } catch (error) {
+      console.error("Auth error:", error);
+      base44.auth.redirectToLogin(window.location.pathname);
+    } finally {
       setLoading(false);
-    } catch (err) {
-      base44.auth.redirectToLogin();
     }
-  };
-
-  const handleSelectItem = (item) => {
-    setSelectedModel(item);
   };
 
   if (loading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${darkMode ? 'bg-black' : 'bg-gray-50'}`}>
-        <div className="flex items-center gap-3">
-          <Loader2 className={`w-6 h-6 animate-spin ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-          <span className={darkMode ? 'text-white' : 'text-gray-900'}>Loading dashboard...</span>
-        </div>
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <LoadingSpinner message="Loading dashboard..." />
       </div>
     );
   }
 
   return (
-    <div className={`flex h-screen ${darkMode ? 'bg-black' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen ${darkMode ? 'bg-gray-950' : 'bg-gray-50'} flex`}>
       <DashboardSidebar 
-        onSelectItem={handleSelectItem} 
-        selectedModel={selectedModel}
+        selectedModel={selectedModel} 
+        setSelectedModel={setSelectedModel}
         darkMode={darkMode}
       />
-      <main className="flex-1 overflow-hidden">
+      
+      <div className="flex-1 flex flex-col">
+        <div className={`${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} border-b px-6 py-4 flex items-center justify-between sticky top-0 z-10`}>
+          <div>
+            <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+              Admin Dashboard
+            </h1>
+            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              {user?.email} • {user?.role}
+            </p>
+          </div>
+          <Button
+            onClick={() => setDarkMode(!darkMode)}
+            size="icon"
+            variant="outline"
+            className={darkMode ? 'border-gray-700' : 'border-gray-300'}
+          >
+            {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </Button>
+        </div>
+
         <DataTable selectedModel={selectedModel} darkMode={darkMode} />
-      </main>
+      </div>
     </div>
   );
 }

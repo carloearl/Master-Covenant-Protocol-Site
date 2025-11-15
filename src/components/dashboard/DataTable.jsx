@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
-import { Loader2, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { base44 } from "@/api/base44Client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { RefreshCw, Database } from "lucide-react";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import EmptyState from "@/components/shared/EmptyState";
 
 export default function DataTable({ selectedModel, darkMode }) {
-  const { data, isLoading, refetch, isRefetching } = useQuery({
-    queryKey: ['entity', selectedModel?.entity],
-    queryFn: async () => {
-      if (!selectedModel?.entity) return [];
-      return await base44.entities[selectedModel.entity].list();
-    },
-    enabled: !!selectedModel?.entity,
-    refetchOnWindowFocus: false,
+  const { data: records = [], isLoading, refetch } = useQuery({
+    queryKey: ['entity-data', selectedModel?.entity],
+    queryFn: () => selectedModel ? base44.entities[selectedModel.entity].list() : [],
+    enabled: !!selectedModel
   });
 
   if (!selectedModel) {
     return (
-      <div className="flex items-center justify-center h-full text-center">
-        <div>
-          <h2 className={`text-2xl font-semibold ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-            Welcome to the Dashboard
-          </h2>
-          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-500'} mt-2`}>
-            Select a data model from the sidebar to view its contents.
+      <div className={`flex-1 flex items-center justify-center ${darkMode ? 'bg-gray-950' : 'bg-gray-50'}`}>
+        <div className="text-center">
+          <Database className={`w-20 h-20 mx-auto mb-4 ${darkMode ? 'text-gray-700' : 'text-gray-300'}`} />
+          <h3 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+            Select a Data Model
+          </h3>
+          <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+            Choose a model from the sidebar to view and manage data
           </p>
         </div>
       </div>
@@ -32,89 +32,73 @@ export default function DataTable({ selectedModel, darkMode }) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="flex items-center gap-2">
-          <Loader2 className={`w-5 h-5 animate-spin ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-          <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
-            Loading {selectedModel.label}...
-          </p>
-        </div>
+      <div className={`flex-1 p-8 ${darkMode ? 'bg-gray-950' : 'bg-gray-50'}`}>
+        <LoadingSpinner message={`Loading ${selectedModel.label}...`} />
       </div>
     );
   }
 
-  const records = data || [];
-  const columns = records.length > 0 ? Object.keys(records[0]).filter(key => 
-    !['__v'].includes(key)
-  ) : [];
+  const columns = records.length > 0 ? Object.keys(records[0]) : [];
 
   return (
-    <div className="p-8 h-full overflow-y-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-          {selectedModel.label}
-        </h1>
-        <Button
-          onClick={() => refetch()}
-          disabled={isRefetching}
-          variant="outline"
-          size="sm"
-          className={darkMode ? 'border-gray-700 text-gray-300' : ''}
-        >
-          <RefreshCw className={`w-4 h-4 mr-2 ${isRefetching ? 'animate-spin' : ''}`} />
-          Refresh
-        </Button>
-      </div>
-
-      {records.length === 0 ? (
-        <div className={`text-center py-12 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-          <p>No records found for {selectedModel.label}.</p>
-        </div>
-      ) : (
-        <div className={`overflow-x-auto rounded-lg shadow ${darkMode ? 'bg-gray-900' : 'bg-white'}`}>
-          <table className="min-w-full border-collapse">
-            <thead className={darkMode ? 'bg-gray-800' : 'bg-gray-100'}>
-              <tr>
-                {columns.map((col) => (
-                  <th
-                    key={col}
-                    className={`py-3 px-4 border-b text-left text-xs font-medium uppercase tracking-wider ${
-                      darkMode ? 'text-gray-300 border-gray-700' : 'text-gray-600 border-gray-200'
-                    }`}
-                  >
-                    {col.replace(/_/g, ' ')}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((row, idx) => (
-                <tr
-                  key={row.id || idx}
-                  className={darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-50'}
-                >
-                  {columns.map((col) => (
-                    <td
-                      key={col}
-                      className={`py-3 px-4 border-b text-sm ${
-                        darkMode ? 'text-gray-300 border-gray-800' : 'text-gray-700 border-gray-200'
-                      }`}
+    <div className={`flex-1 p-8 ${darkMode ? 'bg-gray-950' : 'bg-gray-50'} overflow-auto`}>
+      <Card className={`${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'}`}>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className={darkMode ? 'text-white' : 'text-gray-900'}>
+              {selectedModel.label} ({records.length})
+            </CardTitle>
+            <Button
+              onClick={() => refetch()}
+              size="sm"
+              variant="outline"
+              className={darkMode ? 'border-gray-700 text-white' : 'border-gray-300'}
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {records.length === 0 ? (
+            <EmptyState 
+              icon={Database}
+              title="No records found"
+              description={`No ${selectedModel.label} records exist yet`}
+            />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className={`border-b ${darkMode ? 'border-gray-800' : 'border-gray-200'}`}>
+                    {columns.map((col) => (
+                      <th key={col} className={`text-left p-3 font-semibold text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {col}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {records.map((record, idx) => (
+                    <tr 
+                      key={idx} 
+                      className={`border-b ${darkMode ? 'border-gray-800 hover:bg-gray-800/50' : 'border-gray-100 hover:bg-gray-50'}`}
                     >
-                      {typeof row[col] === 'object' && row[col] !== null
-                        ? JSON.stringify(row[col])
-                        : String(row[col] || '')}
-                    </td>
+                      {columns.map((col) => (
+                        <td key={col} className={`p-3 text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          {typeof record[col] === 'object' 
+                            ? JSON.stringify(record[col]) 
+                            : String(record[col] || '-')}
+                        </td>
+                      ))}
+                    </tr>
                   ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      <div className={`mt-4 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-        Total records: {records.length}
-      </div>
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

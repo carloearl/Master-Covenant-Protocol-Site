@@ -1,52 +1,57 @@
+import { 
+  ShoppingCart, Users, Package, TrendingUp, Map, AlertTriangle, 
+  QrCode, Shield, Bed, UserCheck, DollarSign, BarChart3 
+} from "lucide-react";
+
 export const navItems = [
   {
     category: "General",
     items: [
-      { id: "Consultation", label: "Consultations", entity: "Consultation" },
-      { id: "ServiceUsage", label: "Service Usage Logs", entity: "ServiceUsage" },
-    ],
+      { id: "consultations", label: "Consultations", entity: "Consultation", icon: Users },
+      { id: "products", label: "Products", entity: "Product", icon: Package },
+    ]
   },
   {
-    category: "Point of Sale (POS)",
+    category: "Point of Sale",
     items: [
-      { id: "POSProduct", label: "Products", entity: "POSProduct" },
-      { id: "POSInventoryBatch", label: "Product Batches", entity: "POSInventoryBatch" },
-      { id: "POSTransaction", label: "Transactions", entity: "POSTransaction" },
-      { id: "POSCustomer", label: "Customers", entity: "POSCustomer" },
-      { id: "POSCampaign", label: "Campaigns", entity: "POSCampaign" },
-      { id: "POSLocation", label: "Locations", entity: "POSLocation" },
-      { id: "POSBatch", label: "Cash Batches", entity: "POSBatch" },
-      { id: "POSZReport", label: "End-of-Day Reports (Z)", entity: "POSZReport" },
-    ],
+      { id: "pos-products", label: "Products", entity: "POSProduct", icon: Package },
+      { id: "pos-transactions", label: "Transactions", entity: "POSTransaction", icon: ShoppingCart },
+      { id: "pos-customers", label: "Customers", entity: "POSCustomer", icon: Users },
+      { id: "pos-campaigns", label: "Campaigns", entity: "POSCampaign", icon: TrendingUp },
+      { id: "pos-locations", label: "Locations", entity: "POSLocation", icon: Map },
+      { id: "pos-inventory", label: "Inventory Batches", entity: "POSInventoryBatch", icon: Package },
+      { id: "pos-batches", label: "Cash Batches", entity: "POSBatch", icon: DollarSign },
+      { id: "pos-zreports", label: "Z-Reports", entity: "POSZReport", icon: BarChart3 },
+    ]
   },
   {
-    category: "QR Security & Analytics",
+    category: "QR Security",
     items: [
-      { id: "QRGenHistory", label: "QR Generation History", entity: "QRGenHistory" },
-      { id: "QRThreatLog", label: "QR Threat Logs", entity: "QRThreatLog" },
-      { id: "QRAIScore", label: "QR AI Risk Scores", entity: "QRAIScore" },
-    ],
+      { id: "qr-history", label: "QR Generation History", entity: "QRGenHistory", icon: QrCode },
+      { id: "qr-scores", label: "AI Security Scores", entity: "QRAIScore", icon: Shield },
+      { id: "qr-threats", label: "Threat Logs", entity: "QRThreatLog", icon: AlertTriangle },
+    ]
   },
   {
     category: "HSSS Security",
     items: [
-      { id: "HotzoneMap", label: "Hotzone Maps", entity: "HotzoneMap" },
-      { id: "HotzoneThreat", label: "Hotzone Threats", entity: "HotzoneThreat" },
-    ],
+      { id: "hotzone-maps", label: "Security Maps", entity: "HotzoneMap", icon: Map },
+      { id: "hotzone-threats", label: "Threats", entity: "HotzoneThreat", icon: AlertTriangle },
+    ]
   },
   {
     category: "Hospitality",
     items: [
-      { id: "Entertainer", label: "Entertainers", entity: "Entertainer" },
-      { id: "EntertainerShift", label: "Entertainer Shifts", entity: "EntertainerShift" },
-      { id: "VIPRoom", label: "VIP Rooms", entity: "VIPRoom" },
-      { id: "VIPGuest", label: "VIP Guests", entity: "VIPGuest" },
-    ],
+      { id: "entertainers", label: "Entertainers", entity: "Entertainer", icon: Users },
+      { id: "shifts", label: "Shifts", entity: "EntertainerShift", icon: UserCheck },
+      { id: "vip-rooms", label: "VIP Rooms", entity: "VIPRoom", icon: Bed },
+      { id: "vip-guests", label: "VIP Guests", entity: "VIPGuest", icon: Users },
+    ]
   },
   {
-    category: "Products & Services",
+    category: "System",
     items: [
-      { id: "Product", label: "Company Products", entity: "Product" },
-    ],
-  },
+      { id: "service-usage", label: "Service Usage", entity: "ServiceUsage", icon: BarChart3 },
+    ]
+  }
 ];
