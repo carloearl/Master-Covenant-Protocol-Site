@@ -15,6 +15,7 @@ export default function TechStackCarousel() {
     { name: "Snowflake", logo: "https://www.vectorlogo.zone/logos/snowflake/snowflake-ar21.svg" },
     { name: "ChatGPT", logo: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" },
     { name: "NVIDIA", logo: "https://www.vectorlogo.zone/logos/nvidia/nvidia-ar21.svg" },
+    { name: "Anthropic", logo: "https://www.vectorlogo.zone/logos/anthropic/anthropic-ar21.svg" },
     { name: "Hugging Face", logo: "https://huggingface.co/front/assets/huggingface_logo.svg" },
     { name: "GitHub", logo: "https://www.vectorlogo.zone/logos/github/github-ar21.svg" },
     { name: "GitLab", logo: "https://www.vectorlogo.zone/logos/gitlab/gitlab-ar21.svg" },
@@ -26,8 +27,7 @@ export default function TechStackCarousel() {
     { name: "PayPal", logo: "https://www.vectorlogo.zone/logos/paypal/paypal-ar21.svg" },
     { name: "Salesforce", logo: "https://www.vectorlogo.zone/logos/salesforce/salesforce-ar21.svg" },
     { name: "Slack", logo: "https://www.vectorlogo.zone/logos/slack/slack-ar21.svg" },
-    { name: "Atlassian", logo: "https://www.vectorlogo.zone/logos/atlassian/atlassian-ar21.svg" },
-    { name: "Figma", logo: "https://www.vectorlogo.zone/logos/figma/figma-ar21.svg" }
+    { name: "Twilio", logo: "https://www.vectorlogo.zone/logos/twilio/twilio-ar21.svg" }
   ];
 
   // Row 2: 25 logos scrolling right
@@ -40,7 +40,7 @@ export default function TechStackCarousel() {
     { name: "MySQL", logo: "https://www.vectorlogo.zone/logos/mysql/mysql-ar21.svg" },
     { name: "PlanetScale", logo: "https://www.vectorlogo.zone/logos/planetscale/planetscale-ar21.svg" },
     { name: "CockroachDB", logo: "https://www.vectorlogo.zone/logos/cockroachlabs/cockroachlabs-ar21.svg" },
-    { name: "Anthropic", logo: "https://www.vectorlogo.zone/logos/anthropic/anthropic-ar21.svg" },
+    { name: "SendGrid", logo: "https://www.vectorlogo.zone/logos/sendgrid/sendgrid-ar21.svg" },
     { name: "Cohere", logo: "https://www.vectorlogo.zone/logos/cohere/cohere-ar21.svg" },
     { name: "New Relic", logo: "https://www.vectorlogo.zone/logos/newrelic/newrelic-ar21.svg" },
     { name: "Grafana", logo: "https://www.vectorlogo.zone/logos/grafana/grafana-ar21.svg" },
@@ -54,9 +54,9 @@ export default function TechStackCarousel() {
     { name: "SAP", logo: "https://www.vectorlogo.zone/logos/sap/sap-ar21.svg" },
     { name: "IBM", logo: "https://www.vectorlogo.zone/logos/ibm/ibm-ar21.svg" },
     { name: "Postman", logo: "https://www.vectorlogo.zone/logos/getpostman/getpostman-ar21.svg" },
-    { name: "Twilio", logo: "https://www.vectorlogo.zone/logos/twilio/twilio-ar21.svg" },
+    { name: "Atlassian", logo: "https://www.vectorlogo.zone/logos/atlassian/atlassian-ar21.svg" },
     { name: "Segment", logo: "https://www.vectorlogo.zone/logos/segment/segment-ar21.svg" },
-    { name: "Webpack", logo: "https://www.vectorlogo.zone/logos/js_webpack/js_webpack-ar21.svg" }
+    { name: "Figma", logo: "https://www.vectorlogo.zone/logos/figma/figma-ar21.svg" }
   ];
 
   return (
