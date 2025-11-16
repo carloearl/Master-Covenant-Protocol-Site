@@ -65,7 +65,7 @@ const ScrollSection = ({ children }) => {
   const sectionRef = useRef(null);
   const style = useScrollEffect(sectionRef);
   return (
-    <section ref={sectionRef} className="w-full py-4">
+    <section ref={sectionRef} className="w-full">
       <div style={style} className="w-full transition-all duration-150 ease-out pointer-events-auto">
         {children}
       </div>
