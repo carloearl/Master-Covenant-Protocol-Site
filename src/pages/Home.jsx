@@ -9,48 +9,29 @@ import CTASection from "@/components/home/CTASection";
 
 export default function Home() {
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const sectionRefs = useRef([]);
+  const contentRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 400);
       
-      const viewportHeight = window.innerHeight;
-      const viewportCenter = viewportHeight / 2;
-
-      sectionRefs.current.forEach((section, index) => {
-        if (!section) return;
-        
-        const rect = section.getBoundingClientRect();
-        const sectionCenter = rect.top + rect.height / 2;
-        const distanceFromCenter = sectionCenter - viewportCenter;
-        const normalizedDistance = distanceFromCenter / viewportHeight;
-        
-        // Calculate fade and depth based on position
-        // Below center (coming from bottom): fade in and come forward
-        // Above center (going to top): fade out and go back
-        
-        let opacity, scale, translateZ;
-        
-        if (normalizedDistance > 0) {
-          // Below viewport center - coming from bottom
-          opacity = Math.max(0, 1 - (normalizedDistance * 1.2));
-          scale = Math.max(0.7, 1 - (normalizedDistance * 0.3));
-          translateZ = -normalizedDistance * 400;
-        } else {
-          // Above viewport center - going to top
-          opacity = Math.max(0, 1 + (normalizedDistance * 1.2));
-          scale = Math.max(0.7, 1 + (normalizedDistance * 0.3));
-          translateZ = normalizedDistance * 400;
-        }
-
-        section.style.transform = `
-          perspective(1500px) 
-          translateZ(${translateZ}px) 
-          scale(${scale})
-        `;
-        section.style.opacity = opacity;
-      });
+      if (!contentRef.current) return;
+      
+      const scrollY = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollProgress = scrollY / maxScroll;
+      
+      // Entire page fades and scales as one unified surface
+      const opacity = 1 - (scrollProgress * 0.3);
+      const scale = 1 - (scrollProgress * 0.15);
+      const translateZ = -scrollProgress * 200;
+      
+      contentRef.current.style.transform = `
+        perspective(1500px) 
+        translateZ(${translateZ}px) 
+        scale(${scale})
+      `;
+      contentRef.current.style.opacity = opacity;
     };
 
     handleScroll();
@@ -82,74 +63,26 @@ export default function Home() {
         </button>
       )}
 
-      <div style={{ transformStyle: 'preserve-3d' }}>
-        <div 
-          ref={el => sectionRefs.current[0] = el}
-          style={{ 
-            transformStyle: 'preserve-3d',
-            transformOrigin: 'center center',
-            willChange: 'transform, opacity'
-          }}
-        >
-          <HeroSection />
-        </div>
+      <div 
+        ref={contentRef}
+        style={{ 
+          transformStyle: 'preserve-3d',
+          transformOrigin: 'center top',
+          willChange: 'transform, opacity'
+        }}
+      >
+        <HeroSection />
+        <FeaturesSection />
+        <ServicesGrid />
+        <ComparisonSection />
         
-        <div 
-          ref={el => sectionRefs.current[1] = el}
-          style={{ 
-            transformStyle: 'preserve-3d',
-            transformOrigin: 'center center',
-            willChange: 'transform, opacity'
-          }}
-        >
-          <FeaturesSection />
-        </div>
-        
-        <div 
-          ref={el => sectionRefs.current[2] = el}
-          style={{ 
-            transformStyle: 'preserve-3d',
-            transformOrigin: 'center center',
-            willChange: 'transform, opacity'
-          }}
-        >
-          <ServicesGrid />
-        </div>
-        
-        <div 
-          ref={el => sectionRefs.current[3] = el}
-          style={{ 
-            transformStyle: 'preserve-3d',
-            transformOrigin: 'center center',
-            willChange: 'transform, opacity'
-          }}
-        >
-          <ComparisonSection />
-        </div>
-
-        <section 
-          ref={el => sectionRefs.current[4] = el}
-          className="py-24 relative" 
-          style={{ 
-            transformStyle: 'preserve-3d',
-            transformOrigin: 'center center',
-            willChange: 'transform, opacity'
-          }}
-        >
+        <section className="py-24 relative">
           <div className="container mx-auto px-4 relative z-10">
             <TechStackCarousel />
           </div>
         </section>
 
-        <section 
-          ref={el => sectionRefs.current[5] = el}
-          className="py-24 relative" 
-          style={{ 
-            transformStyle: 'preserve-3d',
-            transformOrigin: 'center center',
-            willChange: 'transform, opacity'
-          }}
-        >
+        <section className="py-24 relative">
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               <div className="glass-royal p-8 rounded-2xl text-center">
@@ -168,16 +101,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div 
-          ref={el => sectionRefs.current[6] = el}
-          style={{ 
-            transformStyle: 'preserve-3d',
-            transformOrigin: 'center center',
-            willChange: 'transform, opacity'
-          }}
-        >
-          <CTASection />
-        </div>
+        <CTASection />
       </div>
     </div>
   );
