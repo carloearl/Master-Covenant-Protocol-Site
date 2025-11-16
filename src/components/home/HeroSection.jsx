@@ -10,7 +10,7 @@ export default function HeroSection() {
           muted
           playsInline
           preload="auto"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
           style={{ filter: 'brightness(1.1) contrast(1.1)' }}
         >
           <source src="https://i.imgur.com/zs3sPzJ.mp4" type="video/mp4" />
@@ -23,7 +23,7 @@ export default function HeroSection() {
             className="h-12 md:h-14 w-auto"
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50 pointer-events-none" />
       </div>
     </div>
   );
