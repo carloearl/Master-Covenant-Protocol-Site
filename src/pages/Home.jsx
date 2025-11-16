@@ -9,34 +9,38 @@ import CTASection from "@/components/home/CTASection";
 
 export default function Home() {
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const sectionRefs = useRef([]);
+  const contentRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 400);
       
+      if (!contentRef.current) return;
+      
+      const allElements = contentRef.current.querySelectorAll('section, div > div');
       const viewportCenter = window.innerHeight / 2;
       
-      sectionRefs.current.forEach(section => {
-        if (!section) return;
-        
-        const rect = section.getBoundingClientRect();
-        const sectionCenter = rect.top + (rect.height / 2);
-        const distanceFromCenter = Math.abs(sectionCenter - viewportCenter);
-        const maxDistance = window.innerHeight;
+      allElements.forEach(element => {
+        const rect = element.getBoundingClientRect();
+        const elementCenter = rect.top + (rect.height / 2);
+        const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
+        const maxDistance = window.innerHeight * 0.8;
         const normalizedDistance = Math.min(distanceFromCenter / maxDistance, 1);
         
-        // Cylindrical effect: fade and push back when away from center
-        const opacity = 1 - (normalizedDistance * 0.7);
-        const scale = 1 - (normalizedDistance * 0.2);
-        const translateZ = -normalizedDistance * 400;
+        // Smooth cylindrical fade based on distance from center
+        const opacity = 1 - (normalizedDistance * 0.6);
+        const scale = 1 - (normalizedDistance * 0.15);
+        const translateZ = -normalizedDistance * 350;
+        const blur = normalizedDistance * 2;
         
-        section.style.transform = `
+        element.style.transform = `
           perspective(1500px) 
           translateZ(${translateZ}px) 
           scale(${scale})
         `;
-        section.style.opacity = Math.max(0.3, opacity);
+        element.style.opacity = Math.max(0.4, opacity);
+        element.style.filter = `blur(${blur}px)`;
+        element.style.transition = 'transform 0.1s ease-out, opacity 0.1s ease-out, filter 0.1s ease-out';
       });
     };
 
@@ -69,31 +73,18 @@ export default function Home() {
         </button>
       )}
 
-      <div ref={el => sectionRefs.current[0] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
+      <div ref={contentRef} style={{ transformStyle: 'preserve-3d' }}>
         <HeroSection />
-      </div>
-
-      <div ref={el => sectionRefs.current[1] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
         <FeaturesSection />
-      </div>
-
-      <div ref={el => sectionRefs.current[2] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
         <ServicesGrid />
-      </div>
-
-      <div ref={el => sectionRefs.current[3] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
         <ComparisonSection />
-      </div>
-      
-      <div ref={el => sectionRefs.current[4] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
+        
         <section className="py-24 relative">
           <div className="container mx-auto px-4 relative z-10">
             <TechStackCarousel />
           </div>
         </section>
-      </div>
 
-      <div ref={el => sectionRefs.current[5] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
         <section className="py-24 relative">
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -112,9 +103,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-      </div>
 
-      <div ref={el => sectionRefs.current[6] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
         <CTASection />
       </div>
     </div>
