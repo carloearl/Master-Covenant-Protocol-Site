@@ -27,14 +27,15 @@ export default function Home() {
               const rect = section.getBoundingClientRect();
               const elementCenter = rect.top + (rect.height / 2);
               const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
-              const maxDistance = window.innerHeight * 0.7;
+              const maxDistance = window.innerHeight * 0.8;
               const normalized = Math.min(distanceFromCenter / maxDistance, 1);
               
-              const opacity = 1 - (normalized * 0.4);
-              const translateZ = -normalized * 150;
+              const opacity = 1 - (normalized * 0.5);
+              const translateZ = -normalized * 200;
               
-              section.style.transform = `translateZ(${translateZ}px)`;
-              section.style.opacity = `${Math.max(opacity, 0.6)}`;
+              section.style.transform = `translateZ(${translateZ}px) scale(${1 - normalized * 0.05})`;
+              section.style.opacity = `${Math.max(opacity, 0.5)}`;
+              section.style.transition = 'transform 0.1s ease-out, opacity 0.1s ease-out';
             });
           }
           
@@ -59,16 +60,15 @@ export default function Home() {
 
   return (
     <div className="text-white relative" style={{ 
-      perspective: '1200px',
-      perspectiveOrigin: '50% 50%',
-      overflow: 'visible'
+      perspective: '1500px',
+      perspectiveOrigin: '50% 50%'
     }}>
       <button
         onClick={scrollToTop}
         className="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110"
         style={{ 
           display: showBackToTop ? 'block' : 'none',
-          zIndex: 9999,
+          zIndex: 99999,
           cursor: 'pointer',
           pointerEvents: 'auto'
         }}
@@ -83,13 +83,13 @@ export default function Home() {
         <ServicesGrid />
         <ComparisonSection />
         
-        <section className="py-24 relative">
+        <section className="py-24 relative" style={{ willChange: 'transform, opacity' }}>
           <div className="container mx-auto px-4 relative">
             <TechStackCarousel />
           </div>
         </section>
 
-        <section className="py-24 relative">
+        <section className="py-24 relative" style={{ willChange: 'transform, opacity' }}>
           <div className="container mx-auto px-4 relative">
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               <div className="glass-royal p-8 rounded-2xl text-center">
