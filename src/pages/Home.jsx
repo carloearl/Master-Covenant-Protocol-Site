@@ -18,35 +18,29 @@ export default function Home() {
       if (!contentRef.current) return;
       
       const sections = contentRef.current.querySelectorAll('section');
-      const viewportCenter = window.innerHeight / 2 + window.scrollY;
+      const viewportCenter = window.innerHeight / 2;
       
       sections.forEach(section => {
         const rect = section.getBoundingClientRect();
-        const elementCenter = rect.top + window.scrollY + (rect.height / 2);
-        const distanceFromCenter = elementCenter - viewportCenter;
+        const elementCenter = rect.top + (rect.height / 2);
+        const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
         const maxDistance = window.innerHeight;
+        const normalizedDistance = Math.min(distanceFromCenter / maxDistance, 1);
         
-        const normalizedDistance = distanceFromCenter / maxDistance;
-        const clampedDistance = Math.max(-1, Math.min(1, normalizedDistance));
+        const opacity = 1 - (normalizedDistance * 0.5);
+        const scale = 1;
+        const translateZ = -normalizedDistance * 200;
         
-        const opacity = 1 - Math.abs(clampedDistance) * 0.6;
-        const scale = 1 - Math.abs(clampedDistance) * 0.1;
-        const rotateX = clampedDistance * 15;
-        const translateZ = -Math.abs(clampedDistance) * 300;
-        
-        section.style.transform = `perspective(2000px) rotateX(${rotateX}deg) translateZ(${translateZ}px) scale(${scale})`;
-        section.style.opacity = Math.max(opacity, 0.4);
-        section.style.transformStyle = 'preserve-3d';
+        section.style.transform = `translateZ(${translateZ}px)`;
+        section.style.opacity = Math.max(opacity, 0.5);
       });
     };
 
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
     };
   }, []);
 
@@ -55,21 +49,22 @@ export default function Home() {
   };
 
   return (
-    <div className="text-white relative overflow-hidden" style={{ 
-      perspective: '2000px',
+    <div className="text-white relative" style={{ 
+      perspective: '1500px',
       perspectiveOrigin: '50% 50%'
     }}>
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-[999] bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 glow-royal"
+          className="fixed bottom-8 right-8 z-[999] bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110"
+          style={{ boxShadow: '0 0 20px rgba(65, 105, 225, 0.3)', cursor: 'pointer', pointerEvents: 'auto' }}
           aria-label="Back to top"
         >
           <ArrowUp className="w-6 h-6" />
         </button>
       )}
 
-      <div ref={contentRef} style={{ transformStyle: 'preserve-3d', position: 'relative', zIndex: 50 }}>
+      <div ref={contentRef} style={{ transformStyle: 'preserve-3d' }}>
         <HeroSection />
         <FeaturesSection />
         <ServicesGrid />
