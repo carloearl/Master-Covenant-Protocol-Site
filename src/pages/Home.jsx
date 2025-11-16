@@ -10,68 +10,39 @@ import ServicesGrid from '@/components/home/ServicesGrid';
 import BoundAICards from '@/components/home/BoundAICards';
 import CTASection from '@/components/home/CTASection';
 
-const useScrollEffect = (sectionRef, containerRef) => {
-  const [style, setStyle] = useState({ transform: 'perspective(1000px)', opacity: 0 });
+const ScrollSection = ({ children }) => {
+  const sectionRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (sectionRef.current) {
-        const { top, height } = sectionRef.current.getBoundingClientRect();
-        const screenHeight = window.innerHeight;
-        
-        const elementCenter = top + height / 2;
-        const screenCenter = screenHeight / 2;
-        const distance = screenCenter - elementCenter;
-        
-        const factor = distance / (screenCenter * 1.1);
-
-        let rotation = 0;
-        let scale = 1;
-        let opacity = 1;
-
-        if (factor < 0) {
-          const progress = Math.min(1, (1 + factor) * 1.2);
-          rotation = (1 - progress) * 25;
-          scale = 0.85 + (progress * 0.15);
-          opacity = Math.max(0, progress);
-        } else if (factor > 0) {
-          const progress = Math.min(1, factor * 1.2);
-          rotation = -progress * 25;
-          scale = 1 - (progress * 0.15);
-          opacity = Math.max(0, 1 - progress);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
         }
+      },
+      { threshold: 0.2 }
+    );
 
-        requestAnimationFrame(() => {
-            setStyle({
-              transform: `perspective(1000px) rotateX(${rotation}deg) scale(${scale})`,
-              opacity: opacity,
-            });
-        });
-      }
-    };
-    
-    const scrollContainer = containerRef.current;
-    if (scrollContainer) {
-      scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
-      handleScroll();
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
     }
 
     return () => {
-      if (scrollContainer) {
-        scrollContainer.removeEventListener('scroll', handleScroll);
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
       }
     };
-  }, [sectionRef, containerRef]);
+  }, []);
 
-  return style;
-};
-
-const ScrollSection = ({ children, containerRef }) => {
-  const sectionRef = useRef(null);
-  const style = useScrollEffect(sectionRef, containerRef);
   return (
-    <section ref={sectionRef} className="min-h-screen w-full flex items-center justify-center px-2 sm:px-4 snap-start snap-always">
-      <div style={style} className="w-full transition-all duration-150 ease-out pointer-events-auto">
+    <section 
+      ref={sectionRef} 
+      className={`w-full flex items-center justify-center px-2 sm:px-4 py-8 md:py-12 transition-all duration-700 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      }`}
+    >
+      <div className="w-full">
         {children}
       </div>
     </section>
@@ -81,7 +52,6 @@ const ScrollSection = ({ children, containerRef }) => {
 export default function Home() {
   const navigate = useNavigate();
   const [email, setEmail] = React.useState('');
-  const scrollContainerRef = useRef(null);
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
@@ -91,41 +61,37 @@ export default function Home() {
   };
 
   return (
-    <div 
-      ref={scrollContainerRef} 
-      className="h-screen w-full overflow-y-scroll overflow-x-hidden snap-y snap-mandatory" 
-      style={{ pointerEvents: 'auto', scrollBehavior: 'smooth' }}
-    >
+    <div className="w-full overflow-x-hidden">
         
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <HeroSection />
         </ScrollSection>
 
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <HeroContent />
         </ScrollSection>
 
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <ServicesGrid />
         </ScrollSection>
 
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <BoundAICards />
         </ScrollSection>
 
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <FeaturesSection />
         </ScrollSection>
         
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <ComparisonSection />
         </ScrollSection>
         
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <TechStackCarousel />
         </ScrollSection>
 
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <CTASection />
         </ScrollSection>
     </div>
