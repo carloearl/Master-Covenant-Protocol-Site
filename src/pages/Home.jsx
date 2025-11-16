@@ -26,41 +26,35 @@ export default function Home() {
         const distanceFromCenter = sectionCenter - viewportCenter;
         const normalizedDistance = distanceFromCenter / viewportHeight;
         
-        // Subtle rotation for cylinder effect (max 3deg)
-        const rotateX = normalizedDistance * 2.5;
+        // Subtle rotation for cylinder effect (max 2deg)
+        const rotateX = normalizedDistance * 1.5;
         
         // Parallax depth - elements further move slower
-        const depth = index * 50;
-        const translateZ = -depth + (normalizedDistance * -80);
+        const depth = index * 40;
+        const translateZ = -depth + (normalizedDistance * -60);
         
         // Scale up as approaching center, scale down when away
-        const scale = 1 - Math.abs(normalizedDistance) * 0.15;
+        const scale = 1 - Math.abs(normalizedDistance) * 0.12;
         
         // Opacity fade for distant elements
-        const opacity = 1 - Math.abs(normalizedDistance) * 0.25;
-        
-        // Parallax Y movement - slower for further elements
-        const parallaxSpeed = 1 - (index * 0.05);
-        const translateY = window.scrollY * parallaxSpeed * 0.1;
+        const opacity = 1 - Math.abs(normalizedDistance) * 0.2;
 
         section.style.transform = `
-          perspective(2500px) 
-          rotateX(${Math.max(-3, Math.min(3, rotateX))}deg) 
+          perspective(2000px) 
+          rotateX(${Math.max(-2, Math.min(2, rotateX))}deg) 
           translateZ(${translateZ}px) 
-          translateY(${translateY}px)
-          scale(${Math.max(0.88, Math.min(1, scale))})`
+          scale(${Math.max(0.9, Math.min(1, scale))})`
         ;
-        section.style.opacity = Math.max(0.6, Math.min(1, opacity));
+        section.style.opacity = Math.max(0.7, Math.min(1, opacity));
       });
     };
 
     handleScroll();
-    const scrollHandler = () => requestAnimationFrame(handleScroll);
-    window.addEventListener('scroll', scrollHandler, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleScroll);
     
     return () => {
-      window.removeEventListener('scroll', scrollHandler);
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
   }, []);
@@ -71,7 +65,7 @@ export default function Home() {
 
   return (
     <div className="text-white relative overflow-x-hidden" style={{ 
-      perspective: '2500px',
+      perspective: '2000px',
       perspectiveOrigin: '50% 50%'
     }}>
       {showBackToTop && (
@@ -90,7 +84,6 @@ export default function Home() {
           style={{ 
             transformStyle: 'preserve-3d',
             transformOrigin: 'center center',
-            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
             willChange: 'transform, opacity'
           }}
         >
@@ -102,7 +95,6 @@ export default function Home() {
           style={{ 
             transformStyle: 'preserve-3d',
             transformOrigin: 'center center',
-            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
             willChange: 'transform, opacity'
           }}
         >
@@ -114,7 +106,6 @@ export default function Home() {
           style={{ 
             transformStyle: 'preserve-3d',
             transformOrigin: 'center center',
-            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
             willChange: 'transform, opacity'
           }}
         >
@@ -126,7 +117,6 @@ export default function Home() {
           style={{ 
             transformStyle: 'preserve-3d',
             transformOrigin: 'center center',
-            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
             willChange: 'transform, opacity'
           }}
         >
@@ -139,7 +129,6 @@ export default function Home() {
           style={{ 
             transformStyle: 'preserve-3d',
             transformOrigin: 'center center',
-            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
             willChange: 'transform, opacity'
           }}
         >
@@ -154,7 +143,6 @@ export default function Home() {
           style={{ 
             transformStyle: 'preserve-3d',
             transformOrigin: 'center center',
-            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
             willChange: 'transform, opacity'
           }}
         >
@@ -181,7 +169,6 @@ export default function Home() {
           style={{ 
             transformStyle: 'preserve-3d',
             transformOrigin: 'center center',
-            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
             willChange: 'transform, opacity'
           }}
         >
