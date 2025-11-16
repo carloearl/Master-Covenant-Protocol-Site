@@ -1,4 +1,3 @@
-css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -93,111 +92,143 @@ css
 }
 
 /* =================================================================
-   NUCLEAR OPTION: FORCE EVERYTHING TO PROPER CONTRAST
+   TOTAL NUCLEAR ANNIHILATION OF WHITE BACKGROUNDS
    ================================================================= */
 
-/* ANY ELEMENT WITH WHITE/LIGHT BACKGROUND = GETS DARK TEXT */
+/* KILL ALL WHITE BACKGROUNDS - NO MERCY */
+*[class*="bg-white"],
+*.bg-white,
+div.bg-white,
+span.bg-white,
+section.bg-white,
+article.bg-white,
 [style*="background:#fff"],
 [style*="background: #fff"],
+[style*="background:#FFF"],
+[style*="background: #FFF"],
 [style*="background:white"],
 [style*="background: white"],
 [style*="background-color:#fff"],
 [style*="background-color: #fff"],
+[style*="background-color:#FFF"],
+[style*="background-color: #FFF"],
 [style*="background-color:white"],
 [style*="background-color: white"],
+[style*="backgroundColor:#fff"],
+[style*="backgroundColor: #fff"],
+[style*="backgroundColor:#FFF"],
+[style*="backgroundColor: #FFF"],
 [style*="backgroundColor:white"],
 [style*="backgroundColor: white"],
-[class*="bg-white"] {
+[style*="background-color: rgb(255, 255, 255)"],
+[style*="background: rgb(255, 255, 255)"] {
   background: rgb(15, 15, 15) !important;
-  color: rgb(255, 255, 255) !important;
+  background-color: rgb(15, 15, 15) !important;
+  color: white !important;
 }
 
+/* FORCE ALL CHILDREN OF WHITE BACKGROUNDS TO WHITE TEXT */
+*[class*="bg-white"] *,
+*.bg-white *,
+div.bg-white *,
 [style*="background:#fff"] *,
 [style*="background: #fff"] *,
 [style*="background:white"] *,
 [style*="background: white"] *,
-[style*="background-color:#fff"] *,
-[style*="background-color: #fff"] *,
-[style*="background-color:white"] *,
-[style*="background-color: white"] *,
-[style*="backgroundColor:white"] *,
-[style*="backgroundColor: white"] *,
-[class*="bg-white"] * {
-  color: rgb(255, 255, 255) !important;
+[style*="background-color:white"] * {
+  color: white !important;
 }
 
-/* RADIX UI - NUCLEAR FIX */
-[data-radix-popper-content-wrapper] > *,
+/* RADIX UI - ABSOLUTE DESTRUCTION */
+[data-radix-popper-content-wrapper],
+[data-radix-popper-content-wrapper] *,
 [data-radix-select-viewport],
 [data-radix-select-content],
 [data-radix-dropdown-menu-content],
 [data-radix-popover-content],
 [data-radix-context-menu-content],
 [data-radix-dialog-content],
-[data-radix-alert-dialog-content] {
+[data-radix-alert-dialog-content],
+[data-radix-menubar-content],
+[role="menu"],
+[role="listbox"],
+[role="dialog"],
+.select-content,
+.dropdown-content,
+.popover-content,
+.dialog-content {
   background: rgb(15, 15, 15) !important;
+  background-color: rgb(15, 15, 15) !important;
   color: white !important;
   border: 1px solid rgba(65, 105, 225, 0.5) !important;
 }
 
-/* ALL TEXT IN RADIX COMPONENTS = WHITE */
+/* ALL TEXT IN MENUS/DROPDOWNS = WHITE */
 [data-radix-select-viewport] *,
 [data-radix-select-content] *,
 [data-radix-dropdown-menu-content] *,
 [data-radix-popover-content] *,
 [data-radix-context-menu-content] *,
 [data-radix-dialog-content] *,
-[data-radix-alert-dialog-content] * {
-  color: white !important;
-}
-
-/* MENU ITEMS */
+[data-radix-alert-dialog-content] *,
+[role="menu"] *,
+[role="listbox"] *,
+[role="dialog"] *,
 [role="menuitem"],
 [role="option"],
 [data-radix-select-item],
-[data-radix-dropdown-menu-item] {
+[data-radix-dropdown-menu-item],
+[data-radix-menubar-item] {
   background: transparent !important;
   color: white !important;
 }
 
+/* HOVER STATES */
 [role="menuitem"]:hover,
 [role="option"]:hover,
 [data-radix-select-item]:hover,
 [data-radix-dropdown-menu-item]:hover,
 [data-radix-select-item][data-highlighted],
-[data-radix-dropdown-menu-item][data-highlighted] {
+[data-radix-dropdown-menu-item][data-highlighted],
+[data-radix-select-item][data-state="checked"] {
   background: rgba(65, 105, 225, 0.3) !important;
   color: white !important;
 }
 
-/* CARDS */
+/* CARDS - ANNIHILATE ALL LIGHT BACKGROUNDS */
 [class*="Card"],
 [class*="card"],
-div[role="region"] {
+div[class*="Card"],
+div[class*="card"],
+.card,
+.Card {
   background: rgb(15, 15, 15) !important;
+  background-color: rgb(15, 15, 15) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
   color: white !important;
 }
 
-[class*="Card"] *:not(.bg-clip-text):not([class*="text-"]),
-[class*="card"] *:not(.bg-clip-text):not([class*="text-"]) {
+[class*="Card"] *,
+[class*="card"] *,
+.card *,
+.Card * {
   color: white !important;
 }
 
-/* BUTTONS */
-button {
+/* BUTTONS - ALL WHITE TEXT */
+button,
+button *,
+[role="button"],
+[role="button"] * {
   color: white !important;
 }
 
-button * {
-  color: white !important;
-}
-
-/* INPUTS */
+/* INPUTS - DARK BACKGROUNDS */
 input:not([type="checkbox"]):not([type="radio"]),
 textarea,
 select {
   background: rgb(20, 20, 20) !important;
+  background-color: rgb(20, 20, 20) !important;
   border: 1px solid rgba(65, 105, 225, 0.5) !important;
   color: white !important;
 }
@@ -211,18 +242,82 @@ textarea::placeholder {
 table {
   background: rgb(15, 15, 15) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
-  color: white !important;
 }
 
 th, td {
   color: white !important;
 }
 
+tr {
+  background: transparent !important;
+}
+
 tr:hover {
   background: rgba(65, 105, 225, 0.1) !important;
 }
 
-/* PRESERVE COLORED TEXT */
+/* BADGES */
+[class*="badge"],
+[class*="Badge"],
+.badge,
+.Badge {
+  background: linear-gradient(135deg, 
+    rgba(65, 105, 225, 0.2) 0%, 
+    rgba(30, 64, 175, 0.15) 100%
+  ) !important;
+  color: white !important;
+}
+
+/* TABS */
+[role="tablist"] {
+  background: rgba(0, 0, 0, 0.7) !important;
+  border: 1px solid rgba(65, 105, 225, 0.4) !important;
+}
+
+[role="tab"] {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[role="tab"][data-state="active"] {
+  background: linear-gradient(135deg, 
+    rgba(65, 105, 225, 0.3) 0%, 
+    rgba(30, 64, 175, 0.2) 100%
+  ) !important;
+  color: white !important;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, 
+    rgba(65, 105, 225, 0.6) 0%, 
+    rgba(30, 64, 175, 0.6) 100%
+  );
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, 
+    rgba(65, 105, 225, 0.8) 0%, 
+    rgba(30, 64, 175, 0.8) 100%
+  );
+}
+
+/* SELECTION */
+::selection {
+  background: rgba(65, 105, 225, 0.5);
+  color: white;
+}
+
+/* PRESERVE COLORED TEXT CLASSES */
 .text-blue-400,
 .text-blue-500,
 .text-blue-600,
@@ -241,48 +336,16 @@ tr:hover {
 .text-orange-400,
 .text-orange-500,
 .text-orange-600 {
-  /* Preserve these */
+  /* Colors preserved */
 }
 
-/* GRADIENT TEXT */
+/* GRADIENT TEXT - SPECIAL CASE */
 .bg-clip-text,
 [style*="background-clip: text"],
 [style*="-webkit-background-clip: text"] {
   color: transparent !important;
   -webkit-text-fill-color: transparent !important;
-}
-
-/* SCROLLBAR */
-::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 6px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.6) 0%, 
-    rgba(30, 64, 175, 0.6) 100%
-  );
-  border-radius: 6px;
-  border: 2px solid rgba(0, 0, 0, 0.3);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.8) 0%, 
-    rgba(30, 64, 175, 0.8) 100%
-  );
-}
-
-/* SELECTION */
-::selection {
-  background: rgba(65, 105, 225, 0.5);
-  color: white;
+  background-color: transparent !important;
 }
 
 /* ANIMATIONS */
@@ -313,8 +376,31 @@ tr:hover {
   animation: scroll 30s linear infinite;
 }
 
-/* ENSURE BODY AND MAIN */
-body, main {
+/* FORCE BODY AND MAIN */
+body, main, html {
   color: white !important;
   background: black !important;
+  background-color: black !important;
+}
+
+/* ANY REMAINING LIGHT BACKGROUNDS */
+div, section, article, aside, header, footer, nav {
+  background-color: transparent;
+}
+
+/* SHADCN/UI SPECIFICS */
+.bg-background {
+  background: black !important;
+}
+
+.bg-card {
+  background: rgb(15, 15, 15) !important;
+}
+
+.bg-popover {
+  background: rgb(15, 15, 15) !important;
+}
+
+.bg-muted {
+  background: rgba(30, 64, 175, 0.1) !important;
 }
