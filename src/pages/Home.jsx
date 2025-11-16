@@ -70,7 +70,7 @@ const ScrollSection = ({ children, containerRef }) => {
   const sectionRef = useRef(null);
   const style = useScrollEffect(sectionRef, containerRef);
   return (
-    <section ref={sectionRef} className="min-h-screen w-full flex items-center justify-center px-2 sm:px-4 snap-start snap-always">
+    <section ref={sectionRef} className="w-full flex items-center justify-center px-2 sm:px-4 py-16 snap-start">
       <div style={style} className="w-full transition-all duration-150 ease-out pointer-events-auto">
         {children}
       </div>
@@ -93,7 +93,7 @@ export default function Home() {
   return (
     <div 
       ref={scrollContainerRef} 
-      className="h-screen w-full overflow-y-scroll overflow-x-hidden snap-y snap-mandatory" 
+      className="h-screen w-full overflow-y-scroll overflow-x-hidden snap-y snap-proximity" 
       style={{ pointerEvents: 'auto', scrollBehavior: 'smooth' }}
     >
         
