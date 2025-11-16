@@ -15,7 +15,7 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-black">
+      <section className="relative h-screen w-full overflow-hidden flex items-center justify-center -mt-20 pt-16">
         <div className="relative max-w-full max-h-full">
           <video
             autoPlay
@@ -29,7 +29,7 @@ export default function HeroSection() {
             <source src="https://i.imgur.com/zs3sPzJ.mp4" type="video/mp4" />
           </video>
           
-          <div className="absolute z-10" style={{ bottom: '-24px', right: '-24px' }}>
+          <div className="absolute z-10" style={{ bottom: '-12px', right: '-12px' }}>
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png"
               alt="GlyphLock"
@@ -37,10 +37,10 @@ export default function HeroSection() {
             />
           </div>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50 pointer-events-none" />
       </section>
 
-      <section className="relative py-24 z-10">
+      <section className="relative -mt-16 z-10">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto text-center">
             <Badge className="mb-6 glass-royal text-blue-400 border-blue-500/50 px-6 py-2 text-sm">

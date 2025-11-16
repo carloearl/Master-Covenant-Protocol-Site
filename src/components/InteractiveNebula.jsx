@@ -12,17 +12,17 @@ export default function InteractiveNebula() {
     canvas.height = window.innerHeight;
 
     const particles = [];
-    const particleCount = 150;
-    const connectionDistance = 150;
+    const particleCount = 200;
+    const connectionDistance = 180;
 
     class Particle {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
-        this.radius = Math.random() * 2 + 1;
-        this.opacity = Math.random() * 0.5 + 0.3;
+        this.vx = (Math.random() - 0.5) * 0.8;
+        this.vy = (Math.random() - 0.5) * 0.8;
+        this.radius = Math.random() * 3 + 1;
+        this.opacity = Math.random() * 0.8 + 0.4;
       }
 
       update() {
@@ -36,8 +36,16 @@ export default function InteractiveNebula() {
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(65, 105, 225, ${this.opacity})`;
+        const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 2);
+        gradient.addColorStop(0, `rgba(65, 105, 225, ${this.opacity})`);
+        gradient.addColorStop(1, `rgba(30, 144, 255, ${this.opacity * 0.3})`);
+        ctx.fillStyle = gradient;
         ctx.fill();
+        
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = `rgba(65, 105, 225, ${this.opacity})`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
       }
     }
 
@@ -56,9 +64,12 @@ export default function InteractiveNebula() {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            const opacity = (1 - distance / connectionDistance) * 0.3;
-            ctx.strokeStyle = `rgba(65, 105, 225, ${opacity})`;
-            ctx.lineWidth = 1;
+            const opacity = (1 - distance / connectionDistance) * 0.5;
+            const gradient = ctx.createLinearGradient(particles[i].x, particles[i].y, particles[j].x, particles[j].y);
+            gradient.addColorStop(0, `rgba(65, 105, 225, ${opacity})`);
+            gradient.addColorStop(1, `rgba(30, 144, 255, ${opacity * 0.6})`);
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 2;
             ctx.stroke();
           }
         }
@@ -66,7 +77,8 @@ export default function InteractiveNebula() {
     }
 
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       particles.forEach(particle => {
         particle.update();
@@ -97,8 +109,7 @@ export default function InteractiveNebula() {
       className="fixed inset-0 pointer-events-none"
       style={{
         zIndex: 1,
-        opacity: 0.8,
-        background: 'transparent'
+        background: 'linear-gradient(135deg, #000000 0%, #0a0a1e 40%, #000814 60%, #000000 100%)'
       }}
     />
   );
