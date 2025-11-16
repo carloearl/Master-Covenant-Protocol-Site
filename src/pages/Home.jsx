@@ -23,7 +23,7 @@ export default function Home() {
   };
 
   return (
-    <div className="text-white relative overflow-hidden">
+    <div className="text-white relative overflow-hidden snap-y snap-mandatory h-screen overflow-y-scroll">
       {showBackToTop && (
         <button
           onClick={scrollToTop}
@@ -34,18 +34,29 @@ export default function Home() {
         </button>
       )}
 
-      <HeroSection />
-      <FeaturesSection />
-      <ServicesGrid />
-      <ComparisonSection />
+      <section className="snap-start h-screen">
+        <HeroSection />
+      </section>
 
-      <section className="py-24 relative">
+      <section className="snap-start min-h-screen">
+        <FeaturesSection />
+      </section>
+
+      <section className="snap-start min-h-screen">
+        <ServicesGrid />
+      </section>
+
+      <section className="snap-start min-h-screen">
+        <ComparisonSection />
+      </section>
+
+      <section className="snap-start min-h-screen py-24 relative">
         <div className="container mx-auto px-4 relative z-10">
           <TechStackCarousel />
         </div>
       </section>
 
-      <section className="py-24 relative">
+      <section className="snap-start min-h-screen py-24 relative">
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div className="glass-royal p-8 rounded-2xl text-center">
@@ -64,7 +75,9 @@ export default function Home() {
         </div>
       </section>
 
-      <CTASection />
+      <section className="snap-start min-h-screen">
+        <CTASection />
+      </section>
     </div>
   );
 }
