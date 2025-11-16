@@ -13,16 +13,16 @@ export default function InteractiveNebula() {
 
     let mouseX = canvas.width / 2;
     let mouseY = canvas.height / 2;
-    let particles = [];
+    let nodes = [];
 
-    class Particle {
+    class Node {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = Math.random() * 0.5 - 0.25;
-        this.speedY = Math.random() * 0.5 - 0.25;
-        this.color = `hsla(${Math.random() * 60 + 200}, 100%, ${Math.random() * 30 + 50}%, ${Math.random() * 0.5 + 0.3})`;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = Math.random() * 0.3 - 0.15;
+        this.speedY = Math.random() * 0.3 - 0.15;
+        this.color = `hsla(${Math.random() * 40 + 200}, 80%, ${Math.random() * 20 + 60}%, ${Math.random() * 0.4 + 0.5})`;
       }
 
       update() {
@@ -32,9 +32,9 @@ export default function InteractiveNebula() {
         const dx = mouseX - this.x;
         const dy = mouseY - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < 150) {
-          this.x -= dx * 0.01;
-          this.y -= dy * 0.01;
+        if (distance < 200) {
+          this.x -= dx * 0.008;
+          this.y -= dy * 0.008;
         }
 
         if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
@@ -46,11 +46,17 @@ export default function InteractiveNebula() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
+        
+        // Glow effect
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = this.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
       }
     }
 
-    for (let i = 0; i < 100; i++) {
-      particles.push(new Particle());
+    for (let i = 0; i < 120; i++) {
+      nodes.push(new Node());
     }
 
     const handleMouseMove = (e) => {
@@ -75,33 +81,35 @@ export default function InteractiveNebula() {
     window.addEventListener("resize", handleResize);
 
     function animate() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 250);
-      gradient.addColorStop(0, "rgba(65, 105, 225, 0.2)");
-      gradient.addColorStop(0.5, "rgba(30, 64, 175, 0.1)");
+      const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 300);
+      gradient.addColorStop(0, "rgba(65, 105, 225, 0.15)");
+      gradient.addColorStop(0.5, "rgba(30, 64, 175, 0.08)");
       gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      particles.forEach((particle) => {
-        particle.update();
-        particle.draw();
+      nodes.forEach((node) => {
+        node.update();
+        node.draw();
       });
 
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
+      // Draw connections between nodes
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 100) {
-            ctx.strokeStyle = `rgba(65, 105, 225, ${0.2 - distance / 500})`;
-            ctx.lineWidth = 0.5;
+          if (distance < 150) {
+            const opacity = (1 - distance / 150) * 0.3;
+            ctx.strokeStyle = `rgba(65, 105, 225, ${opacity})`;
+            ctx.lineWidth = 1;
             ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
             ctx.stroke();
           }
         }
@@ -129,7 +137,7 @@ export default function InteractiveNebula() {
         width: '100%',
         height: '100%',
         zIndex: 1,
-        background: "radial-gradient(ellipse at center, rgba(10, 10, 30, 1) 0%, rgba(0, 0, 0, 1) 100%)",
+        background: "radial-gradient(ellipse at center, rgba(5, 5, 20, 1) 0%, rgba(0, 0, 0, 1) 100%)",
         pointerEvents: 'none'
       }}
     />

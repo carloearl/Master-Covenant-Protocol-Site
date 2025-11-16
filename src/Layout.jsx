@@ -64,7 +64,7 @@ export default function Layout({ children, currentPageName }) {
     <div className="min-h-screen bg-black text-white relative">
       <InteractiveNebula />
       
-      {/* Navigation with strong glassmorphism */}
+      {/* Navigation with blue glassmorphism */}
       <nav className="fixed top-0 left-0 right-0 z-[100] glass-royal border-b border-blue-500/50 shadow-xl">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
@@ -97,7 +97,7 @@ export default function Layout({ children, currentPageName }) {
                   return (
                     <DropdownMenu key={item.label}>
                       <DropdownMenuTrigger asChild>
-                        <Button className="glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30 text-sm h-9 px-3">
+                        <Button className="bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-sm h-9 px-3">
                           {item.label} <ChevronDown className="w-3 h-3 ml-1" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -113,7 +113,7 @@ export default function Layout({ children, currentPageName }) {
                 }
                 return (
                   <Link key={item.page} to={createPageUrl(item.page)}>
-                    <Button className={isActive(item.page) ? "glass-royal border border-blue-500/50 text-blue-400 bg-blue-500/30 text-sm h-9 px-3" : "glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30 text-sm h-9 px-3"}>
+                    <Button className={isActive(item.page) ? "bg-blue-500/30 border-none text-blue-400 text-sm h-9 px-3" : "bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-sm h-9 px-3"}>
                       {item.label}
                     </Button>
                   </Link>
@@ -187,7 +187,7 @@ export default function Layout({ children, currentPageName }) {
                         </div>
                         {item.dropdown.map((subItem) => (
                           <Link key={subItem.page} to={createPageUrl(subItem.page)} onClick={() => setMobileMenuOpen(false)}>
-                            <Button className="w-full justify-start pl-6 glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30 text-sm">
+                            <Button className="w-full justify-start pl-6 bg-transparent border-none text-white hover:bg-blue-500/30 text-sm">
                               {subItem.label}
                             </Button>
                           </Link>
@@ -197,7 +197,7 @@ export default function Layout({ children, currentPageName }) {
                   }
                   return (
                     <Link key={item.page} to={createPageUrl(item.page)} onClick={() => setMobileMenuOpen(false)}>
-                      <Button className="w-full justify-start glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30 text-sm">
+                      <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-sm">
                         {item.label}
                       </Button>
                     </Link>
@@ -205,7 +205,7 @@ export default function Layout({ children, currentPageName }) {
                 })}
                 {user && (
                   <Link to={createPageUrl("Dashboard")} onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full justify-start glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30 text-sm">
+                    <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-sm">
                       Dashboard
                     </Button>
                   </Link>

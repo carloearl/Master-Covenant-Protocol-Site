@@ -28,13 +28,11 @@ const useScrollEffect = (sectionRef, containerRef) => {
         let opacity = 1;
 
         if (factor < 0) {
-          // Section is below center (coming from bottom)
           const progress = Math.min(1, (1 + factor) * 1.2);
           rotation = (1 - progress) * 25;
           scale = 0.85 + (progress * 0.15);
           opacity = Math.max(0, progress);
         } else if (factor > 0) {
-          // Section is above center (leaving to top)
           const progress = Math.min(1, factor * 1.2);
           rotation = -progress * 25;
           scale = 1 - (progress * 0.15);
@@ -94,19 +92,11 @@ export default function Home() {
     <div ref={scrollContainerRef} className="h-screen w-full overflow-y-scroll overflow-x-hidden" style={{ pointerEvents: 'auto' }}>
         
         <ScrollSection containerRef={scrollContainerRef}>
-            <div className="pt-16">
-              <HeroSection />
-            </div>
+            <HeroSection />
         </ScrollSection>
 
         <ScrollSection containerRef={scrollContainerRef}>
             <ServicesGrid />
-        </ScrollSection>
-        
-        <ScrollSection containerRef={scrollContainerRef}>
-            <div className="w-full max-w-7xl mx-auto px-4">
-                <TechStackCarousel />
-            </div>
         </ScrollSection>
 
         <ScrollSection containerRef={scrollContainerRef}>
@@ -115,6 +105,12 @@ export default function Home() {
         
         <ScrollSection containerRef={scrollContainerRef}>
             <ComparisonSection />
+        </ScrollSection>
+        
+        <ScrollSection containerRef={scrollContainerRef}>
+            <div className="w-full max-w-7xl mx-auto px-4">
+                <TechStackCarousel />
+            </div>
         </ScrollSection>
 
         <ScrollSection containerRef={scrollContainerRef}>

@@ -15,7 +15,7 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className="relative h-screen w-full overflow-hidden flex items-center justify-center -mt-20 pt-16">
+      <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
         <div className="relative max-w-full max-h-full">
           <video
             autoPlay
@@ -23,7 +23,7 @@ export default function HeroSection() {
             muted
             playsInline
             preload="auto"
-            className="max-w-full max-h-screen"
+            className="max-w-full h-screen object-cover"
             style={{ filter: 'brightness(1.1) contrast(1.1)' }}
           >
             <source src="https://i.imgur.com/zs3sPzJ.mp4" type="video/mp4" />
