@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ArrowUp } from "lucide-react";
 import TechStackCarousel from "@/components/TechStackCarousel";
 import ComparisonSection from "@/components/ComparisonSection";
@@ -9,25 +9,60 @@ import CTASection from "@/components/home/CTASection";
 
 export default function Home() {
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const sectionRefs = useRef([]);
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrolled = window.scrollY;
-      setShowBackToTop(scrolled > 400);
+      setShowBackToTop(window.scrollY > 400);
       
-      const scrollContainer = document.getElementById('scroll-container');
-      if (scrollContainer) {
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        const scrollPercent = scrolled / maxScroll;
-        const rotation = scrollPercent * 5;
+      const viewportHeight = window.innerHeight;
+      const viewportCenter = viewportHeight / 2;
+
+      sectionRefs.current.forEach((section, index) => {
+        if (!section) return;
         
-        scrollContainer.style.transform = `perspective(3000px) rotateX(${rotation}deg) translateZ(-50px)`;
-      }
+        const rect = section.getBoundingClientRect();
+        const sectionCenter = rect.top + rect.height / 2;
+        const distanceFromCenter = sectionCenter - viewportCenter;
+        const normalizedDistance = distanceFromCenter / viewportHeight;
+        
+        // Subtle rotation for cylinder effect (max 3deg)
+        const rotateX = normalizedDistance * 2.5;
+        
+        // Parallax depth - elements further move slower
+        const depth = index * 50;
+        const translateZ = -depth + (normalizedDistance * -80);
+        
+        // Scale up as approaching center, scale down when away
+        const scale = 1 - Math.abs(normalizedDistance) * 0.15;
+        
+        // Opacity fade for distant elements
+        const opacity = 1 - Math.abs(normalizedDistance) * 0.25;
+        
+        // Parallax Y movement - slower for further elements
+        const parallaxSpeed = 1 - (index * 0.05);
+        const translateY = window.scrollY * parallaxSpeed * 0.1;
+
+        section.style.transform = `
+          perspective(2500px) 
+          rotateX(${Math.max(-3, Math.min(3, rotateX))}deg) 
+          translateZ(${translateZ}px) 
+          translateY(${translateY}px)
+          scale(${Math.max(0.88, Math.min(1, scale))})`
+        ;
+        section.style.opacity = Math.max(0.6, Math.min(1, opacity));
+      });
     };
 
     handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const scrollHandler = () => requestAnimationFrame(handleScroll);
+    window.addEventListener('scroll', scrollHandler, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', scrollHandler);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, []);
 
   const scrollToTop = () => {
@@ -35,7 +70,10 @@ export default function Home() {
   };
 
   return (
-    <div className="text-white relative overflow-x-hidden">
+    <div className="text-white relative overflow-x-hidden" style={{ 
+      perspective: '2500px',
+      perspectiveOrigin: '50% 50%'
+    }}>
       {showBackToTop && (
         <button
           onClick={scrollToTop}
@@ -46,27 +84,80 @@ export default function Home() {
         </button>
       )}
 
-      <div 
-        id="scroll-container"
-        style={{
-          transformStyle: 'preserve-3d',
-          transformOrigin: 'center top',
-          transition: 'transform 0.05s linear',
-          willChange: 'transform'
-        }}
-      >
-        <HeroSection />
-        <FeaturesSection />
-        <ServicesGrid />
-        <ComparisonSection />
+      <div style={{ transformStyle: 'preserve-3d' }}>
+        <div 
+          ref={el => sectionRefs.current[0] = el}
+          style={{ 
+            transformStyle: 'preserve-3d',
+            transformOrigin: 'center center',
+            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
+            willChange: 'transform, opacity'
+          }}
+        >
+          <HeroSection />
+        </div>
         
-        <section className="py-24 relative">
+        <div 
+          ref={el => sectionRefs.current[1] = el}
+          style={{ 
+            transformStyle: 'preserve-3d',
+            transformOrigin: 'center center',
+            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
+            willChange: 'transform, opacity'
+          }}
+        >
+          <FeaturesSection />
+        </div>
+        
+        <div 
+          ref={el => sectionRefs.current[2] = el}
+          style={{ 
+            transformStyle: 'preserve-3d',
+            transformOrigin: 'center center',
+            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
+            willChange: 'transform, opacity'
+          }}
+        >
+          <ServicesGrid />
+        </div>
+        
+        <div 
+          ref={el => sectionRefs.current[3] = el}
+          style={{ 
+            transformStyle: 'preserve-3d',
+            transformOrigin: 'center center',
+            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
+            willChange: 'transform, opacity'
+          }}
+        >
+          <ComparisonSection />
+        </div>
+
+        <section 
+          ref={el => sectionRefs.current[4] = el}
+          className="py-24 relative" 
+          style={{ 
+            transformStyle: 'preserve-3d',
+            transformOrigin: 'center center',
+            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
+            willChange: 'transform, opacity'
+          }}
+        >
           <div className="container mx-auto px-4 relative z-10">
             <TechStackCarousel />
           </div>
         </section>
 
-        <section className="py-24 relative">
+        <section 
+          ref={el => sectionRefs.current[5] = el}
+          className="py-24 relative" 
+          style={{ 
+            transformStyle: 'preserve-3d',
+            transformOrigin: 'center center',
+            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
+            willChange: 'transform, opacity'
+          }}
+        >
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               <div className="glass-royal p-8 rounded-2xl text-center">
@@ -85,7 +176,17 @@ export default function Home() {
           </div>
         </section>
 
-        <CTASection />
+        <div 
+          ref={el => sectionRefs.current[6] = el}
+          style={{ 
+            transformStyle: 'preserve-3d',
+            transformOrigin: 'center center',
+            transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
+            willChange: 'transform, opacity'
+          }}
+        >
+          <CTASection />
+        </div>
       </div>
     </div>
   );
