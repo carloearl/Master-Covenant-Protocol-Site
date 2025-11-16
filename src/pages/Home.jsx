@@ -17,29 +17,24 @@ export default function Home() {
       
       if (!contentRef.current) return;
       
-      const allElements = contentRef.current.querySelectorAll('section, div > div');
+      const sections = contentRef.current.querySelectorAll('section');
       const viewportCenter = window.innerHeight / 2;
       
-      allElements.forEach(element => {
-        const rect = element.getBoundingClientRect();
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
         const elementCenter = rect.top + (rect.height / 2);
         const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
         const maxDistance = window.innerHeight * 0.8;
         const normalizedDistance = Math.min(distanceFromCenter / maxDistance, 1);
         
-        // Cylindrical effect with minimal fade - keep brightness
-        const scale = 1 - (normalizedDistance * 0.12);
-        const translateZ = -normalizedDistance * 350;
+        const scale = 1 - (normalizedDistance * 0.08);
+        const translateZ = -normalizedDistance * 250;
         
-        element.style.transform = `
-          perspective(1500px) 
-          translateZ(${translateZ}px) 
-          scale(${scale})
-        `;
-        element.style.opacity = 1;
-        element.style.filter = 'none';
-        element.style.transition = 'transform 0.1s ease-out';
-        element.style.pointerEvents = 'auto';
+        section.style.transform = `perspective(1500px) translateZ(${translateZ}px) scale(${scale})`;
+        section.style.transition = 'transform 0.15s ease-out';
+        section.style.willChange = 'transform';
+        section.style.backfaceVisibility = 'hidden';
+        section.style.WebkitFontSmoothing = 'antialiased';
       });
     };
 
@@ -58,35 +53,34 @@ export default function Home() {
   };
 
   return (
-    <div className="text-white relative overflow-x-hidden" style={{ 
+    <div className="text-white relative" style={{ 
       perspective: '1500px',
       perspectiveOrigin: '50% 50%'
     }}>
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-[100] bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 glow-royal"
+          className="fixed bottom-8 right-8 z-[999] bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 glow-royal"
           aria-label="Back to top"
-          style={{ pointerEvents: 'auto' }}
         >
           <ArrowUp className="w-6 h-6" />
         </button>
       )}
 
-      <div ref={contentRef} style={{ transformStyle: 'preserve-3d', position: 'relative', zIndex: 20, pointerEvents: 'auto' }}>
+      <div ref={contentRef} style={{ transformStyle: 'preserve-3d', position: 'relative', zIndex: 50 }}>
         <HeroSection />
         <FeaturesSection />
         <ServicesGrid />
         <ComparisonSection />
         
         <section className="py-24 relative">
-          <div className="container mx-auto px-4 relative z-10">
+          <div className="container mx-auto px-4 relative">
             <TechStackCarousel />
           </div>
         </section>
 
         <section className="py-24 relative">
-          <div className="container mx-auto px-4 relative z-10">
+          <div className="container mx-auto px-4 relative">
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               <div className="glass-royal p-8 rounded-2xl text-center">
                 <div className="text-5xl font-bold mb-2 text-blue-400">1.5PB+</div>

@@ -30,10 +30,18 @@
 @layer base {
   * {
     @apply border-border;
+    cursor: pointer !important;
   }
   body {
     @apply bg-black text-white;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  
+  a, button, input, select, textarea {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 100;
   }
 }
 
@@ -88,11 +96,9 @@
   }
 }
 
-/* SCORCHED EARTH - DESTROY ALL WHITE */
 *,
 *::before,
 *::after {
-  background-color: transparent !important;
   border-color: rgba(65, 105, 225, 0.3) !important;
 }
 
@@ -114,7 +120,6 @@ nav {
   color: white !important;
 }
 
-/* SHADCN CARDS - OBLITERATE WHITE */
 [data-card],
 [data-radix-card],
 .card,
@@ -132,12 +137,10 @@ div[class*="bg-gray-50"],
   color: white !important;
 }
 
-/* TEXT COLOR ENFORCEMENT */
 h1, h2, h3, h4, h5, h6, p, span, a, li, td, th, label, legend {
   color: white !important;
 }
 
-/* DROPDOWN/POPOVER MENUS */
 [data-radix-popper-content-wrapper],
 [data-radix-select-viewport],
 [data-radix-select-content],
@@ -155,6 +158,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, li, td, th, label, legend {
   border: 1px solid rgba(65, 105, 225, 0.5) !important;
   color: white !important;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
+  z-index: 9999 !important;
 }
 
 [data-radix-select-item],
@@ -173,11 +177,14 @@ h1, h2, h3, h4, h5, h6, p, span, a, li, td, th, label, legend {
   color: white !important;
 }
 
-/* BUTTONS */
 button:not(.bg-gradient-to-r):not([class*="gradient"]) {
   color: white !important;
   background: rgba(20, 20, 30, 0.8) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 100;
 }
 
 button:hover:not(.bg-gradient-to-r):not([class*="gradient"]) {
@@ -185,13 +192,13 @@ button:hover:not(.bg-gradient-to-r):not([class*="gradient"]) {
   border-color: rgba(65, 105, 225, 0.6) !important;
 }
 
-/* INPUTS */
 input:not([type="checkbox"]):not([type="radio"]),
 textarea,
 select {
   background: rgba(20, 20, 30, 0.9) !important;
   border: 1px solid rgba(65, 105, 225, 0.5) !important;
   color: white !important;
+  cursor: pointer !important;
 }
 
 input::placeholder,
@@ -199,7 +206,6 @@ textarea::placeholder {
   color: rgba(255, 255, 255, 0.5) !important;
 }
 
-/* TABLES */
 table {
   background: transparent !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
@@ -227,7 +233,6 @@ tbody {
   background: transparent !important;
 }
 
-/* BADGES */
 [class*="badge"],
 [class*="Badge"] {
   background: rgba(65, 105, 225, 0.2) !important;
@@ -235,7 +240,6 @@ tbody {
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
 }
 
-/* PRESERVE GRADIENTS */
 .bg-gradient-to-r,
 .bg-gradient-to-l,
 .bg-gradient-to-t,
@@ -252,7 +256,6 @@ tbody {
   background-color: transparent !important;
 }
 
-/* SCROLLBAR */
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
@@ -271,7 +274,6 @@ tbody {
   border-radius: 6px;
 }
 
-/* ANIMATIONS */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-20px); }
