@@ -64,14 +64,14 @@ export default function Home() {
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 glow-royal"
+          className="fixed bottom-8 right-8 z-[100] bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 glow-royal"
           aria-label="Back to top"
         >
           <ArrowUp className="w-6 h-6" />
         </button>
       )}
 
-      <div ref={contentRef} style={{ transformStyle: 'preserve-3d' }}>
+      <div ref={contentRef} style={{ transformStyle: 'preserve-3d', position: 'relative', zIndex: 10 }}>
         <HeroSection />
         <FeaturesSection />
         <ServicesGrid />
