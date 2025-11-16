@@ -5,11 +5,6 @@ css
 
 @layer base {
   :root {
-    --royal-blue: 65, 105, 225;
-    --royal-blue-dark: 30, 64, 175;
-    --glass-bg: rgba(0, 0, 0, 0.4);
-    --glass-border: rgba(65, 105, 225, 0.3);
-    
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
     --card: 0 0% 5%;
@@ -44,7 +39,6 @@ css
 }
 
 @layer components {
-  /* Royal Blue Glassmorphism */
   .glass-royal {
     background: linear-gradient(135deg, 
       rgba(65, 105, 225, 0.15) 0%, 
@@ -70,19 +64,6 @@ css
       inset 0 1px 0 rgba(255, 255, 255, 0.05),
       0 0 15px rgba(65, 105, 225, 0.15) !important;
     color: white !important;
-  }
-
-  .glass-input {
-    background: rgba(0, 0, 0, 0.6) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    border: 1px solid rgba(65, 105, 225, 0.4) !important;
-    color: white !important;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5) !important;
-  }
-
-  .glass-input::placeholder {
-    color: rgba(255, 255, 255, 0.5) !important;
   }
 
   .glass-card {
@@ -112,108 +93,111 @@ css
 }
 
 /* =================================================================
-   ULTRA-AGGRESSIVE FIX: ALL DROPDOWNS, MENUS, POPOVERS = DARK + WHITE TEXT
+   NUCLEAR OPTION: FORCE EVERYTHING TO PROPER CONTRAST
    ================================================================= */
 
-/* FORCE ALL RADIX SELECT/DROPDOWN/POPOVER CONTENT TO BE DARK */
-[data-radix-popper-content-wrapper],
+/* ANY ELEMENT WITH WHITE/LIGHT BACKGROUND = GETS DARK TEXT */
+[style*="background:#fff"],
+[style*="background: #fff"],
+[style*="background:white"],
+[style*="background: white"],
+[style*="background-color:#fff"],
+[style*="background-color: #fff"],
+[style*="background-color:white"],
+[style*="background-color: white"],
+[style*="backgroundColor:white"],
+[style*="backgroundColor: white"],
+[class*="bg-white"] {
+  background: rgb(15, 15, 15) !important;
+  color: rgb(255, 255, 255) !important;
+}
+
+[style*="background:#fff"] *,
+[style*="background: #fff"] *,
+[style*="background:white"] *,
+[style*="background: white"] *,
+[style*="background-color:#fff"] *,
+[style*="background-color: #fff"] *,
+[style*="background-color:white"] *,
+[style*="background-color: white"] *,
+[style*="backgroundColor:white"] *,
+[style*="backgroundColor: white"] *,
+[class*="bg-white"] * {
+  color: rgb(255, 255, 255) !important;
+}
+
+/* RADIX UI - NUCLEAR FIX */
+[data-radix-popper-content-wrapper] > *,
 [data-radix-select-viewport],
 [data-radix-select-content],
 [data-radix-dropdown-menu-content],
 [data-radix-popover-content],
 [data-radix-context-menu-content],
-[data-radix-menubar-content],
-[role="menu"],
-[role="listbox"],
-div[class*="SelectContent"],
-div[class*="DropdownMenuContent"],
-div[class*="PopoverContent"],
-div[class*="ContextMenuContent"] {
-  background: linear-gradient(135deg, 
-    rgba(0, 0, 0, 0.95) 0%, 
-    rgba(30, 64, 175, 0.2) 100%
-  ) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.5) !important;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.8),
-    0 0 20px rgba(65, 105, 225, 0.3) !important;
+[data-radix-dialog-content],
+[data-radix-alert-dialog-content] {
+  background: rgb(15, 15, 15) !important;
   color: white !important;
+  border: 1px solid rgba(65, 105, 225, 0.5) !important;
 }
 
-/* FORCE ALL ITEMS WITHIN MENUS TO HAVE WHITE TEXT */
+/* ALL TEXT IN RADIX COMPONENTS = WHITE */
 [data-radix-select-viewport] *,
 [data-radix-select-content] *,
 [data-radix-dropdown-menu-content] *,
 [data-radix-popover-content] *,
 [data-radix-context-menu-content] *,
-[data-radix-menubar-content] *,
-[role="menu"] *,
-[role="listbox"] *,
-[role="menuitem"],
-[role="option"],
-[data-radix-collection-item],
-div[class*="SelectContent"] *,
-div[class*="DropdownMenuContent"] *,
-div[class*="PopoverContent"] *,
-div[class*="ContextMenuContent"] * {
+[data-radix-dialog-content] *,
+[data-radix-alert-dialog-content] * {
   color: white !important;
 }
 
-/* MENU ITEMS HOVER STATE */
+/* MENU ITEMS */
+[role="menuitem"],
+[role="option"],
+[data-radix-select-item],
+[data-radix-dropdown-menu-item] {
+  background: transparent !important;
+  color: white !important;
+}
+
 [role="menuitem"]:hover,
 [role="option"]:hover,
-[data-radix-collection-item]:hover,
 [data-radix-select-item]:hover,
-[data-radix-dropdown-menu-item]:hover {
+[data-radix-dropdown-menu-item]:hover,
+[data-radix-select-item][data-highlighted],
+[data-radix-dropdown-menu-item][data-highlighted] {
   background: rgba(65, 105, 225, 0.3) !important;
   color: white !important;
 }
 
-/* DIALOGS - FORCE DARK BACKGROUND */
-[data-radix-dialog-overlay],
-[role="dialog"],
-[data-radix-alert-dialog-overlay],
-[data-radix-dialog-content],
-[data-radix-alert-dialog-content],
-div[class*="DialogContent"],
-div[class*="AlertDialogContent"] {
-  background: linear-gradient(135deg, 
-    rgba(0, 0, 0, 0.95) 0%, 
-    rgba(30, 64, 175, 0.2) 100%
-  ) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.5) !important;
-  color: white !important;
-}
-
-[data-radix-dialog-content] *,
-[data-radix-alert-dialog-content] *,
-div[class*="DialogContent"] *,
-div[class*="AlertDialogContent"] * {
-  color: white !important;
-}
-
-/* CARDS - ENSURE PROPER CONTRAST */
-[class*="Card"]:not([class*="bg-white"]),
-div[role="region"]:not([class*="bg-white"]),
-section:not([class*="bg-white"]) {
-  background: linear-gradient(135deg, 
-    rgba(0, 0, 0, 0.8) 0%, 
-    rgba(30, 64, 175, 0.15) 100%
-  ) !important;
-  backdrop-filter: blur(20px) !important;
+/* CARDS */
+[class*="Card"],
+[class*="card"],
+div[role="region"] {
+  background: rgb(15, 15, 15) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
   color: white !important;
 }
 
-/* ALL INPUTS - DARK WITH WHITE TEXT */
+[class*="Card"] *:not(.bg-clip-text):not([class*="text-"]),
+[class*="card"] *:not(.bg-clip-text):not([class*="text-"]) {
+  color: white !important;
+}
+
+/* BUTTONS */
+button {
+  color: white !important;
+}
+
+button * {
+  color: white !important;
+}
+
+/* INPUTS */
 input:not([type="checkbox"]):not([type="radio"]),
 textarea,
 select {
-  background: rgba(0, 0, 0, 0.7) !important;
-  backdrop-filter: blur(16px) !important;
+  background: rgb(20, 20, 20) !important;
   border: 1px solid rgba(65, 105, 225, 0.5) !important;
   color: white !important;
 }
@@ -223,89 +207,14 @@ textarea::placeholder {
   color: rgba(255, 255, 255, 0.5) !important;
 }
 
-/* BUTTONS - GLASS EFFECT WITH WHITE TEXT */
-button:not([class*="bg-gradient"]):not([class*="bg-blue"]):not([class*="bg-red"]):not([class*="bg-green"]) {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.15) 0%, 
-    rgba(30, 64, 175, 0.1) 100%
-  ) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.5) !important;
-  color: white !important;
-}
-
-button:not([class*="bg-gradient"]):not([class*="bg-blue"]):not([class*="bg-red"]):not([class*="bg-green"]) * {
-  color: white !important;
-}
-
-button:hover {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.25) 0%, 
-    rgba(30, 64, 175, 0.2) 100%
-  ) !important;
-}
-
-/* GRADIENT BUTTONS KEEP WHITE TEXT */
-button[class*="bg-gradient"],
-button[class*="bg-blue"],
-button[class*="bg-red"],
-button[class*="bg-green"] {
-  color: white !important;
-}
-
-button[class*="bg-gradient"] *,
-button[class*="bg-blue"] *,
-button[class*="bg-red"] *,
-button[class*="bg-green"] * {
-  color: white !important;
-}
-
-/* BADGES - GLASS EFFECT */
-span[class*="badge"]:not([class*="bg-white"]),
-div[class*="badge"]:not([class*="bg-white"]),
-[class*="Badge"]:not([class*="bg-white"]) {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.2) 0%, 
-    rgba(30, 64, 175, 0.15) 100%
-  ) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.5) !important;
-  color: white !important;
-}
-
-/* TABS */
-[role="tablist"] {
-  background: rgba(0, 0, 0, 0.7) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.4) !important;
-}
-
-[role="tab"] {
-  color: rgba(255, 255, 255, 0.7) !important;
-}
-
-[role="tab"][data-state="active"] {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.3) 0%, 
-    rgba(30, 64, 175, 0.2) 100%
-  ) !important;
-  border: 1px solid rgba(65, 105, 225, 0.5) !important;
-  color: white !important;
-}
-
 /* TABLES */
 table {
-  background: rgba(0, 0, 0, 0.7) !important;
-  backdrop-filter: blur(20px) !important;
+  background: rgb(15, 15, 15) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
-}
-
-th {
-  background: rgba(65, 105, 225, 0.2) !important;
   color: white !important;
 }
 
-td {
+th, td {
   color: white !important;
 }
 
@@ -313,12 +222,7 @@ tr:hover {
   background: rgba(65, 105, 225, 0.1) !important;
 }
 
-/* SEPARATOR */
-hr, [role="separator"] {
-  border-color: rgba(65, 105, 225, 0.3) !important;
-}
-
-/* PRESERVE COLORED TEXT CLASSES */
+/* PRESERVE COLORED TEXT */
 .text-blue-400,
 .text-blue-500,
 .text-blue-600,
@@ -336,21 +240,14 @@ hr, [role="separator"] {
 .text-purple-600,
 .text-orange-400,
 .text-orange-500,
-.text-orange-600,
-.text-white,
-[class*="text-blue-"],
-[class*="text-green-"],
-[class*="text-red-"],
-[class*="text-yellow-"],
-[class*="text-purple-"],
-[class*="text-orange-"] {
-  color: inherit !important;
+.text-orange-600 {
+  /* Preserve these */
 }
 
 /* GRADIENT TEXT */
+.bg-clip-text,
 [style*="background-clip: text"],
-[style*="-webkit-background-clip: text"],
-.bg-clip-text {
+[style*="-webkit-background-clip: text"] {
   color: transparent !important;
   -webkit-text-fill-color: transparent !important;
 }
@@ -388,55 +285,20 @@ hr, [role="separator"] {
   color: white;
 }
 
-/* MARKDOWN CONTENT */
-.prose {
-  color: white !important;
-}
-
-.prose * {
-  color: white !important;
-}
-
-.prose code {
-  background: rgba(0, 0, 0, 0.4) !important;
-  color: white !important;
-}
-
-.prose pre {
-  background: rgba(0, 0, 0, 0.6) !important;
-  color: white !important;
-}
-
-.prose a {
-  color: rgb(96, 165, 250) !important;
-}
-
 /* ANIMATIONS */
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(65, 105, 225, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(65, 105, 225, 0.8);
-  }
+  0%, 100% { box-shadow: 0 0 20px rgba(65, 105, 225, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(65, 105, 225, 0.8); }
 }
 
 @keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .animate-float {
@@ -451,7 +313,8 @@ hr, [role="separator"] {
   animation: scroll 30s linear infinite;
 }
 
-/* ENSURE PROPER TEXT CONTRAST */
+/* ENSURE BODY AND MAIN */
 body, main {
   color: white !important;
+  background: black !important;
 }
