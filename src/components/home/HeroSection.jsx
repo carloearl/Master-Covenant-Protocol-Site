@@ -29,7 +29,7 @@ export default function HeroSection() {
             <source src="https://i.imgur.com/zs3sPzJ.mp4" type="video/mp4" />
           </video>
           
-          <div className="absolute z-10" style={{ top: '-8px', left: '-8px' }}>
+          <div className="absolute z-10" style={{ bottom: '6px', right: '6px' }}>
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png"
               alt="GlyphLock"
