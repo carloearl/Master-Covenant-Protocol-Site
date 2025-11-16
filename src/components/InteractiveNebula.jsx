@@ -20,25 +20,32 @@ export default function InteractiveNebula() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 3 + 1;
+        this.baseX = this.x;
+        this.baseY = this.y;
         this.speedX = Math.random() * 0.3 - 0.15;
         this.speedY = Math.random() * 0.3 - 0.15;
         this.color = `hsla(${Math.random() * 40 + 200}, 80%, ${Math.random() * 20 + 60}%, ${Math.random() * 0.4 + 0.5})`;
       }
 
       update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
+        this.baseX += this.speedX;
+        this.baseY += this.speedY;
 
-        const dx = mouseX - this.x;
-        const dy = mouseY - this.y;
+        if (this.baseX < 0 || this.baseX > canvas.width) this.speedX *= -1;
+        if (this.baseY < 0 || this.baseY > canvas.height) this.speedY *= -1;
+
+        const dx = mouseX - this.baseX;
+        const dy = mouseY - this.baseY;
         const distance = Math.sqrt(dx * dx + dy * dy);
+        
         if (distance < 300) {
-          this.x += dx * 0.04;
-          this.y += dy * 0.04;
+          const force = (300 - distance) / 300;
+          this.x = this.baseX + dx * force * 0.3;
+          this.y = this.baseY + dy * force * 0.3;
+        } else {
+          this.x = this.baseX;
+          this.y = this.baseY;
         }
-
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
       }
 
       draw() {
@@ -54,7 +61,7 @@ export default function InteractiveNebula() {
       }
     }
 
-    for (let i = 0; i < 120; i++) {
+    for (let i = 0; i < 150; i++) {
       nodes.push(new Node());
     }
 
@@ -83,14 +90,14 @@ export default function InteractiveNebula() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw small cursor glow
-      const cursorGradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 30);
-      cursorGradient.addColorStop(0, "rgba(65, 105, 225, 0.8)");
-      cursorGradient.addColorStop(0.5, "rgba(65, 105, 225, 0.4)");
+      // Draw cursor glow
+      const cursorGradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 40);
+      cursorGradient.addColorStop(0, "rgba(65, 105, 225, 0.9)");
+      cursorGradient.addColorStop(0.5, "rgba(65, 105, 225, 0.5)");
       cursorGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
       ctx.fillStyle = cursorGradient;
       ctx.beginPath();
-      ctx.arc(mouseX, mouseY, 30, 0, Math.PI * 2);
+      ctx.arc(mouseX, mouseY, 40, 0, Math.PI * 2);
       ctx.fill();
 
       nodes.forEach((node) => {
