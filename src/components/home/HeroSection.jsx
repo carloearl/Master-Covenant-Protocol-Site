@@ -2,8 +2,8 @@ import React from "react";
 
 export default function HeroSection() {
   return (
-    <div className="w-full flex justify-center">
-      <div className="relative w-[80%] h-[50vh]">
+    <div className="w-full">
+      <div className="relative w-full h-[40vh]">
         <video
           autoPlay
           loop
