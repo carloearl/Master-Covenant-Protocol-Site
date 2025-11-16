@@ -68,7 +68,7 @@ const ScrollSection = ({ children, containerRef }) => {
   const sectionRef = useRef(null);
   const style = useScrollEffect(sectionRef, containerRef);
   return (
-    <section ref={sectionRef} className="h-screen w-full flex items-center justify-center relative">
+    <section ref={sectionRef} className="min-h-screen w-full flex items-center justify-center py-16">
       <div style={style} className="w-full transition-all duration-150 ease-out pointer-events-auto">
         {children}
       </div>
@@ -96,15 +96,21 @@ export default function Home() {
         </ScrollSection>
 
         <ScrollSection containerRef={scrollContainerRef}>
-            <ServicesGrid />
+            <div className="w-full max-w-7xl mx-auto px-4">
+              <ServicesGrid />
+            </div>
         </ScrollSection>
 
         <ScrollSection containerRef={scrollContainerRef}>
-            <FeaturesSection />
+            <div className="w-full max-w-7xl mx-auto px-4">
+              <FeaturesSection />
+            </div>
         </ScrollSection>
         
         <ScrollSection containerRef={scrollContainerRef}>
-            <ComparisonSection />
+            <div className="w-full max-w-7xl mx-auto px-4">
+              <ComparisonSection />
+            </div>
         </ScrollSection>
         
         <ScrollSection containerRef={scrollContainerRef}>
@@ -114,7 +120,9 @@ export default function Home() {
         </ScrollSection>
 
         <ScrollSection containerRef={scrollContainerRef}>
-            <CTASection />
+            <div className="w-full max-w-7xl mx-auto px-4">
+              <CTASection />
+            </div>
         </ScrollSection>
     </div>
   );
