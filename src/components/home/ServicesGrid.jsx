@@ -1,111 +1,96 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Shield, Server, Zap, Eye, Lock } from "lucide-react";
+import { Shield, Zap, Eye, Brain, Lock, FileCode } from "lucide-react";
+
+const services = [
+  {
+    title: "NEXUS N.U.P.S.",
+    description: "AI-powered POS system with advanced analytics",
+    link: "NUPSLogin",
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80",
+    price: "Enterprise",
+    icon: Zap
+  },
+  {
+    title: "Master Covenant",
+    description: "Smart contract platform with blockchain security",
+    link: "MasterCovenant",
+    image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80",
+    price: "$50/mo",
+    icon: FileCode
+  },
+  {
+    title: "Visual Cryptography",
+    description: "QR generation and steganography tools",
+    link: "VisualCryptography",
+    image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80",
+    price: "$179.99",
+    icon: Eye
+  },
+  {
+    title: "Blockchain Solutions",
+    description: "Decentralized security infrastructure",
+    link: "Blockchain",
+    image: "https://images.unsplash.com/photo-1639762681057-408e52192e55?w=800&q=80",
+    price: "$99.99",
+    icon: Lock
+  },
+  {
+    title: "Security Operations Center",
+    description: "24/7 threat monitoring and response",
+    link: "SecurityOperationsCenter",
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80",
+    price: "Enterprise",
+    icon: Shield
+  },
+  {
+    title: "GlyphBot AI Assistant",
+    description: "Intelligent security automation",
+    link: "GlyphBot",
+    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+    price: "Custom",
+    icon: Brain
+  }
+];
 
 export default function ServicesGrid() {
-  const services = [
-    {
-      title: "N.U.P.S. POS",
-      description: "Enterprise point-of-sale with three-tier access control and real-time analytics.",
-      link: "NUPSLogin",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b6f63d51b_Whisk_b9fd7532ee1e87a9152439bac427f256dr.jpg",
-      price: "Enterprise",
-      icon: Server
-    },
-    {
-      title: "GlyphBot AI",
-      description: "AI assistant with code execution, security scanning, and automated auditing.",
-      link: "GlyphBot",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9774d266e_openai-logo-inspired-abstract.png",
-      price: "$50/mo",
-      icon: Zap
-    },
-    {
-      title: "Visual Cryptography Suite",
-      description: "Generate secure QR codes and hide encrypted data within images using LSB encoding.",
-      link: "VisualCryptography",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg",
-      price: "$179.99",
-      icon: Eye
-    },
-    {
-      title: "Blockchain Security",
-      description: "SHA-256/512 hashing, Merkle trees, and immutable verification.",
-      link: "Blockchain",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9be80d6ca_Whisk_43831818b9d5e77953345c3626f3d976eg.jpg",
-      price: "$99.99",
-      icon: Lock
-    },
-    {
-      title: "Security Operations Center",
-      description: "Real-time threat monitoring, interactive mapping, and security analytics.",
-      link: "SecurityOperationsCenter",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/7e319a981_Whisk_429a6543b81e30d9bab4065457f3b62ddr.jpg",
-      price: "Enterprise",
-      icon: Shield
-    },
-    {
-      title: "Complete Security Ecosystem",
-      description: "Comprehensive security tools with quantum-resistant encryption.",
-      link: "SecurityTools",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/11242d8a3_Whisk_ecd15257dc62aafae4b457b73ff01aa9dr.jpg",
-      price: "Custom",
-      icon: Shield
-    }
-  ];
-
   return (
-    <section className="py-24 relative">
-      <div className="container mx-auto px-4 relative z-50">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-            Complete Security <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Ecosystem</span>
-          </h2>
-          <p className="text-xl text-white/70 max-w-3xl mx-auto">
-            Integrated tools designed for enterprise-level protection
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service, index) => {
-            const Icon = service.icon;
-            return (
-              <Link key={index} to={createPageUrl(service.link)} style={{ cursor: 'pointer', pointerEvents: 'auto', position: 'relative', zIndex: 100 }}>
-                <Card className="glass-royal border-blue-500/30 hover:border-blue-500/60 transition-all duration-300 h-full group cursor-pointer overflow-hidden" style={{ cursor: 'pointer', pointerEvents: 'auto', position: 'relative', zIndex: 100 }}>
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute top-3 right-3" style={{ pointerEvents: 'auto', zIndex: 101 }}>
-                      <Badge className="bg-blue-500/90 text-white border-blue-500 font-semibold">
-                        {service.price}
-                      </Badge>
-                    </div>
-                    <div className="absolute bottom-3 left-3" style={{ pointerEvents: 'none', zIndex: 10 }}>
-                      <div className="bg-blue-500/20 backdrop-blur-md p-2 rounded-lg">
-                        <Icon className="w-6 h-6 text-blue-400" />
-                      </div>
-                    </div>
-                  </div>
-                  <CardContent className="p-6" style={{ cursor: 'pointer', pointerEvents: 'auto', position: 'relative', zIndex: 100 }}>
-                    <h3 className="text-lg font-bold mb-3 text-white group-hover:text-blue-400 transition-colors">
-                      {service.title}
-                    </h3>
-                    <p className="text-white/70 text-sm leading-relaxed">
-                      {service.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })}
-        </div>
+    <div className="w-full max-w-7xl mx-auto px-4 py-16">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+          Complete Security Ecosystem
+        </h2>
+        <p className="text-lg text-white/70">
+          Integrated tools designed for enterprise-level protection
+        </p>
       </div>
-    </section>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {services.map((service, idx) => (
+          <Link key={idx} to={createPageUrl(service.link)}>
+            <div className="glass-card rounded-xl overflow-hidden group cursor-pointer hover:scale-105 transition-all duration-300 h-full">
+              <div className="relative h-48 overflow-hidden">
+                <img 
+                  src={service.image} 
+                  alt={service.title}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute top-4 right-4 bg-blue-500/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-white">
+                  {service.price}
+                </div>
+              </div>
+              <div className="p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <service.icon className="w-6 h-6 text-blue-400" />
+                  <h3 className="text-xl font-bold text-white">{service.title}</h3>
+                </div>
+                <p className="text-white/70">{service.description}</p>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }
