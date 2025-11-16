@@ -25,12 +25,16 @@ const useScrollEffect = (sectionRef, containerRef) => {
 
         const rotation = -factor * 15;
         const scale = 1 - Math.abs(factor) * 0.1;
-        const opacity = 1 - Math.abs(factor) * 0.4;
+        
+        // Improved continuous fade: smoother transition from 0 to 1 to 0
+        const normalizedDistance = Math.abs(factor);
+        const opacity = Math.max(0, Math.min(1, 1 - Math.pow(normalizedDistance, 1.5) * 0.8));
 
         requestAnimationFrame(() => {
             setStyle({
               transform: `perspective(1000px) rotateX(${rotation}deg) scale(${scale})`,
-              opacity: Math.max(0, opacity),
+              opacity: opacity,
+              transition: 'opacity 0.15s ease-out',
             });
         });
       }
