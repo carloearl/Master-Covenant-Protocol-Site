@@ -18,22 +18,25 @@ export default function Home() {
       if (!contentRef.current) return;
       
       const sections = contentRef.current.querySelectorAll('section');
-      const viewportCenter = window.innerHeight / 2;
+      const viewportCenter = window.innerHeight / 2 + window.scrollY;
       
       sections.forEach(section => {
         const rect = section.getBoundingClientRect();
-        const elementCenter = rect.top + (rect.height / 2);
-        const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
-        const maxDistance = window.innerHeight * 0.8;
-        const normalizedDistance = Math.min(distanceFromCenter / maxDistance, 1);
+        const elementCenter = rect.top + window.scrollY + (rect.height / 2);
+        const distanceFromCenter = elementCenter - viewportCenter;
+        const maxDistance = window.innerHeight;
         
-        const opacity = 1 - (normalizedDistance * 0.7);
-        const scale = 1 - (normalizedDistance * 0.15);
-        const translateZ = -normalizedDistance * 400;
+        const normalizedDistance = distanceFromCenter / maxDistance;
+        const clampedDistance = Math.max(-1, Math.min(1, normalizedDistance));
         
-        section.style.transform = `perspective(2000px) translateZ(${translateZ}px) scale(${scale})`;
-        section.style.opacity = Math.max(opacity, 0.3);
-        section.style.transition = 'transform 0.1s ease-out, opacity 0.1s ease-out';
+        const opacity = 1 - Math.abs(clampedDistance) * 0.6;
+        const scale = 1 - Math.abs(clampedDistance) * 0.1;
+        const rotateX = clampedDistance * 15;
+        const translateZ = -Math.abs(clampedDistance) * 300;
+        
+        section.style.transform = `perspective(2000px) rotateX(${rotateX}deg) translateZ(${translateZ}px) scale(${scale})`;
+        section.style.opacity = Math.max(opacity, 0.4);
+        section.style.transformStyle = 'preserve-3d';
       });
     };
 
@@ -52,7 +55,7 @@ export default function Home() {
   };
 
   return (
-    <div className="text-white relative" style={{ 
+    <div className="text-white relative overflow-hidden" style={{ 
       perspective: '2000px',
       perspectiveOrigin: '50% 50%'
     }}>
