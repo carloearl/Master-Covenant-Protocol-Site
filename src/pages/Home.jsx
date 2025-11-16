@@ -3,7 +3,6 @@ import { ArrowUp } from "lucide-react";
 import TechStackCarousel from "@/components/TechStackCarousel";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import ComparisonSection from "@/components/ComparisonSection";
-import InteractiveDemoSection from "@/components/InteractiveDemoSection";
 import HeroSection from "@/components/home/HeroSection";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import ServicesGrid from "@/components/home/ServicesGrid";
@@ -38,7 +37,6 @@ export default function Home() {
 
       <HeroSection />
       <FeaturesSection />
-      <InteractiveDemoSection />
       <ServicesGrid />
       <ComparisonSection />
       <TestimonialsSection />
