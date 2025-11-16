@@ -23,7 +23,7 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-black text-white relative overflow-hidden">
+    <div className="text-white relative overflow-hidden">
       {showBackToTop && (
         <button
           onClick={scrollToTop}
