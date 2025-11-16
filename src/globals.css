@@ -112,129 +112,110 @@ css
 }
 
 /* =================================================================
-   CRITICAL FIX: FORCE ALL DROPDOWNS/CARDS TO DARK WITH WHITE TEXT
+   ULTRA-AGGRESSIVE FIX: ALL DROPDOWNS, MENUS, POPOVERS = DARK + WHITE TEXT
    ================================================================= */
 
-/* ALL RADIX UI DROPDOWNS - SUPER AGGRESSIVE */
+/* FORCE ALL RADIX SELECT/DROPDOWN/POPOVER CONTENT TO BE DARK */
 [data-radix-popper-content-wrapper],
-[data-radix-dropdown-menu-content],
+[data-radix-select-viewport],
 [data-radix-select-content],
+[data-radix-dropdown-menu-content],
 [data-radix-popover-content],
-[data-radix-dialog-content],
+[data-radix-context-menu-content],
+[data-radix-menubar-content],
 [role="menu"],
 [role="listbox"],
-[role="dialog"] {
+div[class*="SelectContent"],
+div[class*="DropdownMenuContent"],
+div[class*="PopoverContent"],
+div[class*="ContextMenuContent"] {
   background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.15) 0%, 
-    rgba(30, 64, 175, 0.1) 100%
-  ) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.4) !important;
-  color: white !important;
-}
-
-/* Force white text on ALL children in these components */
-[data-radix-popper-content-wrapper] *,
-[data-radix-dropdown-menu-content] *,
-[data-radix-select-content] *,
-[data-radix-popover-content] *,
-[data-radix-dialog-content] *,
-[role="menu"] *,
-[role="listbox"] *,
-[role="dialog"] * {
-  color: white !important;
-}
-
-/* Menu items and options */
-[data-radix-dropdown-menu-item],
-[data-radix-select-item],
-[role="menuitem"],
-[role="option"] {
-  color: white !important;
-  background: transparent !important;
-}
-
-[data-radix-dropdown-menu-item]:hover,
-[data-radix-select-item]:hover,
-[role="menuitem"]:hover,
-[role="option"]:hover {
-  background: rgba(65, 105, 225, 0.2) !important;
-  color: white !important;
-}
-
-[data-radix-dropdown-menu-item][data-highlighted],
-[data-radix-select-item][data-highlighted] {
-  background: rgba(65, 105, 225, 0.2) !important;
-  color: white !important;
-}
-
-/* ALL CARDS */
-[class*="card"],
-[class*="Card"],
-div[class*="card"]:not([class*="bg-white"]),
-div[class*="Card"]:not([class*="bg-white"]) {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.15) 0%, 
-    rgba(30, 64, 175, 0.1) 100%
-  ) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.4) !important;
-  color: white !important;
-}
-
-/* Force white text in cards */
-[class*="card"] *:not([class*="text-"]):not([class*="bg-"]):not(.bg-clip-text),
-[class*="Card"] *:not([class*="text-"]):not([class*="bg-"]):not(.bg-clip-text) {
-  color: white !important;
-}
-
-/* BUTTONS - ensure white text */
-button:not([class*="bg-white"] button):not([class*="bg-gradient"]) {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.15) 0%, 
-    rgba(30, 64, 175, 0.1) 100%
-  ) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.4) !important;
-  color: white !important;
-}
-
-button:not([class*="bg-white"] button):not([class*="bg-gradient"]) * {
-  color: white !important;
-}
-
-button:not([class*="bg-white"] button):not([class*="bg-gradient"]):hover {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.25) 0%, 
+    rgba(0, 0, 0, 0.95) 0%, 
     rgba(30, 64, 175, 0.2) 100%
   ) !important;
-  border-color: rgba(65, 105, 225, 0.6) !important;
-}
-
-/* Gradient buttons keep their styles */
-button[class*="bg-gradient"],
-button[class*="gradient"] {
-  color: white !important; /* Ensure text is white on gradient buttons */
-}
-button[class*="bg-gradient"] *,
-button[class*="gradient"] * {
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(65, 105, 225, 0.5) !important;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(65, 105, 225, 0.3) !important;
   color: white !important;
 }
 
+/* FORCE ALL ITEMS WITHIN MENUS TO HAVE WHITE TEXT */
+[data-radix-select-viewport] *,
+[data-radix-select-content] *,
+[data-radix-dropdown-menu-content] *,
+[data-radix-popover-content] *,
+[data-radix-context-menu-content] *,
+[data-radix-menubar-content] *,
+[role="menu"] *,
+[role="listbox"] *,
+[role="menuitem"],
+[role="option"],
+[data-radix-collection-item],
+div[class*="SelectContent"] *,
+div[class*="DropdownMenuContent"] *,
+div[class*="PopoverContent"] *,
+div[class*="ContextMenuContent"] * {
+  color: white !important;
+}
 
-/* INPUTS - glassmorphism */
-input:not([type="checkbox"]):not([type="radio"]):not([class*="bg-white"] input),
-textarea:not([class*="bg-white"] textarea),
-select:not([class*="bg-white"] select) {
-  background: rgba(0, 0, 0, 0.6) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
+/* MENU ITEMS HOVER STATE */
+[role="menuitem"]:hover,
+[role="option"]:hover,
+[data-radix-collection-item]:hover,
+[data-radix-select-item]:hover,
+[data-radix-dropdown-menu-item]:hover {
+  background: rgba(65, 105, 225, 0.3) !important;
+  color: white !important;
+}
+
+/* DIALOGS - FORCE DARK BACKGROUND */
+[data-radix-dialog-overlay],
+[role="dialog"],
+[data-radix-alert-dialog-overlay],
+[data-radix-dialog-content],
+[data-radix-alert-dialog-content],
+div[class*="DialogContent"],
+div[class*="AlertDialogContent"] {
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.95) 0%, 
+    rgba(30, 64, 175, 0.2) 100%
+  ) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(65, 105, 225, 0.5) !important;
+  color: white !important;
+}
+
+[data-radix-dialog-content] *,
+[data-radix-alert-dialog-content] *,
+div[class*="DialogContent"] *,
+div[class*="AlertDialogContent"] * {
+  color: white !important;
+}
+
+/* CARDS - ENSURE PROPER CONTRAST */
+[class*="Card"]:not([class*="bg-white"]),
+div[role="region"]:not([class*="bg-white"]),
+section:not([class*="bg-white"]) {
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.8) 0%, 
+    rgba(30, 64, 175, 0.15) 100%
+  ) !important;
+  backdrop-filter: blur(20px) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
   color: white !important;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* ALL INPUTS - DARK WITH WHITE TEXT */
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(65, 105, 225, 0.5) !important;
+  color: white !important;
 }
 
 input::placeholder,
@@ -242,12 +223,79 @@ textarea::placeholder {
   color: rgba(255, 255, 255, 0.5) !important;
 }
 
-/* TABLES */
-table {
+/* BUTTONS - GLASS EFFECT WITH WHITE TEXT */
+button:not([class*="bg-gradient"]):not([class*="bg-blue"]):not([class*="bg-red"]):not([class*="bg-green"]) {
   background: linear-gradient(135deg, 
     rgba(65, 105, 225, 0.15) 0%, 
     rgba(30, 64, 175, 0.1) 100%
   ) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(65, 105, 225, 0.5) !important;
+  color: white !important;
+}
+
+button:not([class*="bg-gradient"]):not([class*="bg-blue"]):not([class*="bg-red"]):not([class*="bg-green"]) * {
+  color: white !important;
+}
+
+button:hover {
+  background: linear-gradient(135deg, 
+    rgba(65, 105, 225, 0.25) 0%, 
+    rgba(30, 64, 175, 0.2) 100%
+  ) !important;
+}
+
+/* GRADIENT BUTTONS KEEP WHITE TEXT */
+button[class*="bg-gradient"],
+button[class*="bg-blue"],
+button[class*="bg-red"],
+button[class*="bg-green"] {
+  color: white !important;
+}
+
+button[class*="bg-gradient"] *,
+button[class*="bg-blue"] *,
+button[class*="bg-red"] *,
+button[class*="bg-green"] * {
+  color: white !important;
+}
+
+/* BADGES - GLASS EFFECT */
+span[class*="badge"]:not([class*="bg-white"]),
+div[class*="badge"]:not([class*="bg-white"]),
+[class*="Badge"]:not([class*="bg-white"]) {
+  background: linear-gradient(135deg, 
+    rgba(65, 105, 225, 0.2) 0%, 
+    rgba(30, 64, 175, 0.15) 100%
+  ) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(65, 105, 225, 0.5) !important;
+  color: white !important;
+}
+
+/* TABS */
+[role="tablist"] {
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(65, 105, 225, 0.4) !important;
+}
+
+[role="tab"] {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[role="tab"][data-state="active"] {
+  background: linear-gradient(135deg, 
+    rgba(65, 105, 225, 0.3) 0%, 
+    rgba(30, 64, 175, 0.2) 100%
+  ) !important;
+  border: 1px solid rgba(65, 105, 225, 0.5) !important;
+  color: white !important;
+}
+
+/* TABLES */
+table {
+  background: rgba(0, 0, 0, 0.7) !important;
   backdrop-filter: blur(20px) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
 }
@@ -265,31 +313,9 @@ tr:hover {
   background: rgba(65, 105, 225, 0.1) !important;
 }
 
-/* BADGES */
-span[class*="badge"]:not([class*="bg-white"]),
-div[class*="badge"]:not([class*="bg-white"]) {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.15) 0%, 
-    rgba(30, 64, 175, 0.1) 100%
-  ) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.4) !important;
-  color: white !important;
-}
-
-/* TABS */
-[role="tablist"] button {
-  color: rgba(255, 255, 255, 0.7) !important;
-}
-
-[role="tablist"] button[data-state="active"] {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.15) 0%, 
-    rgba(30, 64, 175, 0.1) 100%
-  ) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.5) !important;
-  color: white !important;
+/* SEPARATOR */
+hr, [role="separator"] {
+  border-color: rgba(65, 105, 225, 0.3) !important;
 }
 
 /* PRESERVE COLORED TEXT CLASSES */
@@ -311,21 +337,17 @@ div[class*="badge"]:not([class*="bg-white"]) {
 .text-orange-400,
 .text-orange-500,
 .text-orange-600,
-.text-gray-400,
-.text-gray-500,
-.text-gray-600,
+.text-white,
 [class*="text-blue-"],
 [class*="text-green-"],
 [class*="text-red-"],
 [class*="text-yellow-"],
 [class*="text-purple-"],
-[class*="text-orange-"],
-[class*="text-gray-"],
-.bg-clip-text {
+[class*="text-orange-"] {
   color: inherit !important;
 }
 
-/* Gradient text */
+/* GRADIENT TEXT */
 [style*="background-clip: text"],
 [style*="-webkit-background-clip: text"],
 .bg-clip-text {
@@ -333,7 +355,7 @@ div[class*="badge"]:not([class*="bg-white"]) {
   -webkit-text-fill-color: transparent !important;
 }
 
-/* Scrollbar */
+/* SCROLLBAR */
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
@@ -360,28 +382,36 @@ div[class*="badge"]:not([class*="bg-white"]) {
   );
 }
 
-/* Selection */
+/* SELECTION */
 ::selection {
   background: rgba(65, 105, 225, 0.5);
   color: white;
 }
 
-/* Separator */
-hr, [role="separator"] {
-  border-color: rgba(65, 105, 225, 0.3) !important;
+/* MARKDOWN CONTENT */
+.prose {
+  color: white !important;
 }
 
-/* Checkbox and Radio */
-input[type="checkbox"],
-input[type="radio"] {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.15) 0%, 
-    rgba(30, 64, 175, 0.1) 100%
-  ) !important;
-  border: 1px solid rgba(65, 105, 225, 0.5) !important;
+.prose * {
+  color: white !important;
 }
 
-/* Animations */
+.prose code {
+  background: rgba(0, 0, 0, 0.4) !important;
+  color: white !important;
+}
+
+.prose pre {
+  background: rgba(0, 0, 0, 0.6) !important;
+  color: white !important;
+}
+
+.prose a {
+  color: rgb(96, 165, 250) !important;
+}
+
+/* ANIMATIONS */
 @keyframes float {
   0%, 100% {
     transform: translateY(0px);
@@ -421,12 +451,7 @@ input[type="radio"] {
   animation: scroll 30s linear infinite;
 }
 
-/* Ensure body and main have proper contrast */
-body {
-  color: white !important;
-  background: black !important;
-}
-
-main {
+/* ENSURE PROPER TEXT CONTRAST */
+body, main {
   color: white !important;
 }
