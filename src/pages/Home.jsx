@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowUp } from "lucide-react";
 import TechStackCarousel from "@/components/TechStackCarousel";
 import ComparisonSection from "@/components/ComparisonSection";
@@ -9,48 +9,31 @@ import CTASection from "@/components/home/CTASection";
 
 export default function Home() {
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const contentRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 400);
-
-      if (contentRef.current) {
-        const elements = contentRef.current.children;
-        const viewportCenter = window.innerHeight / 2 + window.scrollY;
-
-        Array.from(elements).forEach((element) => {
-          const rect = element.getBoundingClientRect();
-          const elementTop = rect.top + window.scrollY;
-          const elementCenter = elementTop + rect.height / 2;
-          const distanceFromCenter = elementCenter - viewportCenter;
-          const normalizedDistance = distanceFromCenter / (window.innerHeight / 2);
-
-          const rotateX = normalizedDistance * 12;
-          const translateZ = Math.abs(normalizedDistance) * -150;
-          const opacity = 1 - Math.abs(normalizedDistance) * 0.3;
-
-          element.style.transform = `rotateX(${rotateX}deg) translateZ(${translateZ}px)`;
-          element.style.opacity = Math.max(0.4, Math.min(1, opacity));
-        });
-      }
+      const scrolled = window.scrollY;
+      setShowBackToTop(scrolled > 400);
+      
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrolled / docHeight;
+      setScrollProgress(progress);
     };
 
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const cylinderRotation = scrollProgress * 360 * 2;
+
   return (
-    <div className="text-white relative overflow-hidden" style={{ perspective: '2000px', perspectiveOrigin: '50% 50%' }}>
+    <div className="text-white relative">
       {showBackToTop && (
         <button
           onClick={scrollToTop}
@@ -61,30 +44,25 @@ export default function Home() {
         </button>
       )}
 
-      <div ref={contentRef} style={{ transformStyle: 'preserve-3d' }}>
-        <div style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
-          <HeroSection />
-        </div>
+      <div 
+        style={{
+          transform: `perspective(2000px) rotateX(${cylinderRotation * 0.05}deg)`,
+          transformStyle: 'preserve-3d',
+          transition: 'none'
+        }}
+      >
+        <HeroSection />
+        <FeaturesSection />
+        <ServicesGrid />
+        <ComparisonSection />
         
-        <div style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
-          <FeaturesSection />
-        </div>
-        
-        <div style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
-          <ServicesGrid />
-        </div>
-        
-        <div style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
-          <ComparisonSection />
-        </div>
-
-        <section className="py-24 relative" style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
+        <section className="py-24 relative">
           <div className="container mx-auto px-4 relative z-10">
             <TechStackCarousel />
           </div>
         </section>
 
-        <section className="py-24 relative" style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
+        <section className="py-24 relative">
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               <div className="glass-royal p-8 rounded-2xl text-center">
@@ -103,9 +81,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
-          <CTASection />
-        </div>
+        <CTASection />
       </div>
     </div>
   );
