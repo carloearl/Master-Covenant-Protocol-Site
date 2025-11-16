@@ -10,7 +10,7 @@ import ServicesGrid from '@/components/home/ServicesGrid';
 import BoundAICards from '@/components/home/BoundAICards';
 import CTASection from '@/components/home/CTASection';
 
-const useScrollEffect = (sectionRef, containerRef) => {
+const useScrollEffect = (sectionRef) => {
   const [style, setStyle] = useState({ transform: 'perspective(1000px)', opacity: 0 });
 
   useEffect(() => {
@@ -50,27 +50,22 @@ const useScrollEffect = (sectionRef, containerRef) => {
       }
     };
     
-    const scrollContainer = containerRef.current;
-    if (scrollContainer) {
-      scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
-      handleScroll();
-    }
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
 
     return () => {
-      if (scrollContainer) {
-        scrollContainer.removeEventListener('scroll', handleScroll);
-      }
+      window.removeEventListener('scroll', handleScroll);
     };
-  }, [sectionRef, containerRef]);
+  }, [sectionRef]);
 
   return style;
 };
 
-const ScrollSection = ({ children, containerRef }) => {
+const ScrollSection = ({ children }) => {
   const sectionRef = useRef(null);
-  const style = useScrollEffect(sectionRef, containerRef);
+  const style = useScrollEffect(sectionRef);
   return (
-    <section ref={sectionRef} className="w-full py-12 snap-start">
+    <section ref={sectionRef} className="w-full py-4">
       <div style={style} className="w-full transition-all duration-150 ease-out pointer-events-auto">
         {children}
       </div>
@@ -81,7 +76,6 @@ const ScrollSection = ({ children, containerRef }) => {
 export default function Home() {
   const navigate = useNavigate();
   const [email, setEmail] = React.useState('');
-  const scrollContainerRef = useRef(null);
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
@@ -91,41 +85,37 @@ export default function Home() {
   };
 
   return (
-    <div 
-      ref={scrollContainerRef} 
-      className="h-screen w-full overflow-y-scroll overflow-x-hidden snap-y snap-mandatory" 
-      style={{ pointerEvents: 'auto', scrollBehavior: 'smooth' }}
-    >
+    <div className="w-full">
         
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <HeroSection />
         </ScrollSection>
 
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <HeroContent />
         </ScrollSection>
 
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <ServicesGrid />
         </ScrollSection>
 
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <BoundAICards />
         </ScrollSection>
 
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <FeaturesSection />
         </ScrollSection>
         
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <ComparisonSection />
         </ScrollSection>
         
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <TechStackCarousel />
         </ScrollSection>
 
-        <ScrollSection containerRef={scrollContainerRef}>
+        <ScrollSection>
             <CTASection />
         </ScrollSection>
     </div>
