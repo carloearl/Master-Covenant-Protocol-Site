@@ -32,9 +32,9 @@ export default function InteractiveNebula() {
         const dx = mouseX - this.x;
         const dy = mouseY - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < 250) {
-          this.x -= dx * 0.025;
-          this.y -= dy * 0.025;
+        if (distance < 300) {
+          this.x -= dx * 0.06;
+          this.y -= dy * 0.06;
         }
 
         if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
