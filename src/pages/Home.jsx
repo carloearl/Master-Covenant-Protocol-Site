@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ArrowUp } from "lucide-react";
 import TechStackCarousel from "@/components/TechStackCarousel";
 import ComparisonSection from "@/components/ComparisonSection";
@@ -9,14 +9,14 @@ import CTASection from "@/components/home/CTASection";
 
 export default function Home() {
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [rotationX, setRotationX] = useState(0);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = scrolled / maxScroll;
-      setScrollProgress(progress);
+      const rotation = (scrolled / 500) * 60; // Adjust divisor for rotation speed
+      setRotationX(rotation);
       setShowBackToTop(scrolled > 400);
     };
     window.addEventListener('scroll', handleScroll);
@@ -27,34 +27,23 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  return (
-    <div className="text-white relative overflow-hidden" style={{ perspective: '1000px', perspectiveOrigin: 'center center' }}>
-      {showBackToTop && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 glow-royal"
-          aria-label="Back to top"
-        >
-          <ArrowUp className="w-6 h-6" />
-        </button>
-      )}
-
-      <div style={{ 
-        transform: `translateZ(${scrollProgress * -200}px) rotateX(${scrollProgress * 2}deg)`,
-        transition: 'transform 0.1s ease-out',
-        transformStyle: 'preserve-3d'
-      }}>
-        <HeroSection />
-        <FeaturesSection />
-        <ServicesGrid />
-        <ComparisonSection />
-
+  const sections = [
+    { component: <HeroSection />, key: 'hero' },
+    { component: <FeaturesSection />, key: 'features' },
+    { component: <ServicesGrid />, key: 'services' },
+    { component: <ComparisonSection />, key: 'comparison' },
+    { 
+      component: (
         <section className="py-24 relative">
           <div className="container mx-auto px-4 relative z-10">
             <TechStackCarousel />
           </div>
         </section>
-
+      ), 
+      key: 'tech' 
+    },
+    { 
+      component: (
         <section className="py-24 relative">
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -73,9 +62,73 @@ export default function Home() {
             </div>
           </div>
         </section>
+      ), 
+      key: 'stats' 
+    },
+    { component: <CTASection />, key: 'cta' }
+  ];
 
-        <CTASection />
+  const radius = 2000; // Cylinder radius
+  const anglePerSection = 60; // Degrees between sections
+
+  return (
+    <div className="text-white relative overflow-hidden">
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 glow-royal"
+          aria-label="Back to top"
+        >
+          <ArrowUp className="w-6 h-6" />
+        </button>
+      )}
+
+      <div 
+        ref={containerRef}
+        style={{ 
+          perspective: '1500px',
+          perspectiveOrigin: 'center center',
+          minHeight: `${sections.length * 100}vh`
+        }}
+      >
+        <div
+          style={{
+            transformStyle: 'preserve-3d',
+            transform: `rotateX(${rotationX}deg)`,
+            transition: 'transform 0.05s ease-out',
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            width: '100%',
+            marginLeft: '-50%',
+            marginTop: '-50vh'
+          }}
+        >
+          {sections.map((section, index) => {
+            const angle = index * anglePerSection;
+            const translateZ = -radius;
+            const rotateX = -angle;
+
+            return (
+              <div
+                key={section.key}
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  transformStyle: 'preserve-3d',
+                  transform: `rotateX(${rotateX}deg) translateZ(${translateZ}px)`,
+                  backfaceVisibility: 'hidden'
+                }}
+              >
+                {section.component}
+              </div>
+            );
+          })}
+        </div>
       </div>
+
+      {/* Spacer for scroll height */}
+      <div style={{ height: `${sections.length * 100}vh` }} />
     </div>
   );
 }
