@@ -13,6 +13,8 @@ export default function InteractiveNebula() {
 
     let mouseX = canvas.width / 2;
     let mouseY = canvas.height / 2;
+    let orbX = canvas.width / 2;
+    let orbY = canvas.height / 2;
     let nodes = [];
 
     class Node {
@@ -29,12 +31,12 @@ export default function InteractiveNebula() {
         this.x += this.speedX;
         this.y += this.speedY;
 
-        const dx = mouseX - this.x;
-        const dy = mouseY - this.y;
+        const dx = orbX - this.x;
+        const dy = orbY - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (distance < 300) {
-          this.x -= dx * 0.06;
-          this.y -= dy * 0.06;
+          this.x += dx * 0.04;
+          this.y += dy * 0.04;
         }
 
         if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
@@ -47,7 +49,6 @@ export default function InteractiveNebula() {
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
         
-        // Glow effect
         ctx.shadowBlur = 15;
         ctx.shadowColor = this.color;
         ctx.fill();
@@ -84,12 +85,28 @@ export default function InteractiveNebula() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 300);
-      gradient.addColorStop(0, "rgba(65, 105, 225, 0.15)");
-      gradient.addColorStop(0.5, "rgba(30, 64, 175, 0.08)");
-      gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Orb follows mouse instantly
+      orbX = mouseX;
+      orbY = mouseY;
+
+      // Draw glowing orb
+      const orbGradient = ctx.createRadialGradient(orbX, orbY, 0, orbX, orbY, 60);
+      orbGradient.addColorStop(0, "rgba(65, 105, 225, 0.6)");
+      orbGradient.addColorStop(0.3, "rgba(65, 105, 225, 0.3)");
+      orbGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = orbGradient;
+      ctx.beginPath();
+      ctx.arc(orbX, orbY, 60, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw core orb
+      ctx.fillStyle = "rgba(65, 105, 225, 0.9)";
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = "rgba(65, 105, 225, 1)";
+      ctx.beginPath();
+      ctx.arc(orbX, orbY, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
 
       nodes.forEach((node) => {
         node.update();
