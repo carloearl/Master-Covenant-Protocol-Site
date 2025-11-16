@@ -1,3 +1,4 @@
+css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -111,104 +112,18 @@
 }
 
 /* =================================================================
-   CRITICAL: WHITE/LIGHT BACKGROUNDS GET DARK TEXT
+   CRITICAL FIX: FORCE ALL DROPDOWNS/CARDS TO DARK WITH WHITE TEXT
    ================================================================= */
 
-/* Target ANY white or light background - super aggressive */
-[style*="background: white"],
-[style*="background: #fff"],
-[style*="background: #FFF"],
-[style*="background-color: white"],
-[style*="background-color: #fff"],
-[style*="background-color: #FFF"],
-[style*="background-color: rgb(255"],
-[style*="background: rgb(255"],
-[class*="bg-white"],
-.bg-white {
-  color: rgb(30, 30, 30) !important;
-}
-
-[style*="background: white"] *:not([class*="text-"]):not([style*="color"]),
-[style*="background: #fff"] *:not([class*="text-"]):not([style*="color"]),
-[style*="background: #FFF"] *:not([class*="text-"]):not([style*="color"]),
-[style*="background-color: white"] *:not([class*="text-"]):not([style*="color"]),
-[style*="background-color: #fff"] *:not([class*="text-"]):not([style*="color"]),
-[style*="background-color: #FFF"] *:not([class*="text-"]):not([style*="color"]),
-[style*="background-color: rgb(255"] *:not([class*="text-"]):not([style*="color"]),
-[style*="background: rgb(255"] *:not([class*="text-"]):not([style*="color"]),
-[class*="bg-white"] *:not([class*="text-"]):not([style*="color"]),
-.bg-white *:not([class*="text-"]):not([style*="color"]) {
-  color: rgb(30, 30, 30) !important;
-}
-
-/* White background buttons get blue text */
-[style*="background: white"] button:not([class*="bg-blue"]),
-[style*="background: #fff"] button:not([class*="bg-blue"]),
-[style*="background-color: white"] button:not([class*="bg-blue"]),
-[style*="background-color: #fff"] button:not([class*="bg-blue"]),
-[class*="bg-white"] button:not([class*="bg-blue"]),
-.bg-white button:not([class*="bg-blue"]) {
-  color: rgb(65, 105, 225) !important;
-}
-
-[style*="background: white"] button:not([class*="bg-blue"]) *,
-[style*="background: #fff"] button:not([class*="bg-blue"]) *,
-[style*="background-color: white"] button:not([class*="bg-blue"]) *,
-[style*="background-color: #fff"] button:not([class*="bg-blue"]) *,
-[class*="bg-white"] button:not([class*="bg-blue"]) *,
-.bg-white button:not([class*="bg-blue"]) * {
-  color: rgb(65, 105, 225) !important;
-}
-
-/* White background inputs get dark text */
-[style*="background: white"] input,
-[style*="background: #fff"] input,
-[style*="background-color: white"] input,
-[style*="background-color: #fff"] input,
-[class*="bg-white"] input,
-.bg-white input {
-  color: rgb(30, 30, 30) !important;
-  background: white !important;
-  border: 1px solid rgba(65, 105, 225, 0.3) !important;
-}
-
-[style*="background: white"] input::placeholder,
-[style*="background: #fff"] input::placeholder,
-[style*="background-color: white"] input::placeholder,
-[style*="background-color: #fff"] input::placeholder,
-[class*="bg-white"] input::placeholder,
-.bg-white input::placeholder {
-  color: rgba(30, 30, 30, 0.5) !important;
-}
-
-/* Specific Radix UI components that might have light backgrounds */
-[data-radix-dialog-content][style*="background: white"],
-[data-radix-dialog-content][style*="background-color: white"],
-[data-radix-popover-content][style*="background: white"],
-[data-radix-popover-content][style*="background-color: white"],
-[data-radix-dropdown-menu-content][style*="background: white"],
-[data-radix-dropdown-menu-content][style*="background-color: white"] {
-  color: rgb(30, 30, 30) !important;
-}
-
-[data-radix-dialog-content][style*="background: white"] *:not([class*="text-"]),
-[data-radix-dialog-content][style*="background-color: white"] *:not([class*="text-"]),
-[data-radix-popover-content][style*="background: white"] *:not([class*="text-"]),
-[data-radix-popover-content][style*="background-color: white"] *:not([class*="text-"]),
-[data-radix-dropdown-menu-content][style*="background: white"] *:not([class*="text-"]),
-[data-radix-dropdown-menu-content][style*="background-color: white"] *:not([class*="text-"]) {
-  color: rgb(30, 30, 30) !important;
-}
-
-/* =================================================================
-   DARK BACKGROUNDS GET WHITE TEXT (Glassmorphism)
-   ================================================================= */
-
-/* FORCE GLASSMORPHISM ON DARK CARDS */
-div[class*="card"]:not([class*="bg-white"]):not([style*="background: white"]),
-div[class*="Card"]:not([class*="bg-white"]):not([style*="background: white"]),
-[role="dialog"]:not([class*="bg-white"]):not([style*="background: white"]),
-[data-radix-dialog-content]:not([class*="bg-white"]):not([style*="background: white"]) {
+/* ALL RADIX UI DROPDOWNS - SUPER AGGRESSIVE */
+[data-radix-popper-content-wrapper],
+[data-radix-dropdown-menu-content],
+[data-radix-select-content],
+[data-radix-popover-content],
+[data-radix-dialog-content],
+[role="menu"],
+[role="listbox"],
+[role="dialog"] {
   background: linear-gradient(135deg, 
     rgba(65, 105, 225, 0.15) 0%, 
     rgba(30, 64, 175, 0.1) 100%
@@ -216,31 +131,102 @@ div[class*="Card"]:not([class*="bg-white"]):not([style*="background: white"]),
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
-  box-shadow: 
-    0 8px 32px rgba(65, 105, 225, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 0 20px rgba(65, 105, 225, 0.1) !important;
   color: white !important;
 }
 
-/* Dark glass cards have white text */
-div[class*="card"]:not([class*="bg-white"]) *:not([class*="text-"]):not(.bg-clip-text),
-div[class*="Card"]:not([class*="bg-white"]) *:not([class*="text-"]):not(.bg-clip-text),
-[role="dialog"]:not([class*="bg-white"]) *:not([class*="text-"]):not(.bg-clip-text) {
+/* Force white text on ALL children in these components */
+[data-radix-popper-content-wrapper] *,
+[data-radix-dropdown-menu-content] *,
+[data-radix-select-content] *,
+[data-radix-popover-content] *,
+[data-radix-dialog-content] *,
+[role="menu"] *,
+[role="listbox"] *,
+[role="dialog"] * {
   color: white !important;
 }
 
-/* FORCE GLASSMORPHISM ON ALL DARK INPUTS */
-input[type="text"]:not([class*="bg-white"] input),
-input[type="email"]:not([class*="bg-white"] input),
-input[type="password"]:not([class*="bg-white"] input),
-input[type="number"]:not([class*="bg-white"] input),
-input[type="tel"]:not([class*="bg-white"] input),
-input[type="url"]:not([class*="bg-white"] input),
-input[type="search"]:not([class*="bg-white"] input),
-input[type="date"]:not([class*="bg-white"] input),
-input[type="time"]:not([class*="bg-white"] input),
-input[type="file"]:not([class*="bg-white"] input),
+/* Menu items and options */
+[data-radix-dropdown-menu-item],
+[data-radix-select-item],
+[role="menuitem"],
+[role="option"] {
+  color: white !important;
+  background: transparent !important;
+}
+
+[data-radix-dropdown-menu-item]:hover,
+[data-radix-select-item]:hover,
+[role="menuitem"]:hover,
+[role="option"]:hover {
+  background: rgba(65, 105, 225, 0.2) !important;
+  color: white !important;
+}
+
+[data-radix-dropdown-menu-item][data-highlighted],
+[data-radix-select-item][data-highlighted] {
+  background: rgba(65, 105, 225, 0.2) !important;
+  color: white !important;
+}
+
+/* ALL CARDS */
+[class*="card"],
+[class*="Card"],
+div[class*="card"]:not([class*="bg-white"]),
+div[class*="Card"]:not([class*="bg-white"]) {
+  background: linear-gradient(135deg, 
+    rgba(65, 105, 225, 0.15) 0%, 
+    rgba(30, 64, 175, 0.1) 100%
+  ) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(65, 105, 225, 0.4) !important;
+  color: white !important;
+}
+
+/* Force white text in cards */
+[class*="card"] *:not([class*="text-"]):not([class*="bg-"]):not(.bg-clip-text),
+[class*="Card"] *:not([class*="text-"]):not([class*="bg-"]):not(.bg-clip-text) {
+  color: white !important;
+}
+
+/* BUTTONS - ensure white text */
+button:not([class*="bg-white"] button):not([class*="bg-gradient"]) {
+  background: linear-gradient(135deg, 
+    rgba(65, 105, 225, 0.15) 0%, 
+    rgba(30, 64, 175, 0.1) 100%
+  ) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(65, 105, 225, 0.4) !important;
+  color: white !important;
+}
+
+button:not([class*="bg-white"] button):not([class*="bg-gradient"]) * {
+  color: white !important;
+}
+
+button:not([class*="bg-white"] button):not([class*="bg-gradient"]):hover {
+  background: linear-gradient(135deg, 
+    rgba(65, 105, 225, 0.25) 0%, 
+    rgba(30, 64, 175, 0.2) 100%
+  ) !important;
+  border-color: rgba(65, 105, 225, 0.6) !important;
+}
+
+/* Gradient buttons keep their styles */
+button[class*="bg-gradient"],
+button[class*="gradient"] {
+  color: white !important; /* Ensure text is white on gradient buttons */
+}
+button[class*="bg-gradient"] *,
+button[class*="gradient"] * {
+  color: white !important;
+}
+
+
+/* INPUTS - glassmorphism */
+input:not([type="checkbox"]):not([type="radio"]):not([class*="bg-white"] input),
 textarea:not([class*="bg-white"] textarea),
 select:not([class*="bg-white"] select) {
   background: rgba(0, 0, 0, 0.6) !important;
@@ -251,91 +237,35 @@ select:not([class*="bg-white"] select) {
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5) !important;
 }
 
-input:not([class*="bg-white"] input)::placeholder,
-textarea:not([class*="bg-white"] textarea)::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: rgba(255, 255, 255, 0.5) !important;
 }
 
-/* FORCE GLASSMORPHISM ON DARK BUTTONS */
-button:not([class*="gradient"]):not([class*="bg-gradient"]):not([class*="bg-white"] button):not([class*="bg-blue"]):not([style*="background: white"]) {
+/* TABLES */
+table {
   background: linear-gradient(135deg, 
     rgba(65, 105, 225, 0.15) 0%, 
     rgba(30, 64, 175, 0.1) 100%
   ) !important;
   backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
-  color: white !important;
 }
 
-button:not([class*="gradient"]):not([class*="bg-gradient"]):not([class*="bg-white"] button):not([class*="bg-blue"]):not([style*="background: white"]) * {
-  color: white !important;
-}
-
-button:not([class*="gradient"]):not([class*="bg-gradient"]):not([class*="bg-white"] button):not([class*="bg-blue"]):not([style*="background: white"]):hover {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.25) 0%, 
-    rgba(30, 64, 175, 0.2) 100%
-  ) !important;
-  border-color: rgba(65, 105, 225, 0.6) !important;
-}
-
-/* Blue/gradient buttons keep white text */
-button[class*="bg-blue"],
-button[class*="gradient"],
-button[class*="bg-gradient"] {
-  color: white !important;
-}
-
-button[class*="bg-blue"] *,
-button[class*="gradient"] *,
-button[class*="bg-gradient"] * {
-  color: white !important;
-}
-
-/* FORCE GLASSMORPHISM ON DROPDOWNS AND MENUS */
-[role="menu"]:not([style*="background: white"]),
-[role="listbox"]:not([style*="background: white"]),
-[data-radix-popper-content-wrapper]:not([style*="background: white"]),
-[data-radix-dropdown-menu-content]:not([style*="background: white"]),
-[data-radix-select-content]:not([style*="background: white"]),
-div[class*="dropdown"]:not([style*="background: white"]),
-div[class*="menu"]:not([style*="background: white"]),
-div[class*="popover"]:not([style*="background: white"]) {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.15) 0%, 
-    rgba(30, 64, 175, 0.1) 100%
-  ) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.4) !important;
-  box-shadow: 
-    0 8px 32px rgba(65, 105, 225, 0.2),
-    0 0 20px rgba(65, 105, 225, 0.1) !important;
-}
-
-/* Menu items have white text on dark glass */
-[role="menuitem"]:not([style*="background: white"]),
-[role="option"]:not([style*="background: white"]),
-button[role="menuitem"]:not([style*="background: white"]),
-[data-radix-dropdown-menu-item]:not([style*="background: white"]) {
-  color: white !important;
-}
-
-[role="menuitem"]:not([style*="background: white"]) *,
-[role="option"]:not([style*="background: white"]) *,
-button[role="menuitem"]:not([style*="background: white"]) *,
-[data-radix-dropdown-menu-item]:not([style*="background: white"]) * {
-  color: white !important;
-}
-
-[role="menuitem"]:hover,
-[role="option"]:hover,
-[data-radix-dropdown-menu-item]:hover {
+th {
   background: rgba(65, 105, 225, 0.2) !important;
+  color: white !important;
 }
 
-/* FORCE GLASSMORPHISM ON BADGES */
+td {
+  color: white !important;
+}
+
+tr:hover {
+  background: rgba(65, 105, 225, 0.1) !important;
+}
+
+/* BADGES */
 span[class*="badge"]:not([class*="bg-white"]),
 div[class*="badge"]:not([class*="bg-white"]) {
   background: linear-gradient(135deg, 
@@ -343,15 +273,26 @@ div[class*="badge"]:not([class*="bg-white"]) {
     rgba(30, 64, 175, 0.1) 100%
   ) !important;
   backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
   color: white !important;
 }
 
-/* =================================================================
-   PRESERVE COLORED TEXT CLASSES
-   ================================================================= */
+/* TABS */
+[role="tablist"] button {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
 
+[role="tablist"] button[data-state="active"] {
+  background: linear-gradient(135deg, 
+    rgba(65, 105, 225, 0.15) 0%, 
+    rgba(30, 64, 175, 0.1) 100%
+  ) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(65, 105, 225, 0.5) !important;
+  color: white !important;
+}
+
+/* PRESERVE COLORED TEXT CLASSES */
 .text-blue-400,
 .text-blue-500,
 .text-blue-600,
@@ -373,8 +314,6 @@ div[class*="badge"]:not([class*="bg-white"]) {
 .text-gray-400,
 .text-gray-500,
 .text-gray-600,
-.text-white,
-.text-black,
 [class*="text-blue-"],
 [class*="text-green-"],
 [class*="text-red-"],
@@ -386,7 +325,7 @@ div[class*="badge"]:not([class*="bg-white"]) {
   color: inherit !important;
 }
 
-/* Gradient text should keep its colors */
+/* Gradient text */
 [style*="background-clip: text"],
 [style*="-webkit-background-clip: text"],
 .bg-clip-text {
@@ -394,7 +333,7 @@ div[class*="badge"]:not([class*="bg-white"]) {
   -webkit-text-fill-color: transparent !important;
 }
 
-/* Scrollbar styling */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
@@ -421,71 +360,10 @@ div[class*="badge"]:not([class*="bg-white"]) {
   );
 }
 
-/* Selection styling */
+/* Selection */
 ::selection {
   background: rgba(65, 105, 225, 0.5);
   color: white;
-}
-
-/* Markdown content styling */
-.prose {
-  color: white !important;
-}
-
-.prose * {
-  color: white !important;
-}
-
-.prose code {
-  background: rgba(0, 0, 0, 0.4) !important;
-  color: white !important;
-}
-
-.prose pre {
-  background: rgba(0, 0, 0, 0.6) !important;
-  color: white !important;
-}
-
-.prose a {
-  color: rgb(96, 165, 250) !important;
-}
-
-/* Tables */
-table {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.15) 0%, 
-    rgba(30, 64, 175, 0.1) 100%
-  ) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.4) !important;
-}
-
-th {
-  background: rgba(65, 105, 225, 0.2) !important;
-  color: white !important;
-}
-
-td {
-  color: white !important;
-}
-
-tr:hover {
-  background: rgba(65, 105, 225, 0.1) !important;
-}
-
-/* Tabs */
-[role="tablist"] button {
-  color: rgba(255, 255, 255, 0.7) !important;
-}
-
-[role="tablist"] button[data-state="active"] {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.15) 0%, 
-    rgba(30, 64, 175, 0.1) 100%
-  ) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.5) !important;
-  color: white !important;
 }
 
 /* Separator */
@@ -503,7 +381,7 @@ input[type="radio"] {
   border: 1px solid rgba(65, 105, 225, 0.5) !important;
 }
 
-/* Animation keyframes */
+/* Animations */
 @keyframes float {
   0%, 100% {
     transform: translateY(0px);
@@ -543,12 +421,12 @@ input[type="radio"] {
   animation: scroll 30s linear infinite;
 }
 
-/* Ensure proper text contrast everywhere */
+/* Ensure body and main have proper contrast */
 body {
   color: white !important;
+  background: black !important;
 }
 
-/* Main content areas */
 main {
   color: white !important;
 }
