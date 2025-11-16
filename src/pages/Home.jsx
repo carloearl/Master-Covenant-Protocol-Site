@@ -101,33 +101,23 @@ export default function Home() {
         </ScrollSection>
 
         <ScrollSection containerRef={scrollContainerRef}>
-            <div className="w-full max-w-7xl mx-auto px-4">
-              <ServicesGrid />
-            </div>
+            <ServicesGrid />
         </ScrollSection>
 
         <ScrollSection containerRef={scrollContainerRef}>
-            <div className="w-full max-w-7xl mx-auto px-4">
-              <FeaturesSection />
-            </div>
+            <FeaturesSection />
         </ScrollSection>
         
         <ScrollSection containerRef={scrollContainerRef}>
-            <div className="w-full max-w-7xl mx-auto px-4">
-              <ComparisonSection />
-            </div>
+            <ComparisonSection />
         </ScrollSection>
         
         <ScrollSection containerRef={scrollContainerRef}>
-            <div className="w-full max-w-7xl mx-auto px-4">
-                <TechStackCarousel />
-            </div>
+            <TechStackCarousel />
         </ScrollSection>
 
         <ScrollSection containerRef={scrollContainerRef}>
-            <div className="w-full max-w-7xl mx-auto px-4">
-              <CTASection />
-            </div>
+            <CTASection />
         </ScrollSection>
     </div>
   );
