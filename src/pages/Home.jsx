@@ -8,49 +8,37 @@ import FeaturesSection from '@/components/home/FeaturesSection';
 import ServicesGrid from '@/components/home/ServicesGrid';
 import CTASection from '@/components/home/CTASection';
 
-const useScrollEffect = (sectionRef, containerRef) => {
-  const [style, setStyle] = useState({ transform: 'perspective(1000px)', opacity: 0 });
+export default function Home() {
+  const navigate = useNavigate();
+  const [email, setEmail] = React.useState('');
+  const scrollContainerRef = useRef(null);
+  const contentRef = useRef(null);
+  const [style, setStyle] = useState({ transform: 'perspective(1000px)', opacity: 1 });
 
   useEffect(() => {
     const handleScroll = () => {
-      if (sectionRef.current) {
-        const { top, height } = sectionRef.current.getBoundingClientRect();
-        const screenHeight = window.innerHeight;
+      if (contentRef.current && scrollContainerRef.current) {
+        const container = scrollContainerRef.current;
+        const scrollTop = container.scrollTop;
+        const scrollHeight = container.scrollHeight - container.clientHeight;
         
-        const elementCenter = top + height / 2;
-        const screenCenter = screenHeight / 2;
-        const distance = screenCenter - elementCenter;
+        // Calculate scroll progress (0 at top, 1 at bottom)
+        const scrollProgress = scrollTop / scrollHeight;
         
-        const factor = distance / (screenCenter * 1.1);
-
-        let rotation = 0;
-        let scale = 1;
-        let opacity = 1;
-
-        if (factor < 0) {
-          // Section is below center (coming from bottom)
-          const progress = Math.min(1, (1 + factor) * 1.2);
-          rotation = (1 - progress) * 25;
-          scale = 0.85 + (progress * 0.15);
-          opacity = Math.max(0, progress);
-        } else if (factor > 0) {
-          // Section is above center (leaving to top)
-          const progress = Math.min(1, factor * 1.2);
-          rotation = -progress * 25;
-          scale = 1 - (progress * 0.15);
-          opacity = Math.max(0, 1 - progress);
-        }
+        // Map to rotation range: start tilted forward, end tilted back
+        const rotation = (scrollProgress - 0.5) * -30; // -15 to +15 degrees
+        const scale = 0.95 + (1 - Math.abs(scrollProgress - 0.5) * 2) * 0.05;
 
         requestAnimationFrame(() => {
-            setStyle({
-              transform: `perspective(1000px) rotateX(${rotation}deg) scale(${scale})`,
-              opacity: opacity,
-            });
+          setStyle({
+            transform: `perspective(1000px) rotateX(${rotation}deg) scale(${scale})`,
+            opacity: 1,
+          });
         });
       }
     };
     
-    const scrollContainer = containerRef.current;
+    const scrollContainer = scrollContainerRef.current;
     if (scrollContainer) {
       scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
       handleScroll();
@@ -61,27 +49,7 @@ const useScrollEffect = (sectionRef, containerRef) => {
         scrollContainer.removeEventListener('scroll', handleScroll);
       }
     };
-  }, [sectionRef, containerRef]);
-
-  return style;
-};
-
-const ScrollSection = ({ children, containerRef }) => {
-  const sectionRef = useRef(null);
-  const style = useScrollEffect(sectionRef, containerRef);
-  return (
-    <section ref={sectionRef} className="h-screen w-full flex items-center justify-center relative">
-      <div style={style} className="w-full transition-all duration-150 ease-out pointer-events-auto">
-        {children}
-      </div>
-    </section>
-  );
-};
-
-export default function Home() {
-  const navigate = useNavigate();
-  const [email, setEmail] = React.useState('');
-  const scrollContainerRef = useRef(null);
+  }, []);
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
@@ -92,32 +60,34 @@ export default function Home() {
 
   return (
     <div ref={scrollContainerRef} className="h-screen w-full overflow-y-scroll overflow-x-hidden" style={{ pointerEvents: 'auto' }}>
+      <div ref={contentRef} style={style} className="transition-all duration-150 ease-out pointer-events-auto">
         
-        <ScrollSection containerRef={scrollContainerRef}>
-            <HeroSection />
-        </ScrollSection>
+        <section className="h-screen w-full flex items-center justify-center">
+          <HeroSection />
+        </section>
 
-        <ScrollSection containerRef={scrollContainerRef}>
-            <ServicesGrid />
-        </ScrollSection>
+        <section className="h-screen w-full flex items-center justify-center">
+          <ServicesGrid />
+        </section>
         
-        <ScrollSection containerRef={scrollContainerRef}>
-            <div className="w-full max-w-7xl mx-auto px-4">
-                <TechStackCarousel />
-            </div>
-        </ScrollSection>
+        <section className="h-screen w-full flex items-center justify-center">
+          <div className="w-full max-w-7xl mx-auto px-4">
+            <TechStackCarousel />
+          </div>
+        </section>
 
-        <ScrollSection containerRef={scrollContainerRef}>
-            <FeaturesSection />
-        </ScrollSection>
+        <section className="h-screen w-full flex items-center justify-center">
+          <FeaturesSection />
+        </section>
         
-        <ScrollSection containerRef={scrollContainerRef}>
-            <ComparisonSection />
-        </ScrollSection>
+        <section className="h-screen w-full flex items-center justify-center">
+          <ComparisonSection />
+        </section>
 
-        <ScrollSection containerRef={scrollContainerRef}>
-            <CTASection />
-        </ScrollSection>
+        <section className="h-screen w-full flex items-center justify-center">
+          <CTASection />
+        </section>
+      </div>
     </div>
   );
 }
