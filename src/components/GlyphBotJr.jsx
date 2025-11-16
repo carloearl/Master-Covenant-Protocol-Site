@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-export default function GlyphBotJr({ darkMode }) {
+export default function GlyphBotJr() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
@@ -28,11 +28,11 @@ export default function GlyphBotJr({ darkMode }) {
     { label: "Home", page: "Home" },
     { label: "N.U.P.S. POS", page: "NUPSLogin" },
     { label: "Security Tools", page: "SecurityTools" },
-    { label: "QR Generator", page: "QRGenerator" },
+    { label: "Visual Cryptography", page: "VisualCryptography" },
+    { label: "Security Operations", page: "SecurityOperationsCenter" },
     { label: "GlyphBot AI", page: "GlyphBot" },
-    { label: "Pricing", page: "Pricing" },
-    { label: "Documentation", page: "SecurityDocs" },
-    { label: "Contact", page: "Contact" }
+    { label: "Governance Hub", page: "GovernanceHub" },
+    { label: "Pricing", page: "Pricing" }
   ];
 
   const handleSend = async () => {
@@ -47,7 +47,7 @@ export default function GlyphBotJr({ darkMode }) {
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `You are GlyphBot Jr., a professional AI navigation assistant for GlyphLock Security Platform.
 
-Available pages: Home, N.U.P.S. POS, Security Tools, QR Generator, Steganography, Blockchain, HSSS Surveillance, GlyphBot AI, Hotzone Mapper, Pricing, Security Docs, Contact, Consultation, About, Roadmap.
+Available pages: Home, N.U.P.S. POS, Security Tools, Visual Cryptography, Security Operations Center, Blockchain, GlyphBot AI, Governance Hub, Pricing, Contact, Consultation.
 
 User question: ${userMessage}
 
@@ -77,14 +77,7 @@ Provide a helpful, professional response (2-3 sentences max). No emojis. Guide t
       </button>
 
       {isOpen && (
-        <div 
-          className="fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] h-[500px] rounded-2xl shadow-2xl overflow-hidden"
-          style={{
-            background: darkMode ? 'rgba(17, 24, 39, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(20px)',
-            border: darkMode ? '1px solid rgba(59, 130, 246, 0.3)' : '1px solid rgba(59, 130, 246, 0.4)'
-          }}
-        >
+        <div className="fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] h-[500px] rounded-2xl shadow-2xl overflow-hidden glass-royal">
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <img 
@@ -107,20 +100,17 @@ Provide a helpful, professional response (2-3 sentences max). No emojis. Guide t
                   <Menu className="w-5 h-5" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="end"
-                className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-300'} w-48`}
-              >
+              <DropdownMenuContent align="end" className="w-48">
                 <div className="px-2 py-2">
-                  <p className={`text-xs font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Quick Navigation</p>
+                  <p className="text-xs font-semibold text-white">Quick Navigation</p>
                 </div>
-                <DropdownMenuSeparator className={darkMode ? 'bg-gray-700' : 'bg-gray-300'} />
+                <DropdownMenuSeparator />
                 {quickLinks.map((link, idx) => (
                   <DropdownMenuItem key={idx} asChild>
                     <Link 
                       to={createPageUrl(link.page)}
                       onClick={() => setIsOpen(false)}
-                      className={`cursor-pointer ${darkMode ? 'text-gray-200 hover:text-white focus:text-white' : 'text-gray-700 hover:text-gray-900 focus:text-gray-900'}`}
+                      className="cursor-pointer text-white"
                     >
                       {link.label}
                     </Link>
@@ -137,9 +127,7 @@ Provide a helpful, professional response (2-3 sentences max). No emojis. Guide t
                   className={`max-w-[80%] p-3 rounded-lg ${
                     msg.role === 'user'
                       ? 'bg-blue-600 text-white'
-                      : darkMode 
-                        ? 'bg-gray-700 text-gray-100'
-                        : 'bg-gray-200 text-gray-900'
+                      : 'glass-card text-white'
                   }`}
                 >
                   <p className="text-sm">{msg.content}</p>
@@ -148,7 +136,7 @@ Provide a helpful, professional response (2-3 sentences max). No emojis. Guide t
             ))}
             {loading && (
               <div className="flex justify-start">
-                <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                <div className="glass-card p-3 rounded-lg">
                   <div className="flex gap-1">
                     <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
                     <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
@@ -159,18 +147,14 @@ Provide a helpful, professional response (2-3 sentences max). No emojis. Guide t
             )}
           </div>
 
-          <div className={`border-t ${darkMode ? 'border-gray-700' : 'border-gray-300'} p-3`}>
+          <div className="border-t border-blue-500/30 p-3">
             <div className="flex gap-2">
               <Input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Ask me anything..."
-                className={`flex-1 ${
-                  darkMode 
-                    ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' 
-                    : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-500'
-                }`}
+                className="flex-1 text-white"
                 disabled={loading}
               />
               <Button 
