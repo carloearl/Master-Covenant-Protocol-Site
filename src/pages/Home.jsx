@@ -9,39 +9,35 @@ import CTASection from "@/components/home/CTASection";
 
 export default function Home() {
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [sectionTransforms, setSectionTransforms] = useState([]);
-  const sectionRefs = useRef([]);
+  const contentRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      const viewportCenter = window.innerHeight / 2;
-      const scrolled = window.scrollY;
-      setShowBackToTop(scrolled > 400);
+      setShowBackToTop(window.scrollY > 400);
 
-      const transforms = sectionRefs.current.map((ref) => {
-        if (!ref) return { rotateX: 0, translateZ: 0, scale: 1 };
-        
-        const rect = ref.getBoundingClientRect();
-        const sectionCenter = rect.top + rect.height / 2;
-        const distanceFromCenter = sectionCenter - viewportCenter;
-        const normalizedDistance = distanceFromCenter / viewportCenter;
+      if (contentRef.current) {
+        const elements = contentRef.current.children;
+        const viewportCenter = window.innerHeight / 2 + window.scrollY;
 
-        const rotateX = normalizedDistance * 15;
-        const translateZ = Math.abs(normalizedDistance) * -200;
-        const scale = 1 - Math.abs(normalizedDistance) * 0.1;
+        Array.from(elements).forEach((element) => {
+          const rect = element.getBoundingClientRect();
+          const elementTop = rect.top + window.scrollY;
+          const elementCenter = elementTop + rect.height / 2;
+          const distanceFromCenter = elementCenter - viewportCenter;
+          const normalizedDistance = distanceFromCenter / (window.innerHeight / 2);
 
-        return { 
-          rotateX: Math.max(-30, Math.min(30, rotateX)), 
-          translateZ: Math.max(-400, translateZ),
-          scale: Math.max(0.8, Math.min(1, scale))
-        };
-      });
+          const rotateX = normalizedDistance * 12;
+          const translateZ = Math.abs(normalizedDistance) * -150;
+          const opacity = 1 - Math.abs(normalizedDistance) * 0.3;
 
-      setSectionTransforms(transforms);
+          element.style.transform = `rotateX(${rotateX}deg) translateZ(${translateZ}px)`;
+          element.style.opacity = Math.max(0.4, Math.min(1, opacity));
+        });
+      }
     };
 
     handleScroll();
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -53,24 +49,42 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const sections = [
-    { component: <HeroSection />, key: 'hero' },
-    { component: <FeaturesSection />, key: 'features' },
-    { component: <ServicesGrid />, key: 'services' },
-    { component: <ComparisonSection />, key: 'comparison' },
-    { 
-      component: (
-        <section className="py-24 relative">
+  return (
+    <div className="text-white relative overflow-hidden" style={{ perspective: '2000px', perspectiveOrigin: '50% 50%' }}>
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 glow-royal"
+          aria-label="Back to top"
+        >
+          <ArrowUp className="w-6 h-6" />
+        </button>
+      )}
+
+      <div ref={contentRef} style={{ transformStyle: 'preserve-3d' }}>
+        <div style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
+          <HeroSection />
+        </div>
+        
+        <div style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
+          <FeaturesSection />
+        </div>
+        
+        <div style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
+          <ServicesGrid />
+        </div>
+        
+        <div style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
+          <ComparisonSection />
+        </div>
+
+        <section className="py-24 relative" style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
           <div className="container mx-auto px-4 relative z-10">
             <TechStackCarousel />
           </div>
         </section>
-      ), 
-      key: 'tech' 
-    },
-    { 
-      component: (
-        <section className="py-24 relative">
+
+        <section className="py-24 relative" style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               <div className="glass-royal p-8 rounded-2xl text-center">
@@ -88,43 +102,10 @@ export default function Home() {
             </div>
           </div>
         </section>
-      ), 
-      key: 'stats' 
-    },
-    { component: <CTASection />, key: 'cta' }
-  ];
 
-  return (
-    <div className="text-white relative overflow-hidden" style={{ perspective: '1500px', perspectiveOrigin: '50% 50%' }}>
-      {showBackToTop && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 glow-royal"
-          aria-label="Back to top"
-        >
-          <ArrowUp className="w-6 h-6" />
-        </button>
-      )}
-
-      <div>
-        {sections.map((section, index) => {
-          const transform = sectionTransforms[index] || { rotateX: 0, translateZ: 0, scale: 1 };
-          
-          return (
-            <div
-              key={section.key}
-              ref={(el) => (sectionRefs.current[index] = el)}
-              style={{
-                transformStyle: 'preserve-3d',
-                transform: `rotateX(${transform.rotateX}deg) translateZ(${transform.translateZ}px) scale(${transform.scale})`,
-                transition: 'transform 0.05s ease-out',
-                transformOrigin: 'center center'
-              }}
-            >
-              {section.component}
-            </div>
-          );
-        })}
+        <div style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}>
+          <CTASection />
+        </div>
       </div>
     </div>
   );
