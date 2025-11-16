@@ -60,7 +60,7 @@ export default function TechStackCarousel() {
   ];
 
   return (
-    <div className="py-16 overflow-hidden">
+    <div className="py-16 overflow-hidden relative z-50">
       <div className="container mx-auto px-4 mb-12 text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
           Integrated with <span style={{ color: '#00BFFF' }}>World-Class Technologies</span>
@@ -72,7 +72,7 @@ export default function TechStackCarousel() {
       <div className="marquee-wrapper mb-8">
         <div className="marquee-content marquee-left">
           {[...row1Companies, ...row1Companies, ...row1Companies].map((company, idx) => (
-            <div key={`row1-${idx}`} className="logo-item">
+            <div key={`row1-${idx}`} className="logo-item" style={{ cursor: 'pointer', pointerEvents: 'auto', position: 'relative', zIndex: 100 }}>
               <img 
                 src={company.logo} 
                 alt={company.name}
@@ -88,7 +88,7 @@ export default function TechStackCarousel() {
       <div className="marquee-wrapper">
         <div className="marquee-content marquee-right">
           {[...row2Companies, ...row2Companies, ...row2Companies].map((company, idx) => (
-            <div key={`row2-${idx}`} className="logo-item">
+            <div key={`row2-${idx}`} className="logo-item" style={{ cursor: 'pointer', pointerEvents: 'auto', position: 'relative', zIndex: 100 }}>
               <img 
                 src={company.logo} 
                 alt={company.name}
@@ -105,6 +105,7 @@ export default function TechStackCarousel() {
           width: 100%;
           overflow: hidden;
           position: relative;
+          z-index: 50;
         }
 
         .marquee-content {
@@ -133,6 +134,10 @@ export default function TechStackCarousel() {
           align-items: center;
           justify-content: center;
           gap: 6px;
+          cursor: pointer;
+          pointer-events: auto;
+          z-index: 100;
+          position: relative;
         }
 
         .logo-img {
@@ -142,6 +147,8 @@ export default function TechStackCarousel() {
           filter: brightness(0) invert(1);
           opacity: 0.7;
           transition: all 0.3s ease-in-out;
+          cursor: pointer;
+          pointer-events: auto;
         }
 
         .logo-name {
@@ -151,6 +158,8 @@ export default function TechStackCarousel() {
           white-space: nowrap;
           transition: all 0.3s ease-in-out;
           font-weight: 500;
+          cursor: pointer;
+          pointer-events: auto;
         }
 
         .logo-item:hover .logo-img {

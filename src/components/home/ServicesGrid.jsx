@@ -59,7 +59,7 @@ export default function ServicesGrid() {
 
   return (
     <section className="py-24 relative">
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 relative z-50">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
             Complete Security <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Ecosystem</span>
@@ -73,27 +73,26 @@ export default function ServicesGrid() {
           {services.map((service, index) => {
             const Icon = service.icon;
             return (
-              <Link key={index} to={createPageUrl(service.link)}>
-                <Card className="glass-royal border-blue-500/30 hover:border-blue-500/60 transition-all duration-300 h-full group cursor-pointer overflow-hidden">
+              <Link key={index} to={createPageUrl(service.link)} style={{ cursor: 'pointer', pointerEvents: 'auto', position: 'relative', zIndex: 100 }}>
+                <Card className="glass-royal border-blue-500/30 hover:border-blue-500/60 transition-all duration-300 h-full group cursor-pointer overflow-hidden" style={{ cursor: 'pointer', pointerEvents: 'auto', position: 'relative', zIndex: 100 }}>
                   <div className="relative h-48 overflow-hidden">
                     <img
                       src={service.image}
                       alt={service.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/70 to-transparent" />
-                    <div className="absolute top-3 right-3">
+                    <div className="absolute top-3 right-3" style={{ pointerEvents: 'auto', zIndex: 101 }}>
                       <Badge className="bg-blue-500/90 text-white border-blue-500 font-semibold">
                         {service.price}
                       </Badge>
                     </div>
-                    <div className="absolute bottom-3 left-3">
+                    <div className="absolute bottom-3 left-3" style={{ pointerEvents: 'none', zIndex: 10 }}>
                       <div className="bg-blue-500/20 backdrop-blur-md p-2 rounded-lg">
                         <Icon className="w-6 h-6 text-blue-400" />
                       </div>
                     </div>
                   </div>
-                  <CardContent className="p-6">
+                  <CardContent className="p-6" style={{ cursor: 'pointer', pointerEvents: 'auto', position: 'relative', zIndex: 100 }}>
                     <h3 className="text-lg font-bold mb-3 text-white group-hover:text-blue-400 transition-colors">
                       {service.title}
                     </h3>
