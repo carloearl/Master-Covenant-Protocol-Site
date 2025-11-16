@@ -1,3 +1,4 @@
+css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -39,10 +40,7 @@
 
 @layer components {
   .glass-royal {
-    background: linear-gradient(135deg, 
-      rgba(65, 105, 225, 0.15) 0%, 
-      rgba(30, 64, 175, 0.1) 100%
-    ) !important;
+    background: rgba(10, 10, 20, 0.85) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
     border: 1px solid rgba(65, 105, 225, 0.4) !important;
@@ -54,7 +52,7 @@
   }
 
   .glass-dark {
-    background: rgba(0, 0, 0, 0.6) !important;
+    background: rgba(10, 10, 20, 0.9) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
     border: 1px solid rgba(65, 105, 225, 0.3) !important;
@@ -66,7 +64,7 @@
   }
 
   .glass-card {
-    background: rgba(0, 0, 0, 0.5) !important;
+    background: rgba(15, 15, 25, 0.8) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
     border: 1px solid rgba(65, 105, 225, 0.3) !important;
@@ -75,7 +73,7 @@
   }
 
   .glass-card-dark {
-    background: rgba(0, 0, 0, 0.6) !important;
+    background: rgba(10, 10, 20, 0.85) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
     border: 1px solid rgba(65, 105, 225, 0.4) !important;
@@ -92,16 +90,27 @@
 }
 
 /* =================================================================
-   TOTAL NUCLEAR ANNIHILATION OF WHITE BACKGROUNDS
+   ULTIMATE DARK MODE ENFORCEMENT - NO WHITE BACKGROUNDS ALLOWED
    ================================================================= */
 
-/* KILL ALL WHITE BACKGROUNDS - NO MERCY */
-*[class*="bg-white"],
-*.bg-white,
-div.bg-white,
-span.bg-white,
-section.bg-white,
-article.bg-white,
+/* FORCE DARK ON EVERYTHING */
+*,
+*::before,
+*::after {
+  border-color: rgba(65, 105, 225, 0.3) !important;
+}
+
+body, html, #root, main {
+  background: rgb(0, 0, 0) !important;
+  background-color: rgb(0, 0, 0) !important;
+  color: white !important;
+}
+
+/* KILL ALL WHITE/LIGHT BACKGROUNDS */
+div, section, article, aside, header, footer, nav, main,
+[class*="bg-white"],
+[class*="bg-gray-50"],
+[class*="bg-gray-100"],
 [style*="background:#fff"],
 [style*="background: #fff"],
 [style*="background:#FFF"],
@@ -110,38 +119,14 @@ article.bg-white,
 [style*="background: white"],
 [style*="background-color:#fff"],
 [style*="background-color: #fff"],
-[style*="background-color:#FFF"],
-[style*="background-color: #FFF"],
 [style*="background-color:white"],
-[style*="background-color: white"],
-[style*="backgroundColor:#fff"],
-[style*="backgroundColor: #fff"],
-[style*="backgroundColor:#FFF"],
-[style*="backgroundColor: #FFF"],
-[style*="backgroundColor:white"],
-[style*="backgroundColor: white"],
-[style*="background-color: rgb(255, 255, 255)"],
-[style*="background: rgb(255, 255, 255)"] {
-  background: rgb(15, 15, 15) !important;
-  background-color: rgb(15, 15, 15) !important;
-  color: white !important;
+[style*="background-color: white"] {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
-/* FORCE ALL CHILDREN OF WHITE BACKGROUNDS TO WHITE TEXT */
-*[class*="bg-white"] *,
-*.bg-white *,
-div.bg-white *,
-[style*="background:#fff"] *,
-[style*="background: #fff"] *,
-[style*="background:white"] *,
-[style*="background: white"] *,
-[style*="background-color:white"] * {
-  color: white !important;
-}
-
-/* RADIX UI - ABSOLUTE DESTRUCTION */
+/* SHADCN UI COMPONENTS - FORCE DARK */
 [data-radix-popper-content-wrapper],
-[data-radix-popper-content-wrapper] *,
 [data-radix-select-viewport],
 [data-radix-select-content],
 [data-radix-dropdown-menu-content],
@@ -153,57 +138,56 @@ div.bg-white *,
 [role="menu"],
 [role="listbox"],
 [role="dialog"],
-.select-content,
-.dropdown-content,
-.popover-content,
-.dialog-content {
-  background: rgb(15, 15, 15) !important;
-  background-color: rgb(15, 15, 15) !important;
-  color: white !important;
+[role="menubar"] {
+  background: rgba(10, 10, 20, 0.98) !important;
+  background-color: rgba(10, 10, 20, 0.98) !important;
+  backdrop-filter: blur(20px) !important;
   border: 1px solid rgba(65, 105, 225, 0.5) !important;
+  color: white !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
 }
 
-/* ALL TEXT IN MENUS/DROPDOWNS = WHITE */
+/* ALL TEXT IN DROPDOWNS/MENUS = WHITE */
 [data-radix-select-viewport] *,
 [data-radix-select-content] *,
 [data-radix-dropdown-menu-content] *,
 [data-radix-popover-content] *,
-[data-radix-context-menu-content] *,
-[data-radix-dialog-content] *,
-[data-radix-alert-dialog-content] *,
 [role="menu"] *,
 [role="listbox"] *,
-[role="dialog"] *,
-[role="menuitem"],
 [role="option"],
+[role="menuitem"],
 [data-radix-select-item],
-[data-radix-dropdown-menu-item],
-[data-radix-menubar-item] {
-  background: transparent !important;
+[data-radix-dropdown-menu-item] {
   color: white !important;
+  background: transparent !important;
 }
 
-/* HOVER STATES */
+/* HOVER STATES FOR MENU ITEMS */
 [role="menuitem"]:hover,
 [role="option"]:hover,
 [data-radix-select-item]:hover,
 [data-radix-dropdown-menu-item]:hover,
 [data-radix-select-item][data-highlighted],
 [data-radix-dropdown-menu-item][data-highlighted],
-[data-radix-select-item][data-state="checked"] {
+[data-radix-menubar-item][data-highlighted] {
   background: rgba(65, 105, 225, 0.3) !important;
+  background-color: rgba(65, 105, 225, 0.3) !important;
   color: white !important;
 }
 
-/* CARDS - ANNIHILATE ALL LIGHT BACKGROUNDS */
+/* SELECTED STATES */
+[data-radix-select-item][data-state="checked"],
+[data-radix-dropdown-menu-item][data-state="checked"] {
+  background: rgba(65, 105, 225, 0.4) !important;
+  color: white !important;
+}
+
+/* CARDS */
 [class*="Card"],
 [class*="card"],
-div[class*="Card"],
-div[class*="card"],
 .card,
 .Card {
-  background: rgb(15, 15, 15) !important;
-  background-color: rgb(15, 15, 15) !important;
+  background: rgba(15, 15, 25, 0.8) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
   color: white !important;
 }
@@ -215,20 +199,26 @@ div[class*="card"],
   color: white !important;
 }
 
-/* BUTTONS - ALL WHITE TEXT */
-button,
-button *,
-[role="button"],
-[role="button"] * {
+/* BUTTONS */
+button {
   color: white !important;
 }
 
-/* INPUTS - DARK BACKGROUNDS */
+button:not(.bg-gradient-to-r):not([class*="gradient"]) {
+  background: rgba(20, 20, 30, 0.8) !important;
+  border: 1px solid rgba(65, 105, 225, 0.4) !important;
+}
+
+button:hover:not(.bg-gradient-to-r):not([class*="gradient"]) {
+  background: rgba(30, 30, 45, 0.9) !important;
+  border-color: rgba(65, 105, 225, 0.6) !important;
+}
+
+/* INPUTS */
 input:not([type="checkbox"]):not([type="radio"]),
 textarea,
 select {
-  background: rgb(20, 20, 20) !important;
-  background-color: rgb(20, 20, 20) !important;
+  background: rgba(20, 20, 30, 0.9) !important;
   border: 1px solid rgba(65, 105, 225, 0.5) !important;
   color: white !important;
 }
@@ -238,18 +228,27 @@ textarea::placeholder {
   color: rgba(255, 255, 255, 0.5) !important;
 }
 
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: rgba(65, 105, 225, 0.8) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(65, 105, 225, 0.2) !important;
+}
+
 /* TABLES */
 table {
-  background: rgb(15, 15, 15) !important;
+  background: rgba(15, 15, 25, 0.8) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
 }
 
 th, td {
   color: white !important;
+  border-color: rgba(65, 105, 225, 0.2) !important;
 }
 
-tr {
-  background: transparent !important;
+thead {
+  background: rgba(25, 25, 40, 0.9) !important;
 }
 
 tr:hover {
@@ -258,32 +257,17 @@ tr:hover {
 
 /* BADGES */
 [class*="badge"],
-[class*="Badge"],
-.badge,
-.Badge {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.2) 0%, 
-    rgba(30, 64, 175, 0.15) 100%
-  ) !important;
+[class*="Badge"] {
+  background: rgba(65, 105, 225, 0.2) !important;
   color: white !important;
-}
-
-/* TABS */
-[role="tablist"] {
-  background: rgba(0, 0, 0, 0.7) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
 }
 
-[role="tab"] {
-  color: rgba(255, 255, 255, 0.7) !important;
-}
-
-[role="tab"][data-state="active"] {
-  background: linear-gradient(135deg, 
-    rgba(65, 105, 225, 0.3) 0%, 
-    rgba(30, 64, 175, 0.2) 100%
-  ) !important;
-  color: white !important;
+/* NAVIGATION BAR */
+nav {
+  background: rgba(10, 10, 20, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border-color: rgba(65, 105, 225, 0.5) !important;
 }
 
 /* SCROLLBAR */
@@ -317,29 +301,7 @@ tr:hover {
   color: white;
 }
 
-/* PRESERVE COLORED TEXT CLASSES */
-.text-blue-400,
-.text-blue-500,
-.text-blue-600,
-.text-green-400,
-.text-green-500,
-.text-green-600,
-.text-red-400,
-.text-red-500,
-.text-red-600,
-.text-yellow-400,
-.text-yellow-500,
-.text-yellow-600,
-.text-purple-400,
-.text-purple-500,
-.text-purple-600,
-.text-orange-400,
-.text-orange-500,
-.text-orange-600 {
-  /* Colors preserved */
-}
-
-/* GRADIENT TEXT - SPECIAL CASE */
+/* PRESERVE GRADIENT TEXT */
 .bg-clip-text,
 [style*="background-clip: text"],
 [style*="-webkit-background-clip: text"] {
@@ -376,31 +338,24 @@ tr:hover {
   animation: scroll 30s linear infinite;
 }
 
-/* FORCE BODY AND MAIN */
-body, main, html {
+/* TOAST/NOTIFICATION OVERRIDES */
+[data-sonner-toast],
+[data-sonner-toaster] {
+  background: rgba(10, 10, 20, 0.95) !important;
+  border: 1px solid rgba(65, 105, 225, 0.5) !important;
   color: white !important;
-  background: black !important;
-  background-color: black !important;
 }
 
-/* ANY REMAINING LIGHT BACKGROUNDS */
-div, section, article, aside, header, footer, nav {
-  background-color: transparent;
+/* TOOLTIPS */
+[role="tooltip"] {
+  background: rgba(10, 10, 20, 0.95) !important;
+  color: white !important;
+  border: 1px solid rgba(65, 105, 225, 0.5) !important;
 }
 
-/* SHADCN/UI SPECIFICS */
-.bg-background {
-  background: black !important;
-}
-
-.bg-card {
-  background: rgb(15, 15, 15) !important;
-}
-
-.bg-popover {
-  background: rgb(15, 15, 15) !important;
-}
-
-.bg-muted {
-  background: rgba(30, 64, 175, 0.1) !important;
+/* MODAL/DIALOG OVERLAYS */
+[data-radix-dialog-overlay],
+[data-radix-alert-dialog-overlay] {
+  background: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(8px) !important;
 }
