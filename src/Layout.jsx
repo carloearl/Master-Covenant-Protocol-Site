@@ -53,11 +53,26 @@ export default function Layout({ children, currentPageName }) {
   const isConsultationPage = location.pathname === createPageUrl("Consultation");
 
   const certifications = [
-    { name: "SOC 2", logo: "https://logos-world.net/wp-content/uploads/2021/02/SOC-2-Logo.png" },
-    { name: "GDPR", logo: "https://gdpr.eu/wp-content/uploads/2019/01/gdpr-logo.png" },
-    { name: "ISO 27001", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e6/ISO_27001_logo.svg" },
-    { name: "PCI DSS", logo: "https://upload.wikimedia.org/wikipedia/commons/8/8f/PCI_DSS_Logo.svg" },
-    { name: "HIPAA", logo: "https://www.hhs.gov/sites/default/files/hhs-logo.svg" }
+    { 
+      name: "SOC 2", 
+      logo: "https://cdn.prod.website-files.com/62902d243ad8eab83fa8a8a7/62e5c7fbd98e7764a89daec3_soc2-badge.svg"
+    },
+    { 
+      name: "GDPR", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/GDPR_logo.svg/512px-GDPR_logo.svg.png"
+    },
+    { 
+      name: "ISO 27001", 
+      logo: "https://cdn.prod.website-files.com/62902d243ad8eab83fa8a8a7/62e5c7fb84b97c1b76e7fa1c_iso27001-badge.svg"
+    },
+    { 
+      name: "PCI DSS", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/PCI_DSS_Logo.svg/512px-PCI_DSS_Logo.svg.png"
+    },
+    { 
+      name: "HIPAA", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/HIPAA_Logo.svg/512px-HIPAA_Logo.svg.png"
+    }
   ];
 
   return (
