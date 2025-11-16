@@ -9,16 +9,20 @@ import CTASection from "@/components/home/CTASection";
 
 export default function Home() {
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.scrollY;
       setShowBackToTop(scrolled > 400);
       
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = scrolled / docHeight;
-      setScrollProgress(progress);
+      const scrollContainer = document.getElementById('scroll-container');
+      if (scrollContainer) {
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = scrolled / maxScroll;
+        const rotation = scrollPercent * 5;
+        
+        scrollContainer.style.transform = `perspective(3000px) rotateX(${rotation}deg) translateZ(-50px)`;
+      }
     };
 
     handleScroll();
@@ -30,10 +34,8 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const cylinderRotation = scrollProgress * 360 * 2;
-
   return (
-    <div className="text-white relative">
+    <div className="text-white relative overflow-x-hidden">
       {showBackToTop && (
         <button
           onClick={scrollToTop}
@@ -45,10 +47,12 @@ export default function Home() {
       )}
 
       <div 
+        id="scroll-container"
         style={{
-          transform: `perspective(2000px) rotateX(${cylinderRotation * 0.05}deg)`,
           transformStyle: 'preserve-3d',
-          transition: 'none'
+          transformOrigin: 'center top',
+          transition: 'transform 0.05s linear',
+          willChange: 'transform'
         }}
       >
         <HeroSection />
