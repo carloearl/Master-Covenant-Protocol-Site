@@ -9,44 +9,35 @@ import CTASection from "@/components/home/CTASection";
 
 export default function Home() {
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const contentRef = useRef(null);
+  const sectionRefs = useRef([]);
 
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 400);
       
-      if (!contentRef.current) return;
+      const viewportCenter = window.innerHeight / 2;
       
-      const rect = contentRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const viewportCenter = viewportHeight / 2;
-      
-      // Calculate where content center is relative to viewport center
-      const contentCenter = rect.top + (rect.height / 2);
-      const distanceFromCenter = contentCenter - viewportCenter;
-      const normalizedDistance = distanceFromCenter / viewportHeight;
-      
-      // Fade in from bottom, fade out to top
-      let opacity, scale, translateZ;
-      
-      if (normalizedDistance > 0) {
-        // Below center - fading in from bottom
-        opacity = Math.max(0.4, 1 - (normalizedDistance * 0.8));
-        scale = Math.max(0.85, 1 - (normalizedDistance * 0.15));
-        translateZ = -normalizedDistance * 300;
-      } else {
-        // Above center - fading out to top
-        opacity = Math.max(0.4, 1 + (normalizedDistance * 0.8));
-        scale = Math.max(0.85, 1 + (normalizedDistance * 0.15));
-        translateZ = normalizedDistance * 300;
-      }
-      
-      contentRef.current.style.transform = `
-        perspective(1500px) 
-        translateZ(${translateZ}px) 
-        scale(${scale})
-      `;
-      contentRef.current.style.opacity = opacity;
+      sectionRefs.current.forEach(section => {
+        if (!section) return;
+        
+        const rect = section.getBoundingClientRect();
+        const sectionCenter = rect.top + (rect.height / 2);
+        const distanceFromCenter = Math.abs(sectionCenter - viewportCenter);
+        const maxDistance = window.innerHeight;
+        const normalizedDistance = Math.min(distanceFromCenter / maxDistance, 1);
+        
+        // Cylindrical effect: fade and push back when away from center
+        const opacity = 1 - (normalizedDistance * 0.7);
+        const scale = 1 - (normalizedDistance * 0.2);
+        const translateZ = -normalizedDistance * 400;
+        
+        section.style.transform = `
+          perspective(1500px) 
+          translateZ(${translateZ}px) 
+          scale(${scale})
+        `;
+        section.style.opacity = Math.max(0.3, opacity);
+      });
     };
 
     handleScroll();
@@ -78,25 +69,31 @@ export default function Home() {
         </button>
       )}
 
-      <div 
-        ref={contentRef}
-        style={{ 
-          transformStyle: 'preserve-3d',
-          transformOrigin: 'center center',
-          willChange: 'transform, opacity'
-        }}
-      >
+      <div ref={el => sectionRefs.current[0] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
         <HeroSection />
+      </div>
+
+      <div ref={el => sectionRefs.current[1] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
         <FeaturesSection />
+      </div>
+
+      <div ref={el => sectionRefs.current[2] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
         <ServicesGrid />
+      </div>
+
+      <div ref={el => sectionRefs.current[3] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
         <ComparisonSection />
-        
+      </div>
+      
+      <div ref={el => sectionRefs.current[4] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
         <section className="py-24 relative">
           <div className="container mx-auto px-4 relative z-10">
             <TechStackCarousel />
           </div>
         </section>
+      </div>
 
+      <div ref={el => sectionRefs.current[5] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
         <section className="py-24 relative">
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -115,7 +112,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+      </div>
 
+      <div ref={el => sectionRefs.current[6] = el} style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}>
         <CTASection />
       </div>
     </div>
