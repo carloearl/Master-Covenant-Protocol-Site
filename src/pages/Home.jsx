@@ -42,10 +42,10 @@ const useScrollEffect = (sectionRef) => {
         }
 
         requestAnimationFrame(() => {
-            setStyle({
-              transform: `perspective(1000px) rotateX(${rotation}deg) scale(${scale})`,
-              opacity: opacity,
-            });
+          setStyle({
+            transform: `perspective(1000px) rotateX(${rotation}deg) scale(${scale})`,
+            opacity: opacity,
+          });
         });
       }
     };
@@ -65,8 +65,8 @@ const ScrollSection = ({ children }) => {
   const sectionRef = useRef(null);
   const style = useScrollEffect(sectionRef);
   return (
-    <section ref={sectionRef} className="w-full snap-start snap-always">
-      <div style={style} className="w-full transition-all duration-150 ease-out pointer-events-auto">
+    <section ref={sectionRef} className="w-full min-h-screen flex items-center justify-center snap-start">
+      <div style={style} className="w-full transition-all duration-150 ease-out">
         {children}
       </div>
     </section>
@@ -84,40 +84,49 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    document.documentElement.style.scrollSnapType = 'y mandatory';
+    document.documentElement.style.scrollBehavior = 'smooth';
+    
+    return () => {
+      document.documentElement.style.scrollSnapType = '';
+      document.documentElement.style.scrollBehavior = '';
+    };
+  }, []);
+
   return (
-    <div className="w-full h-screen overflow-y-scroll snap-y snap-mandatory">
-        
-        <ScrollSection>
-            <HeroSection />
-        </ScrollSection>
+    <div className="w-full">
+      <ScrollSection>
+        <HeroSection />
+      </ScrollSection>
 
-        <ScrollSection>
-            <HeroContent />
-        </ScrollSection>
+      <ScrollSection>
+        <HeroContent />
+      </ScrollSection>
 
-        <ScrollSection>
-            <ServicesGrid />
-        </ScrollSection>
+      <ScrollSection>
+        <ServicesGrid />
+      </ScrollSection>
 
-        <ScrollSection>
-            <BoundAICards />
-        </ScrollSection>
+      <ScrollSection>
+        <BoundAICards />
+      </ScrollSection>
 
-        <ScrollSection>
-            <FeaturesSection />
-        </ScrollSection>
-        
-        <ScrollSection>
-            <ComparisonSection />
-        </ScrollSection>
-        
-        <ScrollSection>
-            <TechStackCarousel />
-        </ScrollSection>
+      <ScrollSection>
+        <FeaturesSection />
+      </ScrollSection>
+      
+      <ScrollSection>
+        <ComparisonSection />
+      </ScrollSection>
+      
+      <ScrollSection>
+        <TechStackCarousel />
+      </ScrollSection>
 
-        <ScrollSection>
-            <CTASection />
-        </ScrollSection>
+      <ScrollSection>
+        <CTASection />
+      </ScrollSection>
     </div>
   );
 }
