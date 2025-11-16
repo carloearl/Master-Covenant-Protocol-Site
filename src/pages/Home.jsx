@@ -17,14 +17,29 @@ export default function Home() {
       
       if (!contentRef.current) return;
       
-      const scrollY = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollProgress = scrollY / maxScroll;
+      const rect = contentRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const viewportCenter = viewportHeight / 2;
       
-      // Entire page fades and scales as one unified surface
-      const opacity = 1 - (scrollProgress * 0.3);
-      const scale = 1 - (scrollProgress * 0.15);
-      const translateZ = -scrollProgress * 200;
+      // Calculate where content center is relative to viewport center
+      const contentCenter = rect.top + (rect.height / 2);
+      const distanceFromCenter = contentCenter - viewportCenter;
+      const normalizedDistance = distanceFromCenter / viewportHeight;
+      
+      // Fade in from bottom, fade out to top
+      let opacity, scale, translateZ;
+      
+      if (normalizedDistance > 0) {
+        // Below center - fading in from bottom
+        opacity = Math.max(0.4, 1 - (normalizedDistance * 0.8));
+        scale = Math.max(0.85, 1 - (normalizedDistance * 0.15));
+        translateZ = -normalizedDistance * 300;
+      } else {
+        // Above center - fading out to top
+        opacity = Math.max(0.4, 1 + (normalizedDistance * 0.8));
+        scale = Math.max(0.85, 1 + (normalizedDistance * 0.15));
+        translateZ = normalizedDistance * 300;
+      }
       
       contentRef.current.style.transform = `
         perspective(1500px) 
@@ -67,7 +82,7 @@ export default function Home() {
         ref={contentRef}
         style={{ 
           transformStyle: 'preserve-3d',
-          transformOrigin: 'center top',
+          transformOrigin: 'center center',
           willChange: 'transform, opacity'
         }}
       >
