@@ -17,14 +17,12 @@ export default function DreamTeamCard({ card, member }) {
       <div className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
         {/* Front of Card */}
         <div className="absolute inset-0 backface-hidden">
-          <div className="relative w-full h-full rounded-2xl overflow-hidden">
-            <img 
-              src={data.frontImage} 
-              alt={data.name}
-              className="w-full h-full object-contain"
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 via-purple-500/20 to-cyan-500/30 animate-pulse-slow pointer-events-none" />
-          </div>
+          <img 
+            src={data.frontImage} 
+            alt={data.name}
+            className="w-full h-full object-contain"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 via-purple-500/20 to-cyan-500/30 animate-pulse-slow pointer-events-none" />
         </div>
 
         {/* Back of Card */}
