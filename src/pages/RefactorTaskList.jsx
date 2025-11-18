@@ -15,7 +15,7 @@ export default function RefactorTaskList() {
       { id: 7, title: "Mobile Responsiveness - All Pages", status: "completed", priority: "critical" },
       { id: 8, title: "Voucher Redemption System - QR Verification", status: "pending", priority: "critical" },
       { id: 9, title: "Payment Success Flow - User Dashboard", status: "completed", priority: "critical" },
-      { id: 10, title: "Security Headers - CSP & CORS", status: "in-progress", priority: "critical" },
+      { id: 10, title: "Security Headers - CSP & CORS", status: "pending", priority: "critical" },
       { id: 11, title: "SEO Optimization & Google Bot Integration", status: "completed", priority: "critical" },
       { id: 12, title: "Sitemap Generation & Submission", status: "completed", priority: "critical" },
       { id: 13, title: "Master Covenant Gated Download", status: "completed", priority: "critical" },
@@ -35,7 +35,7 @@ export default function RefactorTaskList() {
       { id: 25, title: "White Background Fixes - All Pages Audit", status: "completed", priority: "high" },
       { id: 26, title: "QR Code Security - Anti-Fraud Measures", status: "pending", priority: "high" },
       { id: 27, title: "User Profile Management - Settings Page", status: "pending", priority: "high" },
-      { id: 28, title: "Search Functionality - Global Search", status: "in-progress", priority: "high" },
+      { id: 28, title: "Search Functionality - Covenant Search with Preview", status: "completed", priority: "high" },
       { id: 29, title: "Subscription Management - Cancel/Update", status: "completed", priority: "high" },
       { id: 30, title: "Keywords & Meta Tags - All Pages", status: "completed", priority: "high" },
     ],
@@ -95,6 +95,8 @@ export default function RefactorTaskList() {
       { title: "Sitemap Generation - Search Engine Indexing", completed: true },
       { title: "Search Preview - Blurred Content Teaser", completed: true },
       { title: "Structured Data - Schema.org Integration", completed: true },
+      { title: "Dynamic Search - Keyword Matching System", completed: true },
+      { title: "Search Results - Context-Aware Display", completed: true },
     ]
   };
 
