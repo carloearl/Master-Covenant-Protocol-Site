@@ -18,7 +18,10 @@ export default function Pricing() {
       name: "Professional",
       icon: Shield,
       price: { monthly: 299, annual: 2990 },
-      priceId: "price_1S1E4uAOe9xXPv0nByLqrpFg",
+      priceId: {
+        monthly: "NEED_TO_CREATE_IN_STRIPE",
+        annual: "NEED_TO_CREATE_IN_STRIPE"
+      },
       description: "For individuals and small teams",
       features: [
         "All Visual Cryptography Tools",
@@ -34,7 +37,10 @@ export default function Pricing() {
       name: "Enterprise",
       icon: Crown,
       price: { monthly: 999, annual: 9990 },
-      priceId: "price_1S1E4uAOe9xXPv0nByLqrpFg",
+      priceId: {
+        monthly: "NEED_TO_CREATE_IN_STRIPE",
+        annual: "NEED_TO_CREATE_IN_STRIPE"
+      },
       description: "For organizations requiring advanced security",
       features: [
         "Everything in Professional",
@@ -67,6 +73,13 @@ export default function Pricing() {
   ];
 
   const handleSubscribe = async (plan) => {
+    const priceId = plan.priceId?.[billingCycle];
+    
+    if (!priceId || priceId.includes("NEED_TO_CREATE")) {
+      setError("⚠️ Stripe products not configured yet! Go to stripe.com dashboard and create:\n\n1. Product: 'GlyphLock Professional'\n   - Monthly price: $299\n   - Annual price: $2990\n\n2. Product: 'GlyphLock Enterprise'\n   - Monthly price: $999\n   - Annual price: $9990\n\nThen update the priceId fields in this file.");
+      return;
+    }
+
     try {
       setLoading(plan.name);
       setError(null);
@@ -79,19 +92,12 @@ export default function Pricing() {
 
       const origin = window.location.origin;
       
-      console.log('Creating checkout session...', {
-        priceId: plan.priceId,
-        mode: 'payment'
-      });
-      
       const response = await base44.functions.invoke('stripeCreateCheckout', {
-        priceId: plan.priceId,
-        mode: 'payment',
+        priceId: priceId,
+        mode: 'subscription',
         successUrl: `${origin}${createPageUrl('PaymentSuccess')}?session_id={CHECKOUT_SESSION_ID}`,
         cancelUrl: `${origin}${createPageUrl('Pricing')}`
       });
-
-      console.log('Checkout response:', response);
 
       if (response.data?.url) {
         window.location.href = response.data.url;
@@ -100,8 +106,7 @@ export default function Pricing() {
       }
     } catch (err) {
       console.error('Subscription error:', err);
-      const errorMessage = err.response?.data?.error || err.message || 'Failed to create checkout session';
-      setError(errorMessage);
+      setError(err.response?.data?.error || err.message || 'Failed to create checkout session');
     } finally {
       setLoading(null);
     }
@@ -141,8 +146,8 @@ export default function Pricing() {
           {error && (
             <Alert className="mb-8 bg-red-500/10 border-red-500/30 max-w-3xl mx-auto">
               <AlertCircle className="h-4 w-4 text-red-400" />
-              <AlertDescription className="text-white">
-                <strong>Error:</strong> {error}
+              <AlertDescription className="text-white whitespace-pre-wrap">
+                {error}
               </AlertDescription>
             </Alert>
           )}
