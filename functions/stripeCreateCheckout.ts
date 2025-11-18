@@ -15,27 +15,36 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json();
-    const { priceId, mode = 'payment', successUrl, cancelUrl } = body;
+    const { priceId, mode = 'payment', successUrl, cancelUrl, embedded = false } = body;
 
     if (!priceId) {
       return Response.json({ error: 'priceId is required' }, { status: 400 });
     }
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionConfig = {
       mode: mode,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: successUrl || `${req.headers.get('origin')}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: cancelUrl || `${req.headers.get('origin')}/pricing`,
       customer_email: user.email,
       metadata: {
         user_id: user.id,
         user_email: user.email,
       },
-    });
+    };
+
+    if (embedded) {
+      sessionConfig.ui_mode = 'embedded';
+      sessionConfig.return_url = successUrl || `${req.headers.get('origin')}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
+    } else {
+      sessionConfig.success_url = successUrl || `${req.headers.get('origin')}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
+      sessionConfig.cancel_url = cancelUrl || `${req.headers.get('origin')}/pricing`;
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionConfig);
 
     return Response.json({ 
       sessionId: session.id, 
       url: session.url,
+      clientSecret: session.client_secret,
       publishableKey: Deno.env.get("STRIPE_PUBLISHABLE_KEY")
     });
   } catch (error) {
