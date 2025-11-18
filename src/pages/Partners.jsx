@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import SEOHead from "@/components/SEOHead";
 
 const valuationScenarios = [
   {
@@ -70,7 +71,14 @@ export default function Partners() {
   const maxVal = Math.max(...computedScenarios.map((v) => v.valuation));
 
   return (
-    <div className="min-h-screen bg-black text-white py-20">
+    <>
+      <SEOHead 
+        title="Partners & Investors - GlyphLock | Strategic Partnerships & Licensing"
+        description="Explore GlyphLock's partnership opportunities, financial highlights ($340K in 90 days, $14M escrows), technology stack, and strategic licensing framework. Addressing the $283B IP theft crisis."
+        keywords="cybersecurity partnerships, strategic licensing, technology partnerships, investor relations, IP protection, quantum-resistant encryption, enterprise security, partnership opportunities"
+        url="/partners"
+      />
+      <div className="min-h-screen bg-black text-white py-20">
       {/* Background effects */}
       <div className="pointer-events-none fixed inset-0 opacity-40 mix-blend-screen">
         <div className="absolute -top-40 left-10 h-80 w-80 rounded-full bg-violet-600 blur-3xl" />
@@ -93,12 +101,15 @@ export default function Partners() {
         <section className="grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] items-start mb-12 lg:mb-16">
           <div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white mb-4">
-              GlyphLock Valuation Overview
+              GlyphLock Partnership Overview
             </h1>
+            <p className="text-white/70 text-sm sm:text-base max-w-xl mb-3">
+              <strong className="text-blue-400">Secured Access For Smarter World Powered by GlyphLock</strong>
+            </p>
             <p className="text-white/70 text-sm sm:text-base max-w-xl mb-6">
-              GlyphLock combines patented steganographic QR security, real‑world club & POS deployments, and
-              AI‑bound legal infrastructure. Below is a transparent view of how different models frame our
-              current and near‑term valuation.
+              Revolutionizing cybersecurity through AI-powered QR code technology and interactive security solutions 
+              that address the $283 billion IP theft crisis. Below is a transparent view of our technology, market 
+              opportunity, and partnership framework.
             </p>
 
             <div className="grid gap-4 sm:grid-cols-3 max-w-xl mb-6">
@@ -164,11 +175,248 @@ export default function Partners() {
           </div>
         </section>
 
+        {/* Company Overview */}
+        <section className="mb-16 space-y-6">
+          <div className="rounded-3xl border border-blue-500/30 glass-card-dark p-6">
+            <h2 className="text-2xl font-semibold text-blue-300 mb-4">Company Overview</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="text-sm font-semibold text-white/90 mb-2 uppercase tracking-wide">Mission</h3>
+                <p className="text-white/70 text-sm leading-relaxed">
+                  Revolutionizing cybersecurity through AI-powered QR code technology and interactive security solutions 
+                  that address the $283 billion IP theft crisis.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-white/90 mb-2 uppercase tracking-wide">Founded</h3>
+                <p className="text-white/70 text-sm">2025 • El Mirage, Arizona</p>
+                <p className="text-white/60 text-xs mt-1">Active Early-Stage Company</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-violet-500/30 glass-card-dark p-6">
+            <h2 className="text-xl font-semibold text-violet-300 mb-4">Market Opportunity</h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-4">
+                <p className="text-3xl font-bold text-red-400">$283B</p>
+                <p className="text-xs text-white/70 mt-1">IP Theft Crisis Annually</p>
+              </div>
+              <div className="rounded-xl border border-blue-500/30 bg-blue-500/5 p-4">
+                <p className="text-3xl font-bold text-blue-400">$10T+</p>
+                <p className="text-xs text-white/70 mt-1">Total Addressable Market</p>
+              </div>
+              <div className="rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4">
+                <p className="text-3xl font-bold text-cyan-400">$3.78B</p>
+                <p className="text-xs text-white/70 mt-1">QR Code Market by 2025</p>
+              </div>
+              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
+                <p className="text-3xl font-bold text-emerald-400">$2.7T</p>
+                <p className="text-xs text-white/70 mt-1">Mobile QR Payments by 2025</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-emerald-500/30 glass-card-dark p-6">
+            <h2 className="text-xl font-semibold text-emerald-300 mb-4">Financial Highlights - First 90 Days</h2>
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
+                <p className="text-xs uppercase text-white/60 mb-1">Revenue Generated</p>
+                <p className="text-2xl font-bold text-emerald-400">$340,000</p>
+                <p className="text-xs text-white/60 mt-1">First 90 days of operation</p>
+              </div>
+              <div className="rounded-xl border border-blue-500/30 bg-blue-500/5 p-4">
+                <p className="text-xs uppercase text-white/60 mb-1">Insurance Escrows Secured</p>
+                <p className="text-2xl font-bold text-blue-400">$14M</p>
+                <p className="text-xs text-white/60 mt-1">Before full rollout</p>
+              </div>
+              <div className="rounded-xl border border-violet-500/30 bg-violet-500/5 p-4">
+                <p className="text-xs uppercase text-white/60 mb-1">Enterprise Contracts</p>
+                <p className="text-2xl font-bold text-violet-400">$225K+</p>
+                <p className="text-xs text-white/60 mt-1">Per contract value</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Technology Stack */}
+        <section className="mb-16">
+          <div className="rounded-3xl border border-cyan-500/30 glass-card-dark p-6">
+            <h2 className="text-2xl font-semibold text-cyan-300 mb-4">Core Technology Stack</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {[
+                "AI-powered contract binding with cryptographic proof",
+                "Quantum-resistant encryption technology",
+                "Dynamic QR code generation with real-time updates",
+                "Blockchain integration for automated contract execution",
+                "Neural network-based authentication models",
+                "Interactive hotzone mapping with biometric input",
+                "Advanced steganographic overlay systems",
+                "Next.js, React, and modern JavaScript frameworks"
+              ].map((tech, idx) => (
+                <div key={idx} className="rounded-lg border border-blue-500/20 glass-card-dark p-3 hover:border-cyan-400/50 transition-colors">
+                  <p className="text-xs text-white/80 flex items-start gap-2">
+                    <span className="text-cyan-400 mt-0.5">▸</span>
+                    {tech}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Competitive Advantages */}
+        <section className="mb-16">
+          <div className="rounded-3xl border border-blue-500/30 glass-card-dark p-6">
+            <h2 className="text-2xl font-semibold text-blue-300 mb-4">Competitive Advantages</h2>
+            <div className="space-y-3">
+              {[
+                {title: "First-to-Market", desc: "Unique AI-contract binding technology (first of its kind)"},
+                {title: "Quantum-Resistant", desc: "Future-proof security infrastructure"},
+                {title: "Real-Time Dynamic", desc: "Live QR code updating capability"},
+                {title: "Integrated Platform", desc: "Comprehensive ecosystem, not point solution"},
+                {title: "Proven Revenue", desc: "Early revenue generation proving market demand"},
+                {title: "Multi-Factor Security", desc: "Biometric integration and blockchain verification"}
+              ].map((advantage, idx) => (
+                <div key={idx} className="rounded-lg border border-blue-500/20 glass-card-dark p-4 hover:border-blue-400/50 transition-colors">
+                  <h3 className="text-sm font-semibold text-blue-400 mb-1">{advantage.title}</h3>
+                  <p className="text-xs text-white/70">{advantage.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Target Markets & Use Cases */}
+        <section className="mb-16">
+          <div className="grid lg:grid-cols-2 gap-6">
+            <div className="rounded-3xl border border-violet-500/30 glass-card-dark p-6">
+              <h2 className="text-xl font-semibold text-violet-300 mb-4">Target Markets</h2>
+              <ul className="space-y-2 text-sm text-white/70">
+                <li className="flex items-start gap-2">
+                  <span className="text-violet-400 mt-0.5">•</span>
+                  Enterprise organizations requiring advanced cybersecurity
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-violet-400 mt-0.5">•</span>
+                  Financial services and banking institutions
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-violet-400 mt-0.5">•</span>
+                  Healthcare and pharmaceutical companies
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-violet-400 mt-0.5">•</span>
+                  Government agencies and defense contractors
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-violet-400 mt-0.5">•</span>
+                  E-commerce and payment processing platforms
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-violet-400 mt-0.5">•</span>
+                  Manufacturing and supply chain operations
+                </li>
+              </ul>
+            </div>
+
+            <div className="rounded-3xl border border-cyan-500/30 glass-card-dark p-6">
+              <h2 className="text-xl font-semibold text-cyan-300 mb-4">Use Cases</h2>
+              <ul className="space-y-2 text-sm text-white/70">
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 mt-0.5">•</span>
+                  Secure payment authentication via QR codes
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 mt-0.5">•</span>
+                  Anti-counterfeiting and brand protection
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 mt-0.5">•</span>
+                  Tamper-proof document verification
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 mt-0.5">•</span>
+                  Access control and identity management
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 mt-0.5">•</span>
+                  Supply chain tracking and authentication
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 mt-0.5">•</span>
+                  Secure data transmission and encryption
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Growth Strategy */}
+        <section className="mb-16">
+          <div className="rounded-3xl border border-emerald-500/30 glass-card-dark p-6">
+            <h2 className="text-2xl font-semibold text-emerald-300 mb-4">Growth Strategy</h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              {[
+                "Expand enterprise client base across multiple verticals",
+                "Scale N.U.P.S. three-tier POS platform deployments",
+                "Develop strategic partnerships with cybersecurity firms",
+                "Pursue government and defense sector contracts",
+                "Enhance AI capabilities and quantum-resistant features",
+                "Geographic expansion beyond Arizona market",
+                "Potential Series A funding to accelerate growth"
+              ].map((strategy, idx) => (
+                <div key={idx} className="rounded-lg border border-emerald-500/20 glass-card-dark p-3">
+                  <p className="text-xs text-white/80 flex items-start gap-2">
+                    <span className="text-emerald-400 font-bold">{idx + 1}.</span>
+                    {strategy}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Industry Validation */}
+        <section className="mb-16">
+          <div className="rounded-3xl border border-blue-500/30 glass-card-dark p-6">
+            <h2 className="text-2xl font-semibold text-blue-300 mb-4">Industry Validation</h2>
+            <div className="space-y-3">
+              {[
+                "QR code market growing to $3.78B by 2025 (60% higher engagement with AI)",
+                "Businesses using smart QR solutions see 60% higher engagement rates",
+                "Mobile QR payments expected to exceed $2.7T globally",
+                "Banks reduce phishing risk by 90% with biometric QR authentication",
+                "Cybersecurity valuation multiples range from 8-22x revenue"
+              ].map((validation, idx) => (
+                <div key={idx} className="rounded-lg border border-blue-500/20 glass-card-dark p-3">
+                  <p className="text-xs text-white/80 flex items-start gap-2">
+                    <span className="text-blue-400">✓</span>
+                    {validation}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Vision Statement */}
+        <section className="mb-16">
+          <div className="rounded-3xl border border-violet-500/50 bg-gradient-to-r from-violet-500/10 via-fuchsia-500/10 to-blue-500/10 p-8 shadow-[0_0_40px_rgba(139,92,246,0.5)]">
+            <h2 className="text-2xl font-semibold text-white mb-4 text-center">Our Vision</h2>
+            <p className="text-white/80 text-sm leading-relaxed text-center max-w-4xl mx-auto">
+              To become the global leader in AI-powered cybersecurity solutions, protecting enterprises from the 
+              growing $283 billion IP theft crisis while pioneering quantum-resistant security technologies for 
+              the next generation of digital infrastructure.
+            </p>
+          </div>
+        </section>
+
         {/* Scenario cards */}
         <section className="mb-16">
           <div className="flex items-center justify-between gap-4 mb-4">
             <h2 className="text-lg sm:text-xl font-semibold text-white">
-              How different models see GlyphLock
+              Valuation Models & Scenarios
             </h2>
             <p className="text-[11px] text-white/60 max-w-xs text-right hidden sm:block">
               Each scenario reflects a different lens: conservative databases, early‑stage operator and market heuristics,
@@ -336,6 +584,7 @@ export default function Partners() {
           </p>
         </footer>
       </main>
-    </div>
+      </div>
+    </>
   );
 }
