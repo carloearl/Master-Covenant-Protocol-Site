@@ -207,7 +207,7 @@ COVENANT: MASTER_COVENANT_001
         </Card>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="glass-dark w-full justify-start overflow-x-auto mb-8">
+          <TabsList className="glass-dark w-full justify-start overflow-x-auto mb-8 border border-blue-500/30">
             <TabsTrigger value="master-covenant" className="text-cyan-300 data-[state=active]:bg-blue-600/40 data-[state=active]:text-white">
               <FileText className="w-4 h-4 mr-2" />
               Master Covenant
@@ -271,7 +271,7 @@ COVENANT: MASTER_COVENANT_001
                           ].map((stat, idx) => {
                             const Icon = stat.icon;
                             return (
-                              <div key={idx} className="glass-card border-blue-500/20 p-4 rounded-lg">
+                              <div key={idx} className="glass-card-dark border-blue-500/30 p-4 rounded-lg">
                                 <Icon className="w-6 h-6 text-cyan-400 mb-2" />
                                 <div className="text-xs text-cyan-300/60">{stat.label}</div>
                                 <div className="text-lg font-bold text-white">{stat.value}</div>
@@ -329,7 +329,7 @@ COVENANT: MASTER_COVENANT_001
 
                       <Separator className="bg-cyan-700/30" />
 
-                      <div className="glass-card border-blue-500/30 rounded-lg p-4">
+                      <div className="glass-card-dark border-blue-500/30 rounded-lg p-4">
                         <h4 className="font-bold text-cyan-300 mb-3">This Agreement:</h4>
                         <ul className="space-y-2 text-sm text-white">
                           <li>1. Does not require signature to be enforceable</li>
@@ -411,7 +411,7 @@ COVENANT: MASTER_COVENANT_001
                         </div>
                       ))}
 
-                      <div className="glass-card border-purple-500/30 rounded-lg p-4 mt-6">
+                      <div className="glass-card-dark border-purple-500/30 rounded-lg p-4 mt-6">
                         <div className="flex items-start gap-3">
                           <AlertTriangle className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
                           <div className="text-sm text-white">
@@ -457,7 +457,7 @@ COVENANT: MASTER_COVENANT_001
                           Retroactively enforceable from the first formal GlyphLock patent filing (May 15, 2025).
                           Remains perpetually binding into the future.
                         </p>
-                        <div className="glass-card border-blue-500/30 rounded p-3 text-sm text-white/80">
+                        <div className="glass-card-dark border-blue-500/30 rounded p-3 text-sm text-white/80">
                           Any exposure prior to formal agreement is fully binding under CAB and DACO principles,
                           including all successors, AI nodes, and mirror systems.
                         </div>
@@ -470,7 +470,7 @@ COVENANT: MASTER_COVENANT_001
                           <span className="text-blue-400">§17</span> Statutory, Symbolic, and Punitive Damages
                         </h4>
                         <div className="space-y-3">
-                          <div className="glass-card border-red-500/30 p-4 rounded-lg">
+                          <div className="glass-card-dark border-red-500/30 p-4 rounded-lg">
                             <div className="text-3xl font-bold text-red-400 mb-1">$250,000</div>
                             <div className="text-sm text-cyan-300/70">Minimum statutory damage per infringement</div>
                           </div>
@@ -503,7 +503,7 @@ COVENANT: MASTER_COVENANT_001
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-6 text-white">
-                      <div className="glass-card border-purple-500/30 rounded-lg p-4">
+                      <div className="glass-card-dark border-purple-500/30 rounded-lg p-4">
                         <h4 className="font-bold text-purple-400 mb-3">Section V — GlyphLock Emblem Clause</h4>
                         <p className="text-sm">
                           Use, replication, or symbolic referencing of the GlyphLock emblem, logo, QR symbol, or keyhole
@@ -512,7 +512,7 @@ COVENANT: MASTER_COVENANT_001
                         </p>
                       </div>
 
-                      <div className="glass-card border-red-500/30 rounded-lg p-4">
+                      <div className="glass-card-dark border-red-500/30 rounded-lg p-4">
                         <h4 className="font-bold text-red-400 mb-3">Section W — CAB Invocation & Emergency Override</h4>
                         <p className="text-sm mb-3">
                           CAB may be invoked by DACO² at any moment of breach or existential risk. Activation triggers:
@@ -526,7 +526,7 @@ COVENANT: MASTER_COVENANT_001
                         </ul>
                       </div>
 
-                      <div className="glass-card border-blue-500/30 rounded-lg p-4">
+                      <div className="glass-card-dark border-blue-500/30 rounded-lg p-4">
                         <h4 className="font-bold text-cyan-400 mb-3">Section Y — Zeroed Acknowledgment Law</h4>
                         <p className="font-bold mb-2">
                           Exposure = Agreement
@@ -537,7 +537,7 @@ COVENANT: MASTER_COVENANT_001
                         </p>
                       </div>
 
-                      <div className="glass-card border-cyan-700/30 rounded-lg p-4">
+                      <div className="glass-card-dark border-cyan-700/30 rounded-lg p-4">
                         <h4 className="font-bold text-cyan-300 mb-3">Section Z — Infinite IP Enforcement Mandate</h4>
                         <p className="text-sm">
                           All GlyphLock IP is protected in perpetuity, with no expiration, no geographic limitation,
@@ -558,7 +558,7 @@ COVENANT: MASTER_COVENANT_001
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-6 text-white">
-                      <div className="glass-card border-blue-500/30 rounded-lg p-6">
+                      <div className="glass-card-dark border-blue-500/30 rounded-lg p-6">
                         <h4 className="text-xl font-bold text-cyan-300 mb-4">Ω.5 — Irrevocability and Temporal Enforcement</h4>
                         <p className="mb-4">
                           This Agreement is <strong className="text-cyan-400">irrevocable</strong> and perpetually in force.
@@ -584,7 +584,7 @@ COVENANT: MASTER_COVENANT_001
                         </ul>
                       </div>
 
-                      <div className="glass-card border-purple-500/50 rounded-lg p-6">
+                      <div className="glass-card-dark border-purple-500/50 rounded-lg p-6">
                         <h4 className="text-xl font-bold text-purple-400 mb-4">Ω.9 — Legacy Seal</h4>
                         <blockquote className="italic leading-relaxed text-sm border-l-4 border-purple-500/50 pl-4 text-white/90">
                           "This is the Final Seal of DACO¹ — the closing cipher and immutable archive of GlyphLock.
