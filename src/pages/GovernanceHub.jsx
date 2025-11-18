@@ -15,6 +15,7 @@ import SEOHead from "@/components/SEOHead";
 export default function GovernanceHub() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSection, setSelectedSection] = useState("overview");
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   const sections = [
     { id: "overview", label: "Overview", icon: FileText },
@@ -695,23 +696,105 @@ export default function GovernanceHub() {
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/40" />
                 <Input 
-                  placeholder="Search covenant sections..."
+                  placeholder="Search covenant sections (preview only)..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setShowSearchResults(e.target.value.length > 2);
+                  }}
                   className="pl-10 glass-card-dark border-blue-500/30 text-white"
                 />
               </div>
-              <a 
-                href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d3f9f8113_GLYPHLOCKUPDATEDANDLOGGEDNovember2025.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <Download className="w-4 h-4 mr-2" />
-                  Download PDF
+              <Link to={createPageUrl("Consultation")}>
+                <Button className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white">
+                  <Lock className="w-4 h-4 mr-2" />
+                  Request Full Access
                 </Button>
-              </a>
+              </Link>
             </div>
+
+            {/* Search Results Preview */}
+            {showSearchResults && searchTerm.length > 2 && (
+              <div className="glass-card-dark border-blue-500/30 p-6 rounded-xl mt-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-blue-400">Search Preview</h3>
+                  <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/50">
+                    Limited Access
+                  </Badge>
+                </div>
+                
+                {/* Sample Results with Blur */}
+                <div className="space-y-3">
+                  <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4">
+                    <div className="text-sm text-white/80 mb-2">
+                      Found in: <span className="text-blue-400 font-semibold">Section ALPHA (Α)</span>
+                    </div>
+                    <p className="text-sm text-white/70 leading-relaxed">
+                      GlyphLock was ideated, authored, structured, and sealed by DACO¹ — Carlo Rene Earl...
+                      <span className="relative inline-block ml-1">
+                        <span className="blur-sm select-none">
+                          All use, adaptation, symbolic mimicry, or derivative reflection is governed under 
+                          this origination clause covering pre-patent ideational rights, unregistered symbolic 
+                          structures, and reverse-engineered iterations based on observed functions.
+                        </span>
+                        <span className="absolute inset-0 flex items-center justify-center">
+                          <Lock className="w-4 h-4 text-blue-400" />
+                        </span>
+                      </span>
+                    </p>
+                  </div>
+
+                  <div className="bg-violet-500/5 border border-violet-500/20 rounded-lg p-4">
+                    <div className="text-sm text-white/80 mb-2">
+                      Found in: <span className="text-violet-400 font-semibold">Section 17 — Statutory Damages</span>
+                    </div>
+                    <p className="text-sm text-white/70 leading-relaxed">
+                      Violation of this Agreement subjects the breaching party to a minimum statutory damage of $250,000 USD per infringement...
+                      <span className="relative inline-block ml-1">
+                        <span className="blur-sm select-none">
+                          plus uncapped symbolic and punitive damages measured in correlation to market interference, 
+                          reputational harm, breach of narrative security, and attempted nullification of IP value 
+                          across civil and criminal penalties.
+                        </span>
+                        <span className="absolute inset-0 flex items-center justify-center">
+                          <Lock className="w-4 h-4 text-violet-400" />
+                        </span>
+                      </span>
+                    </p>
+                  </div>
+
+                  <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-4">
+                    <div className="text-sm text-white/80 mb-2">
+                      Found in: <span className="text-emerald-400 font-semibold">Definition 6 — CAB</span>
+                    </div>
+                    <p className="text-sm text-white/70 leading-relaxed">
+                      Any individual, party, entity, platform, AI, or synthetic interface that comes into contact...
+                      <span className="relative inline-block ml-1">
+                        <span className="blur-sm select-none">
+                          is automatically contractually bound without signature or awareness including visual 
+                          perception, auditory recognition, AI hallucination, QR code detection, latent memory 
+                          trigger, or symbolic inference with full retroactive enforcement.
+                        </span>
+                        <span className="absolute inset-0 flex items-center justify-center">
+                          <Lock className="w-4 h-4 text-emerald-400" />
+                        </span>
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-blue-500/30 text-center">
+                  <p className="text-sm text-white/70 mb-4">
+                    Full Master Covenant access is available exclusively through partnership or licensing agreements.
+                  </p>
+                  <Link to={createPageUrl("Consultation")}>
+                    <Button className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white">
+                      Request Partnership Access
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Main Content Grid */}
@@ -756,16 +839,40 @@ export default function GovernanceHub() {
           </div>
 
           {/* Footer CTA */}
-          <div className="mt-12 glass-card-dark border-blue-500/30 p-8 rounded-xl text-center">
-            <h3 className="text-2xl font-bold text-white mb-3">Questions About the Master Covenant?</h3>
-            <p className="text-white/70 mb-6 max-w-2xl mx-auto">
-              Schedule a consultation with our legal team to discuss licensing, partnerships, or compliance with the Master Covenant framework.
-            </p>
-            <Link to={createPageUrl("Consultation")}>
-              <Button className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white">
-                Schedule Legal Consultation
-              </Button>
-            </Link>
+          <div className="mt-12 glass-card-dark border-blue-500/30 p-8 rounded-xl">
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold text-white mb-3">Access the Complete Master Covenant</h3>
+              <p className="text-white/70 mb-6 max-w-2xl mx-auto">
+                Full Master Covenant documentation, including all 60+ definitions, enforcement protocols, and case studies, 
+                is available exclusively through official partnership or licensing agreements.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-4 mb-6">
+              <div className="glass-card-dark border-blue-500/20 p-4 rounded-lg text-center">
+                <Shield className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+                <p className="text-sm font-semibold text-white mb-1">Partnership Access</p>
+                <p className="text-xs text-white/60">Strategic licensing & deployment rights</p>
+              </div>
+              <div className="glass-card-dark border-violet-500/20 p-4 rounded-lg text-center">
+                <FileText className="w-8 h-8 text-violet-400 mx-auto mb-2" />
+                <p className="text-sm font-semibold text-white mb-1">Complete Documentation</p>
+                <p className="text-xs text-white/60">Full covenant PDF & legal framework</p>
+              </div>
+              <div className="glass-card-dark border-emerald-500/20 p-4 rounded-lg text-center">
+                <Scale className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+                <p className="text-sm font-semibold text-white mb-1">Legal Support</p>
+                <p className="text-xs text-white/60">Consultation with our legal team</p>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <Link to={createPageUrl("Consultation")}>
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white">
+                  Request Partnership & Full Access
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
