@@ -57,6 +57,34 @@ export default function TechnologyMarquee() {
     { name: "Webpack", logo: "https://www.vectorlogo.zone/logos/js_webpack/js_webpack-ar21.svg" }
   ];
 
+  const row3Logos = [
+    { name: "Adobe", logo: "https://www.vectorlogo.zone/logos/adobe/adobe-ar21.svg" },
+    { name: "Microsoft", logo: "https://www.vectorlogo.zone/logos/microsoft/microsoft-ar21.svg" },
+    { name: "Google", logo: "https://www.vectorlogo.zone/logos/google/google-ar21.svg" },
+    { name: "Meta", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" },
+    { name: "Apple", logo: "https://www.vectorlogo.zone/logos/apple/apple-ar21.svg" },
+    { name: "Tesla", logo: "https://www.vectorlogo.zone/logos/tesla/tesla-ar21.svg" },
+    { name: "SpaceX", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2e/SpaceX_logo_black.svg" },
+    { name: "AMD", logo: "https://www.vectorlogo.zone/logos/amd/amd-ar21.svg" },
+    { name: "Intel", logo: "https://www.vectorlogo.zone/logos/intel/intel-ar21.svg" },
+    { name: "Cisco", logo: "https://www.vectorlogo.zone/logos/cisco/cisco-ar21.svg" },
+    { name: "VMware", logo: "https://www.vectorlogo.zone/logos/vmware/vmware-ar21.svg" },
+    { name: "Elastic", logo: "https://www.vectorlogo.zone/logos/elastic/elastic-ar21.svg" },
+    { name: "Splunk", logo: "https://www.vectorlogo.zone/logos/splunk/splunk-ar21.svg" },
+    { name: "Palo Alto", logo: "https://upload.wikimedia.org/wikipedia/commons/f/f2/Palo_Alto_Networks_logo.svg" },
+    { name: "Fortinet", logo: "https://upload.wikimedia.org/wikipedia/commons/6/62/Fortinet_logo.svg" },
+    { name: "Check Point", logo: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Check_Point_Logo.svg" },
+    { name: "Zscaler", logo: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Zscaler_logo.svg" },
+    { name: "Qualcomm", logo: "https://www.vectorlogo.zone/logos/qualcomm/qualcomm-ar21.svg" },
+    { name: "Broadcom", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0c/Broadcom_Corporation_Logo.svg" },
+    { name: "ServiceNow", logo: "https://upload.wikimedia.org/wikipedia/commons/5/57/ServiceNow_logo.svg" },
+    { name: "Workday", logo: "https://www.vectorlogo.zone/logos/workday/workday-ar21.svg" },
+    { name: "Box", logo: "https://www.vectorlogo.zone/logos/box/box-ar21.svg" },
+    { name: "Dropbox", logo: "https://www.vectorlogo.zone/logos/dropbox/dropbox-ar21.svg" },
+    { name: "Zoom", logo: "https://www.vectorlogo.zone/logos/zoom/zoom-ar21.svg" },
+    { name: "Discord", logo: "https://www.vectorlogo.zone/logos/discordapp/discordapp-ar21.svg" }
+  ];
+
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-16">
       <div className="text-center mb-12">
@@ -68,7 +96,7 @@ export default function TechnologyMarquee() {
         </p>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-6">
         <div className="marquee-container group">
           <div className="marquee-content-left">
             {[...row1Logos, ...row1Logos, ...row1Logos].map((company, idx) => (
@@ -87,6 +115,21 @@ export default function TechnologyMarquee() {
         <div className="marquee-container group">
           <div className="marquee-content-right">
             {[...row2Logos, ...row2Logos, ...row2Logos].map((company, idx) => (
+              <div key={idx} className="logo-item">
+                <img 
+                  src={company.logo} 
+                  alt={company.name}
+                  className="logo-img"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="marquee-container group">
+          <div className="marquee-content-left">
+            {[...row3Logos, ...row3Logos, ...row3Logos].map((company, idx) => (
               <div key={idx} className="logo-item">
                 <img 
                   src={company.logo} 
