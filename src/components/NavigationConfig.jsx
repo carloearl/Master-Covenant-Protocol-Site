@@ -10,6 +10,7 @@ export const navigationConfig = {
         { label: "Roadmap", page: "Roadmap" },
         { label: "Governance Hub", page: "GovernanceHub" },
         { label: "Partners & Valuation", page: "Partners" },
+        { label: "Site Audit Report", page: "SiteAuditReport" },
       ]
     },
     {
