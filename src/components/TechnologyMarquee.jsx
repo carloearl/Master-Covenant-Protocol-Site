@@ -26,7 +26,8 @@ export default function TechnologyMarquee() {
     { name: "Salesforce", logo: "https://www.vectorlogo.zone/logos/salesforce/salesforce-ar21.svg" },
     { name: "Slack", logo: "https://www.vectorlogo.zone/logos/slack/slack-ar21.svg" },
     { name: "Atlassian", logo: "https://www.vectorlogo.zone/logos/atlassian/atlassian-ar21.svg" },
-    { name: "Figma", logo: "https://www.vectorlogo.zone/logos/figma/figma-ar21.svg" }
+    { name: "Figma", logo: "https://www.vectorlogo.zone/logos/figma/figma-ar21.svg" },
+    { name: "SendGrid", logo: "https://www.vectorlogo.zone/logos/sendgrid/sendgrid-ar21.svg" }
   ];
 
   const row2Logos = [
@@ -38,7 +39,7 @@ export default function TechnologyMarquee() {
     { name: "MySQL", logo: "https://www.vectorlogo.zone/logos/mysql/mysql-ar21.svg" },
     { name: "PlanetScale", logo: "https://www.vectorlogo.zone/logos/planetscale/planetscale-ar21.svg" },
     { name: "CockroachDB", logo: "https://www.vectorlogo.zone/logos/cockroachlabs/cockroachlabs-ar21.svg" },
-    { name: "Anthropic", logo: "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg" },
+    { name: "Claude", logo: "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg" },
     { name: "Cohere", logo: "https://www.vectorlogo.zone/logos/cohere/cohere-ar21.svg" },
     { name: "New Relic", logo: "https://www.vectorlogo.zone/logos/newrelic/newrelic-ar21.svg" },
     { name: "Grafana", logo: "https://www.vectorlogo.zone/logos/grafana/grafana-ar21.svg" },
@@ -54,7 +55,8 @@ export default function TechnologyMarquee() {
     { name: "Postman", logo: "https://www.vectorlogo.zone/logos/getpostman/getpostman-ar21.svg" },
     { name: "Twilio", logo: "https://www.vectorlogo.zone/logos/twilio/twilio-ar21.svg" },
     { name: "Segment", logo: "https://www.vectorlogo.zone/logos/segment/segment-ar21.svg" },
-    { name: "Webpack", logo: "https://www.vectorlogo.zone/logos/js_webpack/js_webpack-ar21.svg" }
+    { name: "Webpack", logo: "https://www.vectorlogo.zone/logos/js_webpack/js_webpack-ar21.svg" },
+    { name: "Perplexity", logo: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/perplexity-ai-icon.png" }
   ];
 
   const row3Logos = [
@@ -82,7 +84,8 @@ export default function TechnologyMarquee() {
     { name: "Box", logo: "https://www.vectorlogo.zone/logos/box/box-ar21.svg" },
     { name: "Dropbox", logo: "https://www.vectorlogo.zone/logos/dropbox/dropbox-ar21.svg" },
     { name: "Zoom", logo: "https://www.vectorlogo.zone/logos/zoom/zoom-ar21.svg" },
-    { name: "Discord", logo: "https://www.vectorlogo.zone/logos/discordapp/discordapp-ar21.svg" }
+    { name: "Discord", logo: "https://www.vectorlogo.zone/logos/discordapp/discordapp-ar21.svg" },
+    { name: "Gemini", logo: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" }
   ];
 
   return (
@@ -96,7 +99,7 @@ export default function TechnologyMarquee() {
         </p>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-2">
         <div className="marquee-container group">
           <div className="marquee-content-left">
             {[...row1Logos, ...row1Logos, ...row1Logos].map((company, idx) => (
@@ -148,7 +151,7 @@ export default function TechnologyMarquee() {
           overflow: hidden;
           position: relative;
           width: 100%;
-          padding: 2rem 0;
+          padding: 1rem 0;
         }
 
         .marquee-content-left,
