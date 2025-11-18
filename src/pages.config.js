@@ -40,7 +40,6 @@ import Partners from './pages/Partners';
 import StripeSubscriptionSetup from './pages/StripeSubscriptionSetup';
 import ManageSubscription from './pages/ManageSubscription';
 import Robots from './pages/Robots';
-import CheckoutEmbed from './pages/CheckoutEmbed';
 import __Layout from './Layout.jsx';
 
 
@@ -87,7 +86,6 @@ export const PAGES = {
     "StripeSubscriptionSetup": StripeSubscriptionSetup,
     "ManageSubscription": ManageSubscription,
     "Robots": Robots,
-    "CheckoutEmbed": CheckoutEmbed,
 }
 
 export const pagesConfig = {

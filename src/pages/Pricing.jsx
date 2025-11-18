@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import SEOHead from "@/components/SEOHead";
 
 export default function Pricing() {
-  const navigate = useNavigate();
   const [billingCycle, setBillingCycle] = useState("monthly");
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
@@ -90,11 +89,24 @@ export default function Pricing() {
         return;
       }
 
-      // Navigate to embedded checkout page
-      navigate(createPageUrl('CheckoutEmbed') + `?priceId=${priceId}&mode=subscription`);
+      const origin = window.location.origin;
+      
+      const response = await base44.functions.invoke('stripeCreateCheckout', {
+        priceId: priceId,
+        mode: 'subscription',
+        successUrl: `${origin}${createPageUrl('PaymentSuccess')}?session_id={CHECKOUT_SESSION_ID}`,
+        cancelUrl: `${origin}${createPageUrl('Pricing')}`
+      });
+
+      if (response.data?.url) {
+        window.location.href = response.data.url;
+      } else {
+        throw new Error(response.data?.error || 'No checkout URL returned');
+      }
     } catch (err) {
       console.error('Subscription error:', err);
-      setError(err.message || 'Failed to initialize checkout');
+      setError(err.response?.data?.error || err.message || 'Failed to create checkout session');
+    } finally {
       setLoading(null);
     }
   };
