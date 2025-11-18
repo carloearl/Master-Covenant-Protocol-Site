@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
-import { Menu, X, User, LogOut, ArrowLeft } from "lucide-react";
+import { Menu, X, User, LogOut, ArrowLeft, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +11,12 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import GlyphBotJr from "@/components/GlyphBotJr";
 import { navigationConfig } from "@/components/NavigationConfig";
 import InteractiveNebula from "@/components/InteractiveNebula";
@@ -84,304 +90,337 @@ export default function Layout({ children, currentPageName }) {
     <div className="min-h-screen bg-black text-white relative">
       <InteractiveNebula />
       
-      {/* Simplified Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-[100] glass-royal border-b border-blue-500/50 shadow-xl">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-14">
-            <div className="flex items-center gap-3">
-              {canGoBack && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => navigate(-1)}
-                  className="glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30 h-8 w-8"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                </Button>
-              )}
-              <Link to={createPageUrl("Home")} className="flex items-center gap-2 group">
-                <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d92107808_glyphlock-3d-logo.png"
-                  alt="GlyphLock"
-                  className="h-7 w-auto transform group-hover:scale-110 transition-transform"
-                />
-                <h1 className="text-base font-bold text-white hidden sm:block">
-                  GlyphLock
-                </h1>
-              </Link>
-            </div>
-
-            <div className="hidden lg:flex items-center gap-1">
-              <Link to={createPageUrl("Home")}>
-                <Button className={isActive("Home") ? "bg-blue-500/30 border-none text-blue-400 text-xs h-8 px-2" : "bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-xs h-8 px-2"}>
-                  Home
-                </Button>
-              </Link>
-              
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className="bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-xs h-8 px-2">
-                    Company
+      <TooltipProvider>
+        {/* Enhanced Navigation */}
+        <nav className="fixed top-0 left-0 right-0 z-[100] glass-royal border-b border-blue-500/50 shadow-xl">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between h-20">
+              <div className="flex items-center gap-4">
+                {canGoBack && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => navigate(-1)}
+                    className="glass-royal border border-blue-500/30 text-white hover:text-blue-400 hover:bg-blue-500/30 h-10 w-10"
+                  >
+                    <ArrowLeft className="w-5 h-5" />
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="glass-royal border-blue-500/50 shadow-2xl z-[110]">
-                  {navigationConfig.main.find(item => item.label === "Company")?.dropdown.map((subItem) => (
-                    <DropdownMenuItem key={subItem.page} asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer text-xs">
-                      <Link to={createPageUrl(subItem.page)}>{subItem.label}</Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className="bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-xs h-8 px-2">
-                    Security
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="glass-royal border-blue-500/50 shadow-2xl z-[110]">
-                  {navigationConfig.main.find(item => item.label === "Security")?.dropdown.map((subItem) => (
-                    <DropdownMenuItem key={subItem.page} asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer text-xs">
-                      <Link to={createPageUrl(subItem.page)}>{subItem.label}</Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <Link to={createPageUrl("GlyphBot")}>
-                <Button className={isActive("GlyphBot") ? "bg-blue-500/30 border-none text-blue-400 text-xs h-8 px-2" : "bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-xs h-8 px-2"}>
-                  AI
-                </Button>
-              </Link>
-
-              <Link to={createPageUrl("Pricing")}>
-                <Button className={isActive("Pricing") ? "bg-blue-500/30 border-none text-blue-400 text-xs h-8 px-2" : "bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-xs h-8 px-2"}>
-                  Pricing
-                </Button>
-              </Link>
-
-              {!isConsultationPage && (
-                <Link to={createPageUrl("Consultation")} className="ml-2">
-                  <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white glow-royal shadow-xl text-xs h-8 px-3">
-                    Contact
-                  </Button>
+                )}
+                <Link to={createPageUrl("Home")} className="flex items-center gap-3 group">
+                  <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d92107808_glyphlock-3d-logo.png"
+                    alt="GlyphLock"
+                    className="h-10 w-auto transform group-hover:scale-110 transition-transform"
+                    style={{ marginTop: '2px', marginRight: '2px' }}
+                  />
+                  <h1 className="text-xl font-bold text-white hidden sm:block">
+                    GlyphLock
+                  </h1>
                 </Link>
-              )}
+              </div>
 
-              {user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button className="ml-2 glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30 text-xs h-8 px-2">
-                      <User className="w-3 h-3 mr-1" />
-                      {user.full_name?.split(' ')[0] || 'User'}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="glass-royal border-blue-500/50 shadow-2xl z-[110]">
-                    <DropdownMenuItem asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer text-xs">
-                      <Link to={createPageUrl("Dashboard")}>
-                        <User className="w-3 h-3 mr-2" />
-                        Dashboard
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator className="bg-blue-500/30" />
-                    <DropdownMenuItem 
-                      onClick={handleLogout}
-                      className="text-red-400 hover:text-red-300 hover:bg-red-500/20 focus:text-red-300 focus:bg-red-500/20 cursor-pointer text-xs"
-                    >
-                      <LogOut className="w-3 h-3 mr-2" />
-                      Logout
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <Button 
-                  onClick={handleLogin}
-                  className="ml-2 glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30 text-xs h-8 px-2"
-                >
-                  Sign In
-                </Button>
-              )}
-            </div>
-
-            <div className="flex items-center gap-2 lg:hidden">
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-white p-2 glass-royal border border-blue-500/30 rounded-lg h-9 w-9 flex items-center justify-center"
-              >
-                {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-              </button>
-            </div>
-          </div>
-
-          {mobileMenuOpen && (
-            <div className="lg:hidden py-3 border-t border-blue-500/30 glass-royal max-h-[70vh] overflow-y-auto">
-              <div className="flex flex-col gap-1">
-                <Link to={createPageUrl("Home")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-sm h-9">
+              <div className="hidden lg:flex items-center gap-2">
+                <Link to={createPageUrl("Home")}>
+                  <Button className={isActive("Home") ? "bg-blue-500/30 border-none text-blue-400 text-sm h-10 px-4" : "bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-sm h-10 px-4"}>
                     Home
                   </Button>
                 </Link>
-
-                <div className="px-3 py-1 text-xs font-semibold text-blue-400">Company</div>
-                {navigationConfig.main.find(item => item.label === "Company")?.dropdown.map((subItem) => (
-                  <Link key={subItem.page} to={createPageUrl(subItem.page)} onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full justify-start pl-6 bg-transparent border-none text-white hover:bg-blue-500/30 text-sm h-9">
-                      {subItem.label}
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-sm h-10 px-4">
+                      Company
                     </Button>
-                  </Link>
-                ))}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="glass-royal border-blue-500/50 bg-black/90 backdrop-blur-xl shadow-2xl z-[110]">
+                    {navigationConfig.main.find(item => item.label === "Company")?.dropdown.map((subItem) => (
+                      <DropdownMenuItem key={subItem.page} asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer text-sm">
+                        <Link to={createPageUrl(subItem.page)}>{subItem.label}</Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
 
-                <div className="px-3 py-1 text-xs font-semibold text-blue-400 mt-2">Security</div>
-                {navigationConfig.main.find(item => item.label === "Security")?.dropdown.map((subItem) => (
-                  <Link key={subItem.page} to={createPageUrl(subItem.page)} onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full justify-start pl-6 bg-transparent border-none text-white hover:bg-blue-500/30 text-sm h-9">
-                      {subItem.label}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-sm h-10 px-4">
+                      Security
                     </Button>
-                  </Link>
-                ))}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="glass-royal border-blue-500/50 bg-black/90 backdrop-blur-xl shadow-2xl z-[110]">
+                    {navigationConfig.main.find(item => item.label === "Security")?.dropdown.map((subItem) => (
+                      <DropdownMenuItem key={subItem.page} asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer text-sm">
+                        <Link to={createPageUrl(subItem.page)}>{subItem.label}</Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
 
-                <Link to={createPageUrl("GlyphBot")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-sm h-9 mt-2">
-                    GlyphBot AI
-                  </Button>
-                </Link>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-1">
+                      <Link to={createPageUrl("GlyphBot")}>
+                        <Button className={isActive("GlyphBot") ? "bg-blue-500/30 border-none text-blue-400 text-sm h-10 px-4" : "bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-sm h-10 px-4"}>
+                          AI
+                        </Button>
+                      </Link>
+                      <HelpCircle className="w-3 h-3 text-blue-400/70 hover:text-blue-400 cursor-help" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent className="glass-royal border-blue-500/50 bg-black/90 backdrop-blur-xl text-white">
+                    <p>GlyphBot - AI-powered cybersecurity assistant</p>
+                  </TooltipContent>
+                </Tooltip>
 
-                <Link to={createPageUrl("Pricing")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-sm h-9">
-                    Pricing
-                  </Button>
-                </Link>
-
-                {user && (
-                  <Link to={createPageUrl("Dashboard")} onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-sm h-9">
-                      Dashboard
-                    </Button>
-                  </Link>
-                )}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-1">
+                      <Link to={createPageUrl("Pricing")}>
+                        <Button className={isActive("Pricing") ? "bg-blue-500/30 border-none text-blue-400 text-sm h-10 px-4" : "bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-sm h-10 px-4"}>
+                          Pricing
+                        </Button>
+                      </Link>
+                      <HelpCircle className="w-3 h-3 text-blue-400/70 hover:text-blue-400 cursor-help" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent className="glass-royal border-blue-500/50 bg-black/90 backdrop-blur-xl text-white">
+                    <p>View pricing plans and packages</p>
+                  </TooltipContent>
+                </Tooltip>
 
                 {!isConsultationPage && (
-                  <Link to={createPageUrl("Consultation")} onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white mt-2 shadow-xl text-sm h-9">
-                      Contact Sales
-                    </Button>
-                  </Link>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1 ml-2">
+                        <Link to={createPageUrl("Consultation")}>
+                          <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white glow-royal shadow-xl text-sm h-10 px-4">
+                            Contact
+                          </Button>
+                        </Link>
+                        <HelpCircle className="w-3 h-3 text-blue-400/70 hover:text-blue-400 cursor-help" />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent className="glass-royal border-blue-500/50 bg-black/90 backdrop-blur-xl text-white">
+                      <p>Schedule a consultation with our experts</p>
+                    </TooltipContent>
+                  </Tooltip>
                 )}
 
                 {user ? (
-                  <Button 
-                    onClick={handleLogout}
-                    className="w-full mt-2 glass-royal border border-red-500/50 text-red-400 hover:bg-red-500/20 text-sm h-9"
-                  >
-                    <LogOut className="w-3 h-3 mr-2" />
-                    Logout
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button className="ml-2 glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30 text-sm h-10 px-4">
+                        <User className="w-4 h-4 mr-2" />
+                        {user.full_name?.split(' ')[0] || 'User'}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="glass-royal border-blue-500/50 bg-black/90 backdrop-blur-xl shadow-2xl z-[110]">
+                      <DropdownMenuItem asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer text-sm">
+                        <Link to={createPageUrl("Dashboard")}>
+                          <User className="w-4 h-4 mr-2" />
+                          Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator className="bg-blue-500/30" />
+                      <DropdownMenuItem 
+                        onClick={handleLogout}
+                        className="text-red-400 hover:text-red-300 hover:bg-red-500/20 focus:text-red-300 focus:bg-red-500/20 cursor-pointer text-sm"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 ) : (
                   <Button 
                     onClick={handleLogin}
-                    className="w-full mt-2 glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30 text-sm h-9"
+                    className="ml-2 glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30 text-sm h-10 px-4"
                   >
                     Sign In
                   </Button>
                 )}
               </div>
-            </div>
-          )}
-        </div>
-      </nav>
 
-      <main className="pt-14 pb-8 relative z-10">
-        {children}
-      </main>
-
-      <GlyphBotJr />
-
-      {/* Footer */}
-      <footer className="glass-royal border-t border-blue-500/50 py-12 relative z-10 shadow-2xl">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-12">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png"
-                  alt="GlyphLock"
-                  className="h-8 w-auto"
-                />
+              <div className="flex items-center gap-2 lg:hidden">
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="text-white p-2 glass-royal border border-blue-500/30 rounded-lg h-10 w-10 flex items-center justify-center"
+                >
+                  {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                </button>
               </div>
-              <p className="text-sm text-white/70">
-                Next-generation cybersecurity platform with quantum-resistant encryption and AI integration.
-              </p>
             </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4 text-white">Services</h3>
-              <div className="flex flex-col gap-2 text-sm">
-                {navigationConfig.footer.services.map((item) => (
-                  <Link key={item.page} to={createPageUrl(item.page)} className="text-white/70 hover:text-blue-400 transition-colors">
-                    {item.label}
+
+            {mobileMenuOpen && (
+              <div className="lg:hidden py-4 border-t border-blue-500/30 glass-royal max-h-[70vh] overflow-y-auto">
+                <div className="flex flex-col gap-2">
+                  <Link to={createPageUrl("Home")} onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-base h-11">
+                      Home
+                    </Button>
                   </Link>
-                ))}
-              </div>
-            </div>
 
-            <div>
-              <h3 className="font-semibold mb-4 text-white">Company</h3>
-              <div className="flex flex-col gap-2 text-sm">
-                {navigationConfig.footer.company.map((item) => (
-                  <Link key={item.page} to={createPageUrl(item.page)} className="text-white/70 hover:text-blue-400 transition-colors">
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
+                  <div className="px-3 py-2 text-xs font-semibold text-blue-400">Company</div>
+                  {navigationConfig.main.find(item => item.label === "Company")?.dropdown.map((subItem) => (
+                    <Link key={subItem.page} to={createPageUrl(subItem.page)} onClick={() => setMobileMenuOpen(false)}>
+                      <Button className="w-full justify-start pl-6 bg-transparent border-none text-white hover:bg-blue-500/30 text-base h-11">
+                        {subItem.label}
+                      </Button>
+                    </Link>
+                  ))}
 
-            <div>
-              <h3 className="font-semibold mb-4 text-white">Legal</h3>
-              <div className="flex flex-col gap-2 text-sm">
-                {navigationConfig.footer.legal.map((item) => (
-                  <Link key={item.page} to={createPageUrl(item.page)} className="text-white/70 hover:text-blue-400 transition-colors">
-                    {item.label}
+                  <div className="px-3 py-2 text-xs font-semibold text-blue-400 mt-2">Security</div>
+                  {navigationConfig.main.find(item => item.label === "Security")?.dropdown.map((subItem) => (
+                    <Link key={subItem.page} to={createPageUrl(subItem.page)} onClick={() => setMobileMenuOpen(false)}>
+                      <Button className="w-full justify-start pl-6 bg-transparent border-none text-white hover:bg-blue-500/30 text-base h-11">
+                        {subItem.label}
+                      </Button>
+                    </Link>
+                  ))}
+
+                  <Link to={createPageUrl("GlyphBot")} onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-base h-11 mt-2">
+                      GlyphBot AI
+                    </Button>
                   </Link>
-                ))}
+
+                  <Link to={createPageUrl("Pricing")} onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-base h-11">
+                      Pricing
+                    </Button>
+                  </Link>
+
+                  {user && (
+                    <Link to={createPageUrl("Dashboard")} onClick={() => setMobileMenuOpen(false)}>
+                      <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-base h-11">
+                        Dashboard
+                      </Button>
+                    </Link>
+                  )}
+
+                  {!isConsultationPage && (
+                    <Link to={createPageUrl("Consultation")} onClick={() => setMobileMenuOpen(false)}>
+                      <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white mt-2 shadow-xl text-base h-11">
+                        Contact Sales
+                      </Button>
+                    </Link>
+                  )}
+
+                  {user ? (
+                    <Button 
+                      onClick={handleLogout}
+                      className="w-full mt-2 glass-royal border border-red-500/50 text-red-400 hover:bg-red-500/20 text-base h-11"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Logout
+                    </Button>
+                  ) : (
+                    <Button 
+                      onClick={handleLogin}
+                      className="w-full mt-2 glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30 text-base h-11"
+                    >
+                      Sign In
+                    </Button>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
-          
-          <div className="pt-8 border-t border-blue-500/30">
-            <div className="mb-8">
-              <h4 className="text-center text-sm font-semibold mb-6 text-white/70">
-                Security & Compliance
-              </h4>
-              <div className="flex flex-wrap items-center justify-center gap-8">
-                {certifications.map((cert, idx) => (
-                  <div key={idx} className="flex flex-col items-center gap-2">
-                    <img 
-                      src={cert.logo} 
-                      alt={cert.name}
-                      className="h-16 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
-                      loading="lazy"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+        </nav>
 
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
-              <div className="text-sm text-white/70">
-                <p>© 2025 GlyphLock Security LLC. All rights reserved.</p>
-              </div>
-              <div className="text-sm space-y-1 text-white/70">
-                <p>El Mirage, Arizona • Established May 2025</p>
-                <p>
-                  <a href="mailto:glyphlock@gmail.com" className="hover:text-blue-400 transition-colors">glyphlock@gmail.com</a>
-                  {" • "}
-                  <a href="tel:+14242466499" className="hover:text-blue-400 transition-colors">(424) 246-6499</a>
+        <main className="pt-20 pb-8 relative z-10">
+          {children}
+        </main>
+
+        <GlyphBotJr />
+
+        {/* Footer */}
+        <footer className="glass-royal border-t border-blue-500/50 py-12 relative z-10 shadow-2xl">
+          <div className="container mx-auto px-4">
+            <div className="grid md:grid-cols-4 gap-8 mb-12">
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png"
+                    alt="GlyphLock"
+                    className="h-8 w-auto"
+                  />
+                </div>
+                <p className="text-sm text-white/70">
+                  Next-generation cybersecurity platform with quantum-resistant encryption and AI integration.
                 </p>
               </div>
+              
+              <div>
+                <h3 className="font-semibold mb-4 text-white">Services</h3>
+                <div className="flex flex-col gap-2 text-sm">
+                  {navigationConfig.footer.services.map((item) => (
+                    <Link key={item.page} to={createPageUrl(item.page)} className="text-white/70 hover:text-blue-400 transition-colors">
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-4 text-white">Company</h3>
+                <div className="flex flex-col gap-2 text-sm">
+                  {navigationConfig.footer.company.map((item) => (
+                    <Link key={item.page} to={createPageUrl(item.page)} className="text-white/70 hover:text-blue-400 transition-colors">
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-4 text-white">Legal</h3>
+                <div className="flex flex-col gap-2 text-sm">
+                  {navigationConfig.footer.legal.map((item) => (
+                    <Link key={item.page} to={createPageUrl(item.page)} className="text-white/70 hover:text-blue-400 transition-colors">
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            <div className="pt-8 border-t border-blue-500/30">
+              <div className="mb-8">
+                <h4 className="text-center text-sm font-semibold mb-6 text-white/70">
+                  Security & Compliance
+                </h4>
+                <div className="flex flex-wrap items-center justify-center gap-8">
+                  {certifications.map((cert, idx) => (
+                    <div key={idx} className="flex flex-col items-center gap-2">
+                      <img 
+                        src={cert.logo} 
+                        alt={cert.name}
+                        className="h-16 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
+                <div className="text-sm text-white/70">
+                  <p>© 2025 GlyphLock Security LLC. All rights reserved.</p>
+                </div>
+                <div className="text-sm space-y-1 text-white/70">
+                  <p>El Mirage, Arizona • Established May 2025</p>
+                  <p>
+                    <a href="mailto:glyphlock@gmail.com" className="hover:text-blue-400 transition-colors">glyphlock@gmail.com</a>
+                    {" • "}
+                    <a href="tel:+14242466499" className="hover:text-blue-400 transition-colors">(424) 246-6499</a>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      </TooltipProvider>
     </div>
   );
 }
