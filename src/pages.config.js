@@ -41,6 +41,7 @@ import StripeSubscriptionSetup from './pages/StripeSubscriptionSetup';
 import ManageSubscription from './pages/ManageSubscription';
 import Robots from './pages/Robots';
 import Sitemap from './pages/Sitemap';
+import FAQ from './pages/FAQ';
 import __Layout from './Layout.jsx';
 
 
@@ -88,6 +89,7 @@ export const PAGES = {
     "ManageSubscription": ManageSubscription,
     "Robots": Robots,
     "Sitemap": Sitemap,
+    "FAQ": FAQ,
 }
 
 export const pagesConfig = {

@@ -35,6 +35,7 @@ export const navigationConfig = {
       { label: "Governance Hub", page: "GovernanceHub" },
       { label: "Partners & Valuation", page: "Partners" },
       { label: "Contact", page: "Contact" },
+      { label: "FAQ", page: "FAQ" },
     ],
     services: [
       { label: "Complete Security Ecosystem", page: "SecurityTools" },
