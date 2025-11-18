@@ -62,7 +62,7 @@
   }
 
   .glass-card {
-    background: rgba(15, 15, 25, 0.8) !important;
+    background: rgba(10, 10, 20, 0.85) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
     border: 1px solid rgba(65, 105, 225, 0.3) !important;
@@ -90,60 +90,72 @@ main {
   color: white !important;
 }
 
-a, 
-button, 
-[role="button"], 
-input, 
-select, 
-textarea, 
-label,
-[class*="Card"],
-[data-card],
-.logo-item {
-  cursor: pointer !important;
-  pointer-events: auto !important;
-  z-index: 10000 !important;
-  position: relative !important;
-}
-
-div,
-section,
-article,
-aside,
-header,
-footer,
-nav {
+/* ULTRA AGGRESSIVE WHITE KILLER */
+div:not([class*="gradient"]):not([class*="Gradient"]),
+section:not([class*="gradient"]),
+article:not([class*="gradient"]),
+aside:not([class*="gradient"]),
+header:not([class*="gradient"]),
+footer:not([class*="gradient"]),
+nav:not([class*="gradient"]) {
+  background-color: transparent !important;
   color: white !important;
 }
 
-/* FORCE ALL CARDS AND CONTAINERS TO BE DARK */
-[data-card],
-[class*="Card"],
-[class*="card"],
-[role="dialog"],
-[data-dialog],
-.bg-white,
-[class*="bg-white"],
-[style*="background: white"],
-[style*="background: #fff"],
+/* Kill all white and light backgrounds */
 [style*="background-color: white"],
 [style*="background-color: #fff"],
-[style*="background-color: rgb(255, 255, 255)"] {
+[style*="background-color: #FFF"],
+[style*="background-color: #ffffff"],
+[style*="background-color: #FFFFFF"],
+[style*="background-color:white"],
+[style*="background-color:#fff"],
+[style*="background-color:#FFF"],
+[style*="background-color:#ffffff"],
+[style*="background-color:#FFFFFF"],
+[style*="background: white"],
+[style*="background: #fff"],
+[style*="background:#fff"],
+[style*="background:white"],
+[style*="background-color: rgb(255, 255, 255)"],
+[style*="background-color:rgb(255, 255, 255)"],
+[style*="background-color: rgb(255,255,255)"],
+[style*="background: rgb(255, 255, 255)"],
+.bg-white,
+[class*="bg-white"] {
   background: rgba(10, 10, 20, 0.85) !important;
+  background-color: rgba(10, 10, 20, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  color: white !important;
+}
+
+/* Shadcn components override */
+[data-card],
+[class*="Card"],
+[class*="card"]:not([class*="gradient"]),
+[role="dialog"],
+[data-dialog] {
+  background: rgba(10, 10, 20, 0.85) !important;
+  background-color: rgba(10, 10, 20, 0.85) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
   border-color: rgba(65, 105, 225, 0.4) !important;
   color: white !important;
 }
 
-h1, h2, h3, h4, h5, h6, p, span, a, li, td, th, label, legend {
+/* Text elements */
+h1, h2, h3, h4, h5, h6, p, span:not([class*="gradient"]), a, li, td, th, label, legend, div {
   color: white !important;
 }
 
+/* Radix UI components */
 [data-radix-popper-content-wrapper],
 [data-radix-select-content],
 [data-radix-dropdown-menu-content],
 [data-radix-popover-content],
+[data-radix-dialog-content],
+[data-radix-tabs-content],
 [role="menu"],
 [role="listbox"],
 [role="dialog"],
@@ -151,6 +163,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, li, td, th, label, legend {
 .popover-content,
 .select-content {
   background: rgba(10, 10, 20, 0.98) !important;
+  background-color: rgba(10, 10, 20, 0.98) !important;
   backdrop-filter: blur(20px) !important;
   border: 1px solid rgba(65, 105, 225, 0.5) !important;
   color: white !important;
@@ -163,6 +176,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, li, td, th, label, legend {
 [role="option"] {
   color: white !important;
   background: transparent !important;
+  background-color: transparent !important;
 }
 
 [data-radix-select-item]:hover,
@@ -170,28 +184,31 @@ h1, h2, h3, h4, h5, h6, p, span, a, li, td, th, label, legend {
 [data-radix-select-item][data-highlighted],
 [data-radix-dropdown-menu-item][data-highlighted] {
   background: rgba(65, 105, 225, 0.3) !important;
+  background-color: rgba(65, 105, 225, 0.3) !important;
   color: white !important;
 }
 
-button {
+/* Buttons */
+button:not([class*="gradient"]) {
   color: white !important;
   cursor: pointer !important;
-}
-
-button:not(.bg-gradient-to-r):not([class*="gradient"]) {
   background: rgba(20, 20, 30, 0.8) !important;
+  background-color: rgba(20, 20, 30, 0.8) !important;
   border: 1px solid rgba(65, 105, 225, 0.4) !important;
 }
 
-button:hover:not(.bg-gradient-to-r):not([class*="gradient"]) {
+button:hover:not([class*="gradient"]) {
   background: rgba(30, 30, 45, 0.9) !important;
+  background-color: rgba(30, 30, 45, 0.9) !important;
   border-color: rgba(65, 105, 225, 0.6) !important;
 }
 
+/* Inputs */
 input:not([type="checkbox"]):not([type="radio"]),
 textarea,
 select {
   background: rgba(20, 20, 30, 0.9) !important;
+  background-color: rgba(20, 20, 30, 0.9) !important;
   border: 1px solid rgba(65, 105, 225, 0.5) !important;
   color: white !important;
 }
@@ -201,12 +218,15 @@ textarea::placeholder {
   color: rgba(255, 255, 255, 0.5) !important;
 }
 
+/* Preserve gradients */
 .bg-gradient-to-r,
 .bg-gradient-to-l,
 .bg-gradient-to-t,
 .bg-gradient-to-b,
-.bg-gradient-to-br {
-  background: linear-gradient(to right, rgb(37 99 235), rgb(29 78 216)) !important;
+.bg-gradient-to-br,
+[class*="gradient"],
+[class*="Gradient"] {
+  /* Let gradients keep their background */
 }
 
 .bg-clip-text {
@@ -214,6 +234,7 @@ textarea::placeholder {
   -webkit-text-fill-color: transparent !important;
 }
 
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 12px;
   background: #000000 !important;
@@ -224,25 +245,49 @@ textarea::placeholder {
   border-radius: 6px;
 }
 
-/* NUCLEAR OPTION - FORCE EVERYTHING */
+/* Kill any remaining backgrounds on all elements except SVG */
+*:not(svg):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon):not([class*="gradient"]):not([class*="Gradient"]):not(body):not(html):not(main):not(#root) {
+  background-color: transparent !important;
+}
+
+/* Only allow backgrounds on these */
+body, 
+html, 
+#root, 
+main,
+.glass-card,
+.glass-card-dark,
+.glass-royal,
+.glass-dark,
+[class*="glass-"] {
+  /* Keep their backgrounds */
+}
+
+body, html, #root, main {
+  background: #000000 !important;
+  background-color: #000000 !important;
+}
+
+[class*="glass-"] {
+  background: rgba(10, 10, 20, 0.85) !important;
+  background-color: rgba(10, 10, 20, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+/* Force borders to be blue */
 * {
   border-color: rgba(65, 105, 225, 0.3) !important;
 }
 
-*:not(svg):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon) {
-  background-color: transparent !important;
-}
-
-/* Only specific elements should have backgrounds */
-body, html, #root, main {
-  background: #000000 !important;
-}
-
-[class*="glass-"],
-.glass-card,
-.glass-card-dark,
-.glass-royal,
-.glass-dark {
-  background: rgba(10, 10, 20, 0.85) !important;
-  backdrop-filter: blur(20px) !important;
+/* Clickable elements */
+a, 
+button, 
+[role="button"], 
+input, 
+select, 
+textarea, 
+label {
+  cursor: pointer !important;
+  pointer-events: auto !important;
 }
