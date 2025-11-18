@@ -728,6 +728,185 @@ export default function Partners() {
           </div>
         </section>
 
+        {/* Master Covenant Legal Framework */}
+        <section className="mb-16 rounded-3xl border border-violet-500/60 glass-card-dark p-8 shadow-[0_0_45px_rgba(139,92,246,0.5)]">
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-semibold text-violet-300 mb-2">GlyphLock Master Covenant</h2>
+              <p className="text-xs text-white/60 uppercase tracking-wide">Patent-Backed Legal Framework • NDA + IPAA + CAB</p>
+            </div>
+            <div className="text-right">
+              <p className="text-3xl font-bold text-violet-400">$4,999</p>
+              <p className="text-xs text-white/60">Enterprise Licensing Framework</p>
+            </div>
+          </div>
+
+          <p className="text-white/80 text-sm leading-relaxed mb-6 max-w-4xl">
+            The Master Covenant of Sovereign IP & Constructive Binding (CAB) is GlyphLock's comprehensive legal architecture 
+            protecting <strong className="text-violet-400">steganographic QR technology, biometric triggers, symbolic IP, and AI-binding protocols</strong> across 
+            physical, digital, and narrative jurisdictions. This is not a template—it's a <strong className="text-white">weapons-grade legal framework</strong> 
+            backed by USPTO Patent Application 18/584,961.
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-4 mb-6">
+            <div className="rounded-lg border border-violet-500/30 bg-violet-500/5 p-4">
+              <h3 className="text-sm font-semibold text-violet-400 mb-3">Core Framework Components</h3>
+              <div className="space-y-2 text-xs text-white/70">
+                <div className="flex items-start gap-2">
+                  <span className="text-violet-400">▸</span>
+                  <span><strong className="text-white">NDA + IPAA + CAB:</strong> Unified non-disclosure, IP assignment, and constructive auto-binding</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-violet-400">▸</span>
+                  <span><strong className="text-white">DACO Authority:</strong> Demanding Authority Creative Originator enforcement structure</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-violet-400">▸</span>
+                  <span><strong className="text-white">BPAAA Protocols:</strong> Multi-tier binding framework for parties, affiliates, and associates</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-violet-400">▸</span>
+                  <span><strong className="text-white">ESIGN/UETA Compliant:</strong> Electronic signature framework validated under federal law</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+              <h3 className="text-sm font-semibold text-red-400 mb-3">Enforcement Mechanisms</h3>
+              <div className="space-y-2 text-xs text-white/70">
+                <div className="flex items-start gap-2">
+                  <span className="text-red-400">▸</span>
+                  <span><strong className="text-white">$250K Minimum:</strong> Statutory damages per infringement event</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-red-400">▸</span>
+                  <span><strong className="text-white">Jackknife Protocol:</strong> Ultra-emergency asset freeze and metadata seizure authority</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-red-400">▸</span>
+                  <span><strong className="text-white">Global Jurisdiction:</strong> Arizona primary venue + 150+ PCT member countries</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-red-400">▸</span>
+                  <span><strong className="text-white">AI Binding:</strong> Extends to LLMs, neural networks, and synthetic systems</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-violet-500/30 pt-6 mb-6">
+            <h3 className="text-lg font-semibold text-white mb-4">Featured Covenant Sections</h3>
+            <div className="grid gap-3">
+              {[
+                {
+                  section: "Section ALPHA (Α)",
+                  title: "Primordial Authorship & Ideational Sovereignty",
+                  desc: "Establishes origin authority and First Use Doctrine protections across all regions, platforms, and mediums—binding all future usage back to DACO¹."
+                },
+                {
+                  section: "Section 6 (CAB)",
+                  title: "Contractual Auto-Binding",
+                  desc: "Automatic binding without signature upon first contact—visual perception, QR detection, AI hallucination, or latent memory trigger. Awareness not required."
+                },
+                {
+                  section: "Definition 10",
+                  title: "Jackknife Protocol",
+                  desc: "Ultra-emergency clause authorizing instant asset freezing, metadata decoy injection, remote shutdowns, and narrative correction without warning."
+                },
+                {
+                  section: "Section 17",
+                  title: "Statutory Damages & Punitive Measures",
+                  desc: "Minimum $250,000 per infringement plus uncapped symbolic/punitive damages, enforceable across multiple jurisdictions simultaneously."
+                },
+                {
+                  section: "Definition 21",
+                  title: "AI Clause",
+                  desc: "Binds LLMs, GANs, RAG systems, and all AI that processes GlyphLock IP. Mere ingestion into model memory constitutes contractual binding."
+                },
+                {
+                  section: "Section 24",
+                  title: "PRC Clause (with Mandarin Translation)",
+                  desc: "Extends enforcement to Chinese jurisdiction with native language binding. Applies to AI training, server hosting, metadata routing, and proxy interactions."
+                },
+                {
+                  section: "Section AR",
+                  title: "Electronic Signatures & Digital Binding",
+                  desc: "QR scans, NFC taps, and blockchain timestamps create ESIGN-compliant electronic signatures. Biometric triggers satisfy attribution requirements."
+                },
+                {
+                  section: "Section AL",
+                  title: "Severability & Cy-Près Doctrine",
+                  desc: "Courts directed to reform unenforceable provisions to maximum extent rather than void entire agreement. Ensures covenant survives legal challenges."
+                }
+              ].map((item, idx) => (
+                <div key={idx} className="rounded-lg border border-violet-500/20 glass-card-dark p-4 hover:border-violet-400/50 transition-all">
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <h4 className="text-sm font-semibold text-violet-400">{item.title}</h4>
+                    <span className="text-xs text-white/50 whitespace-nowrap">{item.section}</span>
+                  </div>
+                  <p className="text-xs text-white/70 leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-5 mb-6">
+            <h3 className="text-sm font-semibold text-emerald-400 mb-3 flex items-center gap-2">
+              <span>🔒</span>
+              <span>What You Receive</span>
+            </h3>
+            <ul className="grid md:grid-cols-2 gap-2 text-xs text-white/70">
+              <li>• Complete 85-page Master Covenant (NDA + IPAA + CAB)</li>
+              <li>• USPTO Patent Application 18/584,961 integration</li>
+              <li>• Multi-jurisdictional enforcement templates</li>
+              <li>• Electronic signature compliance (ESIGN/UETA)</li>
+              <li>• QR-triggered binding mechanisms</li>
+              <li>• AI system protection protocols</li>
+              <li>• Blockchain timestamp verification</li>
+              <li>• Global jurisdiction framework (150+ PCT countries)</li>
+              <li>• Jackknife Protocol emergency provisions</li>
+              <li>• Forensic audit authorization templates</li>
+              <li>• PRC Clause with Mandarin translation</li>
+              <li>• Symbolic IP and mythic code protections</li>
+            </ul>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-4 mb-6">
+            <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4 text-center">
+              <p className="text-2xl font-bold text-blue-400">60+</p>
+              <p className="text-xs text-white/60 mt-1">Legal Definitions</p>
+            </div>
+            <div className="rounded-lg border border-violet-500/30 bg-violet-500/5 p-4 text-center">
+              <p className="text-2xl font-bold text-violet-400">15+</p>
+              <p className="text-xs text-white/60 mt-1">Enforcement Sections</p>
+            </div>
+            <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4 text-center">
+              <p className="text-2xl font-bold text-red-400">$250K+</p>
+              <p className="text-xs text-white/60 mt-1">Min. Damages Per Breach</p>
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 mb-6">
+            <p className="text-xs text-white/70 leading-relaxed">
+              <strong className="text-amber-400">Enterprise Notice:</strong> This is a living legal framework currently protecting 
+              GlyphLock's $1.6M–$13.6M valuation band. The Master Covenant includes retroactive binding provisions, automatic 
+              enforcement triggers, and cross-jurisdictional authority. Suitable for technology companies, defense contractors, 
+              IP-heavy startups, and enterprises requiring military-grade legal protection for steganographic systems, AI models, 
+              and quantum-resistant security infrastructure.
+            </p>
+          </div>
+
+          <Link to={createPageUrl("MasterCovenant")}>
+            <button className="w-full bg-gradient-to-r from-violet-600 via-purple-600 to-blue-600 hover:from-violet-700 hover:via-purple-700 hover:to-blue-700 text-white font-semibold py-4 rounded-xl shadow-[0_0_30px_rgba(139,92,246,0.6)] transition-all">
+              Access Full Master Covenant Framework • $4,999
+            </button>
+          </Link>
+
+          <p className="text-[11px] text-white/50 text-center mt-3 italic">
+            Includes licensing templates, enforcement protocols, and jurisdictional frameworks. One-time enterprise fee.
+          </p>
+        </section>
+
         {/* Partnership & Licensing Block */}
         <section className="mb-16 rounded-3xl border border-blue-500/50 glass-card-dark p-6 shadow-[0_0_35px_rgba(59,130,246,0.4)]">
           <h2 className="text-xl font-semibold text-blue-300 mb-3">Partnership &amp; Licensing Only</h2>
@@ -758,8 +937,6 @@ export default function Partners() {
               </ul>
             </div>
           </div>
-
-
 
           <p className="text-white/60 text-xs mt-4 italic border-t border-blue-500/30 pt-4">
             <strong>No outside equity. No dilution. No investor pressure.</strong> Only aligned partners and licensors 
