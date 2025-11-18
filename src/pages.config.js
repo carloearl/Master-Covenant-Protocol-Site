@@ -44,6 +44,7 @@ import Sitemap from './pages/Sitemap';
 import FAQ from './pages/FAQ';
 import Services from './pages/Services';
 import Solutions from './pages/Solutions';
+import SiteAuditReport from './pages/SiteAuditReport';
 import __Layout from './Layout.jsx';
 
 
@@ -94,6 +95,7 @@ export const PAGES = {
     "FAQ": FAQ,
     "Services": Services,
     "Solutions": Solutions,
+    "SiteAuditReport": SiteAuditReport,
 }
 
 export const pagesConfig = {
