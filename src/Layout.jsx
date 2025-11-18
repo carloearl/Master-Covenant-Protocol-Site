@@ -48,6 +48,11 @@ export default function Layout({ children, currentPageName }) {
     base44.auth.logout();
   };
 
+  const handleLogin = () => {
+    setMobileMenuOpen(false);
+    base44.auth.redirectToLogin();
+  };
+
   const isActive = (pageName) => location.pathname === createPageUrl(pageName);
   const canGoBack = window.history.length > 1 && location.pathname !== createPageUrl("Home");
   const isConsultationPage = location.pathname === createPageUrl("Consultation");
@@ -172,11 +177,12 @@ export default function Layout({ children, currentPageName }) {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Link to={createPageUrl("Login")} className="ml-2">
-                  <Button className="glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30 text-sm h-9 px-3">
-                    Sign In
-                  </Button>
-                </Link>
+                <Button 
+                  onClick={handleLogin}
+                  className="ml-2 glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30 text-sm h-9 px-3"
+                >
+                  Sign In
+                </Button>
               )}
             </div>
 
@@ -241,11 +247,12 @@ export default function Layout({ children, currentPageName }) {
                     Logout
                   </Button>
                 ) : (
-                  <Link to={createPageUrl("Login")} onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full mt-2 glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30 text-sm">
-                      Sign In
-                    </Button>
-                  </Link>
+                  <Button 
+                    onClick={handleLogin}
+                    className="w-full mt-2 glass-royal border border-blue-500/50 text-white hover:bg-blue-500/30 text-sm"
+                  >
+                    Sign In
+                  </Button>
                 )}
               </div>
             </div>
