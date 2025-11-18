@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
-import { Menu, X, User, LogOut, ArrowLeft, HelpCircle } from "lucide-react";
+import { Menu, X, User, LogOut, ArrowLeft, HelpCircle, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -228,12 +228,18 @@ export default function Layout({ children, currentPageName }) {
                       sideOffset={5}
                     >
                       <DropdownMenuItem asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer text-sm">
-                        <Link to={createPageUrl("Dashboard")}>
-                          <User className="w-4 h-4 mr-2" />
-                          Dashboard
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator className="bg-blue-500/30" />
+                          <Link to={createPageUrl("Dashboard")}>
+                            <User className="w-4 h-4 mr-2" />
+                            Dashboard
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer text-sm">
+                          <Link to={createPageUrl("ManageSubscription")}>
+                            <CreditCard className="w-4 h-4 mr-2" />
+                            Manage Subscription
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator className="bg-blue-500/30" />
                       <DropdownMenuItem 
                         onClick={handleLogout}
                         className="text-red-400 hover:text-red-300 hover:bg-red-500/20 focus:text-red-300 focus:bg-red-500/20 cursor-pointer text-sm"
@@ -303,11 +309,18 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
 
                   {user && (
-                    <Link to={createPageUrl("Dashboard")} onClick={() => setMobileMenuOpen(false)}>
-                      <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-base h-11">
-                        Dashboard
-                      </Button>
-                    </Link>
+                    <>
+                      <Link to={createPageUrl("Dashboard")} onClick={() => setMobileMenuOpen(false)}>
+                        <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-base h-11">
+                          Dashboard
+                        </Button>
+                      </Link>
+                      <Link to={createPageUrl("ManageSubscription")} onClick={() => setMobileMenuOpen(false)}>
+                        <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-base h-11">
+                          Manage Subscription
+                        </Button>
+                      </Link>
+                    </>
                   )}
 
                   {!isConsultationPage && (
