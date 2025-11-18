@@ -16,7 +16,7 @@ export default function HeroSection() {
           <source src="https://i.imgur.com/zs3sPzJ.mp4" type="video/mp4" />
         </video>
         
-        <div className="absolute z-10 bottom-1 right-1 sm:bottom-2 sm:right-2 md:bottom-4 md:right-4">
+        <div className="absolute z-10 bottom-6 right-6 sm:bottom-8 sm:right-8 md:bottom-10 md:right-10">
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png"
             alt="GlyphLock"
