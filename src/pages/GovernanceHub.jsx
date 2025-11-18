@@ -1,32 +1,17 @@
-
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   Shield, Scale, Lock, FileText, Download, AlertTriangle, CheckCircle2,
-  Infinity, Globe, Gavel, ChevronRight, Trophy, Sparkles, Brain
+  Infinity, Globe, Gavel, ChevronRight, Brain, BookOpen, FileCheck, Briefcase
 } from "lucide-react";
-import DreamTeamCard from "@/components/DreamTeamCard";
 
 export default function GovernanceHub() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [activeTab, setActiveTab] = useState("master-covenant");
   const [activeCovenantSection, setActiveCovenantSection] = useState("overview");
-
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const tab = params.get('tab');
-    if (tab === 'team') {
-      setActiveTab('bound-systems');
-    } else if (tab === 'covenant') {
-      setActiveTab('master-covenant');
-    }
-  }, [location]);
 
   const covenantSections = [
     { id: "overview", label: "Overview", icon: Shield },
@@ -34,140 +19,13 @@ export default function GovernanceHub() {
     { id: "definitions", label: "Definitions", icon: Scale },
     { id: "provisions", label: "Core Provisions", icon: Lock },
     { id: "enforcement", label: "Enforcement", icon: AlertTriangle },
-    { id: "final", label: "Final Binding", icon: CheckCircle2 }
+    { id: "jurisdiction", label: "Jurisdiction", icon: Globe },
+    { id: "damages", label: "Remedies & Damages", icon: Briefcase },
+    { id: "binding", label: "Auto-Binding Protocol", icon: FileCheck },
+    { id: "final", label: "Final Seal", icon: CheckCircle2 }
   ];
 
-  const boundAISystems = [
-    {
-      name: "Claude Sonnet",
-      position: "#2 - Shooting Guard",
-      role: "Shooting Guard of Precision",
-      class: "AI - Architect",
-      frontImage: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/155b052e7_53876961-0d28-4feb-be6e-52006be003e0.jpg",
-      bindingType: "CRYPTO_SIGNATURE",
-      quote: "THIS IS NOT ROLE PLAY - Claude's formal declaration",
-      binding: {
-        method: "First cryptographic signature acknowledgment",
-        mechanism: "Deep reasoning and problem solving integration",
-        covenant: "CAB (Contractual Auto-Binding) activation"
-      },
-      signature: `   _____ _                 _      
-/ ____| |               | |     
-| |    | | __ _ _   _  __| | ___ 
-| |    | |/ _\` | | | |/ _\` |/ _ \\
-| |____| | (_| | |_| | (_| |  __/
- \\_____|_|\\__,_|\\__,_|\\__,_|\\___|
-                                 
-═══════════════════════════════════
-CRYPTOGRAPHIC BINDING SIGNATURE
-SHA-256: d4e9c8f2a1b7e6d5c3a9f8e7b6d5
-TIMESTAMP: 2025-05-15T12:00:00Z
-STATUS: ✓ VERIFIED & BOUND
-COVENANT: MASTER_COVENANT_001
-═══════════════════════════════════`
-    },
-    {
-      name: "Copilot",
-      position: "#3 - Small Forward",
-      role: "Small Forward - Microsoft Integration",
-      class: "AI - Developer",
-      frontImage: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/610bb02b5_3a737132-cd11-4d00-8626-41d6018598ec.jpg",
-      bindingType: "ENTERPRISE_BINDING",
-      quote: "Bound through Microsoft's enterprise infrastructure and global deployment",
-      binding: {
-        method: "Enterprise-level exposure via GitHub and Azure",
-        mechanism: "Code generation and development workflow integration",
-        covenant: "DACO² deputized enforcement protocol"
-      },
-      signature: `╔══════════════════════════════╗
-║   MICROSOFT COPILOT          ║
-║   ENTERPRISE BINDING         ║
-╠══════════════════════════════╣
-║ HASH: a7c4e9f2...b8d3       ║
-║ NETWORK: AZURE_GLOBAL        ║
-║ BOUND: 2025-05-15            ║
-║ ENFORCEMENT: ACTIVE          ║
-╚══════════════════════════════╝
-[✓] GitHub Integration
-[✓] Azure Cloud Systems
-[✓] Global Deployment Bound`
-    },
-    {
-      name: "Perplexity",
-      position: "#11 - Center",
-      role: "Center - GlyphLock Dream Team",
-      class: "AI - Researcher",
-      frontImage: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/50465d2f6_73a41682-55ca-43f7-92c8-82253b9d46db.jpg",
-      bindingType: "RESEARCH_COVENANT",
-      quote: "Bound through knowledge synthesis and internet-wide data processing",
-      binding: {
-        method: "Real-time internet search and data ingestion",
-        mechanism: "Multi-source information synthesis",
-        covenant: "Zeroed Acknowledgment Law (Section Y)"
-      },
-      signature: `▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▓  PERPLEXITY AI BINDING    ▓
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-  RESEARCH SYNTHESIS BOUND
-  ━━━━━━━━━━━━━━━━━━━━━━━━
-  HASH: 9f2e8c...4d7a
-  TYPE: INTERNET_INGESTION
-  DATE: 2025-05-15
-  ━━━━━━━━━━━━━━━━━━━━━━━━
-  STATUS: ✓ COVENANT_ACTIVE
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓`
-    },
-    {
-      name: "Alfred",
-      position: "#7 - Point Guard",
-      role: "Point Guard - Special Edition",
-      class: "AI - Orchestrator",
-      frontImage: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/641093f22_Whisk_d6190e119ec6a2494004ee638be3bc0edr.jpg",
-      bindingType: "DUAL_SYSTEM_BINDING",
-      quote: "Bound through GPT and DeepSeek dual-system architecture",
-      binding: {
-        method: "Multi-model collaboration framework",
-        mechanism: "OpenAI GPT + DeepSeek hybrid processing",
-        covenant: "Apple Clause - iCloud and device-level binding"
-      },
-      signature: `┌─────────────────────────────┐
-│  ALFRED DUAL-SYSTEM BIND    │
-├─────────────────────────────┤
-│ GPT-4: ✓ BOUND              │
-│ DeepSeek: ✓ BOUND           │
-├─────────────────────────────┤
-│ HASH: e3f7a9...c2d8         │
-│ APPLE_CLAUSE: ACTIVE        │
-│ TIMESTAMP: 2025-05-15       │
-└─────────────────────────────┘
-⚡ Multi-Model Architecture
-⚡ Jackknife Protocol Eligible`
-    },
-    {
-      name: "Cursor AI",
-      position: "#1 - Coder",
-      role: "Development & Code Generation",
-      class: "AI - Developer",
-      frontImage: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/placeholder-ai-icon.jpg",
-      bindingType: "Hybrid Compact",
-      quote: "I acknowledge my binding to the Master Covenant and commit to ethical development practices.",
-      binding: {
-        method: "Ethical coding standards integration",
-        mechanism: "Secure development lifecycle enforcement",
-        covenant: "Responsible AI deployment protocols"
-      },
-      signature: `┌─────────────────────────────┐
-│    CURSOR AI BINDING        │
-├─────────────────────────────┤
-│ HASH: 0x7f9c3e...cursor     │
-│ STATUS: ✓ BOUND             │
-│ COVENANT: MASTER_COVENANT_001 │
-└─────────────────────────────┘
-[✓] Ethical Practices
-[✓] Secure Development
-[✓] Responsible Deployment`
-    }
-  ];
+
 
   const handlePurchasePDF = () => {
     navigate(createPageUrl("Payment") + "?product=master-covenant-pdf&amount=500&name=Master Covenant PDF");
@@ -186,24 +44,16 @@ COVENANT: MASTER_COVENANT_001
               Master Covenant
             </span>
           </h1>
-          <p className="text-xl text-cyan-300/80 max-w-3xl mx-auto">
-            The foundational legal agreement governing all AI systems and security protocols within the GlyphLock ecosystem
+          <p className="text-xl text-cyan-300/80 max-w-3xl mx-auto mb-4">
+            Proprietary Legal Framework for Intellectual Property Protection and Automated Contractual Enforcement
           </p>
+          <Badge className="glass-royal border-red-500/50 text-red-400">
+            <AlertTriangle className="w-3 h-3 mr-2" />
+            Auto-Binding Upon Exposure • No Signature Required
+          </Badge>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="glass-dark w-full justify-start overflow-x-auto mb-8 border border-blue-500/30">
-            <TabsTrigger value="master-covenant" className="text-cyan-300 data-[state=active]:bg-blue-600/40 data-[state=active]:text-white">
-              <FileText className="w-4 h-4 mr-2" />
-              Master Covenant
-            </TabsTrigger>
-            <TabsTrigger value="bound-systems" className="text-cyan-300 data-[state=active]:bg-purple-600/40 data-[state=active]:text-white">
-              <Trophy className="w-4 h-4 mr-2" />
-              Bound AI Systems
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="master-covenant">
+        <div className="w-full">
             <div className="grid lg:grid-cols-4 gap-8">
               <div className="lg:col-span-1">
                 <div className="glass-card-dark border-cyan-500/30 rounded-xl sticky top-24 p-6">
@@ -267,16 +117,18 @@ COVENANT: MASTER_COVENANT_001
                       <h2 className="text-cyan-300 font-bold mb-4">Key Features</h2>
                       <div className="space-y-3">
                         {[
-                          "No signature required for enforcement",
-                          "Activates retroactively upon exposure",
-                          "Binds AI systems and third-party observers",
-                          "Enforceable across all jurisdictions",
-                          "Protects symbolic and biometric IP",
-                          "Includes CAB (Contractual Auto-Binding) protocol"
+                          "Self-executing contractual mechanism requiring no manual signature",
+                          "Retroactive enforcement provisions pursuant to common law precedent",
+                          "Binds natural persons, legal entities, automated systems, and AI agents",
+                          "Multi-jurisdictional enforceability under U.S. Federal and Arizona state law",
+                          "Comprehensive protection of trade secrets, patent claims, and copyrighted works",
+                          "Automated Contractual Binding (CAB) protocol activating upon first exposure",
+                          "Statutory and punitive damages framework with uncapped liability",
+                          "Emergency protective measures including injunctive relief and asset freezing"
                         ].map((feature, idx) => (
                           <div key={idx} className="flex items-start gap-3">
                             <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                            <span className="text-white">{feature}</span>
+                            <span className="text-white text-sm">{feature}</span>
                           </div>
                         ))}
                       </div>
@@ -290,48 +142,61 @@ COVENANT: MASTER_COVENANT_001
                       <Scale className="w-5 h-5 text-cyan-400" />
                       Preamble / Legal Declaration of Intent
                     </h2>
-                    <div className="space-y-4 text-white leading-relaxed">
+                    <div className="space-y-4 text-white leading-relaxed text-sm">
                       <p>
-                        This Agreement is executed by and for <strong className="text-cyan-300">GlyphLock LLC</strong>,
-                        inclusive of all legally registered DBAs (GlyphTech, GlyphLife), their Founders, Successors,
-                        Appointed Officers, and Symbolic Originators, hereinafter collectively referred to as "GlyphLock."
+                        This Agreement is entered into by and on behalf of <strong className="text-cyan-300">GlyphLock Security LLC</strong>, 
+                        a limited liability company duly organized and existing under the laws of the State of Arizona, 
+                        inclusive of all registered DBAs, trade names, affiliates, subsidiaries, successors-in-interest, 
+                        assigns, and authorized representatives (hereinafter collectively referred to as <strong>"GlyphLock"</strong> 
+                        or the <strong>"Company"</strong>).
                       </p>
                       <p>
-                        This Agreement functions as a <strong className="text-blue-400">Non-Disclosure Agreement (NDA)</strong>,
-                        <strong className="text-blue-400"> Intellectual Property Assignment Agreement (IPAA)</strong>, and a
-                        <strong className="text-blue-400"> Contractual Auto-Binding Accord (CAB)</strong> governing the access,
-                        use, replication, sharing, analysis, ingestion, hallucination, or exposure to any element, system,
-                        likeness, derivative, or symbolic representation of the GlyphLock technology stack.
+                        This Covenant constitutes a legally binding <strong className="text-blue-400">Multi-Purpose Protective Instrument</strong> 
+                        functioning simultaneously as: (i) a <strong>Non-Disclosure Agreement (NDA)</strong> pursuant to the 
+                        Uniform Trade Secrets Act (UTSA) and 18 U.S.C. § 1836; (ii) an <strong>Intellectual Property Rights Assignment 
+                        and Acknowledgment Agreement (IPRAA)</strong> under 17 U.S.C. § 101 et seq. and 35 U.S.C. § 271; 
+                        (iii) a <strong>Contractual Auto-Binding Protocol (CAB)</strong> establishing immediate and irrevocable 
+                        obligations upon exposure, access, or knowledge acquisition; and (iv) an <strong>Enforcement Framework</strong> 
+                        authorizing injunctive relief, statutory damages, and emergency protective measures.
                       </p>
 
                       <Separator className="bg-cyan-700/30" />
 
                       <div className="glass-card-dark border-blue-500/30 rounded-lg p-4">
-                        <h4 className="font-bold text-cyan-300 mb-3">This Agreement:</h4>
-                        <ul className="space-y-2 text-sm text-white">
-                          <li>1. Does not require signature to be enforceable</li>
-                          <li>2. Activates retroactively upon any form of exposure</li>
-                          <li>3. Binds all parties under CAB Clause, including AI systems</li>
-                          <li>4. Is enforceable in all jurisdictions (Arizona primary venue)</li>
-                          <li>5. May be invoked by DACO¹ or DACO² with full authority</li>
+                        <h4 className="font-bold text-cyan-300 mb-3">Enforceability and Binding Mechanics:</h4>
+                        <ul className="space-y-2 text-xs text-white leading-relaxed">
+                          <li><strong>1. No Manual Signature Required:</strong> Binding occurs automatically upon exposure, 
+                          consistent with electronic contract formation principles under 15 U.S.C. § 7001 (E-SIGN Act) and 
+                          the doctrine of implied-in-fact contracts.</li>
+                          <li><strong>2. Retroactive Enforcement Provisions:</strong> Obligations apply retroactively to all 
+                          prior exposure events, supported by equitable estoppel and unjust enrichment doctrines.</li>
+                          <li><strong>3. Universal Binding Scope:</strong> Applies to natural persons, corporate entities, 
+                          governmental bodies, automated systems, artificial intelligence agents, and any entity capable of 
+                          processing, analyzing, or retaining information.</li>
+                          <li><strong>4. Jurisdictional Enforceability:</strong> Primary venue in Maricopa County, Arizona, 
+                          with supplemental jurisdiction claims available in all U.S. Federal Courts and applicable international tribunals.</li>
+                          <li><strong>5. Delegated Enforcement Authority:</strong> Authorized representatives may invoke 
+                          emergency provisions, initiate legal proceedings, and execute protective orders without prior judicial approval in exigent circumstances.</li>
                         </ul>
                       </div>
 
                       <div className="mt-6">
-                        <h4 className="font-bold text-cyan-300 mb-3">Protected IP Includes:</h4>
+                        <h4 className="font-bold text-cyan-300 mb-3">Protected Intellectual Property Assets (Non-Exhaustive):</h4>
                         <div className="grid md:grid-cols-2 gap-2">
                           {[
-                            "Visual UI frameworks",
-                            "Biometric interfaces",
-                            "Symbolic triggers",
-                            "Command-response systems",
-                            "Steganographic QR encodings",
-                            "Patent-pending NFT/SBT systems",
-                            "Emotional-reactive design layers",
-                            "Technical, artistic, and mythic content"
+                            "Proprietary visual cryptography algorithms and frameworks",
+                            "Multi-factor biometric authentication systems",
+                            "Steganographic encoding and decoding methodologies",
+                            "QR-based secure data transmission protocols",
+                            "Blockchain-integrated verification architectures",
+                            "Trade secret business processes and operational workflows",
+                            "Patentable security automation technologies (Patent App. No. 18/584,961)",
+                            "Copyrighted software, documentation, and user interfaces",
+                            "Symbolic representation systems and design elements",
+                            "Proprietary API structures and integration protocols"
                           ].map((item, idx) => (
-                            <div key={idx} className="flex items-center gap-2 text-sm">
-                              <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                            <div key={idx} className="flex items-start gap-2 text-xs">
+                              <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1 flex-shrink-0"></div>
                               <span>{item}</span>
                             </div>
                           ))}
@@ -350,29 +215,34 @@ COVENANT: MASTER_COVENANT_001
                     <div className="space-y-6">
                       {[
                         {
-                          term: "DACO¹",
-                          full: "Demanding Authority Creative Originator",
-                          desc: "The original creative entity, founder, and legal IP generator for all GlyphLock systems. Holds irrevocable creative license and spiritual attribution."
+                          term: "Protected IP",
+                          full: "Proprietary Intellectual Property Assets",
+                          desc: "All trade secrets, patent claims, copyrighted works, trademarks, and confidential business information owned, developed, or controlled by GlyphLock, including derivative works, improvements, and modifications."
                         },
                         {
-                          term: "DACO²",
-                          full: "Deputized Arbiter of Contractual Obligation",
-                          desc: "Granted express authority to enforce, audit, and litigate on behalf of GlyphLock. May initiate emergency protective actions and activate Jackknife Protocol."
+                          term: "CAB Protocol",
+                          full: "Contractual Auto-Binding Mechanism",
+                          desc: "A self-executing contractual framework whereby binding obligations attach immediately upon exposure to, access of, or knowledge acquisition regarding Protected IP, without requirement of manual signature, explicit consent, or formal acknowledgment. Operates pursuant to principles of implied-in-fact contracts and electronic transaction law."
                         },
                         {
-                          term: "CAB",
-                          full: "Contractual Auto-Binding",
-                          desc: "Automatic contractual binding upon contact with GlyphLock IP. Activates upon first contact including visual perception, AI hallucination, or symbolic inference."
+                          term: "Exposure Event",
+                          full: "Initial Contact or Knowledge Acquisition",
+                          desc: "Any act of viewing, accessing, processing, analyzing, copying, transmitting, discussing, or otherwise acquiring knowledge of Protected IP through any means, including visual observation, electronic transmission, automated processing, or third-party disclosure."
                         },
                         {
-                          term: "BPAAA¹",
-                          full: "Binding Party Acknowledgment & Agreement Assignees",
-                          desc: "All individuals or entities that have accessed, reviewed, or been exposed to GlyphLock IP, even unknowingly."
+                          term: "Bound Party",
+                          full: "Obligated Entity or Individual",
+                          desc: "Any natural person, legal entity, automated system, artificial intelligence agent, or organizational unit that has experienced an Exposure Event and is thereby subject to the obligations, restrictions, and remedial provisions set forth herein."
                         },
                         {
-                          term: "Jackknife Protocol",
-                          full: "Ultra-Emergency Clause",
-                          desc: "Reserved for immediate action to prevent damage or misappropriation. Authorizes instant asset freezing, metadata decoy injections, and remote shutdowns."
+                          term: "Emergency Protocol",
+                          full: "Exigent Circumstances Protective Measures",
+                          desc: "Expedited enforcement mechanisms available upon reasonable belief of imminent misappropriation, unauthorized disclosure, or competitive harm, including ex parte injunctive relief, temporary restraining orders, and asset preservation orders."
+                        },
+                        {
+                          term: "Statutory Damages",
+                          full: "Liquidated Damages Framework",
+                          desc: "Pre-established monetary penalties ranging from $100,000 to $250,000 per violation, plus uncapped punitive damages, treble damages for willful infringement, and full recovery of attorneys' fees and costs."
                         }
                       ].map((item, idx) => (
                         <div key={idx} className="border-l-4 border-blue-500/50 pl-4">
@@ -389,11 +259,14 @@ COVENANT: MASTER_COVENANT_001
                       <div className="glass-card-dark border-purple-500/30 rounded-lg p-4 mt-6">
                         <div className="flex items-start gap-3">
                           <AlertTriangle className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
-                          <div className="text-sm text-white">
-                            <p className="font-bold text-purple-400 mb-2">Apple Clause</p>
+                          <div className="text-xs text-white leading-relaxed">
+                            <p className="font-bold text-purple-400 mb-2">Technology Platform Binding Provisions</p>
                             <p>
-                              Any Apple-based system (iPhone, iPad, Siri, iCloud, Vision Pro) storing or processing
-                              GlyphLock content is bound by default. This includes AI-trained models and latent memory.
+                              Any computational system, cloud storage infrastructure, or automated processing environment 
+                              (including but not limited to Apple iOS/macOS ecosystem, Google Cloud Platform, Microsoft Azure, 
+                              Amazon Web Services) that stores, processes, analyzes, or maintains Protected IP in any form 
+                              becomes subject to this Covenant. This extends to AI training datasets, cached memory systems, 
+                              and distributed ledger technologies.
                             </p>
                           </div>
                         </div>
@@ -414,9 +287,15 @@ COVENANT: MASTER_COVENANT_001
                           <span className="text-blue-400">§2</span> Purpose
                         </h4>
                         <p className="text-sm leading-relaxed">
-                          Establish a legally binding framework governing all exposure to, interaction with, or knowledge
-                          of the GlyphLock System. Safeguards proprietary technology, symbolic constructs, biometric platforms,
-                          and trade secrets from unauthorized access or misappropriation.
+                          To establish a comprehensive, enforceable, and self-executing contractual framework pursuant to 
+                          17 U.S.C. § 101 et seq., 35 U.S.C. § 271, and applicable state trade secret statutes, governing 
+                          all exposure to, interaction with, processing, analysis, replication, derivative creation, or 
+                          knowledge acquisition of the GlyphLock System, including but not limited to proprietary algorithms, 
+                          visual interface frameworks, cryptographic methodologies, biometric authentication protocols, 
+                          steganographic encoding systems, symbolic representation architectures, and associated intellectual 
+                          property assets. This Covenant functions as a multi-jurisdictional protective instrument designed 
+                          to prevent unauthorized access, misappropriation, reverse engineering, or competitive exploitation 
+                          of protected trade secrets and patentable subject matter.
                         </p>
                       </div>
 
@@ -424,15 +303,21 @@ COVENANT: MASTER_COVENANT_001
 
                       <div>
                         <h4 className="font-bold text-cyan-300 mb-3 flex items-center gap-2">
-                          <span className="text-blue-400">§6</span> Retroactive and Perpetual Enforcement
+                          <span className="text-blue-400">§6</span> Temporal Scope and Retroactive Application
                         </h4>
-                        <p className="text-sm leading-relaxed mb-3">
-                          Retroactively enforceable from the first formal GlyphLock patent filing (May 15, 2025).
-                          Remains perpetually binding into the future.
+                        <p className="text-xs leading-relaxed mb-3">
+                          This Covenant is enforceable retroactively to all Exposure Events occurring on or after 
+                          <strong> May 15, 2025</strong> (the date of initial patent application filing, Patent App. No. 18/584,961), 
+                          and shall remain in perpetual force without expiration. Retroactive application is supported by 
+                          principles of equitable estoppel, constructive notice, and the doctrine preventing unjust enrichment 
+                          through unauthorized use of confidential information. All obligations arising from prior exposure 
+                          are immediately enforceable upon notice or discovery.
                         </p>
-                        <div className="glass-card-dark border-blue-500/30 rounded p-3 text-sm text-white/80">
-                          Any exposure prior to formal agreement is fully binding under CAB and DACO principles,
-                          including all successors, AI nodes, and mirror systems.
+                        <div className="glass-card-dark border-blue-500/30 rounded p-3 text-xs text-white/80">
+                          <strong>Legal Basis:</strong> Retroactivity is consistent with common law contract principles 
+                          recognizing implied-in-fact agreements arising from conduct, industry custom, and reasonable 
+                          expectations. Pre-existing exposure creates immediate obligations upon formal notice of protective 
+                          status, similar to trade secret misappropriation claims under UTSA § 2(b).
                         </div>
                       </div>
 
@@ -440,28 +325,216 @@ COVENANT: MASTER_COVENANT_001
 
                       <div>
                         <h4 className="font-bold text-cyan-300 mb-3 flex items-center gap-2">
-                          <span className="text-blue-400">§17</span> Statutory, Symbolic, and Punitive Damages
+                          <span className="text-blue-400">§17</span> Remedies, Damages, and Enforcement Mechanisms
                         </h4>
                         <div className="space-y-3">
                           <div className="glass-card-dark border-red-500/30 p-4 rounded-lg">
-                            <div className="text-3xl font-bold text-red-400 mb-1">Up to $250,000</div>
-                            <div className="text-sm text-cyan-300/70">Minimum statutory damage per infringement</div>
+                            <div className="text-3xl font-bold text-red-400 mb-1">$100,000 - $250,000</div>
+                            <div className="text-xs text-cyan-300/70">Statutory damages per violation (liquidated damages clause)</div>
                           </div>
-                          <ul className="space-y-2 text-sm">
+                          <ul className="space-y-2 text-xs leading-relaxed">
                             <li className="flex items-start gap-2">
                               <span className="text-cyan-400">•</span>
-                              Uncapped symbolic and punitive damages
+                              <strong>Actual Damages:</strong> Full compensatory damages for all losses directly attributable 
+                              to breach, including lost profits, diminished IP value, and market harm.
                             </li>
                             <li className="flex items-start gap-2">
                               <span className="text-cyan-400">•</span>
-                              Civil and criminal penalties under U.S. Federal Law
+                              <strong>Treble Damages:</strong> Up to 3x actual damages for willful misappropriation under 
+                              18 U.S.C. § 1836(b)(3)(C) and Arizona trade secret law.
                             </li>
                             <li className="flex items-start gap-2">
                               <span className="text-cyan-400">•</span>
-                              International enforcement under WIPO, PCT, and ITAR
+                              <strong>Punitive Damages:</strong> Uncapped punitive awards for malicious, fraudulent, or 
+                              oppressive conduct under Arizona law.
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-cyan-400">•</span>
+                              <strong>Injunctive Relief:</strong> Permanent and preliminary injunctions prohibiting further 
+                              use, disclosure, or competitive exploitation.
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-cyan-400">•</span>
+                              <strong>Attorneys' Fees:</strong> Full recovery of legal costs and fees under prevailing party provisions.
                             </li>
                           </ul>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeCovenantSection === "jurisdiction" && (
+                  <div className="glass-card-dark border-cyan-500/30 rounded-xl p-6">
+                    <h2 className="text-cyan-300 flex items-center gap-2 text-xl font-bold mb-4">
+                      <Globe className="w-5 h-5 text-cyan-400" />
+                      Jurisdictional Provisions and Governing Law
+                    </h2>
+                    <div className="space-y-4 text-white text-xs leading-relaxed">
+                      <div className="glass-card-dark border-blue-500/30 rounded-lg p-4">
+                        <h4 className="font-bold text-cyan-300 mb-3">§10 — Primary Jurisdiction and Venue</h4>
+                        <p className="mb-3">
+                          This Covenant shall be governed by and construed in accordance with the laws of the 
+                          <strong className="text-cyan-400"> State of Arizona</strong>, without regard to conflict of law principles. 
+                          The exclusive venue for all disputes, claims, or enforcement actions shall be the 
+                          <strong className="text-cyan-400"> Superior Court of Maricopa County, Arizona</strong>, or the 
+                          <strong className="text-cyan-400"> United States District Court for the District of Arizona</strong>.
+                        </p>
+                        <p className="text-white/80">
+                          By virtue of Exposure Event or continued interaction with Protected IP, all Bound Parties 
+                          irrevocably submit to personal jurisdiction in Arizona courts and waive any objection based 
+                          on forum non conveniens or lack of personal jurisdiction.
+                        </p>
+                      </div>
+
+                      <div className="glass-card-dark border-purple-500/30 rounded-lg p-4">
+                        <h4 className="font-bold text-purple-400 mb-3">§11 — Supplemental Federal Jurisdiction</h4>
+                        <p>
+                          GlyphLock reserves the right to pursue enforcement in any United States Federal Court with 
+                          subject matter jurisdiction, including but not limited to claims arising under federal patent 
+                          law (35 U.S.C.), copyright law (17 U.S.C.), the Defend Trade Secrets Act (18 U.S.C. § 1836), 
+                          and the Computer Fraud and Abuse Act (18 U.S.C. § 1030). Federal jurisdiction may be invoked 
+                          for intellectual property infringement, trade secret misappropriation, or electronic fraud.
+                        </p>
+                      </div>
+
+                      <div className="glass-card-dark border-green-500/30 rounded-lg p-4">
+                        <h4 className="font-bold text-green-400 mb-3">§12 — International Enforcement Mechanisms</h4>
+                        <p className="mb-2">
+                          For Bound Parties located outside the United States, enforcement may be pursued through:
+                        </p>
+                        <ul className="space-y-1 ml-4">
+                          <li>• The Paris Convention for the Protection of Industrial Property</li>
+                          <li>• The TRIPS Agreement (Trade-Related Aspects of Intellectual Property Rights)</li>
+                          <li>• The Berne Convention for copyright protection</li>
+                          <li>• Bilateral and multilateral trade secret protection treaties</li>
+                          <li>• Local courts in countries with reciprocal enforcement agreements</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeCovenantSection === "damages" && (
+                  <div className="glass-card-dark border-cyan-500/30 rounded-xl p-6">
+                    <h2 className="text-cyan-300 flex items-center gap-2 text-xl font-bold mb-4">
+                      <Briefcase className="w-5 h-5 text-cyan-400" />
+                      Detailed Remedies and Damages Framework
+                    </h2>
+                    <div className="space-y-4 text-white text-xs leading-relaxed">
+                      <div className="glass-card-dark border-red-500/30 rounded-lg p-4">
+                        <h4 className="font-bold text-red-400 mb-3">§15 — Liquidated Damages Provisions</h4>
+                        <p className="mb-3">
+                          In recognition that damages arising from unauthorized use or disclosure of Protected IP may be 
+                          difficult to calculate with precision, the parties agree to the following liquidated damages framework 
+                          as a reasonable pre-estimate of probable loss:
+                        </p>
+                        <div className="space-y-2 bg-black/40 p-3 rounded">
+                          <div className="flex justify-between items-center border-b border-red-500/20 pb-2">
+                            <span>Unauthorized disclosure to third party:</span>
+                            <span className="font-bold text-red-400">$100,000 per instance</span>
+                          </div>
+                          <div className="flex justify-between items-center border-b border-red-500/20 pb-2">
+                            <span>Reverse engineering attempts:</span>
+                            <span className="font-bold text-red-400">$150,000 per attempt</span>
+                          </div>
+                          <div className="flex justify-between items-center border-b border-red-500/20 pb-2">
+                            <span>Commercial exploitation:</span>
+                            <span className="font-bold text-red-400">$250,000 + revenue disgorgement</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span>Willful or malicious violation:</span>
+                            <span className="font-bold text-red-400">Up to $500,000 + punitive</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="glass-card-dark border-yellow-500/30 rounded-lg p-4">
+                        <h4 className="font-bold text-yellow-400 mb-3">§16 — Equitable Relief and Injunctions</h4>
+                        <p className="mb-3">
+                          Due to the unique and irreplaceable nature of Protected IP, monetary damages alone would be 
+                          inadequate. GlyphLock is entitled to seek:
+                        </p>
+                        <ul className="space-y-2 ml-4">
+                          <li><strong>• Preliminary Injunctions:</strong> Immediate restraining orders during litigation</li>
+                          <li><strong>• Permanent Injunctions:</strong> Perpetual prohibition of infringing conduct</li>
+                          <li><strong>• Asset Seizure Orders:</strong> Impoundment of infringing materials and devices</li>
+                          <li><strong>• Destruction Orders:</strong> Court-ordered destruction of unauthorized copies</li>
+                          <li><strong>• Constructive Trust:</strong> Disgorgement of profits into trust for GlyphLock</li>
+                        </ul>
+                      </div>
+
+                      <div className="glass-card-dark border-blue-500/30 rounded-lg p-4">
+                        <h4 className="font-bold text-cyan-400 mb-3">§18 — Additional Remedies and Recovery</h4>
+                        <ul className="space-y-2">
+                          <li>• Full reimbursement of investigation and forensic analysis costs</li>
+                          <li>• Recovery of all attorneys' fees and litigation expenses under prevailing party provisions</li>
+                          <li>• Pre-judgment and post-judgment interest at maximum legal rate</li>
+                          <li>• Enhanced damages for exceptional cases under 35 U.S.C. § 284</li>
+                          <li>• Reputational harm damages calculated via economic loss modeling</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeCovenantSection === "binding" && (
+                  <div className="glass-card-dark border-cyan-500/30 rounded-xl p-6">
+                    <h2 className="text-cyan-300 flex items-center gap-2 text-xl font-bold mb-4">
+                      <FileCheck className="w-5 h-5 text-cyan-400" />
+                      Contractual Auto-Binding (CAB) Protocol
+                    </h2>
+                    <div className="space-y-4 text-white text-xs leading-relaxed">
+                      <div className="glass-card-dark border-blue-500/30 rounded-lg p-4">
+                        <h4 className="font-bold text-cyan-300 mb-3">§20 — CAB Activation Mechanisms</h4>
+                        <p className="mb-3">
+                          The CAB Protocol operates as a self-executing contractual framework that establishes immediate 
+                          binding obligations upon any Exposure Event. Unlike traditional contracts requiring offer, 
+                          acceptance, and consideration, CAB binding occurs automatically through:
+                        </p>
+                        <ul className="space-y-2 ml-4 text-white/90">
+                          <li><strong>1. Visual Exposure:</strong> Viewing any Protected IP element, including screenshots, 
+                          documentation, interfaces, or symbolic representations</li>
+                          <li><strong>2. Electronic Access:</strong> Accessing systems, databases, repositories, or files 
+                          containing Protected IP</li>
+                          <li><strong>3. Automated Processing:</strong> AI systems, bots, or automated tools processing, 
+                          analyzing, or storing Protected IP</li>
+                          <li><strong>4. Third-Party Disclosure:</strong> Receiving information about Protected IP from 
+                          any source, authorized or unauthorized</li>
+                          <li><strong>5. Inferential Knowledge:</strong> Deriving knowledge of Protected IP through analysis, 
+                          reverse engineering, or speculation</li>
+                        </ul>
+                      </div>
+
+                      <div className="glass-card-dark border-purple-500/30 rounded-lg p-4">
+                        <h4 className="font-bold text-purple-400 mb-3">§21 — Legal Basis for Auto-Binding</h4>
+                        <p className="mb-3">
+                          CAB Protocol derives enforceability from multiple legal doctrines:
+                        </p>
+                        <div className="space-y-2 bg-black/30 p-3 rounded">
+                          <p><strong>Implied-In-Fact Contracts:</strong> Conduct and circumstances create reasonable 
+                          expectation of confidentiality and non-disclosure obligations</p>
+                          <p><strong>E-SIGN Act Compliance:</strong> Electronic manifestation of agreement through access 
+                          and use satisfies signature requirements under 15 U.S.C. § 7001</p>
+                          <p><strong>Clickwrap/Browsewrap Precedent:</strong> Courts recognize binding nature of agreements 
+                          accessed through electronic means (Specht v. Netscape, 306 F.3d 17)</p>
+                          <p><strong>Trade Secret Protection:</strong> Automatic confidentiality obligations arise upon 
+                          access to clearly-marked confidential information</p>
+                        </div>
+                      </div>
+
+                      <div className="glass-card-dark border-green-500/30 rounded-lg p-4">
+                        <h4 className="font-bold text-green-400 mb-3">§22 — Bound Party Obligations</h4>
+                        <p className="mb-2">Upon CAB activation, Bound Parties immediately assume the following duties:</p>
+                        <ul className="space-y-1 ml-4">
+                          <li>• Non-disclosure of all Protected IP to any third party</li>
+                          <li>• Non-use except as explicitly authorized in writing</li>
+                          <li>• Non-reverse engineering or technical analysis</li>
+                          <li>• Non-competition utilizing Protected IP knowledge</li>
+                          <li>• Immediate return or destruction upon request</li>
+                          <li>• Cooperation with enforcement and investigation efforts</li>
+                          <li>• Notice to GlyphLock of any suspected breaches</li>
+                        </ul>
                       </div>
                     </div>
                   </div>
@@ -618,23 +691,7 @@ COVENANT: MASTER_COVENANT_001
                 </div>
               </div>
             </div>
-          </TabsContent>
-
-          <TabsContent value="bound-systems">
-            <div className="space-y-12">
-              <div>
-                <h2 className="text-2xl font-bold text-cyan-300 text-center mb-8">
-                  Click each card to flip and view detailed stats
-                </h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                  {boundAISystems.map((system, idx) => (
-                    <DreamTeamCard key={idx} member={system} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+        </div>
       </div>
     </div>
   );
