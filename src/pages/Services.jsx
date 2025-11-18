@@ -180,11 +180,11 @@ export default function Services() {
           {/* Services Grid */}
           <div className="space-y-12 mb-16">
             {services.map((service, idx) => (
-              <Card key={service.id} className={`glass-card-dark border-${service.color}-500/30`}>
+              <Card key={service.id} className="glass-card-dark border-blue-500/30">
                 <CardHeader>
                   <div className="flex items-start gap-4">
-                    <div className={`p-3 rounded-xl bg-${service.color}-500/20 border border-${service.color}-500/50`}>
-                      <service.icon className={`w-8 h-8 text-${service.color}-400`} />
+                    <div className="p-3 rounded-xl bg-blue-500/20 border border-blue-500/50">
+                      <service.icon className="w-8 h-8 text-blue-400" />
                     </div>
                     <div className="flex-1">
                       <CardTitle className="text-2xl text-white mb-2">{service.title}</CardTitle>
@@ -196,13 +196,13 @@ export default function Services() {
                   <div className="grid md:grid-cols-2 gap-3 mb-6">
                     {service.features.map((feature, fIdx) => (
                       <div key={fIdx} className="flex items-start gap-2">
-                        <CheckCircle2 className={`w-4 h-4 text-${service.color}-400 mt-1 flex-shrink-0`} />
+                        <CheckCircle2 className="w-4 h-4 text-blue-400 mt-1 flex-shrink-0" />
                         <span className="text-sm text-white/80">{feature}</span>
                       </div>
                     ))}
                   </div>
                   <Link to={createPageUrl(service.page)}>
-                    <Button className={`bg-${service.color}-600 hover:bg-${service.color}-700 text-white`}>
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                       Learn More & Try Demo
                     </Button>
                   </Link>

@@ -144,11 +144,11 @@ export default function Solutions() {
 
           <div className="grid lg:grid-cols-2 gap-8 mb-16">
             {solutions.map((solution, idx) => (
-              <Card key={idx} className={`glass-card-dark border-${solution.color}-500/30 hover:border-${solution.color}-500/50 transition-all`}>
+              <Card key={idx} className="glass-card-dark border-blue-500/30 hover:border-blue-500/50 transition-all">
                 <CardContent className="p-8">
                   <div className="flex items-start gap-4 mb-6">
-                    <div className={`p-3 rounded-xl bg-${solution.color}-500/20 border border-${solution.color}-500/50`}>
-                      <solution.icon className={`w-8 h-8 text-${solution.color}-400`} />
+                    <div className="p-3 rounded-xl bg-blue-500/20 border border-blue-500/50">
+                      <solution.icon className="w-8 h-8 text-blue-400" />
                     </div>
                     <div className="flex-1">
                       <h2 className="text-2xl font-bold text-white mb-2">{solution.industry}</h2>
@@ -159,14 +159,14 @@ export default function Solutions() {
                   <div className="space-y-2 mb-6">
                     {solution.features.map((feature, fIdx) => (
                       <div key={fIdx} className="flex items-start gap-2">
-                        <CheckCircle2 className={`w-4 h-4 text-${solution.color}-400 mt-0.5 flex-shrink-0`} />
+                        <CheckCircle2 className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                         <span className="text-sm text-white/80">{feature}</span>
                       </div>
                     ))}
                   </div>
 
                   <Link to={createPageUrl(solution.page)}>
-                    <Button className={`w-full bg-${solution.color}-600 hover:bg-${solution.color}-700 text-white`}>
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                       {solution.cta}
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
