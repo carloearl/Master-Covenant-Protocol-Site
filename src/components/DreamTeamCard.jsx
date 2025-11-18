@@ -11,16 +11,16 @@ export default function DreamTeamCard({ card, member }) {
 
   return (
     <div 
-      className="relative h-[600px] w-full max-w-[450px] mx-auto cursor-pointer perspective-1000"
+      className="relative w-full cursor-pointer perspective-1000"
       onClick={() => setIsFlipped(!isFlipped)}
     >
-      <div className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+      <div className={`relative w-full transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
         {/* Front of Card */}
-        <div className="absolute inset-0 backface-hidden">
+        <div className="relative backface-hidden">
           <img 
             src={data.frontImage} 
             alt={data.name}
-            className="w-full h-full object-cover"
+            className="w-full h-auto"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 via-purple-500/20 to-cyan-500/30 animate-pulse-slow pointer-events-none" />
         </div>
