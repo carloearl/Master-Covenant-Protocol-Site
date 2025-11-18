@@ -714,13 +714,7 @@ export default function Partners() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-violet-500/30 bg-violet-500/5 p-4">
-            <p className="text-xs text-white/70 leading-relaxed">
-              <strong className="text-violet-400">Target Partners:</strong> Clubs, POS providers, hardware OEMs, 
-              government agencies, defense contractors, and enterprise security integrators seeking proven, 
-              scalable cybersecurity technology they can deploy under license without equity complications.
-            </p>
-          </div>
+
 
           <p className="text-white/60 text-xs mt-4 italic border-t border-blue-500/30 pt-4">
             <strong>No outside equity. No dilution. No investor pressure.</strong> Only aligned partners and licensors 
