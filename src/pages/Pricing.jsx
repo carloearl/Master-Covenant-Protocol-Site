@@ -10,12 +10,14 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function Pricing() {
   const [billingCycle, setBillingCycle] = useState("monthly");
+  const [loading, setLoading] = useState(null);
 
   const plans = [
     {
       name: "Professional",
       icon: Shield,
       price: { monthly: 299, annual: 2990 },
+      priceId: { monthly: "price_1S1DRYAOe9xXPv0n6sIFWQuk", annual: "price_1S1DRYAOe9xXPv0n6sIFWQuk" },
       description: "For individuals and small teams",
       features: [
         "All Visual Cryptography Tools",
@@ -31,6 +33,7 @@ export default function Pricing() {
       name: "Enterprise",
       icon: Crown,
       price: { monthly: 999, annual: 9990 },
+      priceId: { monthly: "price_1S1E4uAOe9xXPv0nByLqrpFg", annual: "price_1S1E4uAOe9xXPv0nByLqrpFg" },
       description: "For organizations requiring advanced security",
       features: [
         "Everything in Professional",
@@ -62,18 +65,31 @@ export default function Pricing() {
     }
   ];
 
-  const handleSubscribe = async (planName) => {
+  const handleSubscribe = async (plan) => {
     try {
+      setLoading(plan.name);
       const isAuth = await base44.auth.isAuthenticated();
+      
       if (!isAuth) {
         base44.auth.redirectToLogin('/pricing');
         return;
       }
 
-      // TODO: Implement Stripe checkout session creation
-      alert(`Subscription to ${planName} - Coming Soon!`);
+      const response = await base44.functions.invoke('stripeCreateCheckout', {
+        priceId: plan.priceId[billingCycle],
+        mode: 'subscription',
+        successUrl: `${window.location.origin}${createPageUrl('PaymentSuccess')}`,
+        cancelUrl: `${window.location.origin}${createPageUrl('Pricing')}`
+      });
+
+      if (response.data.url) {
+        window.location.href = response.data.url;
+      }
     } catch (error) {
       console.error('Subscription error:', error);
+      alert('Error creating checkout session. Please try again.');
+    } finally {
+      setLoading(null);
     }
   };
 
@@ -172,14 +188,15 @@ export default function Pricing() {
                     </Link>
                   ) : (
                     <Button
-                      onClick={() => handleSubscribe(plan.name)}
+                      onClick={() => handleSubscribe(plan)}
+                      disabled={loading === plan.name}
                       className={`w-full ${
                         plan.highlighted
                           ? "bg-blue-600 hover:bg-blue-700"
                           : "bg-gray-800 hover:bg-gray-700"
                       } text-white`}
                     >
-                      Get Started
+                      {loading === plan.name ? "Processing..." : "Get Started"}
                     </Button>
                   )}
                 </CardContent>

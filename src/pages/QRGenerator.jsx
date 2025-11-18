@@ -1,16 +1,15 @@
-// DEPRECATED: Use VisualCryptography page instead
-// This file redirects to the consolidated Visual Cryptography page
-
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import React from "react";
+import PaywallGuard from "@/components/PaywallGuard";
+import QRGeneratorTab from "@/components/crypto/QRGeneratorTab";
 
 export default function QRGenerator() {
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    navigate(createPageUrl("VisualCryptography"), { replace: true });
-  }, []);
-  
-  return null;
+  return (
+    <PaywallGuard serviceName="QR Generator" requirePlan="professional">
+      <div className="min-h-screen bg-black text-white py-20">
+        <div className="container mx-auto px-4">
+          <QRGeneratorTab />
+        </div>
+      </div>
+    </PaywallGuard>
+  );
 }

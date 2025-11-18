@@ -1,16 +1,15 @@
-// DEPRECATED: Use SecurityOperationsCenter page instead
-// This file redirects to the consolidated SOC page
+import React from "react";
+import PaywallGuard from "@/components/PaywallGuard";
+import HotzoneMapper from "@/components/security/HotzoneMapper";
 
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-
-export default function HotzoneMapper() {
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    navigate(createPageUrl("SecurityOperationsCenter"), { replace: true });
-  }, []);
-  
-  return null;
+export default function HotzoneMapperPage() {
+  return (
+    <PaywallGuard serviceName="Hotzone Mapper" requirePlan="enterprise">
+      <div className="min-h-screen bg-black text-white py-20">
+        <div className="container mx-auto px-4">
+          <HotzoneMapper />
+        </div>
+      </div>
+    </PaywallGuard>
+  );
 }

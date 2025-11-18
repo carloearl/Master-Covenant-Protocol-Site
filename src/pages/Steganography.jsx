@@ -1,16 +1,15 @@
-// DEPRECATED: Use VisualCryptography page instead
-// This file redirects to the consolidated Visual Cryptography page
-
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import React from "react";
+import PaywallGuard from "@/components/PaywallGuard";
+import SteganographyTab from "@/components/crypto/SteganographyTab";
 
 export default function Steganography() {
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    navigate(createPageUrl("VisualCryptography"), { replace: true });
-  }, []);
-  
-  return null;
+  return (
+    <PaywallGuard serviceName="Steganography" requirePlan="professional">
+      <div className="min-h-screen bg-black text-white py-20">
+        <div className="container mx-auto px-4">
+          <SteganographyTab />
+        </div>
+      </div>
+    </PaywallGuard>
+  );
 }

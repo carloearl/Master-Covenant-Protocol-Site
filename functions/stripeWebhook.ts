@@ -5,15 +5,21 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"), {
   apiVersion: '2023-10-16',
 });
 
+const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
+
 Deno.serve(async (req) => {
   try {
     const signature = req.headers.get('stripe-signature');
     const body = await req.text();
 
+    if (!signature || !webhookSecret) {
+      return Response.json({ error: 'Missing signature or webhook secret' }, { status: 400 });
+    }
+
     const event = await stripe.webhooks.constructEventAsync(
       body,
       signature,
-      Deno.env.get("STRIPE_WEBHOOK_SECRET")
+      webhookSecret
     );
 
     const base44 = createClientFromRequest(req);
@@ -21,33 +27,50 @@ Deno.serve(async (req) => {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object;
-        const userId = session.metadata?.user_id;
-        const userEmail = session.metadata?.user_email;
+        const userEmail = session.customer_email || session.metadata?.user_email;
+        
+        if (!userEmail) break;
 
-        if (session.mode === 'payment') {
-          await base44.asServiceRole.entities.Consultation.filter({ email: userEmail }).then(async consultations => {
-            if (consultations.length > 0) {
-              await base44.asServiceRole.entities.Consultation.update(consultations[0].id, {
-                payment_status: 'paid',
-                stripe_payment_intent_id: session.payment_intent,
-                amount_paid: session.amount_total,
-                payment_date: new Date().toISOString(),
-              });
-            }
+        // Update user subscription status
+        const users = await base44.asServiceRole.entities.User.filter({ email: userEmail });
+        if (users.length > 0) {
+          await base44.asServiceRole.entities.User.update(users[0].id, {
+            subscription_status: 'active',
+            subscription_plan: session.metadata?.plan || 'professional',
+            stripe_customer_id: session.customer,
+            stripe_subscription_id: session.subscription,
+            subscription_start_date: new Date().toISOString()
           });
         }
         break;
       }
 
-      case 'payment_intent.succeeded': {
-        const paymentIntent = event.data.object;
-        console.log('Payment succeeded:', paymentIntent.id);
+      case 'customer.subscription.updated': {
+        const subscription = event.data.object;
+        const users = await base44.asServiceRole.entities.User.filter({ 
+          stripe_subscription_id: subscription.id 
+        });
+        
+        if (users.length > 0) {
+          await base44.asServiceRole.entities.User.update(users[0].id, {
+            subscription_status: subscription.status === 'active' ? 'active' : 'inactive'
+          });
+        }
         break;
       }
 
-      case 'payment_intent.payment_failed': {
-        const paymentIntent = event.data.object;
-        console.error('Payment failed:', paymentIntent.id);
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object;
+        const users = await base44.asServiceRole.entities.User.filter({ 
+          stripe_subscription_id: subscription.id 
+        });
+        
+        if (users.length > 0) {
+          await base44.asServiceRole.entities.User.update(users[0].id, {
+            subscription_status: 'cancelled',
+            subscription_end_date: new Date().toISOString()
+          });
+        }
         break;
       }
     }
