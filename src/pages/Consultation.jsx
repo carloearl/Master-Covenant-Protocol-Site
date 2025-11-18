@@ -23,7 +23,6 @@ export default function Consultation() {
     preferred_date: ""
   });
 
-  // Pre-fill email from URL parameter if available
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const emailParam = urlParams.get('email');
@@ -35,7 +34,6 @@ export default function Consultation() {
   const createConsultation = useMutation({
     mutationFn: (data) => base44.entities.Consultation.create(data),
     onSuccess: (result) => {
-      // Redirect to payment page with consultation ID
       navigate(createPageUrl("Payment") + `?consultation_id=${result.id}`);
     }
   });
@@ -60,7 +58,7 @@ export default function Consultation() {
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Book Your <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Consultation</span>
             </h1>
-            <p className="text-xl text-gray-400">
+            <p className="text-xl text-white/70">
               Schedule a consultation with our cybersecurity experts
             </p>
             <p className="text-blue-400 mt-2">$299 consultation fee • Applied to final project cost</p>
@@ -68,7 +66,7 @@ export default function Consultation() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <Card className="bg-gray-900 border-gray-800">
+              <Card className="glass-card-dark border-blue-500/30">
                 <CardHeader>
                   <CardTitle className="text-white">Consultation Request Form</CardTitle>
                 </CardHeader>
@@ -82,7 +80,7 @@ export default function Consultation() {
                           required
                           value={formData.full_name}
                           onChange={(e) => setFormData({...formData, full_name: e.target.value})}
-                          className="bg-gray-800 border-gray-700 text-white"
+                          className="glass-card-dark border-blue-500/30 text-white"
                         />
                       </div>
                       <div>
@@ -93,7 +91,7 @@ export default function Consultation() {
                           required
                           value={formData.email}
                           onChange={(e) => setFormData({...formData, email: e.target.value})}
-                          className="bg-gray-800 border-gray-700 text-white"
+                          className="glass-card-dark border-blue-500/30 text-white"
                         />
                       </div>
                     </div>
@@ -105,7 +103,7 @@ export default function Consultation() {
                           id="company"
                           value={formData.company}
                           onChange={(e) => setFormData({...formData, company: e.target.value})}
-                          className="bg-gray-800 border-gray-700 text-white"
+                          className="glass-card-dark border-blue-500/30 text-white"
                         />
                       </div>
                       <div>
@@ -115,7 +113,7 @@ export default function Consultation() {
                           type="tel"
                           value={formData.phone}
                           onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                          className="bg-gray-800 border-gray-700 text-white"
+                          className="glass-card-dark border-blue-500/30 text-white"
                         />
                       </div>
                     </div>
@@ -127,10 +125,10 @@ export default function Consultation() {
                           value={formData.service_interest}
                           onValueChange={(value) => setFormData({...formData, service_interest: value})}
                         >
-                          <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+                          <SelectTrigger className="glass-card-dark border-blue-500/30 text-white">
                             <SelectValue placeholder="Select a service" />
                           </SelectTrigger>
-                          <SelectContent className="bg-gray-800 border-gray-700">
+                          <SelectContent className="glass-card-dark border-blue-500/30">
                             <SelectItem value="Master Covenant">Master Covenant</SelectItem>
                             <SelectItem value="Security Tools">Security Tools</SelectItem>
                             <SelectItem value="NUPS POS">NUPS POS</SelectItem>
@@ -146,7 +144,7 @@ export default function Consultation() {
                           type="date"
                           value={formData.preferred_date}
                           onChange={(e) => setFormData({...formData, preferred_date: e.target.value})}
-                          className="bg-gray-800 border-gray-700 text-white"
+                          className="glass-card-dark border-blue-500/30 text-white"
                           min={new Date().toISOString().split('T')[0]}
                         />
                       </div>
@@ -160,7 +158,7 @@ export default function Consultation() {
                         value={formData.message}
                         onChange={(e) => setFormData({...formData, message: e.target.value})}
                         placeholder="Tell us about your security needs..."
-                        className="bg-gray-800 border-gray-700 text-white"
+                        className="glass-card-dark border-blue-500/30 text-white"
                       />
                     </div>
 
@@ -186,35 +184,35 @@ export default function Consultation() {
                   {benefits.map((benefit, index) => (
                     <div key={index} className="flex items-start gap-3">
                       <benefit.icon className="w-5 h-5 text-blue-400 mt-1" />
-                      <span className="text-gray-300">{benefit.text}</span>
+                      <span className="text-white">{benefit.text}</span>
                     </div>
                   ))}
                 </CardContent>
               </Card>
 
-              <Card className="bg-gray-900 border-gray-800">
+              <Card className="glass-card-dark border-blue-500/30">
                 <CardHeader>
                   <CardTitle className="text-white">Consultation Details</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Consultation Fee:</span>
+                    <span className="text-white/70">Consultation Fee:</span>
                     <span className="font-semibold text-white">$299</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Response Time:</span>
+                    <span className="text-white/70">Response Time:</span>
                     <span className="font-semibold text-white">24 hours</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Duration:</span>
+                    <span className="text-white/70">Duration:</span>
                     <span className="font-semibold text-white">60 minutes</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Format:</span>
+                    <span className="text-white/70">Format:</span>
                     <span className="font-semibold text-white">Video Call</span>
                   </div>
-                  <div className="pt-3 border-t border-gray-700">
-                    <p className="text-gray-400 text-xs">
+                  <div className="pt-3 border-t border-blue-500/30">
+                    <p className="text-white/70 text-xs">
                       * Consultation fee is fully credited toward your final project cost if you proceed with our services.
                     </p>
                   </div>
@@ -225,7 +223,7 @@ export default function Consultation() {
                 <CardContent className="p-6 text-center">
                   <Shield className="w-12 h-12 text-green-400 mx-auto mb-3" />
                   <h3 className="font-bold text-white mb-2">100% Satisfaction Guarantee</h3>
-                  <p className="text-sm text-gray-300">
+                  <p className="text-sm text-white">
                     If you're not satisfied, we'll refund your consultation fee within 48 hours.
                   </p>
                 </CardContent>
