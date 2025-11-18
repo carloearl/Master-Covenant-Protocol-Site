@@ -17,7 +17,7 @@ export default function Pricing() {
       name: "Professional",
       icon: Shield,
       price: { monthly: 299, annual: 2990 },
-      priceId: { monthly: "price_1S1DRYAOe9xXPv0n6sIFWQuk", annual: "price_1S1DRYAOe9xXPv0n6sIFWQuk" },
+      priceId: "price_1S1E4uAOe9xXPv0nByLqrpFg",
       description: "For individuals and small teams",
       features: [
         "All Visual Cryptography Tools",
@@ -33,7 +33,7 @@ export default function Pricing() {
       name: "Enterprise",
       icon: Crown,
       price: { monthly: 999, annual: 9990 },
-      priceId: { monthly: "price_1S1E4uAOe9xXPv0nByLqrpFg", annual: "price_1S1E4uAOe9xXPv0nByLqrpFg" },
+      priceId: "price_1S1E4uAOe9xXPv0nByLqrpFg",
       description: "For organizations requiring advanced security",
       features: [
         "Everything in Professional",
@@ -71,23 +71,27 @@ export default function Pricing() {
       const isAuth = await base44.auth.isAuthenticated();
       
       if (!isAuth) {
-        base44.auth.redirectToLogin('/pricing');
+        base44.auth.redirectToLogin(window.location.pathname);
         return;
       }
 
+      const origin = window.location.origin;
+      
       const response = await base44.functions.invoke('stripeCreateCheckout', {
-        priceId: plan.priceId[billingCycle],
-        mode: 'subscription',
-        successUrl: `${window.location.origin}${createPageUrl('PaymentSuccess')}`,
-        cancelUrl: `${window.location.origin}${createPageUrl('Pricing')}`
+        priceId: plan.priceId,
+        mode: 'payment',
+        successUrl: `${origin}${createPageUrl('PaymentSuccess')}?session_id={CHECKOUT_SESSION_ID}`,
+        cancelUrl: `${origin}${createPageUrl('Pricing')}`
       });
 
-      if (response.data.url) {
+      if (response.data?.url) {
         window.location.href = response.data.url;
+      } else {
+        throw new Error('No checkout URL returned');
       }
     } catch (error) {
       console.error('Subscription error:', error);
-      alert('Error creating checkout session. Please try again.');
+      alert(`Error: ${error.message || 'Failed to create checkout session'}`);
     } finally {
       setLoading(null);
     }
