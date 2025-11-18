@@ -87,7 +87,7 @@ export default function Layout({ children, currentPageName }) {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white relative">
+    <div className="min-h-screen bg-black text-white relative overflow-x-hidden">
       <InteractiveNebula />
       
       <TooltipProvider>
@@ -126,13 +126,17 @@ export default function Layout({ children, currentPageName }) {
                   </Button>
                 </Link>
                 
-                <DropdownMenu>
+                <DropdownMenu modal={false}>
                   <DropdownMenuTrigger asChild>
                     <Button className="bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-sm h-10 px-4">
                       Company
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="glass-royal border-blue-500/50 bg-black/90 backdrop-blur-xl shadow-2xl z-[110]">
+                  <DropdownMenuContent 
+                    className="glass-royal border-blue-500/50 bg-black/95 backdrop-blur-xl shadow-2xl"
+                    align="start"
+                    sideOffset={5}
+                  >
                     {navigationConfig.main.find(item => item.label === "Company")?.dropdown.map((subItem) => (
                       <DropdownMenuItem key={subItem.page} asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer text-sm">
                         <Link to={createPageUrl(subItem.page)}>{subItem.label}</Link>
@@ -141,13 +145,17 @@ export default function Layout({ children, currentPageName }) {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                <DropdownMenu>
+                <DropdownMenu modal={false}>
                   <DropdownMenuTrigger asChild>
                     <Button className="bg-transparent border-none text-white hover:text-blue-400 hover:bg-blue-500/20 text-sm h-10 px-4">
                       Security
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="glass-royal border-blue-500/50 bg-black/90 backdrop-blur-xl shadow-2xl z-[110]">
+                  <DropdownMenuContent 
+                    className="glass-royal border-blue-500/50 bg-black/95 backdrop-blur-xl shadow-2xl"
+                    align="start"
+                    sideOffset={5}
+                  >
                     {navigationConfig.main.find(item => item.label === "Security")?.dropdown.map((subItem) => (
                       <DropdownMenuItem key={subItem.page} asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer text-sm">
                         <Link to={createPageUrl(subItem.page)}>{subItem.label}</Link>
@@ -207,14 +215,18 @@ export default function Layout({ children, currentPageName }) {
                 )}
 
                 {user ? (
-                  <DropdownMenu>
+                  <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                       <Button className="ml-2 glass-royal border border-blue-500/30 text-white hover:bg-blue-500/30 text-sm h-10 px-4">
                         <User className="w-4 h-4 mr-2" />
                         {user.full_name?.split(' ')[0] || 'User'}
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="glass-royal border-blue-500/50 bg-black/90 backdrop-blur-xl shadow-2xl z-[110]">
+                    <DropdownMenuContent 
+                      className="glass-royal border-blue-500/50 bg-black/95 backdrop-blur-xl shadow-2xl"
+                      align="end"
+                      sideOffset={5}
+                    >
                       <DropdownMenuItem asChild className="text-white hover:text-blue-400 hover:bg-blue-500/30 focus:text-blue-400 focus:bg-blue-500/30 cursor-pointer text-sm">
                         <Link to={createPageUrl("Dashboard")}>
                           <User className="w-4 h-4 mr-2" />
