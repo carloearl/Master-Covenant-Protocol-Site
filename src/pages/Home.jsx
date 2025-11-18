@@ -10,6 +10,8 @@ import ServicesGrid from '@/components/home/ServicesGrid';
 import BoundAICards from '@/components/home/BoundAICards';
 import BoundAISystemsSection from '@/components/home/BoundAISystemsSection';
 import CTASection from '@/components/home/CTASection';
+import SEOHead from '@/components/SEOHead';
+import SecurityMonitor from '@/components/SecurityMonitor';
 
 const useScrollEffect = (sectionRef) => {
   const [style, setStyle] = useState({ transform: 'perspective(1000px)', opacity: 1 });
@@ -89,10 +91,18 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-full">
-      <ScrollSection>
-        <HeroSection />
-      </ScrollSection>
+    <>
+      <SEOHead 
+        title="GlyphLock - Quantum-Resistant Cybersecurity & AI Security Platform"
+        description="Enterprise cybersecurity with quantum-resistant encryption, AI threat detection, visual cryptography, blockchain security, and secure POS systems. Protect your business with GlyphLock."
+        keywords="quantum-resistant encryption, cybersecurity platform, AI security, threat detection, visual cryptography, QR code security, blockchain security, enterprise security, POS system, fraud prevention, data encryption, security operations center, GlyphBot AI assistant"
+        url="/"
+      />
+      <SecurityMonitor />
+      <div className="w-full">
+        <ScrollSection>
+          <HeroSection />
+        </ScrollSection>
 
       <ScrollSection>
         <HeroContent />
@@ -125,6 +135,7 @@ export default function Home() {
       <ScrollSection>
         <CTASection />
       </ScrollSection>
-    </div>
+      </div>
+    </>
   );
 }

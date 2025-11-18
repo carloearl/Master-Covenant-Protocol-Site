@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Shield, Zap, Crown, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import SEOHead from "@/components/SEOHead";
 
 export default function Pricing() {
   const [billingCycle, setBillingCycle] = useState("monthly");
@@ -111,8 +112,15 @@ export default function Pricing() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white py-20">
-      <div className="container mx-auto px-4">
+    <>
+      <SEOHead 
+        title="Pricing - GlyphLock Cybersecurity Plans | Professional & Enterprise"
+        description="Choose from Professional ($200/mo) or Enterprise ($2000/mo) cybersecurity plans. Get quantum-resistant encryption, AI security, visual cryptography, and enterprise POS systems."
+        keywords="cybersecurity pricing, security subscription plans, enterprise security pricing, professional security tools, monthly security plans, cybersecurity packages"
+        url="/pricing"
+      />
+      <div className="min-h-screen bg-black text-white py-20">
+        <div className="container mx-auto px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -223,6 +231,7 @@ export default function Pricing() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

@@ -39,6 +39,7 @@ import ImageGenerator from './pages/ImageGenerator';
 import Partners from './pages/Partners';
 import StripeSubscriptionSetup from './pages/StripeSubscriptionSetup';
 import ManageSubscription from './pages/ManageSubscription';
+import Robots from './pages/Robots';
 import __Layout from './Layout.jsx';
 
 
@@ -84,6 +85,7 @@ export const PAGES = {
     "Partners": Partners,
     "StripeSubscriptionSetup": StripeSubscriptionSetup,
     "ManageSubscription": ManageSubscription,
+    "Robots": Robots,
 }
 
 export const pagesConfig = {

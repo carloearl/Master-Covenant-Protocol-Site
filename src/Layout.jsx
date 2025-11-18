@@ -4,6 +4,7 @@ import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { Menu, X, User, LogOut, ArrowLeft, HelpCircle, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import SecurityMonitor from "@/components/SecurityMonitor";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -88,6 +89,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-x-hidden">
+      <SecurityMonitor />
       <InteractiveNebula />
       
       <TooltipProvider>
