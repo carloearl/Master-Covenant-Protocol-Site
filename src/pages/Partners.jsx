@@ -759,6 +759,8 @@ export default function Partners() {
             </div>
           </div>
 
+
+
           <p className="text-white/60 text-xs mt-4 italic border-t border-blue-500/30 pt-4">
             <strong>No outside equity. No dilution. No investor pressure.</strong> Only aligned partners and licensors 
             committed to scaling GlyphLock's technology through strategic deployment.
