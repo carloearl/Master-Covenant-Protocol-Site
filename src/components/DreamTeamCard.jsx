@@ -18,13 +18,13 @@ export default function DreamTeamCard({ card, member }) {
       <div className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
         {/* Front of Card */}
         <div className="absolute inset-0 backface-hidden">
-          <div className="relative w-full h-full rounded-2xl overflow-hidden border-2 border-blue-500/50">
+          <div className="relative w-full h-full rounded-2xl border-2 border-blue-500/50">
             <img 
               src={data.frontImage} 
               alt={data.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain rounded-2xl"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
           </div>
         </div>
 
