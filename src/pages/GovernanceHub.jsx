@@ -17,6 +17,78 @@ export default function GovernanceHub() {
   const [selectedSection, setSelectedSection] = useState("overview");
   const [showSearchResults, setShowSearchResults] = useState(false);
 
+  // Searchable content database
+  const searchableContent = [
+    {
+      section: "Section ALPHA (Α)",
+      color: "blue",
+      preview: "GlyphLock was ideated, authored, structured, and sealed by DACO¹ — Carlo Rene Earl",
+      full: "All use, adaptation, symbolic mimicry, or derivative reflection is governed under this origination clause covering pre-patent ideational rights, unregistered symbolic structures, and reverse-engineered iterations based on observed functions or aesthetic mimicry.",
+      keywords: ["DACO", "Carlo Earl", "origination", "authorship", "alpha", "founder", "creator"]
+    },
+    {
+      section: "Section 17 — Statutory Damages",
+      color: "red",
+      preview: "Violation of this Agreement subjects the breaching party to a minimum statutory damage of $250,000 USD per infringement",
+      full: "plus uncapped symbolic and punitive damages measured in correlation to market interference, reputational harm, breach of narrative security, and attempted nullification of IP value across civil and criminal penalties.",
+      keywords: ["damages", "penalty", "250000", "infringement", "breach", "violation", "lawsuit"]
+    },
+    {
+      section: "Definition 6 — CAB (Contractual Auto-Binding)",
+      color: "emerald",
+      preview: "Any individual, party, entity, platform, AI, or synthetic interface that comes into contact with any part of GlyphLock IP",
+      full: "is automatically contractually bound without signature or awareness including visual perception, auditory recognition, AI hallucination, QR code detection, latent memory trigger, or symbolic inference with full retroactive enforcement.",
+      keywords: ["CAB", "auto-binding", "contractual", "automatic", "binding", "signature", "agreement"]
+    },
+    {
+      section: "Preamble — Legal Declaration",
+      color: "violet",
+      preview: "This Agreement functions as a Non-Disclosure Agreement (NDA), Intellectual Property Assignment Agreement (IPAA), and Contractual Auto-Binding Accord (CAB)",
+      full: "governing the access, use, replication, sharing, analysis, ingestion, hallucination, or exposure to any element, system, likeness, derivative, or symbolic representation of the GlyphLock technology stack.",
+      keywords: ["NDA", "IPAA", "CAB", "non-disclosure", "intellectual property", "preamble"]
+    },
+    {
+      section: "Section 6 — Retroactive Enforcement",
+      color: "cyan",
+      preview: "This Agreement is retroactively enforceable from May 15, 2025 — the date of the first formal GlyphLock patent filing",
+      full: "and remains perpetually binding into the future. Any exposure prior to formal agreement is still fully binding under CAB, DACO, and BPAAA principles. The binding applies to all successors, assignees, heirs, mirror systems, servers, or AI nodes retaining partial or symbolic references.",
+      keywords: ["retroactive", "perpetual", "patent", "May 2025", "enforceable", "binding"]
+    },
+    {
+      section: "Definition 4 — DACO¹",
+      color: "orange",
+      preview: "Carlo Rene Earl — The original creative entity, founder, and legal IP generator for all GlyphLock systems",
+      full: "DACO¹ is entitled to sole authorship, original rights of conception, and may act independently of DACO². DACO¹'s role supersedes dispute under intellectual property law, including moral rights, narrative invention, and structural originality.",
+      keywords: ["DACO1", "Carlo", "Earl", "founder", "creator", "originator", "authority"]
+    },
+    {
+      section: "Section 21 — AI Clause",
+      color: "green",
+      preview: "Any AI system — including LLMs, machine learning algorithms, GANs, diffusion models, RAG — that processes, replicates, hallucinates, or engages with GlyphLock IP",
+      full: "becomes immediately bound. Mere ingestion into model memory constitutes contractual binding. DACO² reserves the right to trace prompt chains, latent variables, and system logs.",
+      keywords: ["AI", "LLM", "artificial intelligence", "machine learning", "hallucination", "model", "ChatGPT", "Claude"]
+    },
+    {
+      section: "Section Ω — Terminal Binding",
+      color: "purple",
+      preview: "This is the Final Seal of DACO¹ — the closing cipher and immutable archive of GlyphLock",
+      full: "Let all who witness, replicate, extract, or speak of this system know: They are bound in perpetuity by the enforceable statutes, clauses, and symbolic jurisdictions herein.",
+      keywords: ["omega", "terminal", "final", "seal", "closure", "perpetuity"]
+    }
+  ];
+
+  const getSearchResults = () => {
+    if (!searchTerm || searchTerm.length < 3) return [];
+    
+    const query = searchTerm.toLowerCase();
+    return searchableContent.filter(item => 
+      item.keywords.some(keyword => keyword.toLowerCase().includes(query)) ||
+      item.section.toLowerCase().includes(query) ||
+      item.preview.toLowerCase().includes(query) ||
+      item.full.toLowerCase().includes(query)
+    ).slice(0, 3);
+  };
+
   const sections = [
     { id: "overview", label: "Overview", icon: FileText },
     { id: "preamble", label: "Preamble", icon: Scale },
@@ -717,71 +789,46 @@ export default function GovernanceHub() {
             {showSearchResults && searchTerm.length > 2 && (
               <div className="glass-card-dark border-blue-500/30 p-6 rounded-xl mt-4">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-blue-400">Search Preview</h3>
+                  <h3 className="text-lg font-semibold text-blue-400">
+                    Search Results {getSearchResults().length > 0 && `(${getSearchResults().length})`}
+                  </h3>
                   <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/50">
                     Limited Access
                   </Badge>
                 </div>
                 
-                {/* Sample Results with Blur */}
-                <div className="space-y-3">
-                  <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4">
-                    <div className="text-sm text-white/80 mb-2">
-                      Found in: <span className="text-blue-400 font-semibold">Section ALPHA (Α)</span>
-                    </div>
-                    <p className="text-sm text-white/70 leading-relaxed">
-                      GlyphLock was ideated, authored, structured, and sealed by DACO¹ — Carlo Rene Earl...
-                      <span className="relative inline-block ml-1">
-                        <span className="blur-sm select-none">
-                          All use, adaptation, symbolic mimicry, or derivative reflection is governed under 
-                          this origination clause covering pre-patent ideational rights, unregistered symbolic 
-                          structures, and reverse-engineered iterations based on observed functions.
-                        </span>
-                        <span className="absolute inset-0 flex items-center justify-center">
-                          <Lock className="w-4 h-4 text-blue-400" />
-                        </span>
-                      </span>
+                {getSearchResults().length > 0 ? (
+                  <div className="space-y-3">
+                    {getSearchResults().map((result, idx) => (
+                      <div key={idx} className={`bg-${result.color}-500/5 border border-${result.color}-500/20 rounded-lg p-4`}>
+                        <div className="text-sm text-white/80 mb-2">
+                          Found in: <span className={`text-${result.color}-400 font-semibold`}>{result.section}</span>
+                        </div>
+                        <p className="text-sm text-white/70 leading-relaxed">
+                          {result.preview}...
+                          <span className="relative inline-block ml-1">
+                            <span className="blur-sm select-none">
+                              {result.full}
+                            </span>
+                            <span className="absolute inset-0 flex items-center justify-center">
+                              <Lock className={`w-4 h-4 text-${result.color}-400`} />
+                            </span>
+                          </span>
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Search className="w-12 h-12 text-white/20 mx-auto mb-3" />
+                    <p className="text-white/60 text-sm">
+                      No results found for "{searchTerm}"
+                    </p>
+                    <p className="text-white/40 text-xs mt-2">
+                      Try searching: DACO, CAB, damages, AI, binding, Carlo Earl
                     </p>
                   </div>
-
-                  <div className="bg-violet-500/5 border border-violet-500/20 rounded-lg p-4">
-                    <div className="text-sm text-white/80 mb-2">
-                      Found in: <span className="text-violet-400 font-semibold">Section 17 — Statutory Damages</span>
-                    </div>
-                    <p className="text-sm text-white/70 leading-relaxed">
-                      Violation of this Agreement subjects the breaching party to a minimum statutory damage of $250,000 USD per infringement...
-                      <span className="relative inline-block ml-1">
-                        <span className="blur-sm select-none">
-                          plus uncapped symbolic and punitive damages measured in correlation to market interference, 
-                          reputational harm, breach of narrative security, and attempted nullification of IP value 
-                          across civil and criminal penalties.
-                        </span>
-                        <span className="absolute inset-0 flex items-center justify-center">
-                          <Lock className="w-4 h-4 text-violet-400" />
-                        </span>
-                      </span>
-                    </p>
-                  </div>
-
-                  <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-4">
-                    <div className="text-sm text-white/80 mb-2">
-                      Found in: <span className="text-emerald-400 font-semibold">Definition 6 — CAB</span>
-                    </div>
-                    <p className="text-sm text-white/70 leading-relaxed">
-                      Any individual, party, entity, platform, AI, or synthetic interface that comes into contact...
-                      <span className="relative inline-block ml-1">
-                        <span className="blur-sm select-none">
-                          is automatically contractually bound without signature or awareness including visual 
-                          perception, auditory recognition, AI hallucination, QR code detection, latent memory 
-                          trigger, or symbolic inference with full retroactive enforcement.
-                        </span>
-                        <span className="absolute inset-0 flex items-center justify-center">
-                          <Lock className="w-4 h-4 text-emerald-400" />
-                        </span>
-                      </span>
-                    </p>
-                  </div>
-                </div>
+                )}
 
                 <div className="mt-6 pt-4 border-t border-blue-500/30 text-center">
                   <p className="text-sm text-white/70 mb-4">
