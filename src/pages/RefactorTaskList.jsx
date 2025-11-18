@@ -68,7 +68,7 @@ export default function RefactorTaskList() {
       { id: 49, title: "Social Media Integration - Share Features", status: "pending", priority: "low" },
       { id: 50, title: "Blog System - Content Management", status: "pending", priority: "low" },
       { id: 51, title: "Newsletter Signup - Email Marketing", status: "pending", priority: "low" },
-      { id: 52, title: "FAQ System - Help Center", status: "pending", priority: "low" },
+      { id: 52, title: "FAQ System - Help Center", status: "completed", priority: "low" },
       { id: 53, title: "Live Chat Support - GlyphBot Jr", status: "completed", priority: "low" },
       { id: 54, title: "Testimonials Page - Customer Reviews", status: "completed", priority: "low" },
       { id: 55, title: "Press Kit - Media Resources", status: "pending", priority: "low" },
