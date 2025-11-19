@@ -462,7 +462,7 @@ export default function Layout({ children, currentPageName }) {
         </nav>
 
         {/* PAGE CONTENT */}
-        <main className="min-h-screen pt-24 pb-8 relative z-0">{children}</main>
+        <main className="min-h-screen pt-24 pb-8 relative z-10">{children}</main>
 
         <GlyphBotJr />
 
