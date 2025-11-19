@@ -152,27 +152,26 @@ export default function MessageBubble({ message, autoRead = false }) {
         try {
             setIsLoading(true);
             
-            const response = await base44.functions.invoke('textToSpeech', {
+            const { data } = await base44.functions.invoke('textToSpeech', {
                 text: text,
                 voice: voiceId
             });
 
-            if (response?.data) {
-                const blob = new Blob([response.data], { type: 'audio/mpeg' });
-                const url = URL.createObjectURL(blob);
+            const uint8Array = new Uint8Array(data);
+            const blob = new Blob([uint8Array], { type: 'audio/mpeg' });
+            const url = URL.createObjectURL(blob);
+            
+            if (audioRef.current) {
+                audioRef.current.src = url;
+                audioRef.current.playbackRate = playbackSpeed;
+                audioRef.current.onended = () => setIsSpeaking(false);
+                audioRef.current.onerror = () => {
+                    setIsSpeaking(false);
+                    setIsLoading(false);
+                };
                 
-                if (audioRef.current) {
-                    audioRef.current.src = url;
-                    audioRef.current.playbackRate = playbackSpeed;
-                    audioRef.current.onended = () => setIsSpeaking(false);
-                    audioRef.current.onerror = () => {
-                        setIsSpeaking(false);
-                        setIsLoading(false);
-                    };
-                    
-                    setIsSpeaking(true);
-                    await audioRef.current.play();
-                }
+                setIsSpeaking(true);
+                await audioRef.current.play();
             }
         } catch (error) {
             console.error('TTS Error:', error);
@@ -223,7 +222,7 @@ export default function MessageBubble({ message, autoRead = false }) {
                                             )}
                                         </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="glass-dark border-blue-500/30 min-w-[250px] max-h-[500px] overflow-y-auto">
+                                    <DropdownMenuContent className="glass-dark border-blue-500/30 min-w-[250px] max-h-[500px] overflow-y-auto bg-black/95 backdrop-blur-xl">
                                        {isSpeaking ? (
                                            <DropdownMenuItem onClick={stopSpeaking} className="text-white hover:bg-blue-500/20">
                                                <Square className="h-3 w-3 mr-2" />
