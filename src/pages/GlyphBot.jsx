@@ -17,6 +17,8 @@ import PersonaSelector from "../components/glyphbot/PersonaSelector";
 import CodeExecutor from "../components/glyphbot/CodeExecutor";
 import SecurityScanner from "../components/glyphbot/SecurityScanner";
 import AuditGenerator from "../components/glyphbot/AuditGenerator";
+import LanguageSelector from "../components/glyphbot/LanguageSelector";
+import KnowledgeBaseConnector from "../components/glyphbot/KnowledgeBaseConnector";
 import FreeTrialGuard from "@/components/FreeTrialGuard";
 
 export default function GlyphBot() {
@@ -30,6 +32,8 @@ export default function GlyphBot() {
   const [selectedPersona, setSelectedPersona] = useState("default");
   const [autoRead, setAutoRead] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
+  const [knowledgeBases, setKnowledgeBases] = useState([]);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -136,6 +140,8 @@ export default function GlyphBot() {
     const messageContent = inputMessage.trim();
 
     let finalContent = messageContent;
+    
+    // Add persona context
     if (selectedPersona !== "default") {
       const personaContexts = {
         "ethical-hacker": "As an ethical hacker focused on offensive security and penetration testing, ",
@@ -144,6 +150,23 @@ export default function GlyphBot() {
         "smart-contract-auditor": "As a blockchain security expert specializing in smart contracts, "
       };
       finalContent = personaContexts[selectedPersona] + messageContent;
+    }
+
+    // Add language context
+    if (selectedLanguage !== 'en') {
+      const languageNames = {
+        es: 'Spanish', fr: 'French', de: 'German', it: 'Italian', pt: 'Portuguese',
+        ru: 'Russian', zh: 'Chinese', ja: 'Japanese', ko: 'Korean', ar: 'Arabic',
+        hi: 'Hindi', tr: 'Turkish', pl: 'Polish', nl: 'Dutch', sv: 'Swedish',
+        no: 'Norwegian', da: 'Danish', fi: 'Finnish', el: 'Greek'
+      };
+      finalContent = `[Respond in ${languageNames[selectedLanguage]}] ${finalContent}`;
+    }
+
+    // Add knowledge base context
+    if (knowledgeBases.length > 0) {
+      const kbContext = knowledgeBases.map(kb => kb.url).join(', ');
+      finalContent = `${finalContent}\n\n[Context: Consider information from these knowledge bases: ${kbContext}]`;
     }
 
     setInputMessage("");
@@ -271,9 +294,13 @@ export default function GlyphBot() {
               <p className="text-sm text-white/80">AI Security Expert powered by Gemini</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <LanguageSelector 
+              selectedLanguage={selectedLanguage}
+              onSelect={setSelectedLanguage}
+            />
             {user && (
-              <div className="flex items-center gap-2 text-white">
+              <div className="hidden md:flex items-center gap-2 text-white">
                 <User className="w-4 h-4" />
                 <span className="text-sm">{user.email}</span>
               </div>
@@ -338,6 +365,15 @@ export default function GlyphBot() {
                   </CardContent>
                 </Card>
 
+                <KnowledgeBaseConnector 
+                  onKnowledgeAdded={(kb) => {
+                    setKnowledgeBases(prev => {
+                      const saved = localStorage.getItem('glyphbot-knowledge-bases');
+                      return saved ? JSON.parse(saved) : [];
+                    });
+                  }}
+                />
+
                 <Card className="bg-gradient-to-br from-blue-500/20 to-blue-700/20 backdrop-blur-md border-blue-500/30">
                   <CardHeader>
                     <CardTitle className="text-base text-white">Capabilities</CardTitle>
@@ -378,6 +414,8 @@ export default function GlyphBot() {
                         {currentConversation && (
                           <p className="text-sm text-white/80 mt-1">
                             {messages.length} messages • {selectedPersona.replace('-', ' ')} mode
+                            {selectedLanguage !== 'en' && ` • ${selectedLanguage.toUpperCase()}`}
+                            {knowledgeBases.length > 0 && ` • ${knowledgeBases.length} KB connected`}
                           </p>
                         )}
                       </div>
