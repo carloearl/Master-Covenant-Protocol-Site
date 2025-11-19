@@ -106,9 +106,13 @@ export default function MessageBubble({ message, autoRead = false }) {
     const [isLoading, setIsLoading] = useState(false);
     const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
     const [pitch, setPitch] = useState(1.0);
+    const [volume, setVolume] = useState(1.0);
+    const [bass, setBass] = useState(0);
+    const [treble, setTreble] = useState(0);
     const audioRef = useRef(null);
     const audioContextRef = useRef(null);
     const sourceNodeRef = useRef(null);
+    const gainNodeRef = useRef(null);
     const hasAutoPlayed = useRef(false);
     
     const copyToClipboard = (text) => {
@@ -186,7 +190,28 @@ export default function MessageBubble({ message, autoRead = false }) {
             source.buffer = decodedData;
             source.playbackRate.value = playbackSpeed * pitch;
 
-            source.connect(audioContext.destination);
+            // Gain (Volume) control
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = volume;
+            gainNodeRef.current = gainNode;
+
+            // Bass filter (low shelf)
+            const bassFilter = audioContext.createBiquadFilter();
+            bassFilter.type = 'lowshelf';
+            bassFilter.frequency.value = 200;
+            bassFilter.gain.value = bass;
+
+            // Treble filter (high shelf)
+            const trebleFilter = audioContext.createBiquadFilter();
+            trebleFilter.type = 'highshelf';
+            trebleFilter.frequency.value = 3000;
+            trebleFilter.gain.value = treble;
+
+            // Connect the chain
+            source.connect(bassFilter);
+            bassFilter.connect(trebleFilter);
+            trebleFilter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
 
             source.onended = () => {
                 setIsSpeaking(false);
@@ -268,13 +293,7 @@ export default function MessageBubble({ message, autoRead = false }) {
                                                            max="2.0" 
                                                            step="0.1" 
                                                            value={playbackSpeed}
-                                                           onChange={(e) => {
-                                                               const newSpeed = parseFloat(e.target.value);
-                                                               setPlaybackSpeed(newSpeed);
-                                                               if (audioRef.current) {
-                                                                   audioRef.current.playbackRate = newSpeed;
-                                                               }
-                                                           }}
+                                                           onChange={(e) => setPlaybackSpeed(parseFloat(e.target.value))}
                                                            className="w-full h-1 bg-blue-500/30 rounded-lg appearance-none cursor-pointer"
                                                            onClick={(e) => e.stopPropagation()}
                                                        />
@@ -288,6 +307,51 @@ export default function MessageBubble({ message, autoRead = false }) {
                                                            step="0.1" 
                                                            value={pitch}
                                                            onChange={(e) => setPitch(parseFloat(e.target.value))}
+                                                           className="w-full h-1 bg-blue-500/30 rounded-lg appearance-none cursor-pointer"
+                                                           onClick={(e) => e.stopPropagation()}
+                                                       />
+                                                   </div>
+                                                   <div>
+                                                       <label className="text-[10px] text-white/70 block mb-1">Volume: {Math.round(volume * 100)}%</label>
+                                                       <input 
+                                                           type="range" 
+                                                           min="0" 
+                                                           max="2" 
+                                                           step="0.1" 
+                                                           value={volume}
+                                                           onChange={(e) => {
+                                                               const newVolume = parseFloat(e.target.value);
+                                                               setVolume(newVolume);
+                                                               if (gainNodeRef.current) {
+                                                                   gainNodeRef.current.gain.value = newVolume;
+                                                               }
+                                                           }}
+                                                           className="w-full h-1 bg-blue-500/30 rounded-lg appearance-none cursor-pointer"
+                                                           onClick={(e) => e.stopPropagation()}
+                                                       />
+                                                   </div>
+                                                   <div>
+                                                       <label className="text-[10px] text-white/70 block mb-1">Bass: {bass > 0 ? '+' : ''}{bass} dB</label>
+                                                       <input 
+                                                           type="range" 
+                                                           min="-10" 
+                                                           max="10" 
+                                                           step="1" 
+                                                           value={bass}
+                                                           onChange={(e) => setBass(parseFloat(e.target.value))}
+                                                           className="w-full h-1 bg-blue-500/30 rounded-lg appearance-none cursor-pointer"
+                                                           onClick={(e) => e.stopPropagation()}
+                                                       />
+                                                   </div>
+                                                   <div>
+                                                       <label className="text-[10px] text-white/70 block mb-1">Treble: {treble > 0 ? '+' : ''}{treble} dB</label>
+                                                       <input 
+                                                           type="range" 
+                                                           min="-10" 
+                                                           max="10" 
+                                                           step="1" 
+                                                           value={treble}
+                                                           onChange={(e) => setTreble(parseFloat(e.target.value))}
                                                            className="w-full h-1 bg-blue-500/30 rounded-lg appearance-none cursor-pointer"
                                                            onClick={(e) => e.stopPropagation()}
                                                        />
