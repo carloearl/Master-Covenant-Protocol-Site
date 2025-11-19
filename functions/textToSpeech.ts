@@ -1,16 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 const voiceProfiles = {
-  professional: { lang: 'en-US' },
-  friendly: { lang: 'en-GB' },
-  calm: { lang: 'en-AU' },
-  energetic: { lang: 'en-IN' },
-  thoughtful: { lang: 'en-GB' },
-  authoritative: { lang: 'en-US' },
-  warm: { lang: 'en-CA' },
-  confident: { lang: 'en-AU' },
-  soothing: { lang: 'en-GB' },
-  dynamic: { lang: 'en-US' }
+  'en': { lang: 'en' },
+  'en-gb': { lang: 'en-gb' },
+  'en-au': { lang: 'en-au' }
 };
 
 Deno.serve(async (req) => {
@@ -22,14 +15,14 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { text, voice = 'professional' } = await req.json();
+    const { text, voice = 'en' } = await req.json();
     
     if (!text) {
       return Response.json({ error: 'Text is required' }, { status: 400 });
     }
 
-    const profile = voiceProfiles[voice] || voiceProfiles.professional;
-    const lang = profile.lang.slice(0, 2);
+    const profile = voiceProfiles[voice] || voiceProfiles['en'];
+    const lang = profile.lang;
     
     const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${encodeURIComponent(text)}`;
     

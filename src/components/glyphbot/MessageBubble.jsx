@@ -113,16 +113,9 @@ export default function MessageBubble({ message, autoRead = false }) {
     };
 
     const voicePersonalities = [
-        { id: 'professional', name: 'Professional', icon: '👔', description: 'Clear & confident business voice' },
-        { id: 'friendly', name: 'Friendly', icon: '😊', description: 'Warm & approachable companion' },
-        { id: 'calm', name: 'Calm', icon: '🧘', description: 'Relaxed & soothing meditation voice' },
-        { id: 'energetic', name: 'Energetic', icon: '⚡', description: 'Upbeat & dynamic motivator' },
-        { id: 'thoughtful', name: 'Thoughtful', icon: '🤔', description: 'Deliberate & wise mentor' },
-        { id: 'authoritative', name: 'Authoritative', icon: '🎯', description: 'Commanding & decisive leader' },
-        { id: 'warm', name: 'Warm', icon: '☀️', description: 'Caring & empathetic listener' },
-        { id: 'confident', name: 'Confident', icon: '💪', description: 'Bold & self-assured expert' },
-        { id: 'soothing', name: 'Soothing', icon: '🌙', description: 'Gentle & calming storyteller' },
-        { id: 'dynamic', name: 'Dynamic', icon: '🚀', description: 'Fast-paced & exciting announcer' }
+        { id: 'en', name: 'English (US)', icon: '🇺🇸', description: 'Standard American English' },
+        { id: 'en-gb', name: 'English (UK)', icon: '🇬🇧', description: 'British English' },
+        { id: 'en-au', name: 'English (AU)', icon: '🇦🇺', description: 'Australian English' }
     ];
 
     const stopSpeaking = () => {
