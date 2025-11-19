@@ -10,7 +10,6 @@ import Contact from './pages/Contact';
 import NUPSLogin from './pages/NUPSLogin';
 import NUPSStaff from './pages/NUPSStaff';
 import NUPSOwner from './pages/NUPSOwner';
-import GlyphBot from './pages/GlyphBot';
 import About from './pages/About';
 import Roadmap from './pages/Roadmap';
 import Privacy from './pages/Privacy';
@@ -47,6 +46,7 @@ import Solutions from './pages/Solutions';
 import SiteAuditReport from './pages/SiteAuditReport';
 import TaskTracker from './pages/TaskTracker';
 import ContentGenerator from './pages/ContentGenerator';
+import GlyphBot from './pages/GlyphBot';
 import __Layout from './Layout.jsx';
 
 
@@ -63,7 +63,6 @@ export const PAGES = {
     "NUPSLogin": NUPSLogin,
     "NUPSStaff": NUPSStaff,
     "NUPSOwner": NUPSOwner,
-    "GlyphBot": GlyphBot,
     "About": About,
     "Roadmap": Roadmap,
     "Privacy": Privacy,
@@ -100,6 +99,7 @@ export const PAGES = {
     "SiteAuditReport": SiteAuditReport,
     "TaskTracker": TaskTracker,
     "ContentGenerator": ContentGenerator,
+    "GlyphBot": GlyphBot,
 }
 
 export const pagesConfig = {
