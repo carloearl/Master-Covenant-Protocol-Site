@@ -15,6 +15,16 @@ export default function SEOHead({
     // Update title
     document.title = title;
 
+    // Update favicon
+    let favicon = document.querySelector('link[rel="icon"]');
+    if (!favicon) {
+      favicon = document.createElement('link');
+      favicon.setAttribute('rel', 'icon');
+      document.head.appendChild(favicon);
+    }
+    favicon.setAttribute('href', 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png');
+    favicon.setAttribute('type', 'image/png');
+
     // Update or create meta tags
     const updateMetaTag = (name, content, property = false) => {
       const attribute = property ? 'property' : 'name';
