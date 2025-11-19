@@ -113,59 +113,11 @@ export default function Layout({ children, currentPageName }) {
    * SECURITY & COMPLIANCE SVG SET
    * ------------------------------- */
   const certifications = [
-    {
-      name: "SOC 2",
-      svg: `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="80" height="80" rx="8" fill="#1E3A8A" fill-opacity="0.2"/>
-        <rect x="1" y="1" width="78" height="78" rx="7" stroke="#3B82F6" stroke-width="2"/>
-        <path d="M40 15L52 25V45C52 52 46 57 40 65C34 57 28 52 28 45V25L40 15Z" fill="#3B82F6" fill-opacity="0.3" stroke="#3B82F6" stroke-width="2"/>
-        <text x="40" y="48" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#3B82F6" text-anchor="middle">SOC 2</text>
-        <text x="40" y="62" font-family="Arial, sans-serif" font-size="8" fill="#93C5FD" text-anchor="middle">TYPE II</text>
-      </svg>`,
-    },
-    {
-      name: "GDPR",
-      svg: `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="80" height="80" rx="8" fill="#1E3A8A" fill-opacity="0.2"/>
-        <rect x="1" y="1" width="78" height="78" rx="7" stroke="#3B82F6" stroke-width="2"/>
-        <circle cx="40" cy="35" r="18" fill="#3B82F6" fill-opacity="0.3" stroke="#3B82F6" stroke-width="2"/>
-        <text x="40" y="40" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#3B82F6" text-anchor="middle">GDPR</text>
-        <text x="40" y="62" font-family="Arial, sans-serif" font-size="7" fill="#93C5FD" text-anchor="middle">COMPLIANT</text>
-      </svg>`,
-    },
-    {
-      name: "ISO 27001",
-      svg: `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="80" height="80" rx="8" fill="#1E3A8A" fill-opacity="0.2"/>
-        <rect x="1" y="1" width="78" height="78" rx="7" stroke="#3B82F6" stroke-width="2"/>
-        <circle cx="40" cy="32" r="16" fill="none" stroke="#3B82F6" stroke-width="2"/>
-        <text x="40" y="36" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#3B82F6" text-anchor="middle">ISO</text>
-        <text x="40" y="55" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#3B82F6" text-anchor="middle">27001</text>
-        <text x="40" y="66" font-family="Arial, sans-serif" font-size="7" fill="#93C5FD" text-anchor="middle">CERTIFIED</text>
-      </svg>`,
-    },
-    {
-      name: "PCI DSS",
-      svg: `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="80" height="80" rx="8" fill="#1E3A8A" fill-opacity="0.2"/>
-        <rect x="1" y="1" width="78" height="78" rx="7" stroke="#3B82F6" stroke-width="2"/>
-        <rect x="25" y="22" width="30" height="20" rx="2" fill="#3B82F6" fill-opacity="0.3" stroke="#3B82F6" stroke-width="2"/>
-        <rect x="28" y="28" width="7" height="5" rx="1" fill="#3B82F6"/>
-        <line x1="25" y1="36" x2="55" y2="36" stroke="#3B82F6" stroke-width="2"/>
-        <text x="40" y="56" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#3B82F6" text-anchor="middle">PCI DSS</text>
-        <text x="40" y="66" font-family="Arial, sans-serif" font-size="7" fill="#93C5FD" text-anchor="middle">COMPLIANT</text>
-      </svg>`,
-    },
-    {
-      name: "HIPAA",
-      svg: `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="80" height="80" rx="8" fill="#1E3A8A" fill-opacity="0.2"/>
-        <rect x="1" y="1" width="78" height="78" rx="7" stroke="#3B82F6" stroke-width="2"/>
-        <path d="M40 25C35 25 30 28 30 35V45C30 48 32 50 35 50H45C48 50 50 48 50 45V35C50 28 45 25 40 25Z" fill="#3B82F6" fill-opacity="0.3" stroke="#3B82F6" stroke-width="2"/>
-        <path d="M35 35H38V42H35V35ZM42 35H45V42H42V35Z" fill="#3B82F6"/>
-        <text x="40" y="62" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#3B82F6" text-anchor="middle">HIPAA</text>
-      </svg>`,
-    },
+    { name: "SOC 2", subtitle: "TYPE II" },
+    { name: "GDPR", subtitle: "COMPLIANT" },
+    { name: "ISO 27001", subtitle: "CERTIFIED" },
+    { name: "PCI DSS", subtitle: "COMPLIANT" },
+    { name: "HIPAA", subtitle: "COMPLIANT" }
   ];
 
   return (
@@ -582,13 +534,12 @@ export default function Layout({ children, currentPageName }) {
                   Security & Compliance
                 </h4>
 
-                <div className="flex flex-wrap items-center justify-center gap-8">
+                <div className="flex flex-wrap items-center justify-center gap-6">
                   {certifications.map((cert, idx) => (
-                    <div key={idx} className="flex flex-col items-center gap-2">
-                      <div
-                        dangerouslySetInnerHTML={{ __html: cert.svg }}
-                        className="opacity-80 hover:opacity-100 transition-opacity"
-                      />
+                    <div key={idx} className="glass-dark border-blue-500/30 rounded-lg p-4 w-24 h-24 flex flex-col items-center justify-center hover:border-blue-500/50 transition-all">
+                      <Shield className="w-8 h-8 text-blue-400 mb-2" />
+                      <div className="text-xs font-bold text-white text-center leading-tight">{cert.name}</div>
+                      <div className="text-[10px] text-blue-400 mt-1">{cert.subtitle}</div>
                     </div>
                   ))}
                 </div>
