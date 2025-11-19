@@ -103,7 +103,7 @@ export default function SEOHead({
       },
       "sameAs": []
     });
-  }, [title, description, keywords, image, fullUrl, type]);
+  }, [title, description, keywords, image, ogImage, fullUrl, type]);
 
   return null;
 }
