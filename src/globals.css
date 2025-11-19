@@ -182,8 +182,12 @@ h1, h2, h3, h4, h5, h6, p, span:not([class*="gradient"]), a, li, td, th, label, 
 [class*="Dialog"],
 [class*="Menu"],
 [data-state],
+div[data-radix-portal],
 div[data-radix-portal] > *,
-div[data-radix-popper-content-wrapper] > * {
+div[data-radix-portal] > * > *,
+div[data-radix-popper-content-wrapper],
+div[data-radix-popper-content-wrapper] > *,
+div[data-radix-popper-content-wrapper] > * > * {
   background: rgba(30, 58, 138, 0.3) !important;
   background-color: rgba(30, 58, 138, 0.3) !important;
   backdrop-filter: blur(20px) !important;
@@ -191,6 +195,18 @@ div[data-radix-popper-content-wrapper] > * {
   border: 1px solid rgba(59, 130, 246, 0.5) !important;
   color: white !important;
   z-index: 99999 !important;
+}
+
+/* ABSOLUTE NUCLEAR - EVERY SINGLE DIV */
+div {
+  background-color: transparent !important;
+}
+
+div[class*="bg-white"],
+div[class*="bg-gray"],
+div[class*="bg-slate"] {
+  background: rgba(30, 58, 138, 0.3) !important;
+  background-color: rgba(30, 58, 138, 0.3) !important;
 }
 
 [data-radix-select-item],
@@ -361,10 +377,36 @@ main {
 
 /* Badge variants - Blue Theme */
 [class*="badge"],
+[class*="Badge"],
 [data-badge] {
   background: rgba(59, 130, 246, 0.2) !important;
   border: 1px solid rgba(59, 130, 246, 0.5) !important;
   color: white !important;
+}
+
+/* OVERRIDE EVERYTHING WITH BACKGROUND */
+*[class] {
+  background-image: none !important;
+}
+
+*[style*="background"] {
+  background: rgba(30, 58, 138, 0.3) !important;
+  background-color: rgba(30, 58, 138, 0.3) !important;
+}
+
+/* ALL POSSIBLE BACKGROUND COLORS */
+.bg-white,
+.bg-gray-50,
+.bg-gray-100,
+.bg-gray-200,
+.bg-slate-50,
+.bg-slate-100,
+.bg-slate-200,
+[class*="bg-white"],
+[class*="bg-gray"],
+[class*="bg-slate"] {
+  background: rgba(30, 58, 138, 0.3) !important;
+  background-color: rgba(30, 58, 138, 0.3) !important;
 }
 
 /* Separator - Blue Theme */
