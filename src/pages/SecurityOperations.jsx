@@ -136,6 +136,7 @@ export default function SecurityOperations() {
       const reader = new FileReader();
       reader.onload = (event) => {
         const img = new Image();
+        img.crossOrigin = "anonymous";
         img.onload = () => {
           setImage(img);
           setHotspots([]);
@@ -273,6 +274,7 @@ export default function SecurityOperations() {
 
   const loadMap = (map) => {
     const img = new Image();
+    img.crossOrigin = "anonymous";
     img.onload = () => {
       setImage(img);
       setHotspots(map.hotspots || []);
