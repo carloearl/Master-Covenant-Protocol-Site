@@ -171,59 +171,36 @@ export default function MessageBubble({ message, autoRead = false }) {
 
         try {
             setIsLoading(true);
-            
+
             const apiUrl = `https://api.streamelements.com/kappa/v2/speech?voice=${voiceId}&text=${encodeURIComponent(text)}`;
-            
-            if (pitch === 1.0) {
-                const audio = new Audio(apiUrl);
-                audio.playbackRate = playbackSpeed;
-                
-                audio.onloadeddata = () => {
-                    setIsSpeaking(true);
-                    setIsLoading(false);
-                };
-                
-                audio.onended = () => {
-                    setIsSpeaking(false);
-                };
-                
-                audio.onerror = (e) => {
-                    console.error('Audio playback error:', e);
-                    setIsSpeaking(false);
-                    setIsLoading(false);
-                };
-                
-                audioRef.current = audio;
-                await audio.play();
-            } else {
-                const response = await fetch(apiUrl);
-                const audioBuffer = await response.arrayBuffer();
-                
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                audioContextRef.current = audioContext;
-                
-                const decodedData = await audioContext.decodeAudioData(audioBuffer);
-                
-                const source = audioContext.createBufferSource();
-                source.buffer = decodedData;
-                source.playbackRate.value = playbackSpeed;
-                
-                const pitchShifter = audioContext.createBiquadFilter();
-                pitchShifter.type = 'allpass';
-                pitchShifter.frequency.value = 1000 * pitch;
-                
-                source.connect(pitchShifter);
-                pitchShifter.connect(audioContext.destination);
-                
-                source.onended = () => {
-                    setIsSpeaking(false);
-                };
-                
-                sourceNodeRef.current = source;
-                source.start(0);
-                setIsSpeaking(true);
-                setIsLoading(false);
-            }
+
+            const response = await fetch(apiUrl);
+            const audioBuffer = await response.arrayBuffer();
+
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            audioContextRef.current = audioContext;
+
+            const decodedData = await audioContext.decodeAudioData(audioBuffer);
+
+            const source = audioContext.createBufferSource();
+            source.buffer = decodedData;
+            source.playbackRate.value = playbackSpeed * pitch;
+
+            source.connect(audioContext.destination);
+
+            source.onended = () => {
+                setIsSpeaking(false);
+                if (audioContext.state !== 'closed') {
+                    audioContext.close();
+                }
+            };
+
+            sourceNodeRef.current = source;
+            audioRef.current = { pause: () => source.stop() };
+
+            source.start(0);
+            setIsSpeaking(true);
+            setIsLoading(false);
         } catch (error) {
             console.error('TTS Error:', error);
             setIsLoading(false);
