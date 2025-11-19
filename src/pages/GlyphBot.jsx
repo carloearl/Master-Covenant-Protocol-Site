@@ -71,7 +71,8 @@ export default function GlyphBot() {
       const convos = await base44.agents.listConversations({
         agent_name: "glyphbot"
       });
-      setConversations(convos);
+      const filtered = convos.filter(c => !c.metadata?.deleted);
+      setConversations(filtered);
     } catch (error) {
       console.error("Error loading conversations:", error);
     }
@@ -164,10 +165,18 @@ export default function GlyphBot() {
 
   const deleteConversation = async (conversationId, e) => {
     e?.stopPropagation();
-    if (!window.confirm('Delete this conversation?')) return;
+    if (!window.confirm('Delete this conversation? This cannot be undone.')) return;
     
     try {
-      await base44.agents.deleteConversation(conversationId);
+      console.log('Attempting to delete conversation:', conversationId);
+      
+      if (typeof base44.agents.deleteConversation === 'function') {
+        await base44.agents.deleteConversation(conversationId);
+      } else {
+        await base44.agents.updateConversation(conversationId, {
+          metadata: { deleted: true, deleted_at: new Date().toISOString() }
+        });
+      }
       
       setConversations(prev => prev.filter(c => c.id !== conversationId));
       
@@ -175,9 +184,11 @@ export default function GlyphBot() {
         setCurrentConversation(null);
         setMessages([]);
       }
+      
+      console.log('Conversation deleted successfully');
     } catch (error) {
-      console.error("Error deleting conversation:", error);
-      alert('Failed to delete conversation');
+      console.error("Delete conversation error:", error.message, error);
+      alert(`Failed to delete: ${error.message}`);
     }
   };
 
