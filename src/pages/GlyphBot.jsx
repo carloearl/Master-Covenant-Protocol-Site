@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import {
   Brain, Send, Plus, Upload, Trash2, MessageSquare,
-  Sparkles, Shield, Code, FileText, User
+  Sparkles, Shield, Code, FileText, User, Mic, Square
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import MessageBubble from "../components/glyphbot/MessageBubble";
@@ -26,8 +28,12 @@ export default function GlyphBot() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectedPersona, setSelectedPersona] = useState("default");
+  const [autoRead, setAutoRead] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
 
   useEffect(() => {
     const initAuth = async () => {
@@ -167,6 +173,54 @@ export default function GlyphBot() {
       await loadConversations();
     } catch (error) {
       console.error("Error deleting conversation:", error);
+    }
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        stream.getTracks().forEach(track => track.stop());
+        await transcribeAudio(audioBlob);
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Error starting recording:", error);
+      alert("Could not access microphone");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const transcribeAudio = async (audioBlob) => {
+    try {
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'recording.webm');
+      
+      const response = await base44.functions.invoke('transcribeAudio', { audio: audioBlob });
+      
+      if (response.data?.text) {
+        setInputMessage(response.data.text);
+      }
+    } catch (error) {
+      console.error("Error transcribing audio:", error);
+      alert("Failed to transcribe audio");
     }
   };
 
@@ -338,18 +392,31 @@ export default function GlyphBot() {
                           </div>
                         </div>
                       ) : (
-                        <>
-                          {messages.map((message, index) => (
-                            <MessageBubble key={index} message={message} />
-                          ))}
-                          <div ref={messagesEndRef} />
-                        </>
+                       <>
+                         {messages.map((message, index) => (
+                           <MessageBubble key={index} message={message} autoRead={autoRead} />
+                         ))}
+                         <div ref={messagesEndRef} />
+                       </>
                       )}
                     </div>
 
-                    <div className="border-t border-blue-500/30 pt-4">
+                    <div className="border-t border-blue-500/30 pt-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            id="auto-read"
+                            checked={autoRead}
+                            onCheckedChange={setAutoRead}
+                          />
+                          <Label htmlFor="auto-read" className="text-sm text-white cursor-pointer">
+                            Auto-read responses
+                          </Label>
+                        </div>
+                      </div>
+
                       {selectedFiles.length > 0 && (
-                        <div className="mb-3 flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2">
                           {selectedFiles.map((file, index) => (
                             <div
                               key={index}
@@ -384,6 +451,15 @@ export default function GlyphBot() {
                           className="border-blue-500/50 hover:bg-blue-500/20 text-white"
                         >
                           <Upload className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={isRecording ? stopRecording : startRecording}
+                          className={`border-blue-500/50 hover:bg-blue-500/20 text-white ${isRecording ? 'bg-red-500/30' : ''}`}
+                        >
+                          {isRecording ? <Square className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                         </Button>
                         <Input
                           value={inputMessage}
