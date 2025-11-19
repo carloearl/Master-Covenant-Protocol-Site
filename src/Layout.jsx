@@ -130,7 +130,7 @@ export default function Layout({ children, currentPageName }) {
         {/* ----------------------------------
             NAVIGATION BAR
         ---------------------------------- */}
-        <nav className="fixed top-0 left-0 right-0 z-[100] glass-royal border-b border-blue-500/50 shadow-xl">
+        <nav className="fixed top-0 left-0 right-0 z-[9999] glass-royal border-b border-blue-500/50 shadow-xl">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between h-20">
 
@@ -462,7 +462,7 @@ export default function Layout({ children, currentPageName }) {
         </nav>
 
         {/* PAGE CONTENT */}
-        <main className="pt-20 pb-8 relative z-10">{children}</main>
+        <main className="min-h-screen pt-24 pb-8 relative z-0">{children}</main>
 
         <GlyphBotJr />
 
