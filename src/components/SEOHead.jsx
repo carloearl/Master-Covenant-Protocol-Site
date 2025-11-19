@@ -52,7 +52,10 @@ export default function SEOHead({
     updateMetaTag('og:url', fullUrl, true);
     updateMetaTag('og:title', title, true);
     updateMetaTag('og:description', description, true);
-    updateMetaTag('og:image', image, true);
+    updateMetaTag('og:image', ogImage, true);
+    updateMetaTag('og:image:width', '1200', true);
+    updateMetaTag('og:image:height', '630', true);
+    updateMetaTag('og:image:alt', title, true);
     updateMetaTag('og:site_name', 'GlyphLock', true);
 
     // Twitter
@@ -60,7 +63,8 @@ export default function SEOHead({
     updateMetaTag('twitter:url', fullUrl);
     updateMetaTag('twitter:title', title);
     updateMetaTag('twitter:description', description);
-    updateMetaTag('twitter:image', image);
+    updateMetaTag('twitter:image', ogImage);
+    updateMetaTag('twitter:image:alt', title);
 
     // Canonical link
     let canonical = document.querySelector('link[rel="canonical"]');
