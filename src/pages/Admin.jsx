@@ -151,7 +151,7 @@ export default function Admin() {
               </CardContent>
             </Card>
 
-            <Card className="bg-green-900/20 backdrop-blur-md border-green-500/30">
+            <Card className="glass-card-dark border-green-500/30">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-2">
                   <DollarSign className="w-8 h-8 text-green-400" />
@@ -172,7 +172,7 @@ export default function Admin() {
               </CardContent>
             </Card>
 
-            <Card className="bg-purple-900/20 backdrop-blur-md border-purple-500/30">
+            <Card className="glass-card-dark border-purple-500/30">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-2">
                   <Users className="w-8 h-8 text-purple-400" />
@@ -193,7 +193,7 @@ export default function Admin() {
               </CardContent>
             </Card>
 
-            <Card className="bg-orange-900/20 backdrop-blur-md border-orange-500/30">
+            <Card className="glass-card-dark border-orange-500/30">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-2">
                   <Shield className="w-8 h-8 text-orange-400" />
@@ -217,7 +217,7 @@ export default function Admin() {
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="bg-blue-900/30 backdrop-blur-md border border-blue-500/30">
+            <TabsList className="glass-card-dark border border-blue-500/30">
               <TabsTrigger value="overview" className="text-white data-[state=active]:bg-blue-500/30">
                 <LayoutDashboard className="w-4 h-4 mr-2" />
                 Overview
@@ -248,14 +248,14 @@ export default function Admin() {
             <TabsContent value="overview">
               <div className="grid lg:grid-cols-2 gap-6">
                 {/* Recent Consultations */}
-                <Card className="bg-blue-900/20 backdrop-blur-md border-blue-500/30">
+                <Card className="glass-card-dark border-blue-500/30">
                   <CardHeader>
                     <CardTitle className="text-white">Recent Consultations</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       {consultations.slice(0, 5).map((consultation, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 bg-blue-900/30 backdrop-blur-md rounded-lg border border-blue-500/20">
+                        <div key={index} className="flex items-center justify-between p-3 glass-card-dark rounded-lg border border-blue-500/20">
                           <div className="flex-1">
                             <div className="font-semibold text-white">{consultation.full_name}</div>
                             <div className="text-sm text-white/80">{consultation.service_interest}</div>
@@ -274,33 +274,33 @@ export default function Admin() {
                 </Card>
 
                 {/* System Health */}
-                <Card className="bg-blue-900/20 backdrop-blur-md border-blue-500/30">
+                <Card className="glass-card-dark border-blue-500/30">
                   <CardHeader>
                     <CardTitle className="text-white">System Health</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between p-3 bg-green-500/10 backdrop-blur-md border border-green-500/30 rounded-lg">
+                    <div className="flex items-center justify-between p-3 glass-card-dark border border-green-500/30 rounded-lg">
                       <div className="flex items-center gap-3">
                         <CheckCircle className="w-5 h-5 text-green-400" />
                         <span className="text-white">Payment System</span>
                       </div>
                       <Badge className="bg-green-500/20 text-green-400 border-green-500/50">Online</Badge>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-green-500/10 backdrop-blur-md border border-green-500/30 rounded-lg">
+                    <div className="flex items-center justify-between p-3 glass-card-dark border border-green-500/30 rounded-lg">
                       <div className="flex items-center gap-3">
                         <CheckCircle className="w-5 h-5 text-green-400" />
                         <span className="text-white">Database</span>
                       </div>
                       <Badge className="bg-green-500/20 text-green-400 border-green-500/50">Healthy</Badge>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-green-500/10 backdrop-blur-md border border-green-500/30 rounded-lg">
+                    <div className="flex items-center justify-between p-3 glass-card-dark border border-green-500/30 rounded-lg">
                       <div className="flex items-center gap-3">
                         <CheckCircle className="w-5 h-5 text-green-400" />
                         <span className="text-white">Security Scanning</span>
                       </div>
                       <Badge className="bg-green-500/20 text-green-400 border-green-500/50">Active</Badge>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-blue-500/10 backdrop-blur-md border border-blue-500/30 rounded-lg">
+                    <div className="flex items-center justify-between p-3 glass-card-dark border border-blue-500/30 rounded-lg">
                       <div className="flex items-center gap-3">
                         <Clock className="w-5 h-5 text-white" />
                         <span className="text-white">API Response Time</span>
