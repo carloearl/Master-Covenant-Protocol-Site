@@ -191,26 +191,18 @@ export default function GlyphBot() {
     if (!window.confirm('Delete this conversation? This cannot be undone.')) return;
     
     try {
-      console.log('Attempting to delete conversation:', conversationId);
+      await base44.agents.updateConversation(conversationId, {
+        metadata: { deleted: true, deleted_at: new Date().toISOString() }
+      });
       
-      if (typeof base44.agents.deleteConversation === 'function') {
-        await base44.agents.deleteConversation(conversationId);
-      } else {
-        await base44.agents.updateConversation(conversationId, {
-          metadata: { deleted: true, deleted_at: new Date().toISOString() }
-        });
-      }
-      
-      setConversations(prev => prev.filter(c => c.id !== conversationId));
+      await loadConversations();
       
       if (currentConversation?.id === conversationId) {
         setCurrentConversation(null);
         setMessages([]);
       }
-      
-      console.log('Conversation deleted successfully');
     } catch (error) {
-      console.error("Delete conversation error:", error.message, error);
+      console.error("Delete error:", error);
       alert(`Failed to delete: ${error.message}`);
     }
   };
