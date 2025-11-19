@@ -145,20 +145,30 @@ export default function MessageBubble({ message, autoRead = false }) {
         try {
             setIsLoading(true);
             
-            const lang = voiceId === 'en-gb' ? 'en-gb' : voiceId === 'en-au' ? 'en-au' : 'en';
-            const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${encodeURIComponent(text)}`;
-            
-            const audio = new Audio(ttsUrl);
-            audio.playbackRate = playbackSpeed;
-            audio.onplay = () => setIsSpeaking(true);
-            audio.onended = () => setIsSpeaking(false);
-            audio.onerror = () => {
-                setIsSpeaking(false);
-                setIsLoading(false);
-            };
-            
-            audioRef.current = audio;
-            await audio.play();
+            const response = await base44.functions.invoke('textToSpeech', {
+                text: text,
+                voice: voiceId
+            });
+
+            if (response?.data) {
+                const blob = new Blob([response.data], { type: 'audio/mpeg' });
+                const url = URL.createObjectURL(blob);
+                
+                const audio = new Audio(url);
+                audio.playbackRate = playbackSpeed;
+                audio.onplay = () => setIsSpeaking(true);
+                audio.onended = () => {
+                    setIsSpeaking(false);
+                    URL.revokeObjectURL(url);
+                };
+                audio.onerror = () => {
+                    setIsSpeaking(false);
+                    setIsLoading(false);
+                };
+                
+                audioRef.current = audio;
+                await audio.play();
+            }
         } catch (error) {
             console.error('TTS Error:', error);
         } finally {

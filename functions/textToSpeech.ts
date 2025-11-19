@@ -1,11 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
-const voiceProfiles = {
-  'en': { lang: 'en' },
-  'en-gb': { lang: 'en-gb' },
-  'en-au': { lang: 'en-au' }
-};
-
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -21,27 +15,27 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Text is required' }, { status: 400 });
     }
 
-    const profile = voiceProfiles[voice] || voiceProfiles['en'];
-    const lang = profile.lang;
-    
+    const lang = voice === 'en-gb' ? 'en-gb' : voice === 'en-au' ? 'en-au' : 'en';
     const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${encodeURIComponent(text)}`;
     
     const audioResponse = await fetch(ttsUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Referer': 'https://translate.google.com/'
       }
     });
 
     if (!audioResponse.ok) {
-      throw new Error('TTS unavailable');
+      return Response.json({ error: 'TTS service unavailable' }, { status: 503 });
     }
 
-    const audioData = await audioResponse.arrayBuffer();
+    const audioBuffer = await audioResponse.arrayBuffer();
     
-    return new Response(audioData, {
+    return new Response(audioBuffer, {
       status: 200,
       headers: {
-        'Content-Type': 'audio/mpeg'
+        'Content-Type': 'audio/mpeg',
+        'Content-Length': audioBuffer.byteLength.toString()
       }
     });
 
