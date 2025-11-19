@@ -600,7 +600,7 @@ export default function Layout({ children, currentPageName }) {
                 </div>
 
                 <div className="text-sm space-y-1 text-white/70">
-                  <p>El Mirage, Arizona • Established May 2025</p>
+                  <p>El Mirage, Arizona • Established January 2025</p>
                   <p>
                     <a
                       href="mailto:glyphlock@gmail.com"
