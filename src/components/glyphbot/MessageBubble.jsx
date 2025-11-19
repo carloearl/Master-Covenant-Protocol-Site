@@ -107,24 +107,32 @@ export default function MessageBubble({ message }) {
         navigator.clipboard.writeText(text);
     };
 
+    const voicePersonalities = [
+        { name: 'Professional', rate: 0.92, pitch: 1.0, description: 'Clear & confident' },
+        { name: 'Friendly', rate: 1.05, pitch: 1.1, description: 'Warm & approachable' },
+        { name: 'Calm', rate: 0.85, pitch: 0.95, description: 'Relaxed & soothing' },
+        { name: 'Energetic', rate: 1.15, pitch: 1.15, description: 'Upbeat & dynamic' },
+        { name: 'Thoughtful', rate: 0.88, pitch: 0.98, description: 'Deliberate & wise' }
+    ];
+
     const getHighQualityVoices = () => {
         const availableVoices = window.speechSynthesis.getVoices();
         
-        // Prioritize Google voices (highest quality), then other premium voices
-        const googleVoices = availableVoices.filter(v => 
-            v.name.includes('Google') && v.lang.startsWith('en')
-        );
+        // Prioritize natural-sounding voices
+        const premiumVoices = availableVoices.filter(v => 
+            v.lang.startsWith('en') && 
+            (v.name.includes('Google') || 
+             v.name.includes('Natural') ||
+             v.name.includes('Premium') ||
+             v.name.includes('Enhanced') ||
+             v.name.toLowerCase().includes('samantha') ||
+             v.name.toLowerCase().includes('daniel') ||
+             v.name.toLowerCase().includes('karen') ||
+             v.name.toLowerCase().includes('alex'))
+        ).slice(0, 3);
         
-        const otherPremiumVoices = availableVoices.filter(v => 
-            !v.name.includes('Google') && 
-            v.lang.startsWith('en') &&
-            (v.name.includes('Enhanced') || v.name.includes('Premium') || v.name.includes('Natural'))
-        );
-        
-        const allVoices = [...googleVoices, ...otherPremiumVoices].slice(0, 5);
-        
-        return allVoices.map(v => ({
-            name: v.name.replace('Google ', '').replace('Microsoft ', '').slice(0, 30),
+        return premiumVoices.map(v => ({
+            name: v.name.replace('Google ', '').replace('Microsoft ', '').replace('Enhanced', '').trim().slice(0, 25),
             voice: v
         }));
     };
@@ -148,13 +156,26 @@ export default function MessageBubble({ message }) {
         setIsSpeaking(false);
     };
 
-    const speakText = (selectedVoice = null) => {
+    const processTextForSpeech = (text) => {
+        return text
+            .replace(/[#*`]/g, '')
+            .replace(/\.\.\./g, '... ')
+            .replace(/([.!?])\s*([A-Z])/g, '$1 $2')
+            .replace(/,/g, ', ')
+            .replace(/:/g, ': ')
+            .replace(/;/g, '; ')
+            .replace(/\n\n+/g, '. ')
+            .replace(/\n/g, '. ')
+            .trim();
+    };
+
+    const speakText = (selectedVoice = null, personality = null) => {
         if (isSpeaking) {
             stopSpeaking();
             return;
         }
 
-        const text = message.content.replace(/[#*`]/g, '').trim();
+        const text = processTextForSpeech(message.content);
         if (!text) return;
 
         const utterance = new SpeechSynthesisUtterance(text);
@@ -163,9 +184,14 @@ export default function MessageBubble({ message }) {
             utterance.voice = selectedVoice;
         }
 
-        // Natural speech settings
-        utterance.rate = 0.95; // Slightly slower for clarity
-        utterance.pitch = 1.0;
+        if (personality) {
+            utterance.rate = personality.rate;
+            utterance.pitch = personality.pitch;
+        } else {
+            utterance.rate = 0.95;
+            utterance.pitch = 1.0;
+        }
+        
         utterance.volume = 1;
 
         utterance.onstart = () => setIsSpeaking(true);
@@ -205,40 +231,29 @@ export default function MessageBubble({ message }) {
                                             )}
                                         </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="glass-dark border-blue-500/30">
+                                    <DropdownMenuContent className="glass-dark border-blue-500/30 min-w-[180px]">
                                         {isSpeaking ? (
                                             <DropdownMenuItem onClick={stopSpeaking} className="text-white hover:bg-blue-500/20">
                                                 <Square className="h-3 w-3 mr-2" />
                                                 Stop Speaking
                                             </DropdownMenuItem>
-                                        ) : availableVoices.length > 0 ? (
+                                        ) : (
                                             <>
-                                                <DropdownMenuItem 
-                                                    onClick={() => speakText(null)}
-                                                    className="text-white hover:bg-blue-500/20"
-                                                >
-                                                    <Volume2 className="h-3 w-3 mr-2" />
-                                                    Default Voice
-                                                </DropdownMenuItem>
-                                                {availableVoices.map((voice, idx) => (
+                                                <div className="px-2 py-1.5 text-[10px] text-blue-400 font-semibold">Personalities</div>
+                                                {voicePersonalities.map((personality, idx) => (
                                                     <DropdownMenuItem 
                                                         key={idx}
-                                                        onClick={() => speakText(voice.voice)}
-                                                        className="text-white hover:bg-blue-500/20"
+                                                        onClick={() => speakText(availableVoices[0]?.voice, personality)}
+                                                        className="text-white hover:bg-blue-500/20 flex flex-col items-start gap-0.5 py-2"
                                                     >
-                                                        <Volume2 className="h-3 w-3 mr-2" />
-                                                        {voice.name}
+                                                        <div className="flex items-center gap-2">
+                                                            <Volume2 className="h-3 w-3" />
+                                                            <span className="font-medium">{personality.name}</span>
+                                                        </div>
+                                                        <span className="text-[10px] text-white/60 ml-5">{personality.description}</span>
                                                     </DropdownMenuItem>
                                                 ))}
                                             </>
-                                        ) : (
-                                            <DropdownMenuItem 
-                                                onClick={() => speakText(null)}
-                                                className="text-white hover:bg-blue-500/20"
-                                            >
-                                                <Volume2 className="h-3 w-3 mr-2" />
-                                                Read Aloud
-                                            </DropdownMenuItem>
                                         )}
                                     </DropdownMenuContent>
                                 </DropdownMenu>
