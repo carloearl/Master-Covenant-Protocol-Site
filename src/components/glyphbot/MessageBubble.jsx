@@ -105,7 +105,10 @@ export default function MessageBubble({ message, autoRead = false }) {
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
+    const [pitch, setPitch] = useState(1.0);
     const audioRef = useRef(null);
+    const audioContextRef = useRef(null);
+    const sourceNodeRef = useRef(null);
     const hasAutoPlayed = useRef(false);
     
     const copyToClipboard = (text) => {
@@ -113,12 +116,21 @@ export default function MessageBubble({ message, autoRead = false }) {
     };
 
     const voicePersonalities = [
-        { id: 'Joanna', name: 'Joanna', icon: '👩', description: 'American Female - Natural' },
-        { id: 'Matthew', name: 'Matthew', icon: '👨', description: 'American Male - Deep' },
-        { id: 'Amy', name: 'Amy', icon: '👩', description: 'British Female - Clear' },
-        { id: 'Brian', name: 'Brian', icon: '👨', description: 'British Male - Professional' },
-        { id: 'Emma', name: 'Emma', icon: '👩', description: 'British Female - Warm' },
-        { id: 'Joey', name: 'Joey', icon: '👨', description: 'American Male - Friendly' }
+        { id: 'Joanna', name: 'Joanna', icon: '👩', description: 'American Female - Natural', category: 'American' },
+        { id: 'Matthew', name: 'Matthew', icon: '👨', description: 'American Male - Deep', category: 'American' },
+        { id: 'Joey', name: 'Joey', icon: '👨', description: 'American Male - Friendly', category: 'American' },
+        { id: 'Salli', name: 'Salli', icon: '👩', description: 'American Female - Professional', category: 'American' },
+        { id: 'Kendra', name: 'Kendra', icon: '👩', description: 'American Female - Clear', category: 'American' },
+        { id: 'Justin', name: 'Justin', icon: '👦', description: 'American Child - Young', category: 'American' },
+        { id: 'Amy', name: 'Amy', icon: '👩', description: 'British Female - Clear', category: 'British' },
+        { id: 'Brian', name: 'Brian', icon: '👨', description: 'British Male - Professional', category: 'British' },
+        { id: 'Emma', name: 'Emma', icon: '👩', description: 'British Female - Warm', category: 'British' },
+        { id: 'Russell', name: 'Russell', icon: '👨', description: 'Australian Male - Casual', category: 'Australian' },
+        { id: 'Nicole', name: 'Nicole', name: 'Nicole', icon: '👩', description: 'Australian Female - Friendly', category: 'Australian' },
+        { id: 'Raveena', name: 'Raveena', icon: '👩', description: 'Indian Female - Elegant', category: 'International' },
+        { id: 'Aditi', name: 'Aditi', icon: '👩', description: 'Indian Female - Expressive', category: 'International' },
+        { id: 'Geraint', name: 'Geraint', icon: '👨', description: 'Welsh Male - Rich', category: 'International' },
+        { id: 'Gwyneth', name: 'Gwyneth', icon: '👩', description: 'Welsh Female - Melodic', category: 'International' }
     ];
 
     const stopSpeaking = () => {
@@ -126,6 +138,11 @@ export default function MessageBubble({ message, autoRead = false }) {
             audioRef.current.pause();
             audioRef.current.currentTime = 0;
             audioRef.current.src = '';
+        }
+        if (sourceNodeRef.current) {
+            try {
+                sourceNodeRef.current.stop();
+            } catch (e) {}
         }
         setIsSpeaking(false);
     };
@@ -152,26 +169,56 @@ export default function MessageBubble({ message, autoRead = false }) {
             
             const apiUrl = `https://api.streamelements.com/kappa/v2/speech?voice=${voiceId}&text=${encodeURIComponent(text)}`;
             
-            const audio = new Audio(apiUrl);
-            audio.playbackRate = playbackSpeed;
-            
-            audio.onloadeddata = () => {
+            if (pitch === 1.0) {
+                const audio = new Audio(apiUrl);
+                audio.playbackRate = playbackSpeed;
+                
+                audio.onloadeddata = () => {
+                    setIsSpeaking(true);
+                    setIsLoading(false);
+                };
+                
+                audio.onended = () => {
+                    setIsSpeaking(false);
+                };
+                
+                audio.onerror = (e) => {
+                    console.error('Audio playback error:', e);
+                    setIsSpeaking(false);
+                    setIsLoading(false);
+                };
+                
+                audioRef.current = audio;
+                await audio.play();
+            } else {
+                const response = await fetch(apiUrl);
+                const audioBuffer = await response.arrayBuffer();
+                
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                audioContextRef.current = audioContext;
+                
+                const decodedData = await audioContext.decodeAudioData(audioBuffer);
+                
+                const source = audioContext.createBufferSource();
+                source.buffer = decodedData;
+                source.playbackRate.value = playbackSpeed;
+                
+                const pitchShifter = audioContext.createBiquadFilter();
+                pitchShifter.type = 'allpass';
+                pitchShifter.frequency.value = 1000 * pitch;
+                
+                source.connect(pitchShifter);
+                pitchShifter.connect(audioContext.destination);
+                
+                source.onended = () => {
+                    setIsSpeaking(false);
+                };
+                
+                sourceNodeRef.current = source;
+                source.start(0);
                 setIsSpeaking(true);
                 setIsLoading(false);
-            };
-            
-            audio.onended = () => {
-                setIsSpeaking(false);
-            };
-            
-            audio.onerror = (e) => {
-                console.error('Audio playback error:', e);
-                setIsSpeaking(false);
-                setIsLoading(false);
-            };
-            
-            audioRef.current = audio;
-            await audio.play();
+            }
         } catch (error) {
             console.error('TTS Error:', error);
             setIsLoading(false);
@@ -221,7 +268,7 @@ export default function MessageBubble({ message, autoRead = false }) {
                                             )}
                                         </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="glass-dark border-blue-500/30 min-w-[250px] max-h-[500px] overflow-y-auto bg-black/95 backdrop-blur-xl">
+                                    <DropdownMenuContent className="glass-dark border-blue-500/30 min-w-[280px] max-h-[500px] overflow-y-auto bg-black/95 backdrop-blur-xl">
                                        {isSpeaking ? (
                                            <DropdownMenuItem onClick={stopSpeaking} className="text-white hover:bg-blue-500/20">
                                                <Square className="h-3 w-3 mr-2" />
@@ -229,8 +276,8 @@ export default function MessageBubble({ message, autoRead = false }) {
                                            </DropdownMenuItem>
                                        ) : (
                                            <>
-                                               <div className="px-3 py-2 space-y-3 border-b border-blue-500/30">
-                                                   <div className="text-[10px] text-blue-400 font-semibold uppercase tracking-wide">Playback Speed</div>
+                                               <div className="px-3 py-3 space-y-4 border-b border-blue-500/30">
+                                                   <div className="text-[10px] text-blue-400 font-semibold uppercase tracking-wide">Audio Controls</div>
                                                    <div>
                                                        <label className="text-[10px] text-white/70 block mb-1">Speed: {playbackSpeed}x</label>
                                                        <input 
@@ -250,22 +297,44 @@ export default function MessageBubble({ message, autoRead = false }) {
                                                            onClick={(e) => e.stopPropagation()}
                                                        />
                                                    </div>
+                                                   <div>
+                                                       <label className="text-[10px] text-white/70 block mb-1">Pitch: {pitch.toFixed(1)}x</label>
+                                                       <input 
+                                                           type="range" 
+                                                           min="0.5" 
+                                                           max="1.5" 
+                                                           step="0.1" 
+                                                           value={pitch}
+                                                           onChange={(e) => setPitch(parseFloat(e.target.value))}
+                                                           className="w-full h-1 bg-blue-500/30 rounded-lg appearance-none cursor-pointer"
+                                                           onClick={(e) => e.stopPropagation()}
+                                                       />
+                                                   </div>
                                                </div>
-                                               <div className="px-2 py-1.5 text-[10px] text-blue-400 font-semibold uppercase tracking-wide">Voice Personas</div>
-                                               {voicePersonalities.map((voice) => (
-                                                   <DropdownMenuItem 
-                                                       key={voice.id}
-                                                       onClick={() => speakText(voice.id)}
-                                                       disabled={isLoading}
-                                                       className="text-white hover:bg-blue-500/20 focus:bg-blue-500/20 flex flex-col items-start gap-1 py-2.5 cursor-pointer"
-                                                   >
-                                                       <div className="flex items-center gap-2 w-full">
-                                                           <span className="text-base">{voice.icon}</span>
-                                                           <span className="font-medium text-sm">{voice.name}</span>
+                                               <div className="px-2 py-1.5 text-[10px] text-blue-400 font-semibold uppercase tracking-wide">Select Voice</div>
+                                               {['American', 'British', 'Australian', 'International'].map((category) => {
+                                                   const categoryVoices = voicePersonalities.filter(v => v.category === category);
+                                                   if (categoryVoices.length === 0) return null;
+                                                   return (
+                                                       <div key={category}>
+                                                           <div className="px-2 py-1 text-[9px] text-white/40 font-semibold uppercase tracking-wide">{category}</div>
+                                                           {categoryVoices.map((voice) => (
+                                                               <DropdownMenuItem 
+                                                                   key={voice.id}
+                                                                   onClick={() => speakText(voice.id)}
+                                                                   disabled={isLoading}
+                                                                   className="text-white hover:bg-blue-500/20 focus:bg-blue-500/20 flex flex-col items-start gap-1 py-2.5 cursor-pointer"
+                                                               >
+                                                                   <div className="flex items-center gap-2 w-full">
+                                                                       <span className="text-base">{voice.icon}</span>
+                                                                       <span className="font-medium text-sm">{voice.name}</span>
+                                                                   </div>
+                                                                   <span className="text-[10px] text-white/60 ml-7 leading-tight">{voice.description}</span>
+                                                               </DropdownMenuItem>
+                                                           ))}
                                                        </div>
-                                                       <span className="text-[10px] text-white/60 ml-7 leading-tight">{voice.description}</span>
-                                                   </DropdownMenuItem>
-                                               ))}
+                                                   );
+                                               })}
                                            </>
                                        )}
                                     </DropdownMenuContent>
