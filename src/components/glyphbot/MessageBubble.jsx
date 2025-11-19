@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Button } from "@/components/ui/button";
-import { Copy, Zap, CheckCircle2, AlertCircle, Loader2, ChevronRight, Clock, Volume2, Square } from 'lucide-react';
+import { Copy, Zap, CheckCircle2, AlertCircle, Loader2, ChevronRight, Clock, Volume2, Square, Save, Trash2, History, Star } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
 import {
@@ -109,11 +109,16 @@ export default function MessageBubble({ message, autoRead = false }) {
     const [volume, setVolume] = useState(1.0);
     const [bass, setBass] = useState(0);
     const [treble, setTreble] = useState(0);
+    const [presets, setPresets] = useState([]);
+    const [voiceHistory, setVoiceHistory] = useState([]);
+    const [presetName, setPresetName] = useState('');
+    const [showPresetInput, setShowPresetInput] = useState(false);
     const audioRef = useRef(null);
     const audioContextRef = useRef(null);
     const sourceNodeRef = useRef(null);
     const gainNodeRef = useRef(null);
     const hasAutoPlayed = useRef(false);
+    const currentVoiceRef = useRef('Joanna');
     
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text);
@@ -164,7 +169,7 @@ export default function MessageBubble({ message, autoRead = false }) {
             .trim();
     };
 
-    const speakText = async (voiceId) => {
+    const speakText = async (voiceId, voiceName) => {
         if (isSpeaking) {
             stopSpeaking();
             return;
@@ -172,6 +177,9 @@ export default function MessageBubble({ message, autoRead = false }) {
 
         const text = processTextForSpeech(message.content);
         if (!text || text.length === 0) return;
+
+        currentVoiceRef.current = voiceId;
+        addToHistory(voiceId, voiceName);
 
         try {
             setIsLoading(true);
@@ -234,11 +242,69 @@ export default function MessageBubble({ message, autoRead = false }) {
     };
 
     React.useEffect(() => {
+        const savedPresets = localStorage.getItem('glyphbot-voice-presets');
+        const savedHistory = localStorage.getItem('glyphbot-voice-history');
+        if (savedPresets) setPresets(JSON.parse(savedPresets));
+        if (savedHistory) setVoiceHistory(JSON.parse(savedHistory));
+    }, []);
+
+    React.useEffect(() => {
         if (autoRead && !isUser && message.content && !hasAutoPlayed.current) {
             hasAutoPlayed.current = true;
             speakText('Joanna');
         }
     }, [autoRead, isUser, message.content]);
+
+    const savePreset = () => {
+        if (!presetName.trim()) return;
+        const newPreset = {
+            id: Date.now(),
+            name: presetName,
+            voice: currentVoiceRef.current,
+            speed: playbackSpeed,
+            pitch,
+            volume,
+            bass,
+            treble
+        };
+        const updated = [...presets, newPreset];
+        setPresets(updated);
+        localStorage.setItem('glyphbot-voice-presets', JSON.stringify(updated));
+        setPresetName('');
+        setShowPresetInput(false);
+    };
+
+    const loadPreset = (preset) => {
+        currentVoiceRef.current = preset.voice;
+        setPlaybackSpeed(preset.speed);
+        setPitch(preset.pitch);
+        setVolume(preset.volume);
+        setBass(preset.bass);
+        setTreble(preset.treble);
+    };
+
+    const deletePreset = (presetId) => {
+        const updated = presets.filter(p => p.id !== presetId);
+        setPresets(updated);
+        localStorage.setItem('glyphbot-voice-presets', JSON.stringify(updated));
+    };
+
+    const addToHistory = (voiceId, voiceName) => {
+        const historyItem = {
+            id: Date.now(),
+            voice: voiceId,
+            name: voiceName,
+            speed: playbackSpeed,
+            pitch,
+            volume,
+            bass,
+            treble,
+            timestamp: new Date().toISOString()
+        };
+        const updated = [historyItem, ...voiceHistory.filter(h => h.voice !== voiceId)].slice(0, 10);
+        setVoiceHistory(updated);
+        localStorage.setItem('glyphbot-voice-history', JSON.stringify(updated));
+    };
     
     return (
         <>
@@ -355,9 +421,101 @@ export default function MessageBubble({ message, autoRead = false }) {
                                                            className="w-full h-1 bg-blue-500/30 rounded-lg appearance-none cursor-pointer"
                                                            onClick={(e) => e.stopPropagation()}
                                                        />
-                                                   </div>
-                                               </div>
-                                               <div className="px-2 py-1.5 text-[10px] text-blue-400 font-semibold uppercase tracking-wide">Select Voice</div>
+                                                       </div>
+                                                       <div className="flex gap-2">
+                                                       {showPresetInput ? (
+                                                           <div className="flex gap-1 flex-1">
+                                                               <input
+                                                                   type="text"
+                                                                   placeholder="Preset name..."
+                                                                   value={presetName}
+                                                                   onChange={(e) => setPresetName(e.target.value)}
+                                                                   onKeyDown={(e) => e.key === 'Enter' && savePreset()}
+                                                                   className="flex-1 bg-blue-900/30 border border-blue-500/30 rounded px-2 py-1 text-white text-[10px]"
+                                                                   onClick={(e) => e.stopPropagation()}
+                                                                   autoFocus
+                                                               />
+                                                               <button
+                                                                   onClick={savePreset}
+                                                                   className="px-2 py-1 bg-blue-500/30 hover:bg-blue-500/50 rounded text-white"
+                                                               >
+                                                                   <Save className="w-3 h-3" />
+                                                               </button>
+                                                           </div>
+                                                       ) : (
+                                                           <button
+                                                               onClick={() => setShowPresetInput(true)}
+                                                               className="flex-1 px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded text-white text-[10px] flex items-center justify-center gap-1"
+                                                           >
+                                                               <Save className="w-3 h-3" />
+                                                               Save Current as Preset
+                                                           </button>
+                                                       )}
+                                                       </div>
+                                                       </div>
+                                                       {presets.length > 0 && (
+                                                       <>
+                                                       <div className="px-2 py-1.5 text-[10px] text-blue-400 font-semibold uppercase tracking-wide flex items-center gap-1">
+                                                           <Star className="w-3 h-3" />
+                                                           Saved Presets
+                                                       </div>
+                                                       {presets.map((preset) => (
+                                                           <div key={preset.id} className="px-2 py-1">
+                                                               <div className="flex items-center justify-between bg-blue-500/10 rounded px-2 py-1.5 hover:bg-blue-500/20">
+                                                                   <button
+                                                                       onClick={() => {
+                                                                           loadPreset(preset);
+                                                                           speakText(preset.voice, preset.name);
+                                                                       }}
+                                                                       className="flex-1 text-left"
+                                                                   >
+                                                                       <div className="text-white text-[11px] font-medium">{preset.name}</div>
+                                                                       <div className="text-white/50 text-[9px]">
+                                                                           {voicePersonalities.find(v => v.id === preset.voice)?.name} • {preset.speed}x • P:{preset.pitch.toFixed(1)}
+                                                                       </div>
+                                                                   </button>
+                                                                   <button
+                                                                       onClick={(e) => {
+                                                                           e.stopPropagation();
+                                                                           deletePreset(preset.id);
+                                                                       }}
+                                                                       className="text-red-400 hover:text-red-300 p-1"
+                                                                   >
+                                                                       <Trash2 className="w-3 h-3" />
+                                                                   </button>
+                                                               </div>
+                                                           </div>
+                                                       ))}
+                                                       </>
+                                                       )}
+                                                       {voiceHistory.length > 0 && (
+                                                       <>
+                                                       <div className="px-2 py-1.5 text-[10px] text-blue-400 font-semibold uppercase tracking-wide flex items-center gap-1 border-t border-blue-500/30 mt-2 pt-2">
+                                                           <History className="w-3 h-3" />
+                                                           Recent Voices
+                                                       </div>
+                                                       {voiceHistory.slice(0, 5).map((item) => (
+                                                           <DropdownMenuItem
+                                                               key={item.id}
+                                                               onClick={() => {
+                                                                   loadPreset(item);
+                                                                   speakText(item.voice, item.name);
+                                                               }}
+                                                               className="text-white hover:bg-blue-500/20 focus:bg-blue-500/20 cursor-pointer"
+                                                           >
+                                                               <div className="flex flex-col gap-0.5 w-full">
+                                                                   <div className="flex items-center gap-2">
+                                                                       <span className="text-[11px] font-medium">{voicePersonalities.find(v => v.id === item.voice)?.name}</span>
+                                                                   </div>
+                                                                   <span className="text-[9px] text-white/50">
+                                                                       Speed: {item.speed}x • Pitch: {item.pitch.toFixed(1)}x • Vol: {Math.round(item.volume * 100)}%
+                                                                   </span>
+                                                               </div>
+                                                           </DropdownMenuItem>
+                                                       ))}
+                                                       </>
+                                                       )}
+                                                       <div className="px-2 py-1.5 text-[10px] text-blue-400 font-semibold uppercase tracking-wide border-t border-blue-500/30 mt-2">Select Voice</div>
                                                {['American', 'British', 'Australian', 'International'].map((category) => {
                                                    const categoryVoices = voicePersonalities.filter(v => v.category === category);
                                                    if (categoryVoices.length === 0) return null;
@@ -367,7 +525,7 @@ export default function MessageBubble({ message, autoRead = false }) {
                                                            {categoryVoices.map((voice) => (
                                                                <DropdownMenuItem 
                                                                    key={voice.id}
-                                                                   onClick={() => speakText(voice.id)}
+                                                                   onClick={() => speakText(voice.id, voice.name)}
                                                                    disabled={isLoading}
                                                                    className="text-white hover:bg-blue-500/20 focus:bg-blue-500/20 flex flex-col items-start gap-0.5 py-3 cursor-pointer"
                                                                >
