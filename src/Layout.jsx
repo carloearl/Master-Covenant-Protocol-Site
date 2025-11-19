@@ -453,17 +453,10 @@ export default function Layout({ children, currentPageName }) {
                 <div className="flex flex-wrap items-center justify-center gap-8">
                   {certifications.map((cert, idx) => (
                     <div key={idx} className="flex flex-col items-center gap-2">
-                      <img 
-                        src={cert.logo} 
-                        alt={cert.name}
-                        className="h-16 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
-                        loading="lazy"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextElementSibling.style.display = 'block';
-                        }}
+                      <div 
+                        dangerouslySetInnerHTML={{ __html: cert.svg }}
+                        className="opacity-80 hover:opacity-100 transition-opacity"
                       />
-                      <span className="text-xs font-semibold text-white/80 hidden">{cert.name}</span>
                     </div>
                   ))}
                 </div>
