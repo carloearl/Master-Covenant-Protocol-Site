@@ -198,7 +198,7 @@ export default function Payment() {
   if (paymentSuccess) {
     return (
       <div className="min-h-screen bg-black text-white py-20 flex items-center justify-center">
-        <Card className="bg-gray-900 border-green-500/30 max-w-md">
+        <Card className="glass-card-dark border-green-500/30 max-w-md">
           <CardContent className="p-8 text-center">
             <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-10 h-10 text-green-400" />
@@ -314,7 +314,7 @@ export default function Payment() {
 
             {/* Order Summary */}
             <div className="space-y-6">
-              <Card className="bg-gray-900 border-gray-800">
+              <Card className="glass-card-dark border-blue-500/30">
                 <CardHeader>
                   <CardTitle className="text-white">Order Summary</CardTitle>
                 </CardHeader>
@@ -392,7 +392,7 @@ export default function Payment() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gray-900 border-gray-800">
+              <Card className="glass-card-dark border-blue-500/30">
                 <CardHeader>
                   <CardTitle className="text-white text-sm">Refund Policy</CardTitle>
                 </CardHeader>
