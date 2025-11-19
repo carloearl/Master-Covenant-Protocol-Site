@@ -272,7 +272,7 @@ export default function Layout({ children, currentPageName }) {
             </div>
 
             {mobileMenuOpen && (
-              <div className="lg:hidden py-4 border-t border-blue-500/30 glass-royal max-h-[70vh] overflow-y-auto">
+              <div className="lg:hidden py-4 border-t border-blue-500/30 bg-black/95 backdrop-blur-xl max-h-[70vh] overflow-y-auto">
                 <div className="flex flex-col gap-2">
                   <Link to={createPageUrl("Home")} onClick={() => setMobileMenuOpen(false)}>
                     <Button className="w-full justify-start bg-transparent border-none text-white hover:bg-blue-500/30 text-base h-11">
