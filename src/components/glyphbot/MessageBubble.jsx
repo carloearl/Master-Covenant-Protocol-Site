@@ -144,30 +144,44 @@ export default function MessageBubble({ message, autoRead = false }) {
 
         try {
             setIsLoading(true);
+            console.log('Starting TTS with voice:', voiceId);
             
-            const { data } = await base44.functions.invoke('textToSpeech', {
+            const response = await base44.functions.invoke('textToSpeech', {
                 text: text,
                 voice: voiceId
             });
 
-            const uint8Array = new Uint8Array(data);
-            const blob = new Blob([uint8Array], { type: 'audio/mpeg' });
+            console.log('TTS Response:', response);
+            
+            if (!response?.data) {
+                throw new Error('No audio data received');
+            }
+
+            const blob = new Blob([response.data], { type: 'audio/mpeg' });
             const url = URL.createObjectURL(blob);
+            console.log('Audio blob created, size:', blob.size);
             
             if (audioRef.current) {
                 audioRef.current.src = url;
                 audioRef.current.playbackRate = playbackSpeed;
-                audioRef.current.onended = () => setIsSpeaking(false);
-                audioRef.current.onerror = () => {
+                audioRef.current.onended = () => {
+                    console.log('Audio ended');
+                    setIsSpeaking(false);
+                };
+                audioRef.current.onerror = (e) => {
+                    console.error('Audio playback error:', e);
+                    alert('Audio playback failed');
                     setIsSpeaking(false);
                     setIsLoading(false);
                 };
                 
                 setIsSpeaking(true);
                 await audioRef.current.play();
+                console.log('Audio playing');
             }
         } catch (error) {
             console.error('TTS Error:', error);
+            alert('Voice generation failed: ' + error.message);
         } finally {
             setIsLoading(false);
         }
@@ -176,7 +190,7 @@ export default function MessageBubble({ message, autoRead = false }) {
     React.useEffect(() => {
         if (autoRead && !isUser && message.content && !hasAutoPlayed.current) {
             hasAutoPlayed.current = true;
-            speakText('professional');
+            speakText('en');
         }
     }, [autoRead, isUser, message.content]);
     
