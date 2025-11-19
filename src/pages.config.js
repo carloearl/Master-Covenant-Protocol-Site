@@ -47,7 +47,6 @@ import SiteAuditReport from './pages/SiteAuditReport';
 import TaskTracker from './pages/TaskTracker';
 import ContentGenerator from './pages/ContentGenerator';
 import GlyphBot from './pages/GlyphBot';
-import RobotsTxt from './pages/RobotsTxt';
 import __Layout from './Layout.jsx';
 
 
@@ -101,7 +100,6 @@ export const PAGES = {
     "TaskTracker": TaskTracker,
     "ContentGenerator": ContentGenerator,
     "GlyphBot": GlyphBot,
-    "RobotsTxt": RobotsTxt,
 }
 
 export const pagesConfig = {
