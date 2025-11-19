@@ -113,16 +113,18 @@ export default function MessageBubble({ message, autoRead = false }) {
     };
 
     const voicePersonalities = [
-        { id: 'en', name: 'English', icon: '🇺🇸', description: 'American English' },
-        { id: 'en-gb', name: 'British', icon: '🇬🇧', description: 'British English' },
-        { id: 'en-au', name: 'Australian', icon: '🇦🇺', description: 'Australian English' }
+        { id: 'en-US', name: 'American', icon: '🇺🇸', description: 'US English' },
+        { id: 'en-GB', name: 'British', icon: '🇬🇧', description: 'UK English' },
+        { id: 'en-AU', name: 'Australian', icon: '🇦🇺', description: 'Australian English' }
     ];
 
     const stopSpeaking = () => {
         if (audioRef.current) {
             audioRef.current.pause();
             audioRef.current.currentTime = 0;
+            audioRef.current.src = '';
         }
+        window.speechSynthesis?.cancel();
         setIsSpeaking(false);
     };
 
@@ -130,7 +132,40 @@ export default function MessageBubble({ message, autoRead = false }) {
         return text
             .replace(/[#*`]/g, '')
             .replace(/\n/g, ' ')
+            .replace(/\s+/g, ' ')
             .trim();
+    };
+
+    const speakWithWebAPI = (text, locale) => {
+        return new Promise((resolve, reject) => {
+            const utterance = new SpeechSynthesisUtterance(text);
+            const voices = window.speechSynthesis.getVoices();
+            
+            const preferredVoice = voices.find(v => 
+                v.lang.includes(locale.split('-')[0]) && 
+                (v.name.includes('Google') || v.name.includes('Enhanced') || v.name.includes('Premium'))
+            ) || voices.find(v => v.lang.includes(locale.split('-')[0]));
+            
+            if (preferredVoice) utterance.voice = preferredVoice;
+            utterance.rate = playbackSpeed;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+            
+            utterance.onstart = () => {
+                setIsSpeaking(true);
+                setIsLoading(false);
+            };
+            utterance.onend = () => {
+                setIsSpeaking(false);
+                resolve();
+            };
+            utterance.onerror = (e) => {
+                setIsSpeaking(false);
+                reject(e);
+            };
+            
+            window.speechSynthesis.speak(utterance);
+        });
     };
 
     const speakText = async (voiceId) => {
@@ -140,36 +175,52 @@ export default function MessageBubble({ message, autoRead = false }) {
         }
 
         const text = processTextForSpeech(message.content);
-        if (!text) return;
+        if (!text || text.length === 0) return;
 
         try {
             setIsLoading(true);
             
-            const lang = voiceId === 'en-gb' ? 'en-GB' : voiceId === 'en-au' ? 'en-AU' : 'en-US';
-            const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${encodeURIComponent(text)}`;
+            const chunks = text.match(/.{1,200}(\s|$)/g) || [text];
             
-            const audio = new Audio(ttsUrl);
-            audio.playbackRate = playbackSpeed;
+            for (const chunk of chunks) {
+                if (!chunk.trim()) continue;
+                
+                const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${voiceId}&client=tw-ob&ttsspeed=${playbackSpeed}&q=${encodeURIComponent(chunk)}`;
+                
+                try {
+                    const audio = new Audio();
+                    audio.crossOrigin = 'anonymous';
+                    
+                    await new Promise((resolve, reject) => {
+                        audio.oncanplaythrough = () => {
+                            setIsSpeaking(true);
+                            setIsLoading(false);
+                            audio.playbackRate = playbackSpeed;
+                            audio.play().then(resolve).catch(reject);
+                        };
+                        audio.onended = resolve;
+                        audio.onerror = reject;
+                        audioRef.current = audio;
+                        audio.src = ttsUrl;
+                    });
+                    
+                    if (!isSpeaking) break;
+                } catch (chunkError) {
+                    console.warn('Google TTS failed, using Web Speech API:', chunkError);
+                    await speakWithWebAPI(chunk, voiceId);
+                    if (!isSpeaking) break;
+                }
+            }
             
-            audio.onloadeddata = () => {
-                setIsSpeaking(true);
-                setIsLoading(false);
-            };
-            
-            audio.onended = () => {
-                setIsSpeaking(false);
-            };
-            
-            audio.onerror = (e) => {
-                console.error('Audio error:', e);
-                setIsSpeaking(false);
-                setIsLoading(false);
-            };
-            
-            audioRef.current = audio;
-            await audio.play();
+            setIsSpeaking(false);
         } catch (error) {
             console.error('TTS Error:', error);
+            try {
+                await speakWithWebAPI(text, voiceId);
+            } catch (fallbackError) {
+                console.error('All TTS methods failed:', fallbackError);
+            }
+        } finally {
             setIsLoading(false);
         }
     };
@@ -177,7 +228,7 @@ export default function MessageBubble({ message, autoRead = false }) {
     React.useEffect(() => {
         if (autoRead && !isUser && message.content && !hasAutoPlayed.current) {
             hasAutoPlayed.current = true;
-            speakText('en');
+            speakText('en-US');
         }
     }, [autoRead, isUser, message.content]);
     
