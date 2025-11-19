@@ -59,10 +59,10 @@ export default function PersonaSelector({ selectedPersona, onSelect }) {
             key={persona.id}
             onClick={() => onSelect(persona.id)}
             className={cn(
-              "cursor-pointer transition-all duration-200 group",
+              "cursor-pointer transition-all duration-200 group border-2",
               isSelected
-                ? `bg-gradient-to-br ${persona.gradient} bg-opacity-20 border-${persona.color}-500`
-                : "bg-gray-800 border-gray-700 hover:border-gray-600"
+                ? `bg-gradient-to-br ${persona.gradient} bg-opacity-20 border-blue-500`
+                : "bg-blue-900/20 border-blue-500/30 hover:border-blue-500/50"
             )}
           >
             <CardContent className="p-4">
