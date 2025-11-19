@@ -169,6 +169,27 @@ export default function MessageBubble({ message, autoRead = false }) {
             .trim();
     };
 
+    const chunkText = (text, maxLength = 200) => {
+        const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+        const chunks = [];
+        let currentChunk = '';
+
+        for (const sentence of sentences) {
+            if ((currentChunk + sentence).length > maxLength && currentChunk.length > 0) {
+                chunks.push(currentChunk.trim());
+                currentChunk = sentence;
+            } else {
+                currentChunk += sentence;
+            }
+        }
+
+        if (currentChunk.length > 0) {
+            chunks.push(currentChunk.trim());
+        }
+
+        return chunks.length > 0 ? chunks : [text];
+    };
+
     const speakText = async (voiceId, voiceName) => {
         if (isSpeaking) {
             stopSpeaking();
@@ -181,59 +202,78 @@ export default function MessageBubble({ message, autoRead = false }) {
         currentVoiceRef.current = voiceId;
         addToHistory(voiceId, voiceName);
 
+        const chunks = chunkText(text);
+
         try {
             setIsLoading(true);
-
-            const apiUrl = `https://api.streamelements.com/kappa/v2/speech?voice=${voiceId}&text=${encodeURIComponent(text)}`;
-
-            const response = await fetch(apiUrl);
-            const audioBuffer = await response.arrayBuffer();
 
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             audioContextRef.current = audioContext;
 
-            const decodedData = await audioContext.decodeAudioData(audioBuffer);
+            const audioBuffers = [];
 
-            const source = audioContext.createBufferSource();
-            source.buffer = decodedData;
-            source.playbackRate.value = playbackSpeed * pitch;
+            for (const chunk of chunks) {
+                const apiUrl = `https://api.streamelements.com/kappa/v2/speech?voice=${voiceId}&text=${encodeURIComponent(chunk)}`;
+                const response = await fetch(apiUrl);
+                const audioBuffer = await response.arrayBuffer();
+                const decodedData = await audioContext.decodeAudioData(audioBuffer);
+                audioBuffers.push(decodedData);
+            }
 
-            // Gain (Volume) control
-            const gainNode = audioContext.createGain();
-            gainNode.gain.value = volume;
-            gainNodeRef.current = gainNode;
+            let currentIndex = 0;
 
-            // Bass filter (low shelf)
-            const bassFilter = audioContext.createBiquadFilter();
-            bassFilter.type = 'lowshelf';
-            bassFilter.frequency.value = 200;
-            bassFilter.gain.value = bass;
-
-            // Treble filter (high shelf)
-            const trebleFilter = audioContext.createBiquadFilter();
-            trebleFilter.type = 'highshelf';
-            trebleFilter.frequency.value = 3000;
-            trebleFilter.gain.value = treble;
-
-            // Connect the chain
-            source.connect(bassFilter);
-            bassFilter.connect(trebleFilter);
-            trebleFilter.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-
-            source.onended = () => {
-                setIsSpeaking(false);
-                if (audioContext.state !== 'closed') {
-                    audioContext.close();
+            const playNextChunk = () => {
+                if (currentIndex >= audioBuffers.length) {
+                    setIsSpeaking(false);
+                    if (audioContext.state !== 'closed') {
+                        audioContext.close();
+                    }
+                    return;
                 }
+
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffers[currentIndex];
+                source.playbackRate.value = playbackSpeed * pitch;
+
+                const gainNode = audioContext.createGain();
+                gainNode.gain.value = volume;
+                gainNodeRef.current = gainNode;
+
+                const bassFilter = audioContext.createBiquadFilter();
+                bassFilter.type = 'lowshelf';
+                bassFilter.frequency.value = 200;
+                bassFilter.gain.value = bass;
+
+                const trebleFilter = audioContext.createBiquadFilter();
+                trebleFilter.type = 'highshelf';
+                trebleFilter.frequency.value = 3000;
+                trebleFilter.gain.value = treble;
+
+                source.connect(bassFilter);
+                bassFilter.connect(trebleFilter);
+                trebleFilter.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                source.onended = () => {
+                    currentIndex++;
+                    playNextChunk();
+                };
+
+                sourceNodeRef.current = source;
+                audioRef.current = { 
+                    pause: () => {
+                        source.stop();
+                        setIsSpeaking(false);
+                    }
+                };
+
+                source.start(0);
             };
 
-            sourceNodeRef.current = source;
-            audioRef.current = { pause: () => source.stop() };
-
-            source.start(0);
             setIsSpeaking(true);
             setIsLoading(false);
+            playNextChunk();
+
         } catch (error) {
             console.error('TTS Error:', error);
             setIsLoading(false);
