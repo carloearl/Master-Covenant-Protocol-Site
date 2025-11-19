@@ -9,13 +9,14 @@ import { Input } from "@/components/ui/input";
 import { 
   LayoutDashboard, Users, Calendar, DollarSign, 
   Shield, TrendingUp, Search, Filter, Download,
-  CheckCircle, Clock, XCircle, AlertCircle
+  CheckCircle, Clock, XCircle, AlertCircle, FileCheck
 } from "lucide-react";
 import AdminConsultations from "../components/admin/AdminConsultations";
 import AdminUsers from "../components/admin/AdminUsers";
 import AdminPayments from "../components/admin/AdminPayments";
 import AdminAnalytics from "../components/admin/AdminAnalytics";
 import AdminSecurity from "../components/admin/AdminSecurity";
+import SiteAuditReport from "./SiteAuditReport";
 
 export default function Admin() {
   const [user, setUser] = useState(null);
@@ -242,6 +243,10 @@ export default function Admin() {
                 <TrendingUp className="w-4 h-4 mr-2" />
                 Analytics
               </TabsTrigger>
+              <TabsTrigger value="audit" className="text-white data-[state=active]:bg-blue-500/30">
+                <FileCheck className="w-4 h-4 mr-2" />
+                Site Audit
+              </TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}
@@ -339,6 +344,11 @@ export default function Admin() {
                 users={users} 
                 qrCodes={qrCodes} 
               />
+            </TabsContent>
+
+            {/* Site Audit Tab */}
+            <TabsContent value="audit">
+              <SiteAuditReport />
             </TabsContent>
           </Tabs>
         </div>
