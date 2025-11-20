@@ -47,22 +47,26 @@ export default function InteractiveImageStudio() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('name', file.name);
-
     try {
       setLoading(true);
-      const response = await base44.functions.invoke('uploadInteractiveImage', formData);
       
-      if (response.data.success) {
-        setImageId(response.data.imageId);
-        setUploadedImage(response.data.fileUrl);
-        setHotspots([]);
-      }
+      const uploadResult = await base44.integrations.Core.UploadFile({ file });
+      
+      const image = await base44.entities.InteractiveImage.create({
+        name: file.name,
+        fileUrl: uploadResult.file_url,
+        width: 0,
+        height: 0,
+        status: 'draft',
+        ownerEmail: user.email
+      });
+      
+      setImageId(image.id);
+      setUploadedImage(uploadResult.file_url);
+      setHotspots([]);
     } catch (error) {
       console.error("Upload error:", error);
-      alert("Failed to upload image");
+      alert("Failed to upload image: " + error.message);
     } finally {
       setLoading(false);
     }
