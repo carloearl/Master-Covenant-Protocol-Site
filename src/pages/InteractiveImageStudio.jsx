@@ -4,12 +4,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SEOHead from "@/components/SEOHead";
 import EditorTab from "@/components/studio/EditorTab";
 import VerifyTab from "@/components/studio/VerifyTab";
+import { StudioProvider, useStudio } from "@/components/studio/state/StudioContext";
 
-export default function InteractiveImageStudio() {
+function InteractiveImageStudioContent() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("editor");
-  const [verifyLogId, setVerifyLogId] = useState(null);
+  const { state, dispatch } = useStudio();
 
   useEffect(() => {
     (async () => {
@@ -29,9 +29,8 @@ export default function InteractiveImageStudio() {
     })();
   }, []);
 
-  const handleFinalizeSuccess = (logId) => {
-    setVerifyLogId(logId);
-    setActiveTab("verify");
+  const handleFinalizeSuccess = () => {
+    dispatch({ type: "SET_TAB", tab: "verify" });
   };
 
   if (loading) {
@@ -63,7 +62,7 @@ export default function InteractiveImageStudio() {
           <p className="text-white/60 text-lg">Create secure, interactive, cryptographically verified images</p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs value={state.tab} onValueChange={(tab) => dispatch({ type: "SET_TAB", tab: tab as "editor" | "verify" })} className="space-y-6">
           <TabsList className="glass-royal border-cyan-500/30 mx-auto flex w-fit">
             <TabsTrigger 
               value="editor" 
@@ -84,10 +83,18 @@ export default function InteractiveImageStudio() {
           </TabsContent>
 
           <TabsContent value="verify">
-            <VerifyTab initialLogId={verifyLogId} />
+            <VerifyTab />
           </TabsContent>
         </Tabs>
       </div>
     </div>
+  );
+}
+
+export default function InteractiveImageStudio() {
+  return (
+    <StudioProvider>
+      <InteractiveImageStudioContent />
+    </StudioProvider>
   );
 }

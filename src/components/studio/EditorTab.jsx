@@ -4,19 +4,23 @@ import UploadZone from "./UploadZone";
 import ToolbarPanel from "./ToolbarPanel";
 import CanvasPanel from "./CanvasPanel";
 import PropertiesPanel from "./PropertiesPanel";
+import { useStudio } from "./state/StudioContext";
+import { selectImage, selectImageId, selectImageName, selectHotspots, selectSelectedHotspot, selectUploadLoading } from "./state/selectors";
 
 export default function EditorTab({ user, onFinalizeSuccess }) {
-  const [imageId, setImageId] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
-  const [imageName, setImageName] = useState("");
-  const [hotspots, setHotspots] = useState([]);
-  const [selectedHotspot, setSelectedHotspot] = useState(null);
+  const { state, dispatch } = useStudio();
   const [activeTool, setActiveTool] = useState("select");
-  const [loading, setLoading] = useState(false);
+  
+  const imageId = selectImageId(state);
+  const imageUrl = selectImage(state);
+  const imageName = selectImageName(state);
+  const hotspots = selectHotspots(state);
+  const selectedHotspot = selectSelectedHotspot(state);
+  const loading = selectUploadLoading(state);
 
   const handleImageUpload = async (file) => {
     try {
-      setLoading(true);
+      dispatch({ type: "UPLOAD_START" });
       
       const uploadResult = await base44.integrations.Core.UploadFile({ file });
       
@@ -29,16 +33,16 @@ export default function EditorTab({ user, onFinalizeSuccess }) {
         ownerEmail: user.email
       });
       
-      setImageId(image.id);
-      setImageUrl(uploadResult.file_url);
-      setImageName(file.name);
-      setHotspots([]);
-      setSelectedHotspot(null);
+      dispatch({ 
+        type: "UPLOAD_SUCCESS", 
+        imageUrl: uploadResult.file_url,
+        imageId: image.id,
+        imageName: file.name
+      });
     } catch (error) {
       console.error("Upload error:", error);
+      dispatch({ type: "UPLOAD_ERROR", error: error.message });
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -51,19 +55,21 @@ export default function EditorTab({ user, onFinalizeSuccess }) {
       actionType: 'none',
       actionValue: ''
     };
-    setHotspots([...hotspots, newHotspot]);
-    setSelectedHotspot(newHotspot);
+    dispatch({ type: "ADD_HOTSPOT", hotspot: newHotspot });
+    dispatch({ type: "SELECT_HOTSPOT", id: newHotspot.id });
   };
 
   const handleUpdateHotspot = (updatedHotspot) => {
-    setHotspots(hotspots.map(h => h.id === updatedHotspot.id ? updatedHotspot : h));
-    setSelectedHotspot(updatedHotspot);
+    dispatch({ type: "UPDATE_HOTSPOT", hotspot: updatedHotspot });
   };
 
   const handleDeleteHotspot = () => {
     if (!selectedHotspot) return;
-    setHotspots(hotspots.filter(h => h.id !== selectedHotspot.id));
-    setSelectedHotspot(null);
+    dispatch({ type: "DELETE_HOTSPOT", id: selectedHotspot.id });
+  };
+
+  const handleSelectHotspot = (hotspot) => {
+    dispatch({ type: "SELECT_HOTSPOT", id: hotspot?.id || null });
   };
 
   const handleSaveHotspots = async () => {
@@ -88,6 +94,7 @@ export default function EditorTab({ user, onFinalizeSuccess }) {
     if (!imageId) return;
 
     try {
+      dispatch({ type: "FINALIZE_START" });
       await handleSaveHotspots();
 
       const response = await base44.functions.invoke('finalizeInteractiveImage', {
@@ -95,11 +102,19 @@ export default function EditorTab({ user, onFinalizeSuccess }) {
       });
 
       if (response.data.success) {
-        onFinalizeSuccess(response.data.logId);
+        dispatch({ 
+          type: "FINALIZE_SUCCESS", 
+          logId: response.data.logId,
+          hash: response.data.hash,
+          imageFileHash: response.data.imageFileHash,
+          createdAt: response.data.createdAt
+        });
+        onFinalizeSuccess();
         return response.data;
       }
     } catch (error) {
       console.error("Finalize error:", error);
+      dispatch({ type: "FINALIZE_ERROR", error: error.message });
       throw error;
     }
   };
@@ -122,7 +137,7 @@ export default function EditorTab({ user, onFinalizeSuccess }) {
           selectedHotspot={selectedHotspot}
           activeTool={activeTool}
           onAddHotspot={handleAddHotspot}
-          onSelectHotspot={setSelectedHotspot}
+          onSelectHotspot={handleSelectHotspot}
         />
       </div>
 
@@ -132,7 +147,7 @@ export default function EditorTab({ user, onFinalizeSuccess }) {
           hotspots={hotspots}
           onUpdateHotspot={handleUpdateHotspot}
           onDeleteHotspot={handleDeleteHotspot}
-          onSelectHotspot={setSelectedHotspot}
+          onSelectHotspot={handleSelectHotspot}
           onSave={handleSaveHotspots}
           onFinalize={handleFinalize}
         />

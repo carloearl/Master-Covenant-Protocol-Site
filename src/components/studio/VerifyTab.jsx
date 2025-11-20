@@ -5,23 +5,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Search, CheckCircle2, ExternalLink, Copy, Upload } from "lucide-react";
+import { useStudio } from "./state/StudioContext";
+import { selectFinalizeResult } from "./state/selectors";
 
-export default function VerifyTab({ initialLogId }) {
-  const [logId, setLogId] = useState(initialLogId || '');
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+export default function VerifyTab() {
+  const { state, dispatch } = useStudio();
+  const finalizeResult = selectFinalizeResult(state);
+  const [logId, setLogId] = useState('');
   const [recentLogs, setRecentLogs] = useState([]);
 
   useEffect(() => {
     loadRecentLogs();
-  }, []);
-
-  useEffect(() => {
-    if (initialLogId) {
-      setLogId(initialLogId);
-      handleVerify(initialLogId);
+    if (finalizeResult.logId) {
+      setLogId(finalizeResult.logId);
+      handleVerify(finalizeResult.logId);
     }
-  }, [initialLogId]);
+  }, [finalizeResult.logId]);
 
   const loadRecentLogs = async () => {
     try {
@@ -36,19 +35,17 @@ export default function VerifyTab({ initialLogId }) {
     if (!id) return;
 
     try {
-      setLoading(true);
-      setResult(null);
+      dispatch({ type: "VERIFY_START", logId: id });
 
       const response = await base44.functions.invoke('getImageHashLog', { logId: id });
 
       if (response.data.success) {
-        setResult(response.data.log);
+        dispatch({ type: "VERIFY_SUCCESS", result: response.data.log });
       }
     } catch (error) {
       console.error("Verification error:", error);
+      dispatch({ type: "VERIFY_ERROR", error: error.message });
       alert("Failed to verify log: " + error.message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -78,18 +75,18 @@ export default function VerifyTab({ initialLogId }) {
             <div className="flex items-end">
               <Button
                 onClick={() => handleVerify()}
-                disabled={loading || !logId}
+                disabled={state.verifyLoading || !logId}
                 className="bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-black font-bold"
               >
                 <Search className="w-4 h-4 mr-2" />
-                {loading ? "Verifying..." : "Verify"}
+                {state.verifyLoading ? "Verifying..." : "Verify"}
               </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {result && (
+      {state.verifyResult && (
         <Card className="glass-royal border-cyan-500/50 shadow-xl shadow-cyan-500/20" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
           <CardHeader className="border-b border-cyan-500/30" style={{background: 'transparent'}}>
             <CardTitle className="text-white flex items-center gap-2 text-xl">
@@ -102,12 +99,12 @@ export default function VerifyTab({ initialLogId }) {
               <Label className="text-cyan-400 text-sm font-semibold">Verification Hash</Label>
               <div className="flex items-center gap-2 mt-2">
                 <code className="text-white text-xs font-mono flex-1 break-all bg-black/40 p-3 rounded">
-                  {result.hash}
+                  {state.verifyResult.hash}
                 </code>
                 <Button
                   size="icon"
                   variant="ghost"
-                  onClick={() => copyToClipboard(result.hash)}
+                  onClick={() => copyToClipboard(state.verifyResult.hash)}
                   className="text-cyan-400 hover:bg-cyan-500/20 flex-shrink-0"
                 >
                   <Copy className="w-4 h-4" />
@@ -119,12 +116,12 @@ export default function VerifyTab({ initialLogId }) {
               <Label className="text-purple-400 text-sm font-semibold">Image File Hash</Label>
               <div className="flex items-center gap-2 mt-2">
                 <code className="text-white text-xs font-mono flex-1 break-all bg-black/40 p-3 rounded">
-                  {result.imageFileHash}
+                  {state.verifyResult.imageFileHash}
                 </code>
                 <Button
                   size="icon"
                   variant="ghost"
-                  onClick={() => copyToClipboard(result.imageFileHash)}
+                  onClick={() => copyToClipboard(state.verifyResult.imageFileHash)}
                   className="text-purple-400 hover:bg-purple-500/20 flex-shrink-0"
                 >
                   <Copy className="w-4 h-4" />
@@ -135,34 +132,34 @@ export default function VerifyTab({ initialLogId }) {
             <div className="grid md:grid-cols-3 gap-4">
               <div className="p-4 bg-black/40 rounded-lg border border-purple-500/30">
                 <Label className="text-white/60 text-xs">Created At</Label>
-                <p className="text-white mt-1">{new Date(result.createdAt).toLocaleString()}</p>
+                <p className="text-white mt-1">{new Date(state.verifyResult.created_date).toLocaleString()}</p>
               </div>
               <div className="p-4 bg-black/40 rounded-lg border border-purple-500/30">
                 <Label className="text-white/60 text-xs">Image ID</Label>
-                <p className="text-white font-mono text-sm mt-1 truncate">{result.imageId}</p>
+                <p className="text-white font-mono text-sm mt-1 truncate">{state.verifyResult.imageId}</p>
               </div>
               <div className="p-4 bg-black/40 rounded-lg border border-purple-500/30">
                 <Label className="text-white/60 text-xs">Hotspots</Label>
-                <p className="text-white mt-1">{result.hotspotsSnapshot.length} regions</p>
+                <p className="text-white mt-1">{state.verifyResult.hotspotsSnapshot.length} regions</p>
               </div>
             </div>
 
-            {result.imageUrl && (
+            {state.verifyResult.imageUrl && (
               <div>
                 <Label className="text-white/80 text-sm">Verified Image</Label>
                 <img
-                  src={result.imageUrl}
-                  alt={result.imageName}
+                  src={state.verifyResult.imageUrl}
+                  alt={state.verifyResult.imageName}
                   className="w-full max-w-2xl rounded-lg border-2 border-cyan-500/30 mt-3 shadow-lg"
                 />
               </div>
             )}
 
-            {result.hotspotsSnapshot.length > 0 && (
+            {state.verifyResult.hotspotsSnapshot.length > 0 && (
               <div>
                 <Label className="text-white/80 text-sm">Hotspots Snapshot</Label>
                 <div className="space-y-2 mt-3">
-                  {result.hotspotsSnapshot.map((hotspot, index) => (
+                  {state.verifyResult.hotspotsSnapshot.map((hotspot, index) => (
                     <div 
                       key={index} 
                       className="p-4 bg-black/40 rounded-lg border border-purple-500/30"
