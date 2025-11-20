@@ -55,7 +55,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
   const [open, setOpen] = useState(null);
 
   return (
-    <nav className="w-full bg-black/95 border-b border-ultraviolet/60 shadow-[0_2px_20px_rgba(138,43,226,0.3)] text-white z-50 sticky top-0 backdrop-blur-lg">
+    <nav className="w-full bg-black/95 border-b border-royal-blue/60 shadow-[0_2px_20px_rgba(65,105,225,0.4)] text-white z-50 sticky top-0 backdrop-blur-lg">
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
         <Link to={createPageUrl("Home")} className="flex items-center gap-2 group">
           <img
@@ -63,7 +63,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
             alt="GlyphLock"
             className="h-8 w-auto"
           />
-          <span className="text-transparent bg-gradient-to-r from-ultraviolet to-cyan bg-clip-text font-bold text-xl tracking-tight">
+          <span className="text-transparent bg-gradient-to-r from-royal-blue to-cyan bg-clip-text font-bold text-xl tracking-tight">
             GlyphLock
           </span>
         </Link>
@@ -85,13 +85,13 @@ export default function Navbar({ user, onLogin, onLogout }) {
 
               {open === section.label && (
                 <div
-                  className="absolute left-0 top-full bg-black/95 border border-ultraviolet/40 rounded-lg shadow-[0_4px_20px_rgba(138,43,226,0.4)] p-2 w-56 z-50 backdrop-blur-xl"
+                  className="absolute left-0 top-full bg-black/95 border border-royal-blue/40 rounded-lg shadow-[0_4px_20px_rgba(65,105,225,0.5)] p-2 w-56 z-50 backdrop-blur-xl"
                 >
                   {section.items.map((item) => (
                     <Link
                       key={item.page}
                       to={createPageUrl(item.page)}
-                      className="block px-3 py-2 rounded-md hover:bg-ultraviolet/20 hover:text-cyan transition-colors text-gray-200 text-sm"
+                      className="block px-3 py-2 rounded-md hover:bg-royal-blue/20 hover:text-cyan transition-colors text-gray-200 text-sm"
                     >
                       {item.label}
                     </Link>
@@ -106,7 +106,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
           </Link>
 
           <Link to={createPageUrl("Consultation")}>
-            <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-ultraviolet to-cyan text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+            <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-royal-blue to-cyan text-white text-sm font-semibold hover:opacity-90 transition-opacity">
               Contact
             </button>
           </Link>
@@ -114,19 +114,19 @@ export default function Navbar({ user, onLogin, onLogout }) {
           {user ? (
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
-                <Button className="bg-ultraviolet/20 border border-ultraviolet/50 text-white hover:bg-ultraviolet/30 text-sm">
+                <Button className="bg-royal-blue/20 border border-royal-blue/50 text-white hover:bg-royal-blue/30 text-sm">
                   <User className="w-4 h-4 mr-1" />
                   {user.full_name?.split(" ")[0] || "User"}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-black/95 border border-ultraviolet/40 shadow-[0_4px_20px_rgba(138,43,226,0.4)] backdrop-blur-xl">
-                <DropdownMenuItem asChild className="text-gray-200 hover:bg-ultraviolet/20 hover:text-cyan text-sm">
+              <DropdownMenuContent className="bg-black/95 border border-royal-blue/40 shadow-[0_4px_20px_rgba(65,105,225,0.5)] backdrop-blur-xl">
+                <DropdownMenuItem asChild className="text-gray-200 hover:bg-royal-blue/20 hover:text-cyan text-sm">
                   <Link to={createPageUrl("Dashboard")}>
                     <User className="w-4 h-4 mr-2" />
                     Dashboard
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-ultraviolet/30" />
+                <DropdownMenuSeparator className="bg-royal-blue/30" />
                 <DropdownMenuItem
                   onClick={onLogout}
                   className="text-red-400 hover:bg-red-500/20 text-sm"
@@ -139,7 +139,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
           ) : (
             <Button
               onClick={onLogin}
-              className="bg-ultraviolet/20 border border-ultraviolet/50 text-white hover:bg-ultraviolet/30 text-sm"
+              className="bg-royal-blue/20 border border-royal-blue/50 text-white hover:bg-royal-blue/30 text-sm"
             >
               Sign In
             </Button>

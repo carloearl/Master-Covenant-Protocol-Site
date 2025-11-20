@@ -10,7 +10,7 @@ export default function GlyphLoader({ fullScreen = true, text = "Securing..." })
     <div className={containerClass}>
       {/* Animated background particles */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-ultraviolet/30 rounded-full blur-[100px] animate-pulse" />
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-royal-blue/40 rounded-full blur-[100px] animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-cyan/30 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
 
@@ -20,32 +20,32 @@ export default function GlyphLoader({ fullScreen = true, text = "Securing..." })
         <div className="relative">
           {/* Outer glow ring */}
           <div className="absolute inset-0 animate-spin-slow">
-            <div className="w-32 h-32 rounded-full border-4 border-transparent border-t-ultraviolet border-r-cyan" />
+            <div className="w-32 h-32 rounded-full border-4 border-transparent border-t-royal-blue border-r-cyan" />
           </div>
           
           {/* Middle pulse ring */}
           <div className="absolute inset-2 animate-ping opacity-75">
-            <div className="w-28 h-28 rounded-full bg-gradient-to-r from-ultraviolet/20 to-cyan/20" />
+            <div className="w-28 h-28 rounded-full bg-gradient-to-r from-royal-blue/25 to-cyan/20" />
           </div>
 
           {/* Center shield */}
           <div className="relative flex items-center justify-center w-32 h-32">
-            <div className="absolute inset-4 bg-gradient-to-br from-ultraviolet to-cyan rounded-full animate-pulse" />
+            <div className="absolute inset-4 bg-gradient-to-br from-royal-blue to-cyan rounded-full animate-pulse" />
             <Shield className="w-16 h-16 text-white relative z-10 animate-pulse" />
           </div>
         </div>
 
         {/* Loading text */}
         <div className="flex flex-col items-center gap-2">
-          <h2 className="text-2xl font-bold text-transparent bg-gradient-to-r from-ultraviolet via-cyan to-ultraviolet bg-clip-text animate-pulse">
+          <h2 className="text-2xl font-bold text-transparent bg-gradient-to-r from-royal-blue via-cyan to-royal-blue bg-clip-text animate-pulse">
             {text}
           </h2>
           
           {/* Animated dots */}
           <div className="flex gap-2">
-            <div className="w-2 h-2 rounded-full bg-ultraviolet animate-bounce" />
+            <div className="w-2 h-2 rounded-full bg-royal-blue animate-bounce" />
             <div className="w-2 h-2 rounded-full bg-cyan animate-bounce" style={{ animationDelay: '0.2s' }} />
-            <div className="w-2 h-2 rounded-full bg-ultraviolet animate-bounce" style={{ animationDelay: '0.4s' }} />
+            <div className="w-2 h-2 rounded-full bg-royal-blue animate-bounce" style={{ animationDelay: '0.4s' }} />
           </div>
         </div>
 

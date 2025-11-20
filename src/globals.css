@@ -25,7 +25,8 @@ css
     --input: 217 91% 60% / 0.3;
     --ring: 217 91% 60%;
     --radius: 0.75rem;
-    --ultraviolet: #7f00ff;
+    --royal-blue: #4169e1;
+    --ultraviolet: #8a2be2;
     --cyan: #00eaff;
   }
 }
@@ -42,10 +43,15 @@ css
   }
 }
 
+.bg-royal-blue { background-color: var(--royal-blue); }
+.text-royal-blue { color: var(--royal-blue); }
+.border-royal-blue { border-color: var(--royal-blue); }
+.shadow-royal-blue { box-shadow: 0 0 15px rgba(65, 105, 225, 0.6); }
+
 .bg-ultraviolet { background-color: var(--ultraviolet); }
 .text-ultraviolet { color: var(--ultraviolet); }
 .border-ultraviolet { border-color: var(--ultraviolet); }
-.shadow-ultraviolet { box-shadow: 0 0 15px rgba(127, 0, 255, 0.4); }
+.shadow-ultraviolet { box-shadow: 0 0 15px rgba(138, 43, 226, 0.4); }
 
 .footer-links a {
   display: block;
@@ -57,16 +63,16 @@ css
 }
 
 @layer components {
-  /* GlyphBot Blue Theme - Primary Glass Style */
+  /* Royal Blue Theme - Primary Glass Style */
   .glass-royal,
   .glass-dark,
   .glass-card,
   .glass-card-dark {
-    background: rgba(30, 58, 138, 0.2) !important;
+    background: rgba(65, 105, 225, 0.15) !important;
     backdrop-filter: blur(16px) !important;
     -webkit-backdrop-filter: blur(16px) !important;
-    border: 1px solid rgba(59, 130, 246, 0.3) !important;
-    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2) !important;
+    border: 1px solid rgba(65, 105, 225, 0.4) !important;
+    box-shadow: 0 8px 32px rgba(65, 105, 225, 0.3) !important;
     color: white !important;
   }
 }
@@ -107,11 +113,11 @@ nav:not([class*="gradient"]) {
 [class*="Dialog"],
 [class*="Content"],
 [data-radix-portal] {
-  background: rgba(30, 58, 138, 0.2) !important;
-  background-color: rgba(30, 58, 138, 0.2) !important;
+  background: rgba(65, 105, 225, 0.15) !important;
+  background-color: rgba(65, 105, 225, 0.15) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  border: 1px solid rgba(65, 105, 225, 0.4) !important;
   color: white !important;
 }
 
@@ -119,8 +125,8 @@ nav:not([class*="gradient"]) {
 body > div:not(#root):not(#__next),
 [style*="position: fixed"],
 [style*="position: absolute"] {
-  background: rgba(30, 58, 138, 0.3) !important;
-  background-color: rgba(30, 58, 138, 0.3) !important;
+  background: rgba(65, 105, 225, 0.2) !important;
+  background-color: rgba(65, 105, 225, 0.2) !important;
 }
 
 /* NUCLEAR OPTION - KILL ALL WHITE EVERYWHERE */
@@ -138,8 +144,8 @@ body > div:not(#root):not(#__next),
 div[class*="bg-"],
 section[class],
 article[class] {
-  background: rgba(30, 58, 138, 0.3) !important;
-  background-color: rgba(30, 58, 138, 0.3) !important;
+  background: rgba(65, 105, 225, 0.2) !important;
+  background-color: rgba(65, 105, 225, 0.2) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
 }
@@ -150,7 +156,7 @@ section:not([class*="gradient"]):not([class*="Gradient"]),
 article:not([class*="gradient"]):not([class*="Gradient"]),
 aside:not([class*="gradient"]):not([class*="Gradient"]),
 main > div:not([class*="gradient"]) {
-  background-color: rgba(30, 58, 138, 0.2) !important;
+  background-color: rgba(65, 105, 225, 0.15) !important;
 }
 
 /* Force all list items, menu items, options */
@@ -169,8 +175,8 @@ li:hover,
 option:hover,
 [role="option"]:hover,
 [role="menuitem"]:hover {
-  background: rgba(59, 130, 246, 0.3) !important;
-  background-color: rgba(59, 130, 246, 0.3) !important;
+  background: rgba(65, 105, 225, 0.3) !important;
+  background-color: rgba(65, 105, 225, 0.3) !important;
 }
 
 /* Text elements */
@@ -178,7 +184,7 @@ h1, h2, h3, h4, h5, h6, p, span:not([class*="gradient"]), a, li, td, th, label, 
   color: white !important;
 }
 
-/* Radix UI components - Blue Theme - ULTRA AGGRESSIVE */
+/* Radix UI components - Royal Blue Theme - ULTRA AGGRESSIVE */
 [data-radix-popper-content-wrapper],
 [data-radix-select-content],
 [data-radix-dropdown-menu-content],
@@ -206,11 +212,11 @@ div[data-radix-portal] > * > *,
 div[data-radix-popper-content-wrapper],
 div[data-radix-popper-content-wrapper] > *,
 div[data-radix-popper-content-wrapper] > * > * {
-  background: rgba(30, 58, 138, 0.3) !important;
-  background-color: rgba(30, 58, 138, 0.3) !important;
+  background: rgba(65, 105, 225, 0.2) !important;
+  background-color: rgba(65, 105, 225, 0.2) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(59, 130, 246, 0.5) !important;
+  border: 1px solid rgba(65, 105, 225, 0.5) !important;
   color: white !important;
   z-index: 99999 !important;
 }
@@ -223,8 +229,8 @@ div {
 div[class*="bg-white"],
 div[class*="bg-gray"],
 div[class*="bg-slate"] {
-  background: rgba(30, 58, 138, 0.3) !important;
-  background-color: rgba(30, 58, 138, 0.3) !important;
+  background: rgba(65, 105, 225, 0.2) !important;
+  background-color: rgba(65, 105, 225, 0.2) !important;
 }
 
 [data-radix-select-item],
@@ -240,17 +246,17 @@ div[class*="bg-slate"] {
 [data-radix-dropdown-menu-item]:hover,
 [data-radix-select-item][data-highlighted],
 [data-radix-dropdown-menu-item][data-highlighted] {
-  background: rgba(59, 130, 246, 0.3) !important;
-  background-color: rgba(59, 130, 246, 0.3) !important;
+  background: rgba(65, 105, 225, 0.3) !important;
+  background-color: rgba(65, 105, 225, 0.3) !important;
   color: white !important;
 }
 
-/* Tabs - Blue Theme */
+/* Tabs - Royal Blue Theme */
 [role="tablist"],
 [data-radix-tabs-list] {
-  background: rgba(30, 58, 138, 0.3) !important;
+  background: rgba(65, 105, 225, 0.2) !important;
   backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  border: 1px solid rgba(65, 105, 225, 0.4) !important;
 }
 
 [role="tab"],
@@ -260,33 +266,33 @@ div[class*="bg-slate"] {
 
 [role="tab"][data-state="active"],
 [data-radix-tabs-trigger][data-state="active"] {
-  background: rgba(59, 130, 246, 0.3) !important;
+  background: rgba(65, 105, 225, 0.4) !important;
   color: white !important;
 }
 
-/* Buttons - Blue Theme */
+/* Buttons - Royal Blue Theme */
 button:not([class*="gradient"]) {
   color: white !important;
   cursor: pointer !important;
-  background: rgba(59, 130, 246, 0.3) !important;
-  background-color: rgba(59, 130, 246, 0.3) !important;
-  border: 1px solid rgba(59, 130, 246, 0.5) !important;
+  background: rgba(65, 105, 225, 0.25) !important;
+  background-color: rgba(65, 105, 225, 0.25) !important;
+  border: 1px solid rgba(65, 105, 225, 0.5) !important;
 }
 
 button:hover:not([class*="gradient"]) {
-  background: rgba(59, 130, 246, 0.5) !important;
-  background-color: rgba(59, 130, 246, 0.5) !important;
-  border-color: rgba(59, 130, 246, 0.7) !important;
+  background: rgba(65, 105, 225, 0.4) !important;
+  background-color: rgba(65, 105, 225, 0.4) !important;
+  border-color: rgba(65, 105, 225, 0.7) !important;
 }
 
-/* Inputs - Blue Theme */
+/* Inputs - Royal Blue Theme */
 input:not([type="checkbox"]):not([type="radio"]),
 textarea,
 select {
-  background: rgba(30, 58, 138, 0.3) !important;
-  background-color: rgba(30, 58, 138, 0.3) !important;
+  background: rgba(65, 105, 225, 0.15) !important;
+  background-color: rgba(65, 105, 225, 0.15) !important;
   backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  border: 1px solid rgba(65, 105, 225, 0.4) !important;
   color: white !important;
 }
 
@@ -311,14 +317,14 @@ textarea::placeholder {
   -webkit-text-fill-color: transparent !important;
 }
 
-/* Scrollbar - Blue Theme */
+/* Scrollbar - Royal Blue Theme */
 ::-webkit-scrollbar {
   width: 12px;
   background: #000000 !important;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.6) 0%, rgba(37, 99, 235, 0.6) 100%) !important;
+  background: linear-gradient(135deg, rgba(65, 105, 225, 0.7) 0%, rgba(65, 105, 225, 0.5) 100%) !important;
   border-radius: 6px;
 }
 
@@ -341,9 +347,9 @@ color: #fff !important;
 background: transparent !important;
 }
 
-/* Force all borders to blue */
+/* Force all borders to royal blue */
 * {
-  border-color: rgba(59, 130, 246, 0.3) !important;
+  border-color: rgba(65, 105, 225, 0.4) !important;
 }
 
 /* Transparent backgrounds except specific elements */
@@ -351,11 +357,11 @@ background: transparent !important;
   background-color: transparent !important;
 }
 
-/* Tables - Blue Theme */
+/* Tables - Royal Blue Theme */
 table, thead, tbody, tr, td, th {
-  background: rgba(30, 58, 138, 0.2) !important;
-  background-color: rgba(30, 58, 138, 0.2) !important;
-  border-color: rgba(59, 130, 246, 0.3) !important;
+  background: rgba(65, 105, 225, 0.15) !important;
+  background-color: rgba(65, 105, 225, 0.15) !important;
+  border-color: rgba(65, 105, 225, 0.4) !important;
   color: white !important;
 }
 
@@ -365,13 +371,13 @@ table {
 }
 
 thead {
-  background: rgba(30, 58, 138, 0.4) !important;
-  background-color: rgba(30, 58, 138, 0.4) !important;
+  background: rgba(65, 105, 225, 0.3) !important;
+  background-color: rgba(65, 105, 225, 0.3) !important;
 }
 
 tbody tr:hover {
-  background: rgba(59, 130, 246, 0.2) !important;
-  background-color: rgba(59, 130, 246, 0.2) !important;
+  background: rgba(65, 105, 225, 0.25) !important;
+  background-color: rgba(65, 105, 225, 0.25) !important;
 }
 
 /* Only allow backgrounds on these */
@@ -388,8 +394,8 @@ main {
 .glass-card-dark,
 .glass-royal,
 .glass-dark {
-  background: rgba(30, 58, 138, 0.2) !important;
-  background-color: rgba(30, 58, 138, 0.2) !important;
+  background: rgba(65, 105, 225, 0.15) !important;
+  background-color: rgba(65, 105, 225, 0.15) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
 }
@@ -406,18 +412,18 @@ main {
 [class*="Box"],
 [data-card],
 [data-panel] {
-  background: rgba(30, 58, 138, 0.2) !important;
-  background-color: rgba(30, 58, 138, 0.2) !important;
+  background: rgba(65, 105, 225, 0.15) !important;
+  background-color: rgba(65, 105, 225, 0.15) !important;
   backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  border: 1px solid rgba(65, 105, 225, 0.4) !important;
 }
 
-/* Badge variants - Blue Theme */
+/* Badge variants - Royal Blue Theme */
 [class*="badge"],
 [class*="Badge"],
 [data-badge] {
-  background: rgba(59, 130, 246, 0.2) !important;
-  border: 1px solid rgba(59, 130, 246, 0.5) !important;
+  background: rgba(65, 105, 225, 0.25) !important;
+  border: 1px solid rgba(65, 105, 225, 0.5) !important;
   color: white !important;
 }
 
@@ -442,15 +448,15 @@ main {
 [class*="bg-white"],
 [class*="bg-gray"],
 [class*="bg-slate"] {
-  background: rgba(30, 58, 138, 0.3) !important;
-  background-color: rgba(30, 58, 138, 0.3) !important;
+  background: rgba(65, 105, 225, 0.2) !important;
+  background-color: rgba(65, 105, 225, 0.2) !important;
 }
 
-/* Separator - Blue Theme */
+/* Separator - Royal Blue Theme */
 [data-orientation="horizontal"],
 [data-orientation="vertical"],
 hr {
-  background: rgba(59, 130, 246, 0.3) !important;
+  background: rgba(65, 105, 225, 0.4) !important;
 }
 
 /* Clickable elements */
