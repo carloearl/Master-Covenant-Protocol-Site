@@ -72,8 +72,31 @@ export default function Footer() {
 
 
 
-      <div className="mt-10 text-center text-gray-500 text-xs">
-        © {new Date().getFullYear()} GlyphLock Security LLC — All Rights Reserved
+      <div className="mt-10 pt-8 border-t border-ultraviolet/30">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center max-w-7xl mx-auto px-6">
+          <div className="text-sm text-gray-400">
+            <p>© {new Date().getFullYear()} GlyphLock Security LLC. All rights reserved.</p>
+          </div>
+
+          <div className="text-sm space-y-1 text-gray-400">
+            <p>El Mirage, Arizona • Established January 2025</p>
+            <p>
+              <a
+                href="mailto:glyphlock@gmail.com"
+                className="hover:text-cyan-400 transition-colors"
+              >
+                glyphlock@gmail.com
+              </a>
+              {" • "}
+              <a
+                href="tel:+14242466499"
+                className="hover:text-cyan-400 transition-colors"
+              >
+                (424) 246-6499
+              </a>
+            </p>
+          </div>
+        </div>
       </div>
     </footer>
   );
