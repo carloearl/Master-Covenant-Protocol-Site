@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DataTable from "@/components/dashboard/DataTable";
-import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import GlyphLoader from "@/components/GlyphLoader";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -31,11 +31,7 @@ export default function Dashboard() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <LoadingSpinner message="Loading dashboard..." />
-      </div>
-    );
+    return <GlyphLoader text="Loading Dashboard..." />;
   }
 
   return (

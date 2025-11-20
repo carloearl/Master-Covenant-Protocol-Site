@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import SEOHead from "@/components/SEOHead";
 
 import { Crown, Shield, Zap, Check, AlertCircle } from "lucide-react";
+import GlyphLoader from "@/components/GlyphLoader";
 
 export default function Pricing() {
   const [loading, setLoading] = useState(null);
@@ -72,16 +73,27 @@ export default function Pricing() {
     try {
       setLoading(plan.name);
       setError(null);
-      // TEMPORARY WORKAROUND — bypass Base44 and go direct to Stripe
-      // Replace old code completely.
-      window.location.href = `https://checkout.stripe.com/c/pay/${plan.priceId}`;
-      return;
+      
+      const response = await base44.functions.invoke('stripeCreateCheckout', {
+        priceId: plan.priceId,
+        mode: 'subscription' // All plans here seem to be subscriptions based on descriptions
+      });
+
+      if (response.data.url) {
+        window.location.href = response.data.url;
+      } else {
+        throw new Error(response.data.error || "Failed to create checkout session");
+      }
     } catch (err) {
+      console.error("Subscription error:", err);
       setError(err.message || "Failed to process subscription.");
-    } finally {
       setLoading(null);
     }
   };
+
+  if (loading) {
+    return <GlyphLoader text={`Preparing ${loading} Plan...`} />;
+  }
 
   return (
     <>
@@ -112,7 +124,7 @@ export default function Pricing() {
         <div className="container mx-auto px-4 relative z-10 max-w-7xl">
           <div className="text-center mb-20">
             <h1 className="text-5xl md:text-6xl font-black tracking-tight">
-              GlyphLock <span className="text-blue-400">Security Plans</span>
+              GlyphLock <span className="text-royal-blue">Security Plans</span>
             </h1>
             <p className="text-lg text-gray-400 mt-4">
               Zero free tiers. Zero compromises. Zero games.
@@ -138,7 +150,7 @@ export default function Pricing() {
               <div key={plan.name} className="relative group">
                 {plan.highlight && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
-                    <Badge className="bg-blue-600 text-white px-4 py-1 rounded-full shadow-xl shadow-blue-500/40">
+                    <Badge className="bg-royal-blue text-white px-4 py-1 rounded-full shadow-xl shadow-royal-blue/40">
                       Most Popular
                     </Badge>
                   </div>
@@ -148,15 +160,15 @@ export default function Pricing() {
                   className={`relative backdrop-blur-xl transition-all duration-300 border-2
                     ${
                       plan.highlight
-                        ? "border-blue-500 shadow-[0_0_25px_rgba(0,140,255,0.6)]"
-                        : "border-gray-800 hover:border-blue-500/40"
+                        ? "border-royal-blue shadow-[0_0_25px_rgba(65,105,225,0.6)]"
+                        : "border-gray-800 hover:border-royal-blue/40"
                     }
                     bg-gradient-to-br from-gray-900/60 to-gray-950/40
                     h-full group-hover:scale-[1.02]`}
                 >
                   <CardHeader>
                     <div className="flex justify-between mb-4">
-                      <plan.icon className="w-10 h-10 text-blue-400" />
+                      <plan.icon className="w-10 h-10 text-royal-blue" />
                     </div>
                     <CardTitle className="text-3xl font-bold text-white tracking-tight">
                       {plan.name}
@@ -187,7 +199,7 @@ export default function Pricing() {
 
                     {plan.name === "Custom" ? (
                       <Link to={createPageUrl("Consultation")}>
-                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg">
+                        <Button className="w-full bg-royal-blue hover:bg-blue-700 text-white text-lg">
                           Contact Sales
                         </Button>
                       </Link>
@@ -197,7 +209,7 @@ export default function Pricing() {
                         disabled={loading === plan.name}
                         className={`w-full text-lg ${
                           plan.highlight
-                            ? "bg-blue-600 hover:bg-blue-700"
+                            ? "bg-royal-blue hover:bg-blue-700"
                             : "bg-gray-800 hover:bg-gray-700"
                         } text-white`}
                       >
