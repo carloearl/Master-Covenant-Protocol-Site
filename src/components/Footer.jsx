@@ -72,29 +72,45 @@ export default function Footer() {
 
 
 
-      <div className="mt-10 pt-8 border-t border-ultraviolet/30">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center max-w-7xl mx-auto px-6">
-          <div className="text-sm text-gray-400">
-            <p>© {new Date().getFullYear()} GlyphLock Security LLC. All rights reserved.</p>
-          </div>
+      <div className="mt-12 max-w-7xl mx-auto px-6">
+        <h4 className="text-center text-sm font-semibold mb-6 text-gray-400">
+          Security & Compliance Certifications
+        </h4>
 
-          <div className="text-sm space-y-1 text-gray-400">
-            <p>El Mirage, Arizona • Established January 2025</p>
-            <p>
-              <a
-                href="mailto:glyphlock@gmail.com"
-                className="hover:text-cyan-400 transition-colors"
-              >
-                glyphlock@gmail.com
-              </a>
-              {" • "}
-              <a
-                href="tel:+14242466499"
-                className="hover:text-cyan-400 transition-colors"
-              >
-                (424) 246-6499
-              </a>
-            </p>
+        <div className="flex flex-wrap items-center justify-center gap-6 mb-12">
+          {certifications.map((cert, idx) => (
+            <div key={idx} className="glass-card border border-ultraviolet/30 rounded-lg p-4 w-28 h-28 flex flex-col items-center justify-center hover:border-cyan-400/50 hover:shadow-ultraviolet transition-all backdrop-blur-xl">
+              <Shield className="w-10 h-10 text-ultraviolet mb-2" />
+              <div className="text-xs font-bold text-white text-center leading-tight">{cert.name}</div>
+              <div className="text-[10px] text-cyan-400 mt-1">{cert.subtitle}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="pt-8 border-t border-ultraviolet/30">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
+            <div className="text-sm text-gray-400">
+              <p>© {new Date().getFullYear()} GlyphLock Security LLC. All rights reserved.</p>
+            </div>
+
+            <div className="text-sm space-y-1 text-gray-400">
+              <p>El Mirage, Arizona • Established January 2025</p>
+              <p>
+                <a
+                  href="mailto:glyphlock@gmail.com"
+                  className="hover:text-cyan-400 transition-colors"
+                >
+                  glyphlock@gmail.com
+                </a>
+                {" • "}
+                <a
+                  href="tel:+14242466499"
+                  className="hover:text-cyan-400 transition-colors"
+                >
+                  (424) 246-6499
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
