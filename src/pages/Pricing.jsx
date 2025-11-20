@@ -108,7 +108,7 @@ export default function Pricing() {
           className="absolute inset-0 opacity-20"
           style={{
             backgroundImage:
-              "radial-gradient(circle at center, rgba(0,120,255,0.8), transparent 60%)"
+              "radial-gradient(circle at center, rgba(65,105,225,0.8), transparent 60%)"
           }}
         />
 
@@ -138,8 +138,8 @@ export default function Pricing() {
             </Alert>
           )}
 
-          <Alert className="mb-12 bg-blue-500/10 border-blue-500/30 max-w-3xl mx-auto">
-            <AlertCircle className="h-5 w-5 text-blue-400" />
+          <Alert className="mb-12 bg-royal-blue/10 border-royal-blue/30 max-w-3xl mx-auto">
+            <AlertCircle className="h-5 w-5 text-royal-blue" />
             <AlertDescription className="text-white">
               All sales are final. Subscription refunds available only within 14 days.
             </AlertDescription>
@@ -230,7 +230,7 @@ export default function Pricing() {
               Talk to a GlyphLock security specialist.
             </p>
             <Link to={createPageUrl("Consultation")}>
-              <Button className="text-white border-blue-500/50 hover:bg-blue-500/20 px-8 py-6 text-lg">
+              <Button className="text-white border-royal-blue/50 hover:bg-royal-blue/20 px-8 py-6 text-lg">
                 Schedule Consultation ($299)
               </Button>
             </Link>
