@@ -71,7 +71,7 @@ export default function Consultation() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <Card className="glass-card-dark border-blue-500/30" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
+              <Card className="glass-card-dark border-royal-blue/30" style={{background: 'rgba(65, 105, 225, 0.15)', backdropFilter: 'blur(16px)'}}>
                 <CardHeader>
                   <CardTitle className="text-white">Consultation Request Form</CardTitle>
                 </CardHeader>
@@ -85,7 +85,7 @@ export default function Consultation() {
                           required
                           value={formData.full_name}
                           onChange={(e) => setFormData({...formData, full_name: e.target.value})}
-                          className="glass-card-dark border-blue-500/30 text-white"
+                          className="glass-card-dark border-royal-blue/30 text-white"
                         />
                       </div>
                       <div>
@@ -96,7 +96,7 @@ export default function Consultation() {
                           required
                           value={formData.email}
                           onChange={(e) => setFormData({...formData, email: e.target.value})}
-                          className="glass-card-dark border-blue-500/30 text-white"
+                          className="glass-card-dark border-royal-blue/30 text-white"
                         />
                       </div>
                     </div>
@@ -108,7 +108,7 @@ export default function Consultation() {
                           id="company"
                           value={formData.company}
                           onChange={(e) => setFormData({...formData, company: e.target.value})}
-                          className="glass-card-dark border-blue-500/30 text-white"
+                          className="glass-card-dark border-royal-blue/30 text-white"
                         />
                       </div>
                       <div>
@@ -118,7 +118,7 @@ export default function Consultation() {
                           type="tel"
                           value={formData.phone}
                           onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                          className="glass-card-dark border-blue-500/30 text-white"
+                          className="glass-card-dark border-royal-blue/30 text-white"
                         />
                       </div>
                     </div>
@@ -149,7 +149,7 @@ export default function Consultation() {
                           type="date"
                           value={formData.preferred_date}
                           onChange={(e) => setFormData({...formData, preferred_date: e.target.value})}
-                          className="glass-card-dark border-blue-500/30 text-white"
+                          className="glass-card-dark border-royal-blue/30 text-white"
                           min={new Date().toISOString().split('T')[0]}
                         />
                       </div>
@@ -163,7 +163,7 @@ export default function Consultation() {
                         value={formData.message}
                         onChange={(e) => setFormData({...formData, message: e.target.value})}
                         placeholder="Tell us about your security needs..."
-                        className="glass-card-dark border-blue-500/30 text-white"
+                        className="glass-card-dark border-royal-blue/30 text-white"
                       />
                     </div>
 
@@ -181,7 +181,7 @@ export default function Consultation() {
             </div>
 
             <div className="space-y-6">
-              <Card className="glass-card-dark border-blue-500/30" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
+              <Card className="glass-card-dark border-royal-blue/30" style={{background: 'rgba(65, 105, 225, 0.15)', backdropFilter: 'blur(16px)'}}>
                 <CardHeader>
                   <CardTitle className="text-white">What to Expect</CardTitle>
                 </CardHeader>
@@ -195,7 +195,7 @@ export default function Consultation() {
                 </CardContent>
               </Card>
 
-              <Card className="glass-card-dark border-blue-500/30" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
+              <Card className="glass-card-dark border-royal-blue/30" style={{background: 'rgba(65, 105, 225, 0.15)', backdropFilter: 'blur(16px)'}}>
                 <CardHeader>
                   <CardTitle className="text-white">Consultation Details</CardTitle>
                 </CardHeader>
