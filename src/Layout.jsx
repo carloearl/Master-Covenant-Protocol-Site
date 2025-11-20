@@ -6,9 +6,11 @@ import GlyphBotJr from "@/components/GlyphBotJr";
 import InteractiveNebula from "@/components/InteractiveNebula";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import GlyphLoader from "@/components/GlyphLoader";
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
 
   useEffect(() => {
@@ -21,9 +23,13 @@ export default function Layout({ children, currentPageName }) {
         }
       } catch (err) {
         console.error("Failed to get user:", err);
+      } finally {
+        setLoading(false);
       }
     })();
   }, []);
+
+  if (loading) return <GlyphLoader text="Initializing Secure Environment..." />;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });

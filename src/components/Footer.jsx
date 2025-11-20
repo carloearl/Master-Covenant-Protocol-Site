@@ -13,7 +13,7 @@ const certifications = [
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-black border-t border-ultraviolet/40 text-gray-300 py-12">
+    <footer className="w-full bg-black border-t border-royal-blue/40 text-gray-300 py-12">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-5 gap-10">
         <div>
           <div className="flex items-center gap-2 mb-4">
@@ -29,7 +29,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="text-ultraviolet font-semibold mb-4">Company</h4>
+          <h4 className="text-royal-blue font-semibold mb-4">Company</h4>
           <div className="footer-links flex flex-col gap-2">
             <Link to={createPageUrl("About")}>About</Link>
             <Link to={createPageUrl("DreamTeam")}>Dream Team</Link>
@@ -39,7 +39,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="text-ultraviolet font-semibold mb-4">Services</h4>
+          <h4 className="text-royal-blue font-semibold mb-4">Services</h4>
           <div className="footer-links flex flex-col gap-2">
             <Link to={createPageUrl("QRGenerator")}>QR Generator</Link>
             <Link to={createPageUrl("Blockchain")}>Blockchain Verification</Link>
@@ -51,7 +51,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="text-ultraviolet font-semibold mb-4">AI Tools</h4>
+          <h4 className="text-royal-blue font-semibold mb-4">AI Tools</h4>
           <div className="footer-links flex flex-col gap-2">
             <Link to={createPageUrl("GlyphBot")}>GlyphBot AI</Link>
             <Link to={createPageUrl("ContentGenerator")}>Content Generator</Link>
@@ -60,7 +60,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="text-ultraviolet font-semibold mb-4">Resources</h4>
+          <h4 className="text-royal-blue font-semibold mb-4">Resources</h4>
           <div className="footer-links flex flex-col gap-2">
             <Link to={createPageUrl("SecurityDocs")}>Documentation</Link>
             <Link to={createPageUrl("Roadmap")}>Roadmap</Link>
@@ -79,15 +79,15 @@ export default function Footer() {
 
         <div className="flex flex-wrap items-center justify-center gap-6 mb-12">
           {certifications.map((cert, idx) => (
-            <div key={idx} className="glass-card border border-ultraviolet/30 rounded-lg p-4 w-28 h-28 flex flex-col items-center justify-center hover:border-cyan-400/50 hover:shadow-ultraviolet transition-all backdrop-blur-xl">
-              <Shield className="w-10 h-10 text-ultraviolet mb-2" />
+            <div key={idx} className="glass-card border border-royal-blue/30 rounded-lg p-4 w-28 h-28 flex flex-col items-center justify-center hover:border-cyan-400/50 hover:shadow-royal-blue transition-all backdrop-blur-xl">
+              <Shield className="w-10 h-10 text-royal-blue mb-2" />
               <div className="text-xs font-bold text-white text-center leading-tight">{cert.name}</div>
               <div className="text-[10px] text-cyan-400 mt-1">{cert.subtitle}</div>
             </div>
           ))}
         </div>
 
-        <div className="pt-8 border-t border-ultraviolet/30">
+        <div className="pt-8 border-t border-royal-blue/30">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
             <div className="text-sm text-gray-400">
               <p>© {new Date().getFullYear()} GlyphLock Security LLC. All rights reserved.</p>
