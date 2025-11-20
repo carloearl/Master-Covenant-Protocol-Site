@@ -72,12 +72,12 @@ export default function Navbar({ user, onLogin, onLogout }) {
           {NAV.map((section) => (
             <div 
               key={section.label} 
-              className="relative"
+              className="relative pt-2"
               onMouseEnter={() => setOpen(section.label)}
               onMouseLeave={() => setOpen(null)}
             >
               <button
-                className="flex items-center gap-1 hover:text-cyan-300 transition"
+                className="flex items-center gap-1 hover:text-cyan-300 transition -mt-2"
               >
                 {section.label}
                 <ChevronDown size={16} />
@@ -85,7 +85,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
 
               {open === section.label && (
                 <div
-                  className="absolute left-0 top-full mt-2 bg-black border border-ultraviolet/40 rounded-lg shadow-xl p-3 w-56 z-50"
+                  className="absolute left-0 top-full bg-black border border-ultraviolet/40 rounded-lg shadow-xl p-3 w-56 z-50"
                 >
                   {section.items.map((item) => (
                     <Link
