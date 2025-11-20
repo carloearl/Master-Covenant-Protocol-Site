@@ -39,8 +39,8 @@ export default function FinalizeModal({ open, onClose, result }) {
             </div>
           </div>
 
-          <div className="p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-            <p className="text-purple-400 text-sm font-semibold mb-2">Image File Hash</p>
+          <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+            <p className="text-blue-400 text-sm font-semibold mb-2">Image File Hash</p>
             <div className="flex items-center gap-2">
               <code className="text-white text-xs font-mono flex-1 break-all">
                 {result.imageFileHash}
@@ -49,7 +49,7 @@ export default function FinalizeModal({ open, onClose, result }) {
                 size="icon"
                 variant="ghost"
                 onClick={() => copyToClipboard(result.imageFileHash)}
-                className="text-purple-400 hover:bg-purple-500/20 flex-shrink-0"
+                className="text-blue-400 hover:bg-blue-500/20 flex-shrink-0"
               >
                 <Copy className="w-4 h-4" />
               </Button>
@@ -57,11 +57,11 @@ export default function FinalizeModal({ open, onClose, result }) {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-3 bg-black/40 rounded-lg border border-purple-500/30">
+            <div className="p-3 bg-black/40 rounded-lg border border-cyan-500/30">
               <p className="text-white/60 text-xs mb-1">Log ID</p>
               <p className="text-white text-sm font-mono">{result.logId}</p>
             </div>
-            <div className="p-3 bg-black/40 rounded-lg border border-purple-500/30">
+            <div className="p-3 bg-black/40 rounded-lg border border-cyan-500/30">
               <p className="text-white/60 text-xs mb-1">Timestamp</p>
               <p className="text-white text-sm">{new Date(result.createdAt).toLocaleString()}</p>
             </div>
@@ -78,7 +78,7 @@ export default function FinalizeModal({ open, onClose, result }) {
             <Button
               onClick={onClose}
               variant="outline"
-              className="border-purple-500/50 text-white hover:bg-purple-500/20"
+              className="border-cyan-500/50 text-white hover:bg-cyan-500/20"
             >
               Close
             </Button>

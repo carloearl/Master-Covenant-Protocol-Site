@@ -25,7 +25,7 @@ export default function ToolbarPanel({ activeTool, onToolChange }) {
                 p-3 rounded-lg transition-all flex flex-col items-center gap-1
                 ${isActive 
                   ? 'bg-cyan-500/30 border-2 border-cyan-400 shadow-lg shadow-cyan-500/50' 
-                  : 'bg-purple-900/20 border-2 border-purple-500/30 hover:border-cyan-500/50'
+                  : 'bg-cyan-900/20 border-2 border-cyan-500/30 hover:border-cyan-500/50'
                 }
               `}
               title={tool.label}

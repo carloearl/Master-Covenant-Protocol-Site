@@ -60,10 +60,10 @@ export default function UploadZone({ onUpload, loading }) {
     >
       <div className={`
         border-2 border-dashed rounded-xl p-16 text-center transition-all
-        ${dragActive ? 'border-cyan-400 bg-cyan-500/10' : 'border-purple-500/50 bg-purple-900/10'}
+        ${dragActive ? 'border-cyan-400 bg-cyan-500/10' : 'border-cyan-500/50 bg-cyan-900/10'}
         ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
       `}>
-        <Upload className={`w-20 h-20 mx-auto mb-6 ${dragActive ? 'text-cyan-400' : 'text-purple-400'}`} />
+        <Upload className={`w-20 h-20 mx-auto mb-6 ${dragActive ? 'text-cyan-400' : 'text-cyan-400'}`} />
         
         <h3 className="text-2xl font-bold text-white mb-3">
           {loading ? 'Uploading...' : 'Upload Your Image'}

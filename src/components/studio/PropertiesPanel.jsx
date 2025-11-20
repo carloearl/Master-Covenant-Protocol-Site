@@ -69,7 +69,7 @@ export default function PropertiesPanel({
   return (
     <div className="space-y-4">
       <Card className="glass-royal border-cyan-500/30" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
-        <CardHeader className="border-b border-purple-500/30" style={{background: 'transparent'}}>
+        <CardHeader className="border-b border-cyan-500/30" style={{background: 'transparent'}}>
           <CardTitle className="text-white text-lg">Hotspot Details</CardTitle>
         </CardHeader>
         <CardContent className="pt-6" style={{background: 'transparent'}}>
@@ -81,7 +81,7 @@ export default function PropertiesPanel({
                   value={formData.label}
                   onChange={(e) => setFormData({ ...formData, label: e.target.value })}
                   onBlur={handleUpdate}
-                  className="glass-card-dark border-purple-500/30 text-white mt-1"
+                  className="glass-card-dark border-cyan-500/30 text-white mt-1"
                 />
               </div>
 
@@ -92,7 +92,7 @@ export default function PropertiesPanel({
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   onBlur={handleUpdate}
                   rows={3}
-                  className="glass-card-dark border-purple-500/30 text-white mt-1"
+                  className="glass-card-dark border-cyan-500/30 text-white mt-1"
                 />
               </div>
 
@@ -106,10 +106,10 @@ export default function PropertiesPanel({
                     onUpdateHotspot({ ...selectedHotspot, ...updated });
                   }}
                 >
-                  <SelectTrigger className="glass-card-dark border-purple-500/30 text-white mt-1">
+                  <SelectTrigger className="glass-card-dark border-cyan-500/30 text-white mt-1">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="glass-card-dark border-purple-500/30">
+                  <SelectContent className="glass-card-dark border-cyan-500/30">
                     <SelectItem value="none">None</SelectItem>
                     <SelectItem value="link">Link (New Tab)</SelectItem>
                     <SelectItem value="redirect">Redirect (Same Window)</SelectItem>
@@ -140,7 +140,7 @@ export default function PropertiesPanel({
                         ? 'event_name'
                         : 'Enter text...'
                     }
-                    className="glass-card-dark border-purple-500/30 text-white mt-1"
+                    className="glass-card-dark border-cyan-500/30 text-white mt-1"
                   />
                   {formData.actionType === 'trigger_event' && (
                     <p className="text-xs text-cyan-400/70 mt-1">
@@ -155,7 +155,7 @@ export default function PropertiesPanel({
                 </div>
               )}
 
-              <div className="pt-3 border-t border-purple-500/30">
+              <div className="pt-3 border-t border-cyan-500/30">
                 <Label className="text-white/60 text-xs">Position</Label>
                 <div className="grid grid-cols-2 gap-2 mt-2 text-xs text-white/70">
                   <div>X: {selectedHotspot.x.toFixed(1)}%</div>
@@ -182,8 +182,8 @@ export default function PropertiesPanel({
         </CardContent>
       </Card>
 
-      <Card className="glass-royal border-purple-500/30" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
-        <CardHeader className="border-b border-purple-500/30" style={{background: 'transparent'}}>
+      <Card className="glass-royal border-cyan-500/30" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
+        <CardHeader className="border-b border-cyan-500/30" style={{background: 'transparent'}}>
           <CardTitle className="text-white text-lg">Current Hotspots ({hotspots.length})</CardTitle>
         </CardHeader>
         <CardContent className="pt-4" style={{background: 'transparent'}}>
@@ -199,7 +199,7 @@ export default function PropertiesPanel({
                     p-3 rounded-lg cursor-pointer transition-all
                     ${selectedHotspot?.id === hotspot.id
                       ? 'bg-cyan-500/20 border-2 border-cyan-400'
-                      : 'bg-purple-900/20 border-2 border-purple-500/30 hover:border-cyan-500/50'
+                      : 'bg-cyan-900/20 border-2 border-cyan-500/30 hover:border-cyan-500/50'
                     }
                   `}
                 >
@@ -214,8 +214,8 @@ export default function PropertiesPanel({
         </CardContent>
       </Card>
 
-      <Card className="glass-royal border-purple-500/30 bg-gradient-to-br from-purple-900/20 to-cyan-900/10" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
-        <CardHeader className="border-b border-purple-500/30" style={{background: 'transparent'}}>
+      <Card className="glass-royal border-cyan-500/30 bg-gradient-to-br from-cyan-900/20 to-blue-900/10" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
+        <CardHeader className="border-b border-cyan-500/30" style={{background: 'transparent'}}>
           <CardTitle className="text-white text-lg flex items-center gap-2">
             <Hash className="w-5 h-5 text-cyan-400" />
             Finalize & Hash
@@ -229,7 +229,7 @@ export default function PropertiesPanel({
           <Button
             onClick={handleSave}
             disabled={saving || hotspots.length === 0}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+            className="w-full bg-cyan-600 hover:bg-cyan-700 text-white"
           >
             <Save className="w-4 h-4 mr-2" />
             {saving ? 'Saving...' : 'Save Hotspots'}
