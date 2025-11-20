@@ -30,7 +30,7 @@ export default function FeaturesSection() {
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-            Why Choose <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">GlyphLock</span>
+            Why Choose <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">GlyphLock</span>
           </h2>
           <p className="text-xl text-white/70 max-w-3xl mx-auto">
             Military-grade security that adapts to emerging threats
@@ -41,9 +41,9 @@ export default function FeaturesSection() {
           {features.map((feature, idx) => {
             const Icon = feature.icon;
             return (
-              <div key={idx} className="glass-royal p-8 rounded-2xl hover:border-blue-500/60 transition-all duration-300 group">
-                <div className="bg-blue-500/20 w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-500/30 transition-colors">
-                  <Icon className="w-8 h-8 text-blue-400" />
+              <div key={idx} className="glass-royal p-8 rounded-2xl hover:border-cyan-500/60 transition-all duration-300 group">
+                <div className="bg-cyan-500/20 w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:bg-cyan-500/30 transition-colors">
+                  <Icon className="w-8 h-8 text-cyan-400" />
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-white">{feature.title}</h3>
                 <p className="text-white/70">{feature.description}</p>
@@ -62,7 +62,7 @@ export default function FeaturesSection() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex items-end p-8">
               <div>
                 <div className="flex items-center gap-3 mb-3">
-                  <Lock className="w-7 h-7 text-blue-400" />
+                  <Lock className="w-7 h-7 text-cyan-400" />
                   <h3 className="text-2xl font-bold text-white">Smart Contracts</h3>
                 </div>
                 <p className="text-white/80">Automated, secure, and transparent agreements</p>
@@ -79,7 +79,7 @@ export default function FeaturesSection() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex items-end p-8">
               <div>
                 <div className="flex items-center gap-3 mb-3">
-                  <Shield className="w-7 h-7 text-blue-400" />
+                  <Shield className="w-7 h-7 text-cyan-400" />
                   <h3 className="text-2xl font-bold text-white">Full Stack Security</h3>
                 </div>
                 <p className="text-white/80">End-to-end protection for your entire stack</p>
@@ -96,7 +96,7 @@ export default function FeaturesSection() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex items-end p-8">
               <div>
                 <div className="flex items-center gap-3 mb-3">
-                  <Eye className="w-7 h-7 text-blue-400" />
+                  <Eye className="w-7 h-7 text-cyan-400" />
                   <h3 className="text-2xl font-bold text-white">Secure Development</h3>
                 </div>
                 <p className="text-white/80">Build with security at the foundation</p>
