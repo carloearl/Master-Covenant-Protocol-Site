@@ -11,7 +11,7 @@ export default function ToolbarPanel({ activeTool, onToolChange }) {
   ];
 
   return (
-    <Card className="glass-royal border-cyan-500/30 p-2">
+    <Card className="glass-royal border-cyan-500/30 p-2" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
       <div className="flex flex-col gap-2">
         {tools.map((tool) => {
           const Icon = tool.icon;

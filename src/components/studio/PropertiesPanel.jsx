@@ -68,11 +68,11 @@ export default function PropertiesPanel({
 
   return (
     <div className="space-y-4">
-      <Card className="glass-royal border-cyan-500/30">
-        <CardHeader className="border-b border-purple-500/30">
+      <Card className="glass-royal border-cyan-500/30" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
+        <CardHeader className="border-b border-purple-500/30" style={{background: 'transparent'}}>
           <CardTitle className="text-white text-lg">Hotspot Details</CardTitle>
         </CardHeader>
-        <CardContent className="pt-6">
+        <CardContent className="pt-6" style={{background: 'transparent'}}>
           {selectedHotspot ? (
             <div className="space-y-4">
               <div>
@@ -159,11 +159,11 @@ export default function PropertiesPanel({
         </CardContent>
       </Card>
 
-      <Card className="glass-royal border-purple-500/30">
-        <CardHeader className="border-b border-purple-500/30">
+      <Card className="glass-royal border-purple-500/30" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
+        <CardHeader className="border-b border-purple-500/30" style={{background: 'transparent'}}>
           <CardTitle className="text-white text-lg">Current Hotspots ({hotspots.length})</CardTitle>
         </CardHeader>
-        <CardContent className="pt-4">
+        <CardContent className="pt-4" style={{background: 'transparent'}}>
           {hotspots.length === 0 ? (
             <p className="text-white/40 text-center py-4 text-sm">No hotspots yet</p>
           ) : (
@@ -191,14 +191,14 @@ export default function PropertiesPanel({
         </CardContent>
       </Card>
 
-      <Card className="glass-royal border-purple-500/30 bg-gradient-to-br from-purple-900/20 to-cyan-900/10">
-        <CardHeader className="border-b border-purple-500/30">
+      <Card className="glass-royal border-purple-500/30 bg-gradient-to-br from-purple-900/20 to-cyan-900/10" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
+        <CardHeader className="border-b border-purple-500/30" style={{background: 'transparent'}}>
           <CardTitle className="text-white text-lg flex items-center gap-2">
             <Hash className="w-5 h-5 text-cyan-400" />
             Finalize & Hash
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-4 space-y-3">
+        <CardContent className="pt-4 space-y-3" style={{background: 'transparent'}}>
           <p className="text-white/60 text-sm">
             Lock in this interactive image and generate a cryptographic hash for verification.
           </p>

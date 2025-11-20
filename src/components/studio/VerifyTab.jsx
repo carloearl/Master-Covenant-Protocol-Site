@@ -59,11 +59,11 @@ export default function VerifyTab({ initialLogId }) {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      <Card className="glass-royal border-cyan-500/30">
-        <CardHeader className="border-b border-purple-500/30">
+      <Card className="glass-royal border-cyan-500/30" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
+        <CardHeader className="border-b border-purple-500/30" style={{background: 'transparent'}}>
           <CardTitle className="text-white text-xl">Verify by Log ID</CardTitle>
         </CardHeader>
-        <CardContent className="pt-6">
+        <CardContent className="pt-6" style={{background: 'transparent'}}>
           <div className="flex gap-3">
             <div className="flex-1">
               <Label htmlFor="logId" className="text-white/80 text-sm">Log ID</Label>
@@ -90,14 +90,14 @@ export default function VerifyTab({ initialLogId }) {
       </Card>
 
       {result && (
-        <Card className="glass-royal border-cyan-500/50 shadow-xl shadow-cyan-500/20">
-          <CardHeader className="border-b border-cyan-500/30">
+        <Card className="glass-royal border-cyan-500/50 shadow-xl shadow-cyan-500/20" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
+          <CardHeader className="border-b border-cyan-500/30" style={{background: 'transparent'}}>
             <CardTitle className="text-white flex items-center gap-2 text-xl">
               <CheckCircle2 className="w-6 h-6 text-cyan-400" />
               Verification Result
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-6 space-y-4">
+          <CardContent className="pt-6 space-y-4" style={{background: 'transparent'}}>
             <div className="p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-lg">
               <Label className="text-cyan-400 text-sm font-semibold">Verification Hash</Label>
               <div className="flex items-center gap-2 mt-2">
@@ -196,11 +196,11 @@ export default function VerifyTab({ initialLogId }) {
         </Card>
       )}
 
-      <Card className="glass-royal border-purple-500/30">
-        <CardHeader className="border-b border-purple-500/30">
+      <Card className="glass-royal border-purple-500/30" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
+        <CardHeader className="border-b border-purple-500/30" style={{background: 'transparent'}}>
           <CardTitle className="text-white text-xl">Recent Interactive Image Hashes</CardTitle>
         </CardHeader>
-        <CardContent className="pt-6">
+        <CardContent className="pt-6" style={{background: 'transparent'}}>
           {recentLogs.length === 0 ? (
             <p className="text-white/40 text-center py-8">No verification logs yet</p>
           ) : (

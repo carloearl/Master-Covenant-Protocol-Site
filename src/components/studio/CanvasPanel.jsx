@@ -167,8 +167,8 @@ export default function CanvasPanel({
   };
 
   return (
-    <Card className="glass-royal border-cyan-500/30 overflow-hidden">
-      <CardHeader className="border-b border-purple-500/30">
+    <Card className="glass-royal border-cyan-500/30 overflow-hidden" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
+      <CardHeader className="border-b border-purple-500/30" style={{background: 'transparent'}}>
         <CardTitle className="text-white flex items-center justify-between">
           <span>{imageName}</span>
           <div className="flex items-center gap-2">
@@ -194,7 +194,7 @@ export default function CanvasPanel({
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-4 bg-black">
+      <CardContent className="p-4" style={{background: '#000000'}}>
         <div className="relative overflow-auto max-h-[600px] border-2 border-dashed border-purple-500/30 rounded-lg">
           <canvas
             ref={canvasRef}
