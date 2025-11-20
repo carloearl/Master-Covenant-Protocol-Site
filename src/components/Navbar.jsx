@@ -55,17 +55,15 @@ export default function Navbar({ user, onLogin, onLogout }) {
   const [open, setOpen] = useState(null);
 
   return (
-    <nav className="w-full bg-gradient-to-r from-black via-ultraviolet/10 to-black border-b-4 border-ultraviolet shadow-[0_0_40px_rgba(138,43,226,0.8),0_10px_60px_rgba(0,234,255,0.4)] text-white font-medium z-50 sticky top-0 backdrop-blur-xl">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link to={createPageUrl("Home")} className="flex items-center gap-3 group">
-          <div className="p-2 bg-gradient-to-br from-ultraviolet to-cyan rounded-xl shadow-[0_0_20px_rgba(0,234,255,0.6)] group-hover:shadow-[0_0_30px_rgba(138,43,226,0.8)] transition-all duration-300">
-            <img
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d92107808_glyphlock-3d-logo.png"
-              alt="GlyphLock"
-              className="h-8 w-auto"
-            />
-          </div>
-          <span className="text-transparent bg-gradient-to-r from-ultraviolet via-cyan to-ultraviolet bg-clip-text font-black text-2xl tracking-wide group-hover:scale-105 transition-transform">
+    <nav className="w-full bg-black/95 border-b border-ultraviolet/60 shadow-[0_2px_20px_rgba(138,43,226,0.3)] text-white z-50 sticky top-0 backdrop-blur-lg">
+      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+        <Link to={createPageUrl("Home")} className="flex items-center gap-2 group">
+          <img
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d92107808_glyphlock-3d-logo.png"
+            alt="GlyphLock"
+            className="h-8 w-auto"
+          />
+          <span className="text-transparent bg-gradient-to-r from-ultraviolet to-cyan bg-clip-text font-bold text-xl tracking-tight">
             GlyphLock
           </span>
         </Link>
@@ -79,21 +77,21 @@ export default function Navbar({ user, onLogin, onLogout }) {
               onMouseLeave={() => setOpen(null)}
             >
               <button
-                className="flex items-center gap-1 text-white hover:text-cyan transition-all duration-300 -mt-2 font-bold hover:scale-110"
+                className="flex items-center gap-1 text-gray-300 hover:text-cyan transition-colors -mt-2 text-sm font-medium"
               >
                 {section.label}
-                <ChevronDown size={16} className="group-hover:rotate-180 transition-transform" />
+                <ChevronDown size={14} />
               </button>
 
               {open === section.label && (
                 <div
-                  className="absolute left-0 top-full bg-gradient-to-br from-ultraviolet/40 via-black/90 to-cyan/40 border-4 border-cyan rounded-xl shadow-[0_0_40px_rgba(0,234,255,0.6)] p-4 w-64 z-50 backdrop-blur-xl"
+                  className="absolute left-0 top-full bg-black/95 border border-ultraviolet/40 rounded-lg shadow-[0_4px_20px_rgba(138,43,226,0.4)] p-2 w-56 z-50 backdrop-blur-xl"
                 >
                   {section.items.map((item) => (
                     <Link
                       key={item.page}
                       to={createPageUrl(item.page)}
-                      className="block px-4 py-3 rounded-lg hover:bg-gradient-to-r hover:from-ultraviolet/30 hover:to-cyan/30 hover:text-white transition-all duration-300 text-gray-100 font-semibold border border-transparent hover:border-cyan/50 hover:shadow-[0_0_15px_rgba(0,234,255,0.4)]"
+                      className="block px-3 py-2 rounded-md hover:bg-ultraviolet/20 hover:text-cyan transition-colors text-gray-200 text-sm"
                     >
                       {item.label}
                     </Link>
@@ -104,11 +102,11 @@ export default function Navbar({ user, onLogin, onLogout }) {
           ))}
 
           <Link to={createPageUrl("Pricing")}>
-            <button className="text-white hover:text-cyan transition-all duration-300 font-bold hover:scale-110">Pricing</button>
+            <button className="text-gray-300 hover:text-cyan transition-colors text-sm font-medium">Pricing</button>
           </Link>
 
           <Link to={createPageUrl("Consultation")}>
-            <button className="px-6 py-3 rounded-xl bg-gradient-to-r from-ultraviolet to-cyan text-white font-black shadow-[0_0_25px_rgba(138,43,226,0.8)] hover:shadow-[0_0_40px_rgba(0,234,255,1)] hover:scale-105 transition-all duration-300 border-2 border-white/20">
+            <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-ultraviolet to-cyan text-white text-sm font-semibold hover:opacity-90 transition-opacity">
               Contact
             </button>
           </Link>
@@ -116,22 +114,22 @@ export default function Navbar({ user, onLogin, onLogout }) {
           {user ? (
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
-                <Button className="bg-gradient-to-r from-cyan to-ultraviolet border-2 border-white/30 text-white hover:shadow-[0_0_30px_rgba(138,43,226,0.8)] font-bold hover:scale-105 transition-all duration-300">
-                  <User className="w-5 h-5 mr-2" />
+                <Button className="bg-ultraviolet/20 border border-ultraviolet/50 text-white hover:bg-ultraviolet/30 text-sm">
+                  <User className="w-4 h-4 mr-1" />
                   {user.full_name?.split(" ")[0] || "User"}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-gradient-to-br from-ultraviolet/40 via-black/90 to-cyan/40 border-4 border-cyan shadow-[0_0_40px_rgba(0,234,255,0.6)] backdrop-blur-xl">
-                <DropdownMenuItem asChild className="text-white hover:bg-gradient-to-r hover:from-ultraviolet/30 hover:to-cyan/30 font-semibold">
+              <DropdownMenuContent className="bg-black/95 border border-ultraviolet/40 shadow-[0_4px_20px_rgba(138,43,226,0.4)] backdrop-blur-xl">
+                <DropdownMenuItem asChild className="text-gray-200 hover:bg-ultraviolet/20 hover:text-cyan text-sm">
                   <Link to={createPageUrl("Dashboard")}>
                     <User className="w-4 h-4 mr-2" />
                     Dashboard
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-cyan/50" />
+                <DropdownMenuSeparator className="bg-ultraviolet/30" />
                 <DropdownMenuItem
                   onClick={onLogout}
-                  className="text-red-400 hover:bg-red-500/30 font-semibold"
+                  className="text-red-400 hover:bg-red-500/20 text-sm"
                 >
                   <LogOut className="w-4 h-4 mr-2" />
                   Logout
@@ -141,7 +139,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
           ) : (
             <Button
               onClick={onLogin}
-              className="bg-gradient-to-r from-ultraviolet to-cyan border-2 border-white/30 text-white hover:shadow-[0_0_30px_rgba(0,234,255,0.8)] font-bold hover:scale-105 transition-all duration-300"
+              className="bg-ultraviolet/20 border border-ultraviolet/50 text-white hover:bg-ultraviolet/30 text-sm"
             >
               Sign In
             </Button>
