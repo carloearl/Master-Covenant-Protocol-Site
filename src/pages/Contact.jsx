@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Phone, MapPin, Send, CheckCircle2 } from "lucide-react";
+import { Mail, Phone, MapPin, Send, CheckCircle2, Globe } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import SEOHead from "@/components/SEOHead";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -46,113 +47,113 @@ export default function Contact() {
         keywords="contact GlyphLock, cybersecurity consultation, partnership inquiry, licensing request, enterprise security contact, GlyphLock email, security consultation, El Mirage Arizona, technology partnership"
         url="/contact"
       />
-      <div className="min-h-screen bg-black text-white py-20">
-      <div className="container mx-auto px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Get in <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Touch</span>
+      <div className="min-h-screen bg-black text-white pt-32 pb-24 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#00E4FF]/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-[#8C4BFF]/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div className="container mx-auto px-6 max-w-6xl relative z-10">
+          
+          {/* Hero */}
+          <div className="text-center mb-20">
+            <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter font-space">
+              GET IN <span className="text-transparent bg-gradient-to-r from-[#00E4FF] to-[#8C4BFF] bg-clip-text">TOUCH</span>
             </h1>
-            <p className="text-xl text-gray-400">
-              We're here to help secure your digital future
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Secure your digital sovereignty. Initiate a secure channel with GlyphLock.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <Card className="glass-card-dark border-blue-500/30 text-center" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
-              <CardContent className="pt-6">
-                <div className="w-14 h-14 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Mail className="w-7 h-7 text-blue-400" />
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            {[
+              { icon: Mail, title: "Email", content: "glyphlock@gmail.com", href: "mailto:glyphlock@gmail.com", color: "text-[#00E4FF]" },
+              { icon: Phone, title: "Phone", content: "(424) 246-6499", href: "tel:+14242466499", color: "text-[#8C4BFF]" },
+              { icon: MapPin, title: "Location", content: "El Mirage, Arizona", color: "text-white" }
+            ].map((item, idx) => (
+              <div key={idx} className="glass-card rounded-xl p-8 border border-white/10 text-center hover:border-[#00E4FF]/30 transition-all group">
+                <div className={`w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-white/10 group-hover:bg-[#00E4FF]/10 group-hover:border-[#00E4FF]/30 transition-all`}>
+                  <item.icon className={`w-8 h-8 ${item.color}`} />
                 </div>
-                <h3 className="font-semibold text-white mb-2">Email</h3>
-                <a href="mailto:glyphlock@gmail.com" className="text-blue-400 hover:text-blue-300">
-                  glyphlock@gmail.com
-                </a>
-              </CardContent>
-            </Card>
-
-            <Card className="glass-card-dark border-blue-500/30 text-center" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
-              <CardContent className="pt-6">
-                <div className="w-14 h-14 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Phone className="w-7 h-7 text-blue-400" />
-                </div>
-                <h3 className="font-semibold text-white mb-2">Phone</h3>
-                <a href="tel:+14242466499" className="text-blue-400 hover:text-blue-300">
-                  (424) 246-6499
-                </a>
-              </CardContent>
-            </Card>
-
-            <Card className="glass-card-dark border-blue-500/30 text-center" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
-              <CardContent className="pt-6">
-                <div className="w-14 h-14 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <MapPin className="w-7 h-7 text-blue-400" />
-                </div>
-                <h3 className="font-semibold text-white mb-2">Location</h3>
-                <p className="text-gray-400">El Mirage, Arizona</p>
-              </CardContent>
-            </Card>
+                <h3 className="text-xl font-bold text-white mb-2 font-space">{item.title}</h3>
+                {item.href ? (
+                  <a href={item.href} className="text-gray-400 hover:text-[#00E4FF] transition-colors text-lg">
+                    {item.content}
+                  </a>
+                ) : (
+                  <p className="text-gray-400 text-lg">{item.content}</p>
+                )}
+              </div>
+            ))}
           </div>
 
-          {submitted && (
-            <Alert className="mb-8 bg-green-500/10 border-green-500/30">
-              <CheckCircle2 className="h-4 w-4 text-green-400" />
-              <AlertDescription className="text-white">
-                Thank you! We'll get back to you within 24 hours.
-              </AlertDescription>
-            </Alert>
-          )}
+          <div className="grid lg:grid-cols-[1fr_1fr] gap-12">
+            {/* Contact Form */}
+            <div className="glass-card rounded-2xl p-8 md:p-10 border border-[#00E4FF]/20 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#00E4FF] to-[#8C4BFF]"></div>
+              
+              <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3 font-space">
+                <Send className="w-6 h-6 text-[#00E4FF]" />
+                Secure Messaging
+              </h2>
 
-          <Card className="glass-card-dark border-blue-500/30" style={{background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)'}}>
-            <CardHeader>
-              <CardTitle className="text-white">Send us a Message</CardTitle>
-            </CardHeader>
-            <CardContent style={{background: 'transparent'}}>
+              {submitted ? (
+                <Alert className="bg-green-500/10 border-green-500/30 neon-border-cyan mb-8">
+                  <CheckCircle2 className="h-5 w-5 text-green-400" />
+                  <AlertDescription className="text-green-100 ml-2">
+                    Transmission received. We will respond within 24 hours.
+                  </AlertDescription>
+                </Alert>
+              ) : null}
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <Label htmlFor="name" className="text-white">Name *</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-gray-300 text-sm uppercase tracking-wider font-bold">Identity</Label>
                     <Input
                       id="name"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="bg-gray-800 border-gray-700 text-white"
+                      className="bg-black/40 border-white/10 text-white focus:border-[#00E4FF] h-12"
+                      placeholder="Your Name"
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="email" className="text-white">Email *</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-gray-300 text-sm uppercase tracking-wider font-bold">Contact Point</Label>
                     <Input
                       id="email"
                       type="email"
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="bg-gray-800 border-gray-700 text-white"
+                      className="bg-black/40 border-white/10 text-white focus:border-[#00E4FF] h-12"
+                      placeholder="name@company.com"
                     />
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="subject" className="text-white">Subject *</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="subject" className="text-gray-300 text-sm uppercase tracking-wider font-bold">Subject Protocol</Label>
                   <Input
                     id="subject"
                     required
                     value={formData.subject}
                     onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                    className="bg-gray-800 border-gray-700 text-white"
+                    className="bg-black/40 border-white/10 text-white focus:border-[#00E4FF] h-12"
+                    placeholder="Consultation / Partnership / Support"
                   />
                 </div>
 
-                <div>
-                  <Label htmlFor="message" className="text-white">Message *</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="message" className="text-gray-300 text-sm uppercase tracking-wider font-bold">Transmission</Label>
                   <Textarea
                     id="message"
                     required
                     value={formData.message}
                     onChange={(e) => setFormData({...formData, message: e.target.value})}
                     rows={6}
-                    className="bg-gray-800 border-gray-700 text-white"
+                    className="bg-black/40 border-white/10 text-white focus:border-[#00E4FF] resize-none"
+                    placeholder="Describe your security requirements..."
                   />
                 </div>
 
@@ -160,17 +161,52 @@ export default function Contact() {
                   type="submit"
                   size="lg"
                   disabled={sendEmail.isPending}
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-700"
+                  className="w-full bg-gradient-to-r from-[#00E4FF] to-[#0099FF] hover:to-[#00E4FF] text-black font-bold uppercase tracking-wide h-14 text-lg shadow-[0_0_20px_rgba(0,228,255,0.3)] border-none transition-all"
                 >
-                  <Send className="w-4 h-4 mr-2" />
-                  {sendEmail.isPending ? "Sending..." : "Send Message"}
+                  {sendEmail.isPending ? "Encrypting & Sending..." : "Initiate Transmission"}
                 </Button>
               </form>
-            </CardContent>
-          </Card>
+            </div>
+
+            {/* Side Info */}
+            <div className="space-y-8">
+              <div className="glass-card rounded-2xl p-8 border border-[#8C4BFF]/20">
+                <h3 className="text-2xl font-bold text-white mb-4 font-space">Global Operations</h3>
+                <p className="text-gray-400 leading-relaxed mb-6">
+                  GlyphLock operates globally with Arizona as our primary jurisdiction and legal enforcement zone. 
+                  Our systems are deployed across enterprise networks, hospitality venues, and secure facilities worldwide.
+                </p>
+                <div className="flex items-center gap-3 text-[#8C4BFF] font-bold uppercase tracking-wide text-sm">
+                  <Globe className="w-5 h-5" />
+                  <span>Operating in 12 Time Zones</span>
+                </div>
+              </div>
+
+              <div className="glass-card rounded-2xl p-8 border border-white/10 bg-gradient-to-br from-white/5 to-transparent">
+                <h3 className="text-2xl font-bold text-white mb-4 font-space">Partnership Inquiries</h3>
+                <p className="text-gray-400 leading-relaxed mb-6">
+                  For enterprise licensing, white-label solutions, or strategic integration requests, please use the contact form with subject "Partnership".
+                </p>
+                <ul className="space-y-3 text-sm text-gray-300">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#00E4FF]" />
+                    <span>Enterprise volume licensing</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#00E4FF]" />
+                    <span>Custom API integration</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#00E4FF]" />
+                    <span>Dedicated support channels</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
-    </div>
     </>
   );
 }
