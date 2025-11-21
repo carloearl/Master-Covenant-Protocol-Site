@@ -16,14 +16,14 @@ export default Deno.serve(async (req) => {
     switch (langKey) {
       case 'node':
         folder.file("index.js", "module.exports = { test: () => console.log('GlyphLock Node SDK ready') };");
-        folder.file("README.md", "# GlyphLock Node SDK\n\nBasic starter.\n\n## Installation\n`npm install @glyphlock/sdk`");
+        folder.file("README.md", "# GlyphLock Node SDK\nStarter pack for v2.1.0");
         break;
       case 'python':
-        folder.file("glyphlock.py", "print('GlyphLock Python SDK ready')");
-        folder.file("README.md", "# GlyphLock Python SDK\n\nBasic starter.\n\n## Installation\n`pip install glyphlock`");
+        folder.file("glyphlock.py", 'print("GlyphLock Python SDK ready")');
+        folder.file("README.md", "# GlyphLock Python SDK\nStarter pack for v2.1.0");
         break;
       case 'go':
-        folder.file("glyphlock.go", 'package glyphlock\n\nfunc Test() { println("GlyphLock Go SDK ready") }');
+        folder.file("glyphlock.go", 'package glyphlock\n\nfunc Test(){ println("GlyphLock Go SDK ready") }');
         folder.file("README.md", "# GlyphLock Go SDK");
         break;
       case 'java':
@@ -36,11 +36,11 @@ export default Deno.serve(async (req) => {
         folder.file("README.md", "# GlyphLock .NET SDK");
         break;
       case 'ruby':
-        folder.file("glyphlock.rb", "puts 'GlyphLock Ruby SDK ready'");
+        folder.file("glyphlock.rb", 'puts "GlyphLock Ruby SDK ready"');
         folder.file("README.md", "# GlyphLock Ruby SDK");
         break;
       case 'php':
-        folder.file("glyphlock.php", "<?php echo 'GlyphLock PHP SDK ready';");
+        folder.file("glyphlock.php", '<?php echo "GlyphLock PHP SDK ready"; ?>');
         folder.file("README.md", "# GlyphLock PHP SDK");
         break;
       case 'rust':
