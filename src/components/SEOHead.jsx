@@ -1,20 +1,57 @@
+
 import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { getSeoData } from '@/components/seo/seoData';
 
 export default function SEOHead({ 
-  title = "GlyphLock Security - Quantum-Resistant Cybersecurity Platform | AI-Powered Enterprise Security Solutions",
-  description = "GlyphLock Security LLC delivers enterprise-grade quantum-resistant cybersecurity with AI threat detection, visual cryptography, blockchain security, and secure POS systems. Based in El Mirage, Arizona. Protect your digital assets with military-grade encryption, GlyphBot AI assistant, QR code security, steganography tools, and comprehensive security operations center. Founded January 2025 by Carlo Rene Earl, Collin Vanderginst (CTO), and Jacub Lough (CSO/CFO).",
-  keywords = "GlyphLock Security LLC, quantum-resistant encryption, cybersecurity platform Arizona, AI security threat detection, blockchain security solutions, visual cryptography, QR code security generator, steganography tools, security operations center SOC, enterprise security El Mirage, POS system NUPS, GlyphBot AI assistant, secure payment processing, fraud prevention system, identity protection, data encryption, Carlo Rene Earl, Collin Vanderginst CTO, Jacub Lough CSO CFO, military-grade encryption, cybersecurity consulting, security audit services, hotzone mapper, Master Covenant security framework",
+  title,
+  description,
+  keywords,
   image = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d92107808_glyphlock-3d-logo.png",
   ogImage = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d92107808_glyphlock-3d-logo.png",
   url,
   type = "website"
 }) {
+  const location = useLocation();
+  
+  // Auto-resolve SEO data
+  let autoData = {};
+  // Try to find key by matching url property in SEO_DATA values
+  const path = location.pathname;
+  const key = Object.keys(getSeoData("")).find(k => {
+      const data = getSeoData(k);
+      return data && data.url === path;
+  }) || (path === "/" ? "Home" : null);
+  
+  if (key) {
+      autoData = getSeoData(key);
+  }
+
+  const resolvedTitle = title || autoData.title || "GlyphLock Security - Quantum-Resistant Cybersecurity Platform | AI-Powered Enterprise Security Solutions";
+  const resolvedDescription = description || autoData.description || "GlyphLock Security LLC delivers enterprise-grade quantum-resistant cybersecurity with AI threat detection, visual cryptography, blockchain security, and secure POS systems. Based in El Mirage, Arizona. Protect your digital assets with military-grade encryption, GlyphBot AI assistant, QR code security, steganography tools, and comprehensive security operations center. Founded January 2025 by Carlo Rene Earl, Collin Vanderginst (CTO), and Jacub Lough (CSO/CFO).";
+  
+  // Combine and deduplicate keywords
+  const defaultKeywords = "GlyphLock Security LLC, quantum-resistant encryption, cybersecurity platform Arizona, AI security threat detection, blockchain security solutions, visual cryptography, QR code security generator, steganography tools, security operations center SOC, enterprise security El Mirage, POS system NUPS, GlyphBot AI assistant, secure payment processing, fraud prevention system, identity protection, data encryption, Carlo Rene Earl, Collin Vanderginst CTO, Jacub Lough CSO CFO, military-grade encryption, cybersecurity consulting, security audit services, hotzone mapper, Master Covenant security framework";
+  const autoKeywords = autoData.keywords ? autoData.keywords.join(", ") : "";
+  const propKeywords = Array.isArray(keywords) ? keywords.join(", ") : (keywords || "");
+  
+  const combinedKeywords = [propKeywords, autoKeywords, defaultKeywords]
+    .filter(Boolean)
+    .join(", ")
+    .split(",")
+    .map(k => k.trim())
+    .filter((v, i, a) => a.indexOf(v) === i && v !== "") // Ensure unique and non-empty
+    .join(", ");
+
+  const resolvedKeywords = combinedKeywords;
+  const resolvedSchemaType = autoData.schemaType || "WebSite";
+
   const siteUrl = "https://glyphlock.io";
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
 
   useEffect(() => {
     // Update title
-    document.title = title;
+    document.title = resolvedTitle;
 
     // Update favicon
     let favicon = document.querySelector('link[rel="icon"]');
@@ -39,9 +76,9 @@ export default function SEOHead({
     };
 
     // Primary Meta Tags
-    updateMetaTag('title', title);
-    updateMetaTag('description', description);
-    updateMetaTag('keywords', keywords);
+    updateMetaTag('title', resolvedTitle);
+    updateMetaTag('description', resolvedDescription);
+    updateMetaTag('keywords', resolvedKeywords);
     updateMetaTag('robots', 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1');
     updateMetaTag('googlebot', 'index, follow');
     updateMetaTag('bingbot', 'index, follow');
@@ -50,21 +87,21 @@ export default function SEOHead({
     // Open Graph
     updateMetaTag('og:type', type, true);
     updateMetaTag('og:url', fullUrl, true);
-    updateMetaTag('og:title', title, true);
-    updateMetaTag('og:description', description, true);
+    updateMetaTag('og:title', resolvedTitle, true);
+    updateMetaTag('og:description', resolvedDescription, true);
     updateMetaTag('og:image', ogImage, true);
     updateMetaTag('og:image:width', '1200', true);
     updateMetaTag('og:image:height', '630', true);
-    updateMetaTag('og:image:alt', title, true);
+    updateMetaTag('og:image:alt', resolvedTitle, true);
     updateMetaTag('og:site_name', 'GlyphLock', true);
 
     // Twitter
     updateMetaTag('twitter:card', 'summary_large_image');
     updateMetaTag('twitter:url', fullUrl);
-    updateMetaTag('twitter:title', title);
-    updateMetaTag('twitter:description', description);
+    updateMetaTag('twitter:title', resolvedTitle);
+    updateMetaTag('twitter:description', resolvedDescription);
     updateMetaTag('twitter:image', ogImage);
-    updateMetaTag('twitter:image:alt', title);
+    updateMetaTag('twitter:image:alt', resolvedTitle);
 
     // Canonical link
     let canonical = document.querySelector('link[rel="canonical"]');
@@ -75,7 +112,7 @@ export default function SEOHead({
     }
     canonical.setAttribute('href', fullUrl);
 
-    // Structured Data - Comprehensive Organization Schema
+    // Structured Data - Comprehensive Organization Schema (always present)
     let script = document.querySelector('script[type="application/ld+json"]#org-schema');
     if (!script) {
       script = document.createElement('script');
@@ -136,7 +173,7 @@ export default function SEOHead({
       ],
       "slogan": "Quantum-Grade Security for the AI Era",
       "areaServed": "Worldwide",
-      "keywords": keywords,
+      "keywords": resolvedKeywords,
       "knowsAbout": [
         "Quantum-resistant encryption",
         "Cybersecurity",
@@ -229,7 +266,7 @@ export default function SEOHead({
       }
     });
 
-    // WebSite Schema for search
+    // WebSite Schema for search (always present)
     let websiteScript = document.querySelector('script[type="application/ld+json"]#website-schema');
     if (!websiteScript) {
       websiteScript = document.createElement('script');
@@ -242,7 +279,7 @@ export default function SEOHead({
       "@type": "WebSite",
       "name": "GlyphLock Security",
       "url": siteUrl,
-      "description": description,
+      "description": resolvedDescription,
       "publisher": {
         "@type": "Organization",
         "name": "GlyphLock Security LLC"
@@ -256,7 +293,37 @@ export default function SEOHead({
         "query-input": "required name=search_term_string"
       }
     });
-  }, [title, description, keywords, image, ogImage, fullUrl, type]);
+    
+    // Page Specific Schema (if not Organization or WebSite)
+    if (resolvedSchemaType !== "Organization" && resolvedSchemaType !== "WebSite") {
+        let pageScript = document.querySelector('script[type="application/ld+json"]#page-schema');
+        if (!pageScript) {
+          pageScript = document.createElement('script');
+          pageScript.setAttribute('type', 'application/ld+json');
+          pageScript.setAttribute('id', 'page-schema');
+          document.head.appendChild(pageScript);
+        }
+        pageScript.textContent = JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": resolvedSchemaType,
+            "name": resolvedTitle,
+            "description": resolvedDescription,
+            "url": fullUrl,
+            "mainEntityOfPage": fullUrl,
+            "provider": {
+                 "@type": "Organization",
+                 "name": "GlyphLock Security LLC"
+            }
+        });
+    } else {
+      // Remove page-specific schema if it exists and is no longer needed
+      let pageScript = document.querySelector('script[type="application/ld+json"]#page-schema');
+      if (pageScript) {
+        pageScript.remove();
+      }
+    }
+
+  }, [resolvedTitle, resolvedDescription, resolvedKeywords, image, ogImage, fullUrl, type, resolvedSchemaType]);
 
   return null;
 }

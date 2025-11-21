@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { SEO_DATA } from "@/utils/seoData";
+import { SEO_DATA } from "@/components/seo/seoData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Map, FileText, Cpu, Lock, Globe, ArrowRight, ExternalLink } from "lucide-react";
