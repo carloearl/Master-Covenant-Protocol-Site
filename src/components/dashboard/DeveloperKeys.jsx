@@ -64,23 +64,18 @@ export default function DeveloperKeys() {
 
   const regenerateKeyMutation = useMutation({
     mutationFn: async ({ id, type }) => {
-        // In a real app, this would call a backend function to rotate just one part
-        // For now we'll simulate by calling the generation function and updating
-        const tempName = "Rotation Temp";
-        const res = await base44.functions.invoke("generateAPIKey", { name: tempName, environment: "live" });
-        const newKeys = res.data;
-        
-        const updates = { last_rotated: new Date().toISOString() };
-        if (type === 'public' || type === 'all') updates.public_key = newKeys.public_key;
-        if (type === 'secret' || type === 'all') updates.secret_key = newKeys.secret_key;
-        if (type === 'env' || type === 'all') updates.env_key = newKeys.env_key;
-        
-        await base44.entities.APIKey.update(id, updates);
+        const res = await base44.functions.invoke("rotateAPIKey", { key_id: id, type });
+        if (res.status >= 400) throw new Error(res.data.error || "Failed to rotate key");
+        return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['api-keys'] });
       setProcessing(null);
-      toast.success("Keys rotated successfully");
+      toast.success("Keys rotated securely");
+    },
+    onError: (error) => {
+      setProcessing(null);
+      toast.error(`Rotation failed: ${error.message}`);
     }
   });
 

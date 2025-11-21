@@ -62,6 +62,20 @@ export default Deno.serve(async (req) => {
       device_lock: false
     });
 
+    // Log creation to Audit System
+    await base44.entities.SystemAuditLog.create({
+      event_type: 'KEY_CREATION',
+      description: `Created new API Key: ${name}`,
+      actor_email: user.email,
+      resource_id: apiKey.id,
+      metadata: {
+        environment,
+        blockchain_hash: blockchainHash
+      },
+      ip_address: "Unknown (SDK)",
+      status: "success"
+    });
+
     return Response.json(apiKey);
 
   } catch (error) {
