@@ -41,7 +41,7 @@ export default function Roadmap() {
         { title: "AI Crawler Integration", status: "completed" },
         { title: "Mobile App Launch", status: "in-progress" },
         { title: "Smart Contract Generator", status: "in-progress" },
-        { title: "Advanced Threat Detection", status: "planned" },
+        { title: "Advanced Threat Detection", status: "in-progress" },
         { title: "SOC 2 Certification", status: "planned" }
       ]
     },
@@ -52,7 +52,7 @@ export default function Roadmap() {
       items: [
         { title: "Full Quantum Encryption", status: "planned" },
         { title: "Global CDN Deployment", status: "planned" },
-        { title: "Enterprise API Platform", status: "planned" },
+        { title: "Enterprise API Platform", status: "in-progress" },
         { title: "ISO 27001 Certification", status: "planned" }
       ]
     },
@@ -73,9 +73,9 @@ export default function Roadmap() {
       icon: Clock,
       items: [
         { title: "International Data Center Deployment", status: "planned" },
-        { title: "AI-Powered Threat Prediction", status: "planned" },
-        { title: "White Label Platform Release", status: "planned" },
-        { title: "Enterprise SDK Launch", status: "planned" }
+        { title: "AI-Powered Threat Prediction", status: "in-progress" },
+        { title: "White Label Platform Release", status: "in-progress" },
+        { title: "Enterprise SDK Launch", status: "in-progress" }
       ]
     },
     {
