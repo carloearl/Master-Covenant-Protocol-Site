@@ -49,6 +49,7 @@ import ContentGenerator from './pages/ContentGenerator';
 import GlyphBot from './pages/GlyphBot';
 import InteractiveImageStudio from './pages/InteractiveImageStudio';
 import DeveloperConsole from './pages/DeveloperConsole';
+import BackendSetup from './pages/BackendSetup';
 import __Layout from './Layout.jsx';
 
 
@@ -104,6 +105,7 @@ export const PAGES = {
     "GlyphBot": GlyphBot,
     "InteractiveImageStudio": InteractiveImageStudio,
     "DeveloperConsole": DeveloperConsole,
+    "BackendSetup": BackendSetup,
 }
 
 export const pagesConfig = {
