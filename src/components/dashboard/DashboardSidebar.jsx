@@ -36,7 +36,7 @@ export default function DashboardSidebar({ selectedModel, setSelectedModel }) {
                     return (
                       <button
                         key={item.id}
-                        onClick={() => setSelectedModel({ entity: item.entity, label: item.label })}
+                        onClick={() => setSelectedModel(item)}
                         className={`w-full flex items-center gap-2 p-2 rounded-lg text-sm transition-colors ${
                           selectedModel?.entity === item.entity
                             ? 'bg-blue-600 text-white' 
