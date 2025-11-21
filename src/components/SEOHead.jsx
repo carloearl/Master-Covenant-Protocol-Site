@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 
 export default function SEOHead({ 
-  title = "GlyphLock - Quantum-Resistant Cybersecurity & AI Security Platform",
-  description = "Next-generation cybersecurity platform with quantum-resistant encryption, AI-powered threat detection, visual cryptography, blockchain security, and enterprise POS systems. Protect your digital assets with GlyphLock.",
-  keywords = "cybersecurity, quantum-resistant encryption, AI security, blockchain security, visual cryptography, QR code security, steganography, threat detection, security operations center, enterprise security, POS system, NUPS, GlyphBot AI, secure payment processing, fraud prevention, identity protection, data encryption",
+  title = "GlyphLock Security - Quantum-Resistant Cybersecurity Platform | AI-Powered Enterprise Security Solutions",
+  description = "GlyphLock Security LLC delivers enterprise-grade quantum-resistant cybersecurity with AI threat detection, visual cryptography, blockchain security, and secure POS systems. Based in El Mirage, Arizona. Protect your digital assets with military-grade encryption, GlyphBot AI assistant, QR code security, steganography tools, and comprehensive security operations center. Founded January 2025 by Carlo Rene Earl, Collin Vanderginst (CTO), and Jacub Lough (CSO/CFO).",
+  keywords = "GlyphLock Security LLC, quantum-resistant encryption, cybersecurity platform Arizona, AI security threat detection, blockchain security solutions, visual cryptography, QR code security generator, steganography tools, security operations center SOC, enterprise security El Mirage, POS system NUPS, GlyphBot AI assistant, secure payment processing, fraud prevention system, identity protection, data encryption, Carlo Rene Earl, Collin Vanderginst CTO, Jacub Lough CSO CFO, military-grade encryption, cybersecurity consulting, security audit services, hotzone mapper, Master Covenant security framework",
   image = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d92107808_glyphlock-3d-logo.png",
   ogImage = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d92107808_glyphlock-3d-logo.png",
   url,
@@ -75,33 +75,186 @@ export default function SEOHead({
     }
     canonical.setAttribute('href', fullUrl);
 
-    // Structured Data
-    let script = document.querySelector('script[type="application/ld+json"]');
+    // Structured Data - Comprehensive Organization Schema
+    let script = document.querySelector('script[type="application/ld+json"]#org-schema');
     if (!script) {
       script = document.createElement('script');
       script.setAttribute('type', 'application/ld+json');
+      script.setAttribute('id', 'org-schema');
       document.head.appendChild(script);
     }
     script.textContent = JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "GlyphLock Security LLC",
+      "alternateName": "GlyphLock",
       "url": siteUrl,
       "logo": image,
-      "description": description,
+      "image": image,
+      "description": "Enterprise-grade quantum-resistant cybersecurity platform offering AI-powered threat detection, visual cryptography, blockchain security, secure POS systems, and comprehensive security solutions for businesses worldwide.",
+      "foundingDate": "2025-01",
+      "founder": [
+        {
+          "@type": "Person",
+          "name": "Carlo Rene Earl",
+          "jobTitle": "Founder & Owner"
+        },
+        {
+          "@type": "Person",
+          "name": "Collin Vanderginst",
+          "jobTitle": "Chief Technology Officer"
+        },
+        {
+          "@type": "Person",
+          "name": "Jacub Lough",
+          "jobTitle": "Chief Security Officer & Chief Financial Officer"
+        }
+      ],
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "El Mirage",
         "addressRegion": "AZ",
         "addressCountry": "US"
       },
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+1-424-246-6499",
-        "contactType": "customer service",
-        "email": "glyphlock@gmail.com"
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+1-424-246-6499",
+          "contactType": "customer service",
+          "email": "glyphlock@gmail.com",
+          "availableLanguage": ["en"]
+        },
+        {
+          "@type": "ContactPoint",
+          "email": "carloearl@gmail.com",
+          "contactType": "technical support"
+        }
+      ],
+      "sameAs": [
+        "https://instagram.com/glyphlock",
+        "https://tiktok.com/@glyphlock"
+      ],
+      "slogan": "Quantum-Grade Security for the AI Era",
+      "areaServed": "Worldwide",
+      "keywords": keywords,
+      "knowsAbout": [
+        "Quantum-resistant encryption",
+        "Cybersecurity",
+        "Artificial Intelligence",
+        "Blockchain Security",
+        "Visual Cryptography",
+        "Threat Detection",
+        "Data Protection",
+        "Identity Verification",
+        "Fraud Prevention",
+        "Security Auditing"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Cybersecurity Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Professional Security Plan",
+              "description": "Visual Cryptography Tools, Blockchain Security Suite, GlyphBot AI Assistant, up to 1,000 QR codes/month",
+              "provider": {
+                "@type": "Organization",
+                "name": "GlyphLock Security LLC"
+              }
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Enterprise Security Plan",
+              "description": "Unlimited QR Generation, Priority AI Processing, Security Operations Center, N.U.P.S. POS System, 24/7 Premium Support",
+              "provider": {
+                "@type": "Organization",
+                "name": "GlyphLock Security LLC"
+              }
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "GlyphBot AI Assistant",
+              "description": "AI-powered cybersecurity assistant for threat detection, code analysis, and security auditing",
+              "provider": {
+                "@type": "Organization",
+                "name": "GlyphLock Security LLC"
+              }
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "QR Code Security Generator",
+              "description": "Generate secure, quantum-resistant QR codes with AI-powered threat detection",
+              "provider": {
+                "@type": "Organization",
+                "name": "GlyphLock Security LLC"
+              }
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Steganography Tools",
+              "description": "Hide sensitive data within images using advanced cryptographic techniques",
+              "provider": {
+                "@type": "Organization",
+                "name": "GlyphLock Security LLC"
+              }
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Security Consultation",
+              "description": "60-minute expert cybersecurity analysis and custom solution recommendations",
+              "provider": {
+                "@type": "Organization",
+                "name": "GlyphLock Security LLC"
+              }
+            }
+          }
+        ]
+      }
+    });
+
+    // WebSite Schema for search
+    let websiteScript = document.querySelector('script[type="application/ld+json"]#website-schema');
+    if (!websiteScript) {
+      websiteScript = document.createElement('script');
+      websiteScript.setAttribute('type', 'application/ld+json');
+      websiteScript.setAttribute('id', 'website-schema');
+      document.head.appendChild(websiteScript);
+    }
+    websiteScript.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "GlyphLock Security",
+      "url": siteUrl,
+      "description": description,
+      "publisher": {
+        "@type": "Organization",
+        "name": "GlyphLock Security LLC"
       },
-      "sameAs": []
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${siteUrl}/search?q={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
+      }
     });
   }, [title, description, keywords, image, ogImage, fullUrl, type]);
 
