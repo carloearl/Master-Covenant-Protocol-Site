@@ -48,6 +48,7 @@ import TaskTracker from './pages/TaskTracker';
 import ContentGenerator from './pages/ContentGenerator';
 import GlyphBot from './pages/GlyphBot';
 import InteractiveImageStudio from './pages/InteractiveImageStudio';
+import DeveloperConsole from './pages/DeveloperConsole';
 import __Layout from './Layout.jsx';
 
 
@@ -102,6 +103,7 @@ export const PAGES = {
     "ContentGenerator": ContentGenerator,
     "GlyphBot": GlyphBot,
     "InteractiveImageStudio": InteractiveImageStudio,
+    "DeveloperConsole": DeveloperConsole,
 }
 
 export const pagesConfig = {

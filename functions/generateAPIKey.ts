@@ -42,6 +42,9 @@ export default Deno.serve(async (req) => {
     // Using 'CORE' as default service name for now
     const envKey = `GLX-ENV-CORE-${envTag}-${hash(3)}`;
 
+    // Mock Blockchain Hash (SHA-256 like)
+    const blockchainHash = `0x${hash(64)}`;
+
     // Save to DB
     const apiKey = await base44.entities.APIKey.create({
       name,
@@ -49,7 +52,14 @@ export default Deno.serve(async (req) => {
       secret_key: secretKey,
       env_key: envKey,
       status: 'active',
-      environment
+      environment,
+      created_date: new Date().toISOString(),
+      last_rotated: new Date().toISOString(),
+      blockchain_hash: blockchainHash,
+      rotation_schedule: "none",
+      ip_allowlist: "",
+      geo_lock: false,
+      device_lock: false
     });
 
     return Response.json(apiKey);

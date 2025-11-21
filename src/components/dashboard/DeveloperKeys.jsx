@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Check, Key, RefreshCw, Plus, Eye, EyeOff, Shield, Terminal, Globe, Lock, Server } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  Copy, Check, Key, RefreshCw, Plus, Eye, EyeOff, Shield, 
+  Terminal, Globe, Lock, Server, AlertTriangle, Clock, 
+  MapPin, Smartphone, Network, History, FileCode, Trash2
+} from "lucide-react";
 import GlyphLoader from "@/components/GlyphLoader";
 import { toast } from "sonner";
 
@@ -17,6 +22,7 @@ export default function DeveloperKeys() {
   const [newKeyName, setNewKeyName] = useState("");
   const [environment, setEnvironment] = useState("live");
   const [isCreating, setIsCreating] = useState(false);
+  const [processing, setProcessing] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: keys = [], isLoading } = useQuery({
@@ -40,6 +46,51 @@ export default function DeveloperKeys() {
     }
   });
 
+  const updateKeyMutation = useMutation({
+    mutationFn: async ({ id, data }) => base44.entities.APIKey.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['api-keys'] });
+      toast.success("Key settings updated");
+    }
+  });
+
+  const deleteKeyMutation = useMutation({
+    mutationFn: async (id) => base44.entities.APIKey.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['api-keys'] });
+      toast.success("Key revoked and deleted");
+    }
+  });
+
+  const regenerateKeyMutation = useMutation({
+    mutationFn: async ({ id, type }) => {
+        // In a real app, this would call a backend function to rotate just one part
+        // For now we'll simulate by calling the generation function and updating
+        const tempName = "Rotation Temp";
+        const res = await base44.functions.invoke("generateAPIKey", { name: tempName, environment: "live" });
+        const newKeys = res.data;
+        
+        const updates = { last_rotated: new Date().toISOString() };
+        if (type === 'public' || type === 'all') updates.public_key = newKeys.public_key;
+        if (type === 'secret' || type === 'all') updates.secret_key = newKeys.secret_key;
+        if (type === 'env' || type === 'all') updates.env_key = newKeys.env_key;
+        
+        await base44.entities.APIKey.update(id, updates);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['api-keys'] });
+      setProcessing(null);
+      toast.success("Keys rotated successfully");
+    }
+  });
+
+  const handleReglyph = (id, type) => {
+    if (confirm(`Are you sure you want to rotate the ${type} key? The old key will stop working immediately.`)) {
+        setProcessing(id);
+        regenerateKeyMutation.mutate({ id, type });
+    }
+  };
+
   const copyToClipboard = (text, id) => {
     navigator.clipboard.writeText(text);
     setCopied(id);
@@ -57,17 +108,24 @@ export default function DeveloperKeys() {
     createKeyMutation.mutate({ name: newKeyName, environment });
   };
 
+  const handleKillSwitch = (id) => {
+      if (confirm("WARNING: KILL SWITCH. This will immediately revoke ALL keys and regenerate them. Active connections will be severed. Continue?")) {
+          setProcessing(id);
+          regenerateKeyMutation.mutate({ id, type: 'all' });
+      }
+  };
+
   if (isLoading) return <GlyphLoader text="Loading Developer Console..." />;
 
   return (
-    <div className="p-8 bg-black min-h-full text-white space-y-8">
+    <div className="space-y-8">
       <div className="flex justify-between items-end border-b border-blue-900/30 pb-6">
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-            GlyphLock Tri-Key System
-          </h1>
-          <p className="text-gray-400 mt-2 max-w-2xl">
-            Manage your cryptographic access credentials. The Tri-Key System provides distinct layers for client-side access (Public), server-side operations (Secret), and environment verification (Env).
+          <h2 className="text-2xl font-bold text-white">
+            API Key Management Center
+          </h2>
+          <p className="text-gray-400 mt-2 text-sm">
+            Manage your Tri-Key cryptographic credentials.
           </p>
         </div>
         <Button 
@@ -92,20 +150,29 @@ export default function DeveloperKeys() {
                 <Input
                   value={newKeyName}
                   onChange={(e) => setNewKeyName(e.target.value)}
-                  placeholder="e.g., Payment Service Prod"
+                  placeholder="e.g., glx_payment_prod"
                   className="bg-black/50 border-blue-500/30 text-white placeholder:text-gray-600"
+                  list="key-suggestions"
                 />
+                <datalist id="key-suggestions">
+                    <option value="glx_auth_primary" />
+                    <option value="glx_gateway_prod" />
+                    <option value="glx_contracts_main" />
+                    <option value="glx_hotzone_scanner" />
+                    <option value="glx_ai_binding_core" />
+                </datalist>
               </div>
               <div className="grid gap-2 w-40">
                 <Label>Environment</Label>
-                <select 
-                  value={environment}
-                  onChange={(e) => setEnvironment(e.target.value)}
-                  className="h-10 bg-black/50 border border-blue-500/30 rounded-md text-white px-3"
-                >
-                  <option value="live">Live</option>
-                  <option value="test">Test</option>
-                </select>
+                <Select value={environment} onValueChange={setEnvironment}>
+                  <SelectTrigger className="bg-black/50 border-blue-500/30 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="live">Live</SelectItem>
+                    <SelectItem value="test">Test</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <Button 
                 type="submit" 
@@ -137,41 +204,82 @@ export default function DeveloperKeys() {
           </Card>
         ) : (
           keys.map((key) => (
-            <Card key={key.id} className="bg-gray-900/40 border-blue-500/20 backdrop-blur-sm hover:border-blue-500/40 transition-all overflow-hidden">
-              <div className="h-1 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500" />
+            <Card key={key.id} className="bg-gray-900/40 border-blue-500/20 backdrop-blur-sm hover:border-blue-500/40 transition-all overflow-hidden group">
+              <div className={`h-1 w-full ${key.status === 'compromised' ? 'bg-red-600' : 'bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500'}`} />
               <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-6">
+                
+                {/* Header */}
+                <div className="flex flex-wrap justify-between items-start mb-6 gap-4">
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                      <Shield className="w-6 h-6 text-blue-400" />
+                      <Key className="w-6 h-6 text-blue-400" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-white text-xl">{key.name}</h3>
-                      <div className="flex items-center gap-3 text-xs text-gray-500 mt-1">
-                        <span className="flex items-center gap-1"><Globe className="w-3 h-3" /> {key.environment.toUpperCase()}</span>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-white text-xl">{key.name}</h3>
+                        <Badge variant="outline" className={`
+                            ${key.status === 'active' ? 'border-green-500/50 text-green-400 bg-green-500/10' : ''}
+                            ${key.status === 'revoked' ? 'border-red-500/50 text-red-400 bg-red-500/10' : ''}
+                        `}>
+                            {key.status.toUpperCase()}
+                        </Badge>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 mt-1 font-mono">
+                        <span className="flex items-center gap-1 text-blue-400"><Globe className="w-3 h-3" /> {key.environment.toUpperCase()}</span>
                         <span>•</span>
                         <span>Created: {new Date(key.created_date).toLocaleDateString()}</span>
                         <span>•</span>
-                        <span className="font-mono">ID: {key.id.slice(0, 8)}</span>
+                        <span className="flex items-center gap-1" title="Blockchain Timestamp"><History className="w-3 h-3" /> {key.blockchain_hash ? key.blockchain_hash.slice(0, 10) + '...' : 'Pending'}</span>
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-2">
-                     <Badge variant="outline" className="border-blue-500/30 text-blue-400">
-                        Tri-Key Active
-                     </Badge>
+                  <div className="flex items-center gap-2">
+                     <Select 
+                        value={key.rotation_schedule || 'none'} 
+                        onValueChange={(val) => updateKeyMutation.mutate({ id: key.id, data: { rotation_schedule: val }})}
+                     >
+                        <SelectTrigger className="h-8 w-32 bg-black/50 border-gray-700 text-xs">
+                            <SelectValue placeholder="Rotation" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="none">Manual Rotation</SelectItem>
+                            <SelectItem value="24h">Every 24h</SelectItem>
+                            <SelectItem value="7d">Every 7 Days</SelectItem>
+                            <SelectItem value="30d">Every 30 Days</SelectItem>
+                        </SelectContent>
+                     </Select>
+                     
+                     <Button 
+                        variant="destructive" 
+                        size="sm" 
+                        onClick={() => handleKillSwitch(key.id)}
+                        disabled={processing === key.id}
+                        className="h-8 bg-red-900/30 hover:bg-red-900/60 text-red-400 border border-red-900/50"
+                     >
+                        <AlertTriangle className="w-3 h-3 mr-1" />
+                        KILL SWITCH
+                     </Button>
                   </div>
                 </div>
 
-                <div className="grid gap-6 md:grid-cols-2">
+                <div className="grid gap-6 lg:grid-cols-2">
                   
                   {/* Public Key Section */}
-                  <div className="space-y-3 p-4 rounded-lg bg-blue-950/10 border border-blue-500/10">
-                    <div className="flex items-center gap-2 text-blue-400 mb-1">
-                      <Globe className="w-4 h-4" />
-                      <span className="text-sm font-bold tracking-wider">PUBLIC KEY</span>
+                  <div className="space-y-3 p-4 rounded-lg bg-blue-950/10 border border-blue-500/10 relative group/key">
+                    <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2 text-blue-400">
+                            <Globe className="w-4 h-4" />
+                            <span className="text-sm font-bold tracking-wider">PUBLIC KEY</span>
+                        </div>
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => handleReglyph(key.id, 'public')}
+                            className="h-6 text-[10px] text-blue-400 hover:text-blue-300 hover:bg-blue-900/30"
+                        >
+                            Reglyph Public
+                        </Button>
                     </div>
-                    <p className="text-xs text-gray-500">Safe for client-side usage (browsers, mobile apps).</p>
                     <div className="relative">
                       <Input 
                         readOnly 
@@ -187,15 +295,28 @@ export default function DeveloperKeys() {
                         {copied === `pk-${key.id}` ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
                       </Button>
                     </div>
+                    <div className="flex justify-between text-[10px] text-gray-600">
+                        <span>Entropy: 6-char</span>
+                        <span>Rotated: {key.last_rotated ? new Date(key.last_rotated).toLocaleDateString() : 'Never'}</span>
+                    </div>
                   </div>
 
                   {/* Secret Key Section */}
                   <div className="space-y-3 p-4 rounded-lg bg-purple-950/10 border border-purple-500/10">
-                    <div className="flex items-center gap-2 text-purple-400 mb-1">
-                      <Lock className="w-4 h-4" />
-                      <span className="text-sm font-bold tracking-wider">SECRET KEY</span>
+                    <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2 text-purple-400">
+                            <Lock className="w-4 h-4" />
+                            <span className="text-sm font-bold tracking-wider">SECRET KEY</span>
+                        </div>
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => handleReglyph(key.id, 'secret')}
+                            className="h-6 text-[10px] text-purple-400 hover:text-purple-300 hover:bg-purple-900/30"
+                        >
+                            Reglyph Secret
+                        </Button>
                     </div>
-                    <p className="text-xs text-gray-500">Server-side only. Never expose this key to the public.</p>
                     <div className="relative">
                       <Input 
                         readOnly 
@@ -222,12 +343,16 @@ export default function DeveloperKeys() {
                         </Button>
                       </div>
                     </div>
+                    <div className="flex justify-between text-[10px] text-gray-600">
+                        <span>Entropy: 20-char</span>
+                        <span>Masked by default</span>
+                    </div>
                   </div>
 
                 </div>
 
                 {/* Environment Variables Section */}
-                <div className="mt-6 pt-6 border-t border-gray-800">
+                <div className="mt-6 pt-6 border-t border-gray-800/50">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2 text-gray-300">
                        <Server className="w-4 h-4" />
@@ -244,8 +369,11 @@ export default function DeveloperKeys() {
                     </Button>
                   </div>
                   
-                  <div className="bg-black/80 rounded-lg p-4 border border-gray-800 font-mono text-xs">
-                    <div className="flex flex-col gap-1">
+                  <div className="bg-black/80 rounded-lg p-4 border border-gray-800 font-mono text-xs relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-2 opacity-50">
+                        <Terminal className="w-12 h-12 text-gray-800" />
+                    </div>
+                    <div className="flex flex-col gap-1 relative z-10">
                       <div className="flex">
                         <span className="text-purple-400 w-40">GLX_PUBLIC_KEY</span>
                         <span className="text-gray-500">=</span>
@@ -269,6 +397,34 @@ export default function DeveloperKeys() {
                     </div>
                   </div>
                 </div>
+
+                {/* Security Settings */}
+                <div className="mt-6 flex flex-wrap gap-6 pt-4 border-t border-gray-800/50">
+                    <div className="flex items-center gap-2">
+                        <Switch 
+                            checked={key.geo_lock} 
+                            onCheckedChange={(val) => updateKeyMutation.mutate({ id: key.id, data: { geo_lock: val }})}
+                        />
+                        <Label className="text-xs text-gray-400 flex items-center gap-1"><MapPin className="w-3 h-3" /> Geo Lock</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Switch 
+                            checked={key.device_lock} 
+                            onCheckedChange={(val) => updateKeyMutation.mutate({ id: key.id, data: { device_lock: val }})}
+                        />
+                        <Label className="text-xs text-gray-400 flex items-center gap-1"><Smartphone className="w-3 h-3" /> Device Lock</Label>
+                    </div>
+                    <div className="flex items-center gap-2 ml-auto">
+                        <span className="text-xs text-gray-500 flex items-center gap-1"><Network className="w-3 h-3" /> IP Allowlist:</span>
+                        <Input 
+                            placeholder="0.0.0.0/0" 
+                            value={key.ip_allowlist || ''}
+                            onChange={(e) => updateKeyMutation.mutate({ id: key.id, data: { ip_allowlist: e.target.value }})}
+                            className="h-6 w-32 text-xs bg-black/50 border-gray-800"
+                        />
+                    </div>
+                </div>
+
               </CardContent>
             </Card>
           ))

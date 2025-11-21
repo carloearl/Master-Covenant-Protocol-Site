@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { ChevronDown, User, LogOut } from "lucide-react";
+import { ChevronDown, User, LogOut, Terminal } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import {
   DropdownMenu,
@@ -44,6 +44,7 @@ const NAV = [
   {
     label: "Resources",
     items: [
+      { label: "Developer Console", page: "DeveloperConsole" },
       { label: "Documentation", page: "SecurityDocs" },
       { label: "Roadmap", page: "Roadmap" },
       { label: "FAQ", page: "FAQ" },
@@ -124,6 +125,12 @@ export default function Navbar({ user, onLogin, onLogout }) {
                   <Link to={createPageUrl("Dashboard")}>
                     <User className="w-4 h-4 mr-2" />
                     Dashboard
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="text-gray-200 hover:bg-royal-blue/20 hover:text-cyan text-sm">
+                  <Link to={createPageUrl("DeveloperConsole")}>
+                    <Terminal className="w-4 h-4 mr-2" />
+                    Dev Console
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-royal-blue/30" />
