@@ -1,4 +1,6 @@
 css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,27 +9,19 @@ css
   :root {
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
-    --card: 217 91% 15%;
-    --card-foreground: 0 0% 100%;
-    --popover: 217 91% 15%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 0 0% 90%;
-    --accent: 217 91% 60%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 217 91% 60% / 0.3;
-    --input: 217 91% 60% / 0.3;
-    --ring: 217 91% 60%;
-    --radius: 0.75rem;
-    --royal-blue: #4169e1;
-    --ultraviolet: #8a2be2;
-    --cyan: #00eaff;
+    
+    /* GLYPHLOCK SUPREME PALETTE */
+    --primary-black: #000000;
+    --secondary-black: #020617;
+    --tertiary-black: #0A0F24;
+    
+    --neon-cyan: #00E4FF;
+    --neon-purple: #8C4BFF;
+    --ultraviolet: #9F00FF;
+    --deep-blue: #001F54;
+    
+    --glass-border: rgba(0, 228, 255, 0.2);
+    --glass-bg: rgba(10, 15, 36, 0.7);
   }
 }
 
@@ -36,16 +30,21 @@ css
     @apply border-border;
   }
   html, body {
-    @apply bg-black text-white;
-    background-color: #000 !important;
-    color: #eaeaea !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    @apply bg-black text-white font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+    background-color: #000000;
+    color: #ffffff;
+    overflow-x: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
   }
 }
 
-.bg-royal-blue { background-color: var(--royal-blue); }
-.text-royal-blue { color: var(--royal-blue); }
-.border-royal-blue { border-color: var(--royal-blue); }
+.bg-royal-blue { background-color: var(--royal-blue); } /* Note: --royal-blue is no longer defined in :root after this change. */
+.text-royal-blue { color: var(--royal-blue); } /* Note: --royal-blue is no longer defined in :root after this change. */
+.border-royal-blue { border-color: var(--royal-blue); } /* Note: --royal-blue is no longer defined in :root after this change. */
 .shadow-royal-blue { box-shadow: 0 0 15px rgba(65, 105, 225, 0.6); }
 
 .bg-ultraviolet { background-color: var(--ultraviolet); }
@@ -63,10 +62,10 @@ css
 }
 
 @layer components {
-  /* Royal Blue Theme - Primary Glass Style */
+  /* Royal Blue Theme - Primary Glass Style (preserved existing definitions) */
   .glass-royal,
   .glass-dark,
-  .glass-card,
+  .glass-card-legacy, /* Renamed to avoid direct conflict with new .glass-card */
   .glass-card-dark {
     background: rgba(65, 105, 225, 0.15) !important;
     backdrop-filter: blur(16px) !important;
@@ -74,6 +73,63 @@ css
     border: 1px solid rgba(65, 105, 225, 0.4) !important;
     box-shadow: 0 8px 32px rgba(65, 105, 225, 0.3) !important;
     color: white !important;
+  }
+
+  /* New components from outline */
+  .glass-panel {
+    @apply backdrop-blur-xl border border-white/10 bg-white/5;
+  }
+  
+  .glass-card { /* New definition from outline */
+    background: linear-gradient(145deg, rgba(14, 26, 58, 0.6) 0%, rgba(0, 0, 0, 0.8) 100%);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 228, 255, 0.15);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .glass-card:hover {
+    border-color: rgba(0, 228, 255, 0.4);
+    box-shadow: 0 0 15px rgba(0, 228, 255, 0.15);
+  }
+
+  .neon-border-cyan {
+    box-shadow: 0 0 5px rgba(0, 228, 255, 0.2), inset 0 0 5px rgba(0, 228, 255, 0.1);
+    border: 1px solid #00E4FF;
+  }
+
+  .neon-border-purple {
+    box-shadow: 0 0 5px rgba(140, 75, 255, 0.2), inset 0 0 5px rgba(140, 75, 255, 0.1);
+    border: 1px solid #8C4BFF;
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 10px rgba(0, 228, 255, 0.5);
+  }
+
+  .btn-primary {
+    background: linear-gradient(90deg, #001F54 0%, #0A0F24 100%);
+    border: 1px solid #00E4FF;
+    color: #00E4FF;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background: #00E4FF;
+    color: #000000;
+    box-shadow: 0 0 15px rgba(0, 228, 255, 0.4);
+  }
+  
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid #8C4BFF;
+    color: #8C4BFF;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-secondary:hover {
+    background: #8C4BFF;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(140, 75, 255, 0.4);
   }
 }
 
@@ -101,7 +157,7 @@ nav:not([class*="gradient"]) {
 /* Kill all white backgrounds - apply blue theme - NUCLEAR */
 [data-card],
 [class*="Card"],
-[class*="card"]:not([class*="gradient"]),
+[class*="card"]:not([class*="gradient"]):not(.glass-card), /* Added :not(.glass-card) to prioritize new glass-card */
 [role="dialog"],
 [data-dialog],
 .bg-white,
@@ -317,21 +373,10 @@ textarea::placeholder {
   -webkit-text-fill-color: transparent !important;
 }
 
-/* Scrollbar - Royal Blue Theme */
-::-webkit-scrollbar {
-  width: 12px;
-  background: #000000 !important;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, rgba(65, 105, 225, 0.7) 0%, rgba(65, 105, 225, 0.5) 100%) !important;
-  border-radius: 6px;
-}
-
 /* === GLYPHLOCK SIGNATURE PALETTE FREEZE (DO NOT MOVE) === */
 
 :root {
---ultraviolet: #8a2be2;
+--ultraviolet: #8a2be2; /* This re-asserts the original ultraviolet value, overriding the new one from the top :root block. */
 --uv-dark: #541b8b;
 --cyan: #00eaff;
 }
@@ -390,7 +435,7 @@ main {
 }
 
 [class*="glass-"],
-.glass-card,
+.glass-card-legacy, /* Used legacy class name for existing styles */
 .glass-card-dark,
 .glass-royal,
 .glass-dark {
@@ -402,7 +447,7 @@ main {
 
 /* FORCE EVERY POSSIBLE CARD COMPONENT */
 [class*="Card"],
-[class*="card"],
+[class*="card"]:not(.glass-card), /* Added :not(.glass-card) to prioritize new glass-card */
 [class*="panel"],
 [class*="Panel"],
 [class*="container"]:not([class*="Container-"]),
@@ -468,4 +513,19 @@ select,
 textarea, 
 label {
   cursor: pointer !important;
+}
+
+/* Custom Scrollbar (New styles from outline, replacing old scrollbar theme) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+::-webkit-scrollbar-thumb {
+  background: #00E4FF;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8C4BFF;
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Shield } from "lucide-react";
+import { Shield, Twitter, Linkedin, Instagram, Github, Mail, Phone } from "lucide-react";
 
 const certifications = [
   { name: "SOC 2", subtitle: "TYPE II" },
@@ -13,104 +13,111 @@ const certifications = [
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-black border-t border-royal-blue/40 text-gray-300 py-12">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-5 gap-10">
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <img
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png"
-              alt="GlyphLock"
-              className="h-8 w-auto"
-            />
-          </div>
-          <p className="text-sm text-gray-400">
-            Quantum-resistant security. AI-native governance. Blockchain-backed verification.
-          </p>
-        </div>
+    <footer className="w-full bg-[#000000] border-t border-[#8C4BFF]/20 text-gray-400 pt-24 pb-12 relative overflow-hidden">
+      {/* Decorative Glows */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#00E4FF]/5 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#8C4BFF]/5 rounded-full blur-[120px] pointer-events-none"></div>
 
-        <div>
-          <h4 className="text-royal-blue font-semibold mb-4">Company</h4>
-          <div className="footer-links flex flex-col gap-2">
-            <Link to={createPageUrl("About")}>About</Link>
-            <Link to={createPageUrl("DreamTeam")}>Dream Team</Link>
-            <Link to={createPageUrl("Partners")}>Partners</Link>
-            <Link to={createPageUrl("MasterCovenant")}>Master Covenant</Link>
-          </div>
-        </div>
-
-        <div>
-          <h4 className="text-royal-blue font-semibold mb-4">Services</h4>
-          <div className="footer-links flex flex-col gap-2">
-            <Link to={createPageUrl("QRGenerator")}>QR Generator</Link>
-            <Link to={createPageUrl("Blockchain")}>Blockchain Verification</Link>
-            <Link to={createPageUrl("InteractiveImageStudio")}>Image Studio</Link>
-            <Link to={createPageUrl("Steganography")}>Steganography</Link>
-            <Link to={createPageUrl("HotzoneMapper")}>Hotzone Mapper</Link>
-            <Link to={createPageUrl("NUPSLogin")}>NUPS POS</Link>
-          </div>
-        </div>
-
-        <div>
-          <h4 className="text-royal-blue font-semibold mb-4">AI Tools</h4>
-          <div className="footer-links flex flex-col gap-2">
-            <Link to={createPageUrl("GlyphBot")}>GlyphBot AI</Link>
-            <Link to={createPageUrl("ContentGenerator")}>Content Generator</Link>
-            <Link to={createPageUrl("ImageGenerator")}>Image Generator</Link>
-          </div>
-        </div>
-
-        <div>
-          <h4 className="text-royal-blue font-semibold mb-4">Resources</h4>
-          <div className="footer-links flex flex-col gap-2">
-            <Link to={createPageUrl("SecurityDocs")}>Documentation</Link>
-            <Link to={createPageUrl("Roadmap")}>Roadmap</Link>
-            <Link to={createPageUrl("Terms")}>Terms</Link>
-            <Link to={createPageUrl("Privacy")}>Privacy</Link>
-          </div>
-        </div>
-      </div>
-
-
-
-      <div className="mt-12 max-w-7xl mx-auto px-6">
-        <h4 className="text-center text-sm font-semibold mb-6 text-gray-400">
-          Security & Compliance Certifications
-        </h4>
-
-        <div className="flex flex-wrap items-center justify-center gap-6 mb-12">
-          {certifications.map((cert, idx) => (
-            <div key={idx} className="glass-card border border-royal-blue/30 rounded-lg p-4 w-28 h-28 flex flex-col items-center justify-center hover:border-cyan-400/50 hover:shadow-royal-blue transition-all backdrop-blur-xl">
-              <Shield className="w-10 h-10 text-royal-blue mb-2" />
-              <div className="text-xs font-bold text-white text-center leading-tight">{cert.name}</div>
-              <div className="text-[10px] text-cyan-400 mt-1">{cert.subtitle}</div>
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 mb-20">
+          {/* Brand Column */}
+          <div className="lg:col-span-4 space-y-6">
+            <div className="flex items-center gap-3">
+              <img
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/08025b614_gl-logo.png"
+                alt="GlyphLock"
+                className="h-10 w-auto"
+              />
+              <span className="text-2xl font-black tracking-tighter font-space text-white">
+                GLYPH<span className="text-[#00E4FF]">LOCK</span>
+              </span>
             </div>
-          ))}
-        </div>
-
-        <div className="pt-8 border-t border-royal-blue/30">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
-            <div className="text-sm text-gray-400">
-              <p>© {new Date().getFullYear()} GlyphLock Security LLC. All rights reserved.</p>
+            <p className="text-gray-400 leading-relaxed max-w-sm">
+              The world's first quantum-resistant security platform for the AI era. 
+              Protecting your digital sovereignty with military-grade encryption and autonomous governance.
+            </p>
+            <div className="flex items-center gap-4 pt-4">
+              {[Twitter, Linkedin, Instagram, Github].map((Icon, i) => (
+                <a key={i} href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-[#00E4FF] hover:text-black transition-all duration-300">
+                  <Icon size={18} />
+                </a>
+              ))}
             </div>
+          </div>
 
-            <div className="text-sm space-y-1 text-gray-400">
-              <p>El Mirage, Arizona • Established January 2025</p>
-              <p>
-                <a
-                  href="mailto:glyphlock@gmail.com"
-                  className="hover:text-cyan-400 transition-colors"
-                >
-                  glyphlock@gmail.com
-                </a>
-                {" • "}
-                <a
-                  href="tel:+14242466499"
-                  className="hover:text-cyan-400 transition-colors"
-                >
-                  (424) 246-6499
-                </a>
+          {/* Links Columns */}
+          <div className="lg:col-span-2">
+            <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Company</h4>
+            <div className="flex flex-col gap-4">
+              <Link to={createPageUrl("About")} className="hover:text-[#00E4FF] transition-colors">About Us</Link>
+              <Link to={createPageUrl("DreamTeam")} className="hover:text-[#00E4FF] transition-colors">Leadership</Link>
+              <Link to={createPageUrl("Partners")} className="hover:text-[#00E4FF] transition-colors">Partners</Link>
+              <Link to={createPageUrl("MasterCovenant")} className="hover:text-[#00E4FF] transition-colors">Governance</Link>
+              <Link to={createPageUrl("Contact")} className="hover:text-[#00E4FF] transition-colors">Contact</Link>
+            </div>
+          </div>
+
+          <div className="lg:col-span-2">
+            <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Solutions</h4>
+            <div className="flex flex-col gap-4">
+              <Link to={createPageUrl("QRGenerator")} className="hover:text-[#00E4FF] transition-colors">Secure QR</Link>
+              <Link to={createPageUrl("Blockchain")} className="hover:text-[#00E4FF] transition-colors">Blockchain</Link>
+              <Link to={createPageUrl("InteractiveImageStudio")} className="hover:text-[#00E4FF] transition-colors">Image Studio</Link>
+              <Link to={createPageUrl("HotzoneMapper")} className="hover:text-[#00E4FF] transition-colors">Hotzone Mapper</Link>
+              <Link to={createPageUrl("NUPSLogin")} className="hover:text-[#00E4FF] transition-colors">NUPS POS</Link>
+            </div>
+          </div>
+
+          <div className="lg:col-span-2">
+            <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Resources</h4>
+            <div className="flex flex-col gap-4">
+              <Link to={createPageUrl("SecurityDocs")} className="hover:text-[#00E4FF] transition-colors">Documentation</Link>
+              <Link to={createPageUrl("DeveloperConsole")} className="hover:text-[#00E4FF] transition-colors">API Reference</Link>
+              <Link to={createPageUrl("Roadmap")} className="hover:text-[#00E4FF] transition-colors">Roadmap</Link>
+              <Link to={createPageUrl("FAQ")} className="hover:text-[#00E4FF] transition-colors">FAQ</Link>
+              <Link to={createPageUrl("Pricing")} className="hover:text-[#00E4FF] transition-colors">Pricing</Link>
+            </div>
+          </div>
+          
+          <div className="lg:col-span-2">
+            <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Contact</h4>
+            <div className="flex flex-col gap-4">
+              <a href="mailto:glyphlock@gmail.com" className="flex items-center gap-2 hover:text-[#00E4FF] transition-colors">
+                <Mail size={16} /> glyphlock@gmail.com
+              </a>
+              <a href="tel:+14242466499" className="flex items-center gap-2 hover:text-[#00E4FF] transition-colors">
+                <Phone size={16} /> (424) 246-6499
+              </a>
+              <p className="text-sm opacity-60 pt-2">
+                El Mirage, Arizona<br/>United States
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Certifications */}
+        <div className="border-t border-white/10 pt-12 mb-12">
+          <p className="text-center text-xs font-bold uppercase tracking-widest text-gray-500 mb-8">Security & Compliance Standards</p>
+          <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+            {certifications.map((cert, idx) => (
+              <div key={idx} className="group relative bg-white/5 border border-white/10 rounded-lg px-6 py-4 flex items-center gap-3 hover:border-[#00E4FF]/50 hover:bg-[#00E4FF]/5 transition-all duration-300">
+                <Shield className="w-6 h-6 text-gray-500 group-hover:text-[#00E4FF] transition-colors" />
+                <div className="text-left">
+                  <div className="text-white font-bold text-sm group-hover:text-[#00E4FF] transition-colors">{cert.name}</div>
+                  <div className="text-[10px] text-gray-500 tracking-wider group-hover:text-white/70">{cert.subtitle}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
+          <p>© {new Date().getFullYear()} GlyphLock Security LLC. All rights reserved.</p>
+          <div className="flex items-center gap-8">
+            <Link to={createPageUrl("Terms")} className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link to={createPageUrl("Privacy")} className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link to={createPageUrl("Cookies")} className="hover:text-white transition-colors">Cookies</Link>
           </div>
         </div>
       </div>
