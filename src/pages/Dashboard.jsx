@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DataTable from "@/components/dashboard/DataTable";
+import DeveloperKeys from "@/components/dashboard/DeveloperKeys";
 import GlyphLoader from "@/components/GlyphLoader";
 
 export default function Dashboard() {
@@ -53,7 +54,11 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <DataTable selectedModel={selectedModel} />
+        {selectedModel?.id === 'api-keys' ? (
+          <DeveloperKeys />
+        ) : (
+          <DataTable selectedModel={selectedModel} />
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { 
   ShoppingCart, Users, Package, TrendingUp, Map, AlertTriangle, 
-  QrCode, Shield, Bed, UserCheck, DollarSign, BarChart3 
+  QrCode, Shield, Bed, UserCheck, DollarSign, BarChart3, Key
 } from "lucide-react";
 
 export const navItems = [
@@ -52,6 +52,12 @@ export const navItems = [
     category: "System",
     items: [
       { id: "service-usage", label: "Service Usage", entity: "ServiceUsage", icon: BarChart3 },
+    ]
+  },
+  {
+    category: "Developer",
+    items: [
+      { id: "api-keys", label: "API Keys & Secrets", entity: "APIKey", icon: Key }, // Using string icon name to be handled in mapping or import
     ]
   }
 ];
