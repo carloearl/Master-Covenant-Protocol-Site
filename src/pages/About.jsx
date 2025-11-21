@@ -127,33 +127,21 @@ export default function About() {
                 <Sparkles className="w-8 h-8 text-blue-400" />
                 Our Origin
               </h2>
-              <p className="text-white/90 leading-relaxed mb-6 text-lg">
-                GlyphLock was born from a simple but dangerous idea:<br />
-                <span className="text-blue-400 font-semibold italic">"What if camouflage could hide QR codes inside it?"</span>
-              </p>
-              <p className="text-white/90 leading-relaxed mb-6">
-                In early 2025 in Arizona, Carlo Rene Earl (DACO¹), and his closest collaborator, 
-                Collin Vanderginst, were talking about military stealth. 
-                Collin mentioned patterns and concealment. 
-                Carlo said, "What if the pattern itself *is* the authentication? What if the pattern carries information no one can see?"
-              </p>
-              <p className="text-white/90 leading-relaxed mb-6">
-                That single spark became the entire foundation of modern interactive, steganographic, quantum-resistant imagery. 
-                The moment camouflage became a communication protocol, GlyphLock was inevitable.
-              </p>
-              <p className="text-white/90 leading-relaxed mb-6">
-                From that point forward, Carlo pushed one idea relentlessly:<br />
-                <span className="text-blue-400 font-bold">If a QR code can hide, then information can defend itself.</span><br />
-                And if information can defend itself — corporations, creators, governments, and families can too.
-              </p>
-              <p className="text-white/90 leading-relaxed">
-                That idea grew into <span className="text-blue-400 font-bold">The Master Covenant</span>, 
-                the world's first dual-layer binding framework for AI, humans, contracts, 
-                and machine-verified truth.
-              </p>
-              <div className="mt-8 p-6 glass-card border-blue-500/50 rounded-lg">
-                <p className="text-xl text-blue-400 font-bold text-center">
-                  Today, that idea is a company.
+              <div className="space-y-6 text-white/90 leading-relaxed text-lg">
+                <p>
+                  GlyphLock began with a conversation that shouldn’t have mattered as much as it did — two friends in Arizona in early 2025 talking about camouflage, patterns, and military stealth. Collin mentioned how patterns hide people. Carlo pushed further and asked the question that changed everything: <span className="text-blue-400 font-semibold italic">“What if the pattern isn’t hiding you… what if the pattern itself is the intelligence?”</span> That moment cracked open an entirely new idea: imagery as encrypted communication, invisible data embedded inside everyday surfaces, information that could move, react, and protect itself.
+                </p>
+                <p>
+                  But the vision didn’t take off instantly. Behind the scenes were long nights, financial setbacks, early collaborators who didn’t deliver, people who stalled progress, partners who talked more than they built, and the constant pressure of raising a family while trying to hold onto a concept that felt bigger than life.
+                </p>
+                <p>
+                  There were moments Carlo nearly quit — not because the idea was weak, but because the path was heavy. When outside promises failed and unreliable contributors slowed the project down, he made the toughest but clearest decision: <span className="text-blue-400 font-bold">bootstrap everything and trust no one but the people who actually show up.</span>
+                </p>
+                <p>
+                  That pivot reshaped the entire trajectory. What started as a clever thought about camouflage became a full-blown security ecosystem built through sheer discipline, creative intelligence, and refusal to fold. With Collin turning theory into functioning systems, Jacub providing structure and strategic direction, and Angel keeping the entire operation organized and compliant, GlyphLock grew from a raw concept into a quantum-resistant authentication framework, complete with encrypted glyph signatures, interactive image intelligence, and the Master Covenant — a binding blueprint for how humans, AI, and digital truth are verified.
+                </p>
+                <p>
+                  GlyphLock wasn’t built in a boardroom or funded by VCs. It was built through perseverance, real struggle, and the belief that the world needed a new way to protect identity, information, and integrity. The story isn’t glamorous — it’s earned. And that’s why GlyphLock exists today: because Carlo refused to let a world-changing idea die in silence.
                 </p>
               </div>
             </div>
