@@ -5,9 +5,6 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
  * Adds Base44 authentication layer
  */
 
-const SUPABASE_URL = 'https://kygisdokikvzgzwonzxk.supabase.co';
-const FUNCTIONS_URL = `${SUPABASE_URL}/functions/v1`;
-
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -23,12 +20,22 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Function name required' }, { status: 400 });
     }
 
-    // Forward request to Supabase Edge Function
-    const response = await fetch(`${FUNCTIONS_URL}/${functionName}`, {
+    // Get Supabase credentials from environment
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+      return Response.json({ error: 'Supabase credentials not configured' }, { status: 500 });
+    }
+
+    // Forward to Supabase Edge Function with service role key and user context
+    const response = await fetch(`${supabaseUrl}/functions/v1/${functionName}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': req.headers.get('Authorization') || '',
+        'Authorization': `Bearer ${supabaseServiceKey}`,
+        'x-user-id': user.id,
+        'x-user-email': user.email,
       },
       body: JSON.stringify(payload || {}),
     });
