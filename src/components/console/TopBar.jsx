@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Search, Bell, Settings, User, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,9 +11,28 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { base44 } from "@/api/base44Client";
+import { glyphLockAPI } from "@/components/api/glyphLockAPI";
+import NotificationDrawer from "./NotificationDrawer";
 
 export default function TopBar({ user, projectName = "GlyphLock Production" }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  useEffect(() => {
+    loadUnreadCount();
+    const interval = setInterval(loadUnreadCount, 30000); // Poll every 30s
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadUnreadCount = async () => {
+    try {
+      const data = await glyphLockAPI.notifications.list();
+      setUnreadCount(data.unread_count || 0);
+    } catch (err) {
+      console.error("Failed to load notification count:", err);
+    }
+  };
 
   const handleLogout = async () => {
     await base44.auth.logout();
@@ -66,10 +85,27 @@ export default function TopBar({ user, projectName = "GlyphLock Production" }) {
         </DropdownMenu>
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="text-white/70 hover:text-white relative">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="text-white/70 hover:text-white relative"
+          onClick={() => setShowNotifications(true)}
+        >
           <Bell className="w-5 h-5" />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
         </Button>
+
+        <NotificationDrawer 
+          isOpen={showNotifications}
+          onClose={() => {
+            setShowNotifications(false);
+            loadUnreadCount();
+          }}
+        />
 
         {/* Settings */}
         <Button variant="ghost" size="icon" className="text-white/70 hover:text-white">

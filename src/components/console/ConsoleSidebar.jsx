@@ -1,27 +1,29 @@
-import React from "react";
-import { Home, Key, Download, Users, FileText, Zap, Shield, Book, LogOut, DollarSign, TrendingUp, UsersRound, Clock, MessageSquare } from "lucide-react";
+import React, { useState } from "react";
+import { Home, Key, Download, Users, FileText, Zap, Shield, Book, LogOut, DollarSign, TrendingUp, UsersRound, Clock, Code, Settings2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
-const modules = [
-  { id: "dashboard", label: "Overview", icon: Home },
+const developerModules = [
   { id: "api-keys", label: "API Keys", icon: Key },
-  { id: "sdk", label: "SDK Downloads", icon: Download },
+  { id: "sdk", label: "SDK Center", icon: Download },
   { id: "functions", label: "Edge Functions", icon: Zap },
-  { id: "security", label: "Security", icon: Shield },
-  { id: "logs", label: "System Logs", icon: FileText },
   { id: "api-reference", label: "API Docs", icon: Book },
-  { id: "billing", label: "Billing", icon: DollarSign },
-  { id: "usage", label: "Usage", icon: TrendingUp },
+  { id: "logs", label: "Logs", icon: FileText },
 ];
 
-const adminModules = [
-  { id: "users", label: "Users", icon: Users, adminOnly: true },
-  { id: "team-roles", label: "Team & Roles", icon: UsersRound, adminOnly: true },
-  { id: "audit-timeline", label: "Audit Logs", icon: Clock, adminOnly: true },
-  { id: "support", label: "Support", icon: MessageSquare, adminOnly: true },
+const enterpriseModules = [
+  { id: "billing", label: "Billing", icon: DollarSign },
+  { id: "usage", label: "Usage", icon: TrendingUp },
+  { id: "team-roles", label: "Team & Roles", icon: UsersRound },
+  { id: "audit-timeline", label: "Audit Timeline", icon: Clock },
+  { id: "security", label: "Security", icon: Shield },
+];
+
+const adminOnlyModules = [
+  { id: "admin-billing", label: "Admin Billing", icon: Settings2 },
 ];
 
 export default function ConsoleSidebar({ activeModule, setActiveModule, user }) {
+  const [mode, setMode] = useState("developer"); // "developer" or "enterprise"
   const handleLogout = async () => {
     await base44.auth.logout();
   };
@@ -38,6 +40,34 @@ export default function ConsoleSidebar({ activeModule, setActiveModule, user }) 
             <h1 className="text-lg font-bold text-white">GlyphLock</h1>
             <p className="text-xs text-[#00E4FF]">Command Center</p>
           </div>
+        </div>
+      </div>
+
+      {/* Mode Switcher */}
+      <div className="p-4 border-b border-[#8C4BFF]/20">
+        <div className="flex gap-2 p-1 bg-[#020617] rounded-lg">
+          <button
+            onClick={() => setMode("developer")}
+            className={`flex-1 px-3 py-2 rounded-md text-xs font-semibold transition-all ${
+              mode === "developer"
+                ? "bg-[#00E4FF] text-black"
+                : "text-white/60 hover:text-white"
+            }`}
+          >
+            <Code className="w-4 h-4 mx-auto mb-1" />
+            DEVELOPER
+          </button>
+          <button
+            onClick={() => setMode("enterprise")}
+            className={`flex-1 px-3 py-2 rounded-md text-xs font-semibold transition-all ${
+              mode === "enterprise"
+                ? "bg-[#8C4BFF] text-white"
+                : "text-white/60 hover:text-white"
+            }`}
+          >
+            <Shield className="w-4 h-4 mx-auto mb-1" />
+            ENTERPRISE
+          </button>
         </div>
       </div>
 
@@ -58,33 +88,37 @@ export default function ConsoleSidebar({ activeModule, setActiveModule, user }) 
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {modules.map((module) => {
-          const Icon = module.icon;
-          const isActive = activeModule === module.id;
-          
-          return (
-            <button
-              key={module.id}
-              onClick={() => setActiveModule(module.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                isActive
-                  ? "bg-[#8C4BFF]/20 text-[#8C4BFF] shadow-lg shadow-[#8C4BFF]/10"
-                  : "text-white/70 hover:text-white hover:bg-white/5"
-              }`}
-            >
-              <Icon className="w-5 h-5" />
-              <span className="text-sm font-medium">{module.label}</span>
-            </button>
-          );
-        })}
-
-        {/* Admin Section */}
-        {user?.role === 'admin' && (
+        {mode === "developer" ? (
           <>
-            <div className="pt-4 pb-2">
-              <p className="text-xs text-white/40 font-semibold px-4">ADMIN</p>
+            <div className="pb-2">
+              <p className="text-xs text-[#00E4FF] font-semibold px-4 uppercase tracking-wider">Developer Tools</p>
             </div>
-            {adminModules.map((module) => {
+            {developerModules.map((module) => {
+              const Icon = module.icon;
+              const isActive = activeModule === module.id;
+              
+              return (
+                <button
+                  key={module.id}
+                  onClick={() => setActiveModule(module.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    isActive
+                      ? "bg-[#00E4FF]/20 text-[#00E4FF] shadow-lg shadow-[#00E4FF]/10"
+                      : "text-white/70 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="text-sm font-medium">{module.label}</span>
+                </button>
+              );
+            })}
+          </>
+        ) : (
+          <>
+            <div className="pb-2">
+              <p className="text-xs text-[#8C4BFF] font-semibold px-4 uppercase tracking-wider">Enterprise Management</p>
+            </div>
+            {enterpriseModules.map((module) => {
               const Icon = module.icon;
               const isActive = activeModule === module.id;
               
@@ -103,6 +137,34 @@ export default function ConsoleSidebar({ activeModule, setActiveModule, user }) 
                 </button>
               );
             })}
+
+            {/* Admin Only Modules */}
+            {user?.role === 'admin' && (
+              <>
+                <div className="pt-4 pb-2">
+                  <p className="text-xs text-red-400 font-semibold px-4 uppercase tracking-wider">Admin Only</p>
+                </div>
+                {adminOnlyModules.map((module) => {
+                  const Icon = module.icon;
+                  const isActive = activeModule === module.id;
+                  
+                  return (
+                    <button
+                      key={module.id}
+                      onClick={() => setActiveModule(module.id)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                        isActive
+                          ? "bg-red-500/20 text-red-400 shadow-lg shadow-red-500/10"
+                          : "text-white/70 hover:text-white hover:bg-white/5"
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span className="text-sm font-medium">{module.label}</span>
+                    </button>
+                  );
+                })}
+              </>
+            )}
           </>
         )}
       </nav>
