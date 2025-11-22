@@ -117,6 +117,7 @@ export default function Chat() {
 
       <div className="dino-input-zone">
         <input
+          type="text"
           className="dino-input"
           value={input}
           placeholder="Type your message…"
