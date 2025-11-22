@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Shield, Zap, Eye, Brain, Lock, FileCode } from "lucide-react";
+import { Shield, Zap, Eye, Brain, Lock, FileCode, MapPin, Image } from "lucide-react";
 
 const services = [
   {
@@ -33,11 +33,11 @@ const services = [
     icon: Lock
   },
   {
-    title: "Security Operations Center",
-    description: "24/7 threat monitoring and response",
-    link: "SecurityOperationsCenter",
+    title: "Hotzone Mapper",
+    description: "Security threat visualization and mapping",
+    link: "HotzoneMapper",
     image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9167e5df2_08f33231-115f-4c95-9719-682f4e9679cc.jpg",
-    icon: Shield
+    icon: MapPin
   },
   {
     title: "GlyphBot AI Assistant",
