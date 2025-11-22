@@ -44,7 +44,7 @@ const NAV = [
   {
     label: "Resources",
     items: [
-      { label: "Developer Console", page: "DeveloperConsole" },
+      { label: "Command Center", page: "CommandCenter" },
       { label: "Documentation", page: "SecurityDocs" },
       { label: "Roadmap", page: "Roadmap" },
       { label: "FAQ", page: "FAQ" },
@@ -202,9 +202,9 @@ export default function Navbar({ user, onLogin, onLogout }) {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="text-gray-300 focus:bg-[#8C4BFF]/20 focus:text-white rounded-lg cursor-pointer mb-1">
-                  <Link to={createPageUrl("DeveloperConsole")}>
+                  <Link to={createPageUrl("CommandCenter")}>
                     <Terminal className="w-4 h-4 mr-2 text-[#8C4BFF]" />
-                    Dev Console
+                    Command Center
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-white/10 my-1" />
