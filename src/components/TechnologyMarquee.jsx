@@ -78,7 +78,6 @@ export default function TechnologyMarquee() {
     { name: "WordPress", logo: "https://www.vectorlogo.zone/logos/wordpress/wordpress-ar21.svg" },
     { name: "Shopify", logo: "https://www.vectorlogo.zone/logos/shopify/shopify-ar21.svg" },
     { name: "Magento", logo: "https://www.vectorlogo.zone/logos/magento/magento-ar21.svg" },
-    { name: "Base44", logo: "https://base44.io/favicon.ico" },
     { name: "Replit", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b2/Repl.it_logo.svg" },
     { name: "Greylock", logo: "https://upload.wikimedia.org/wikipedia/commons/4/40/Greylock_Partners_logo.svg" },
     { name: "Y Combinator", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b2/Y_Combinator_logo.svg" },
@@ -104,9 +103,9 @@ export default function TechnologyMarquee() {
     { name: "TikTok", logo: "https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" },
     { name: "Snapchat", logo: "https://upload.wikimedia.org/wikipedia/en/c/c4/Snapchat_logo.svg" },
     { name: "US Bank", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2d/US_Bank_logo_2020.svg" },
-    { name: "Elavon", logo: "https://cdn.worldvectorlogo.com/logos/elavon.svg" },
+    { name: "Elavon", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxVfqLXnqhF6CaGqG-7vPiFXvLwClMFp8Bag&s" },
     { name: "GoDaddy", logo: "https://upload.wikimedia.org/wikipedia/commons/3/36/GoDaddy_logo.svg" },
-    { name: "Square", logo: "https://cdn.worldvectorlogo.com/logos/square-2.svg" },
+    { name: "Block (Square)", logo: "https://logo.clearbit.com/squareup.com" },
     { name: "Base44", logo: "https://avatars.githubusercontent.com/u/145019558?s=200&v=4" }
   ];
 
@@ -143,9 +142,9 @@ export default function TechnologyMarquee() {
     { name: "Varonis", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Varonis_logo.svg" },
     { name: "Ping Identity", logo: "https://upload.wikimedia.org/wikipedia/commons/7/73/Ping_Identity_logo.svg" },
     { name: "JumpCloud", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7f/JumpCloud_logo.svg" },
-    { name: "Stripe", logo: "https://cdn.worldvectorlogo.com/logos/stripe-4.svg" },
-    { name: "Clover", logo: "https://cdn.worldvectorlogo.com/logos/clover-2.svg" },
-    { name: "Toast", logo: "https://cdn.worldvectorlogo.com/logos/toast-2.svg" }
+    { name: "Stripe", logo: "https://logo.clearbit.com/stripe.com" },
+    { name: "Clover", logo: "https://logo.clearbit.com/clover.com" },
+    { name: "Toast POS", logo: "https://logo.clearbit.com/toasttab.com" }
   ];
 
   // Row 3: 25 logos (major tech & finance)
