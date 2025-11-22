@@ -143,77 +143,38 @@ main {
   color: white !important;
 }
 
-/* FORCE ALL ELEMENTS TO BLUE THEME */
-div:not([class*="gradient"]):not([class*="Gradient"]):not(svg):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon),
-section:not([class*="gradient"]),
-article:not([class*="gradient"]),
-aside:not([class*="gradient"]),
-header:not([class*="gradient"]),
-footer:not([class*="gradient"]),
-nav:not([class*="gradient"]) {
+/* Ensure text is visible */
+div, section, article, aside, header, footer, nav, span, p, h1, h2, h3, h4, h5, h6 {
+  color: inherit;
+}
+
+/* Only apply glass theme to specific glassmorphic components */
+.glass-card,
+.glass-panel,
+.glass-card-dark,
+.glass-royal {
+  background: rgba(10, 15, 36, 0.8) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(0, 228, 255, 0.2) !important;
   color: white !important;
 }
 
-/* Kill all white backgrounds - apply blue theme - NUCLEAR */
-[data-card],
-[class*="Card"],
-[class*="card"]:not([class*="gradient"]):not(.glass-card), /* Added :not(.glass-card) to prioritize new glass-card */
-[role="dialog"],
-[data-dialog],
-.bg-white,
-[class*="bg-white"],
-[class*="Menu"],
-[class*="Dropdown"],
-[class*="Select"],
-[class*="Popover"],
-[class*="Dialog"],
-[class*="Content"],
-[data-radix-portal] {
-  background: rgba(65, 105, 225, 0.15) !important;
-  background-color: rgba(65, 105, 225, 0.15) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.4) !important;
+/* Radix UI portals only */
+[data-radix-portal] [data-radix-popper-content-wrapper],
+[data-radix-select-content],
+[data-radix-dropdown-menu-content],
+[data-radix-popover-content],
+[data-radix-dialog-content] {
+  background: rgba(10, 15, 36, 0.98) !important;
+  background-color: rgba(10, 15, 36, 0.98) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(0, 228, 255, 0.3) !important;
   color: white !important;
 }
 
-/* FORCE ALL PORTALED/FLOATING ELEMENTS */
-body > div:not(#root):not(#__next),
-[style*="position: fixed"],
-[style*="position: absolute"] {
-  background: rgba(65, 105, 225, 0.2) !important;
-  background-color: rgba(65, 105, 225, 0.2) !important;
-}
-
-/* NUCLEAR OPTION - KILL ALL WHITE EVERYWHERE */
-*[style*="background: white"],
-*[style*="background: #fff"],
-*[style*="background: #ffffff"],
-*[style*="background-color: white"],
-*[style*="background-color: #fff"],
-*[style*="background-color: #ffffff"],
-*[style*="background:white"],
-*[style*="background:#fff"],
-*[style*="background:#ffffff"],
-*[class*="white"],
-*[class*="White"],
-div[class*="bg-"],
-section[class],
-article[class] {
-  background: rgba(65, 105, 225, 0.2) !important;
-  background-color: rgba(65, 105, 225, 0.2) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-}
-
-/* ABSOLUTE OVERRIDE - ALL DIVS AND CONTAINERS */
-div:not([class*="gradient"]):not([class*="Gradient"]):not(svg):not([class*="Nebula"]):not([class*="bg-black"]),
-section:not([class*="gradient"]):not([class*="Gradient"]),
-article:not([class*="gradient"]):not([class*="Gradient"]),
-aside:not([class*="gradient"]):not([class*="Gradient"]),
-main > div:not([class*="gradient"]) {
-  background-color: rgba(65, 105, 225, 0.15) !important;
-}
+/* Remove nuclear overrides that break component styling */
 
 /* Force all list items, menu items, options */
 li, 
@@ -277,17 +238,7 @@ div[data-radix-popper-content-wrapper] > * > * {
   z-index: 99999 !important;
 }
 
-/* ABSOLUTE NUCLEAR - EVERY SINGLE DIV */
-div {
-  background-color: transparent !important;
-}
-
-div[class*="bg-white"],
-div[class*="bg-gray"],
-div[class*="bg-slate"] {
-  background: rgba(65, 105, 225, 0.2) !important;
-  background-color: rgba(65, 105, 225, 0.2) !important;
-}
+/* Let components control their own backgrounds */
 
 [data-radix-select-item],
 [data-radix-dropdown-menu-item],
@@ -397,10 +348,7 @@ background: transparent !important;
   border-color: rgba(65, 105, 225, 0.4) !important;
 }
 
-/* Transparent backgrounds except specific elements */
-*:not(svg):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon):not([class*="gradient"]):not([class*="Gradient"]):not(body):not(html):not(main):not(#root):not([class*="glass-"]):not(table):not(thead):not(tbody):not(tr):not(td):not(th) {
-  background-color: transparent !important;
-}
+/* Remove overly broad background clearing */
 
 /* Tables - UV Theme */
 table, thead, tbody, tr, td, th {
@@ -445,23 +393,7 @@ main {
   -webkit-backdrop-filter: blur(16px) !important;
 }
 
-/* FORCE EVERY POSSIBLE CARD COMPONENT */
-[class*="Card"],
-[class*="card"]:not(.glass-card), /* Added :not(.glass-card) to prioritize new glass-card */
-[class*="panel"],
-[class*="Panel"],
-[class*="container"]:not([class*="Container-"]),
-[class*="wrapper"],
-[class*="Wrapper"],
-[class*="box"],
-[class*="Box"],
-[data-card],
-[data-panel] {
-  background: rgba(65, 105, 225, 0.15) !important;
-  background-color: rgba(65, 105, 225, 0.15) !important;
-  backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(65, 105, 225, 0.4) !important;
-}
+/* Remove forced card styling - let components define their own backgrounds */
 
 /* Badge variants - Royal Blue Theme */
 [class*="badge"],
@@ -472,30 +404,7 @@ main {
   color: white !important;
 }
 
-/* OVERRIDE EVERYTHING WITH BACKGROUND */
-*[class] {
-  background-image: none !important;
-}
-
-*[style*="background"] {
-  background: rgba(30, 58, 138, 0.3) !important;
-  background-color: rgba(30, 58, 138, 0.3) !important;
-}
-
-/* ALL POSSIBLE BACKGROUND COLORS */
-.bg-white,
-.bg-gray-50,
-.bg-gray-100,
-.bg-gray-200,
-.bg-slate-50,
-.bg-slate-100,
-.bg-slate-200,
-[class*="bg-white"],
-[class*="bg-gray"],
-[class*="bg-slate"] {
-  background: rgba(65, 105, 225, 0.2) !important;
-  background-color: rgba(65, 105, 225, 0.2) !important;
-}
+/* Remove overly aggressive background overrides */
 
 /* Separator - Royal Blue Theme */
 [data-orientation="horizontal"],
