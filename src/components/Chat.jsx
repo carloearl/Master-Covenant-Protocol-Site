@@ -1,14 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { MessageCircle, X } from "lucide-react";
+import { MessageCircle, X, Save, FolderOpen, Plus } from "lucide-react";
 
 export default function Chat() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: "assistant", text: "🦕 Roar! I'm DinoBot. How can I help?" }
+    { role: "assistant", text: "🦕 Roar! I'm DinoBot. How can I help?", timestamp: new Date().toISOString() }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [conversations, setConversations] = useState([]);
+  const [currentConvId, setCurrentConvId] = useState(null);
+  const [showConvList, setShowConvList] = useState(false);
   const msgRef = useRef(null);
   const audioRef = useRef(new Audio());
 
@@ -20,6 +23,21 @@ export default function Chat() {
       });
     }
   }, [messages]);
+
+  useEffect(() => {
+    if (isOpen) {
+      loadConversations();
+    }
+  }, [isOpen]);
+
+  const loadConversations = async () => {
+    try {
+      const convs = await base44.entities.Conversation.list('-last_message_at', 10);
+      setConversations(convs);
+    } catch (e) {
+      console.error("Failed to load conversations:", e);
+    }
+  };
 
   const playVoice = async (text) => {
     try {
@@ -44,25 +62,75 @@ export default function Chat() {
     if (!input.trim() || loading) return;
 
     const userMessage = input.trim();
+    const timestamp = new Date().toISOString();
     setInput("");
-    setMessages(prev => [...prev, { role: "user", text: userMessage }]);
+    setMessages(prev => [...prev, { role: "user", text: userMessage, timestamp }]);
     setLoading(true);
 
     try {
+      // Build conversation context from message history
+      const conversationHistory = messages.slice(1).map(msg => 
+        `${msg.role === 'user' ? 'User' : 'DinoBot'}: ${msg.text}`
+      ).join('\n');
+
+      const contextPrompt = conversationHistory 
+        ? `Previous conversation:\n${conversationHistory}\n\nUser: ${userMessage}`
+        : `User: ${userMessage}`;
+
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are DinoBot, a friendly AI assistant. Be helpful and professional. User question: ${userMessage}`,
+        prompt: `You are DinoBot, a friendly AI assistant. Be helpful and professional. Maintain context from the conversation history and reference previous messages when relevant.\n\n${contextPrompt}`,
         add_context_from_internet: false
       });
 
-      setMessages(prev => [...prev, { role: "assistant", text: response }]);
+      const assistantMsg = { role: "assistant", text: response, timestamp: new Date().toISOString() };
+      setMessages(prev => [...prev, assistantMsg]);
+
+      // Auto-save conversation if it has a saved ID
+      if (currentConvId) {
+        await saveCurrentConversation(currentConvId);
+      }
     } catch (error) {
       setMessages(prev => [...prev, {
         role: "assistant",
-        text: "🦕 Connection issue. Please try again!"
+        text: "🦕 Connection issue. Please try again!",
+        timestamp: new Date().toISOString()
       }]);
     }
 
     setLoading(false);
+  };
+
+  const saveCurrentConversation = async (convId = null) => {
+    try {
+      const title = messages.find(m => m.role === 'user')?.text.slice(0, 50) || 'New Chat';
+      const convData = {
+        title,
+        messages,
+        last_message_at: new Date().toISOString()
+      };
+
+      if (convId) {
+        await base44.entities.Conversation.update(convId, convData);
+      } else {
+        const newConv = await base44.entities.Conversation.create(convData);
+        setCurrentConvId(newConv.id);
+      }
+      await loadConversations();
+    } catch (e) {
+      console.error("Failed to save conversation:", e);
+    }
+  };
+
+  const loadConversation = async (conv) => {
+    setMessages(conv.messages);
+    setCurrentConvId(conv.id);
+    setShowConvList(false);
+  };
+
+  const newConversation = () => {
+    setMessages([{ role: "assistant", text: "🦕 Roar! I'm DinoBot. How can I help?", timestamp: new Date().toISOString() }]);
+    setCurrentConvId(null);
+    setShowConvList(false);
   };
 
   if (!isOpen) {
@@ -80,11 +148,45 @@ export default function Chat() {
   return (
     <div className="dino-chat-container">
       <div className="dino-header">
+        <button onClick={() => setShowConvList(!showConvList)} className="dino-icon-btn" title="Conversations">
+          <FolderOpen className="w-5 h-5" />
+        </button>
         <div className="dino-title">GlyphBot • Dino Edition</div>
+        <button onClick={() => saveCurrentConversation(currentConvId)} className="dino-icon-btn" title="Save">
+          <Save className="w-5 h-5" />
+        </button>
         <button onClick={() => setIsOpen(false)} className="dino-close-btn">
           <X className="w-5 h-5" />
         </button>
       </div>
+
+      {showConvList && (
+        <div className="dino-conv-list">
+          <div className="dino-conv-header">
+            <h3>Conversations</h3>
+            <button onClick={newConversation} className="dino-new-conv">
+              <Plus className="w-4 h-4" /> New
+            </button>
+          </div>
+          <div className="dino-conv-items">
+            {conversations.map(conv => (
+              <div 
+                key={conv.id} 
+                className={`dino-conv-item ${currentConvId === conv.id ? 'active' : ''}`}
+                onClick={() => loadConversation(conv)}
+              >
+                <div className="dino-conv-title">{conv.title}</div>
+                <div className="dino-conv-date">
+                  {new Date(conv.last_message_at).toLocaleDateString()}
+                </div>
+              </div>
+            ))}
+            {conversations.length === 0 && (
+              <div className="dino-conv-empty">No saved conversations</div>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="dino-messages" ref={msgRef}>
         {messages.map((msg, i) => (
