@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { MessageCircle, X, Save, FolderOpen, Plus } from "lucide-react";
-import "./chat.css";
 
 export default function Chat() {
   const [isOpen, setIsOpen] = useState(false);

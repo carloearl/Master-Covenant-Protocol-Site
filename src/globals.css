@@ -297,6 +297,106 @@ input, textarea {
   box-shadow: none;
 }
 
+/* Conversations List */
+.dino-conv-list {
+  background: #0a0a0a;
+  border-bottom: 1px solid #333;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.dino-conv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid #333;
+}
+
+.dino-conv-header h3 {
+  color: #8afcff;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.dino-new-conv {
+  background: #113024;
+  border: 1px solid #8afcff;
+  color: #8afcff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  touch-action: manipulation;
+}
+
+.dino-new-conv:active {
+  transform: scale(0.95);
+}
+
+.dino-conv-items {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.dino-conv-item {
+  padding: 12px 20px;
+  border-bottom: 1px solid #222;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dino-conv-item:hover {
+  background: #111;
+}
+
+.dino-conv-item.active {
+  background: #113024;
+  border-left: 3px solid #8afcff;
+}
+
+.dino-conv-title {
+  color: #fff;
+  font-size: 14px;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dino-conv-date {
+  color: #666;
+  font-size: 12px;
+}
+
+.dino-conv-empty {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-size: 13px;
+}
+
+.dino-icon-btn {
+  background: none;
+  border: none;
+  color: #8afcff;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dino-icon-btn:active {
+  transform: scale(0.9);
+}
+
 /* Mobile optimizations already handled by 16px font-size rule */
 
 /* Hide elements when printing (preserved as it's a good practice) */
