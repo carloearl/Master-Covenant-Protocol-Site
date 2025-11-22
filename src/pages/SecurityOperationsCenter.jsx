@@ -1,10 +1,7 @@
-
-import React, { useState } from "react";
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Map, Activity, BarChart3 } from "lucide-react";
+import { Shield, Activity, BarChart3 } from "lucide-react";
 import ThreatMonitor from "@/components/security/ThreatMonitor";
-import HotzoneMapper from "@/components/security/HotzoneMapper";
-import SavedMaps from "@/components/security/SavedMaps";
 import SecurityAnalytics from "@/components/security/SecurityAnalytics";
 import FreeTrialGuard from "@/components/FreeTrialGuard";
 
@@ -27,18 +24,10 @@ export default function SecurityOperationsCenter() {
             </div>
 
             <Tabs defaultValue="monitor" className="w-full">
-              <TabsList className="grid w-full grid-cols-4 bg-gray-900 mb-8">
+              <TabsList className="grid w-full grid-cols-2 bg-gray-900 mb-8">
                 <TabsTrigger value="monitor" className="text-white data-[state=active]:bg-red-600">
                   <Activity className="w-4 h-4 mr-2" />
                   Live Monitor
-                </TabsTrigger>
-                <TabsTrigger value="mapper" className="text-white data-[state=active]:bg-red-600">
-                  <Map className="w-4 h-4 mr-2" />
-                  Hotzone Mapper
-                </TabsTrigger>
-                <TabsTrigger value="maps" className="text-white data-[state=active]:bg-red-600">
-                  <Shield className="w-4 h-4 mr-2" />
-                  Saved Maps
                 </TabsTrigger>
                 <TabsTrigger value="analytics" className="text-white data-[state=active]:bg-red-600">
                   <BarChart3 className="w-4 h-4 mr-2" />
@@ -48,14 +37,6 @@ export default function SecurityOperationsCenter() {
 
               <TabsContent value="monitor">
                 <ThreatMonitor />
-              </TabsContent>
-
-              <TabsContent value="mapper">
-                <HotzoneMapper />
-              </TabsContent>
-
-              <TabsContent value="maps">
-                <SavedMaps />
               </TabsContent>
 
               <TabsContent value="analytics">
