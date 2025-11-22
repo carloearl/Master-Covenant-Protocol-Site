@@ -110,6 +110,33 @@ export const glyphLockAPI = {
         throw error;
       }
     }
+  },
+
+  // Billing Management
+  billing: {
+    getStatus: async () => {
+      return callFunction('getBillingStatus');
+    },
+    
+    getHistory: async () => {
+      return callFunction('getBillingHistory');
+    },
+    
+    adminOverview: async () => {
+      return callFunction('getAdminBillingOverview');
+    },
+    
+    updateSubscription: async (priceId) => {
+      return callFunction('updateSubscription', { priceId });
+    },
+    
+    cancelSubscription: async () => {
+      return callFunction('cancelSubscription');
+    },
+    
+    downloadInvoice: async (invoiceId) => {
+      return callFunction('downloadInvoice', { invoiceId });
+    }
   }
 };
 

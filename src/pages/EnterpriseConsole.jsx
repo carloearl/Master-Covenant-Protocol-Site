@@ -13,6 +13,7 @@ import EdgeFunctionExplorer from "@/components/console/EdgeFunctionExplorer";
 import SecuritySettings from "@/components/console/SecuritySettings";
 import APIReference from "@/components/console/APIReference";
 import BillingAndPayments from "@/components/console/BillingAndPayments";
+import AdminBillingOverview from "@/components/console/admin/AdminBillingOverview";
 
 export default function EnterpriseConsole() {
   const navigate = useNavigate();
@@ -62,7 +63,9 @@ export default function EnterpriseConsole() {
       case "api-reference":
         return <APIReference />;
       case "billing":
-        return <BillingAndPayments />;
+        return <BillingAndPayments user={user} />;
+      case "admin-billing":
+        return <AdminBillingOverview user={user} />;
       default:
         return <DashboardHome user={user} />;
     }
