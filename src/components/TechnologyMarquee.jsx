@@ -13,7 +13,7 @@ export default function TechnologyMarquee() {
     { name: "Redis", logo: "https://www.vectorlogo.zone/logos/redis/redis-ar21.svg" },
     { name: "OpenAI", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
     { name: "NVIDIA", logo: "https://www.vectorlogo.zone/logos/nvidia/nvidia-ar21.svg" },
-    { name: "Hugging Face", logo: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Hugging_Face_logo.svg" },
+    { name: "Hugging Face", logo: "https://huggingface.co/front/assets/huggingface_logo.svg" },
     { name: "GitHub", logo: "https://www.vectorlogo.zone/logos/github/github-ar21.svg" },
     { name: "Cloudflare", logo: "https://www.vectorlogo.zone/logos/cloudflare/cloudflare-ar21.svg" },
     { name: "Stripe", logo: "https://www.vectorlogo.zone/logos/stripe/stripe-ar21.svg" },
@@ -78,13 +78,31 @@ export default function TechnologyMarquee() {
     { name: "WordPress", logo: "https://www.vectorlogo.zone/logos/wordpress/wordpress-ar21.svg" },
     { name: "Shopify", logo: "https://www.vectorlogo.zone/logos/shopify/shopify-ar21.svg" },
     { name: "Magento", logo: "https://www.vectorlogo.zone/logos/magento/magento-ar21.svg" },
-    { name: "Base44", logo: "https://avatars.githubusercontent.com/u/145019558?s=200&v=4" },
+    { name: "Base44", logo: "https://base44.io/favicon.ico" },
     { name: "Replit", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b2/Repl.it_logo.svg" },
     { name: "Greylock", logo: "https://upload.wikimedia.org/wikipedia/commons/4/40/Greylock_Partners_logo.svg" },
     { name: "Y Combinator", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b2/Y_Combinator_logo.svg" },
     { name: "Sequoia", logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Sequoia_Capital_logo.svg" },
     { name: "Andreessen Horowitz", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Andreessen_Horowitz_logo.svg" },
-    { name: "Accel", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Accel_logo.svg" }
+    { name: "Accel", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Accel_logo.svg" },
+    { name: "CyberArk", logo: "https://upload.wikimedia.org/wikipedia/commons/9/9f/CyberArk_Logo.svg" },
+    { name: "Rapid7", logo: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Rapid7_logo.svg" },
+    { name: "Tenable", logo: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Tenable_logo.svg" },
+    { name: "SentinelOne", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e3/SentinelOne_Logo.svg" },
+    { name: "McAfee", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/McAfee_logo.svg" },
+    { name: "Norton", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a7/NortonLifeLock_logo.svg" },
+    { name: "Sophos", logo: "https://upload.wikimedia.org/wikipedia/commons/8/89/Sophos_logo.svg" },
+    { name: "Duo Security", logo: "https://upload.wikimedia.org/wikipedia/commons/5/57/Duo_Security_logo.svg" },
+    { name: "1Password", logo: "https://upload.wikimedia.org/wikipedia/commons/6/68/1Password_logo.svg" },
+    { name: "Bitwarden", logo: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Bitwarden_logo.svg" },
+    { name: "Netflix", logo: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" },
+    { name: "Uber", logo: "https://upload.wikimedia.org/wikipedia/commons/5/58/Uber_logo_2018.svg" },
+    { name: "Airbnb", logo: "https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg" },
+    { name: "Twitter", logo: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg" },
+    { name: "LinkedIn", logo: "https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" },
+    { name: "Reddit", logo: "https://upload.wikimedia.org/wikipedia/commons/5/58/Reddit_logo_new.svg" },
+    { name: "TikTok", logo: "https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" },
+    { name: "Snapchat", logo: "https://upload.wikimedia.org/wikipedia/en/c/c4/Snapchat_logo.svg" }
   ];
 
   // Row 2: 25 logos (enterprise & security)
@@ -116,7 +134,10 @@ export default function TechnologyMarquee() {
     { name: "PagerDuty", logo: "https://www.vectorlogo.zone/logos/pagerduty/pagerduty-ar21.svg" },
     { name: "Perplexity", logo: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/perplexity-ai-icon.png" },
     { name: "Anthropic", logo: "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg" },
-    { name: "Cohere", logo: "https://www.vectorlogo.zone/logos/cohere/cohere-ar21.svg" }
+    { name: "Cohere", logo: "https://www.vectorlogo.zone/logos/cohere/cohere-ar21.svg" },
+    { name: "Varonis", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Varonis_logo.svg" },
+    { name: "Ping Identity", logo: "https://upload.wikimedia.org/wikipedia/commons/7/73/Ping_Identity_logo.svg" },
+    { name: "JumpCloud", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7f/JumpCloud_logo.svg" }
   ];
 
   // Row 3: 25 logos (major tech & finance)
@@ -145,7 +166,11 @@ export default function TechnologyMarquee() {
     { name: "Atlassian", logo: "https://www.vectorlogo.zone/logos/atlassian/atlassian-ar21.svg" },
     { name: "Notion", logo: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png" },
     { name: "Asana", logo: "https://www.vectorlogo.zone/logos/asana/asana-ar21.svg" },
-    { name: "Monday.com", logo: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Monday_logo.svg" }
+    { name: "Monday.com", logo: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Monday_logo.svg" },
+    { name: "Lyft", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a0/Lyft_logo.svg" },
+    { name: "DoorDash", logo: "https://upload.wikimedia.org/wikipedia/commons/f/fd/DoorDash_Logo.svg" },
+    { name: "Instacart", logo: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Instacart_logo_and_wordmark.svg" },
+    { name: "Robinhood", logo: "https://upload.wikimedia.org/wikipedia/commons/9/90/Robinhood_Markets_logo.svg" }
   ];
 
   return (
