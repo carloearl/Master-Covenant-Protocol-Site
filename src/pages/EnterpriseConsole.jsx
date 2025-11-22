@@ -15,12 +15,16 @@ import APIReference from "@/components/console/APIReference";
 import BillingAndPayments from "@/components/console/BillingAndPayments";
 import AdminBillingOverview from "@/components/console/admin/AdminBillingOverview";
 import TeamAndRoles from "@/components/console/TeamAndRoles";
+import AuditTimeline from "@/components/console/AuditTimeline";
+import OnboardingWizard from "@/components/console/OnboardingWizard";
 
 export default function EnterpriseConsole() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeModule, setActiveModule] = useState("dashboard");
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [billingStatus, setBillingStatus] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -32,12 +36,23 @@ export default function EnterpriseConsole() {
         }
         const userData = await base44.auth.me();
         setUser(userData);
-      } catch (err) {
+
+        // Check onboarding status
+        try {
+          const status = await base44.functions.invoke('getBillingStatus');
+          setBillingStatus(status.data);
+          if (status.data && !status.data.onboardingComplete) {
+            setShowOnboarding(true);
+          }
+        } catch (e) {
+          console.error('Failed to check onboarding status:', e);
+        }
+        } catch (err) {
         console.error("Auth error:", err);
         navigate("/");
-      } finally {
+        } finally {
         setLoading(false);
-      }
+        }
     })();
   }, [navigate]);
 
@@ -69,6 +84,8 @@ export default function EnterpriseConsole() {
         return <AdminBillingOverview user={user} />;
       case "team-roles":
         return <TeamAndRoles user={user} />;
+      case "audit-timeline":
+        return <AuditTimeline user={user} />;
       default:
         return <DashboardHome user={user} />;
     }
@@ -80,7 +97,15 @@ export default function EnterpriseConsole() {
         title="GlyphLock Enterprise Console - Secure API & Key Management"
         description="Manage API keys, monitor security, deploy edge functions, and control your GlyphLock enterprise infrastructure."
       />
-      
+
+      {showOnboarding && (
+        <OnboardingWizard 
+          onClose={() => setShowOnboarding(false)}
+          onNavigate={setActiveModule}
+          completedSteps={billingStatus?.completedOnboardingSteps || []}
+        />
+      )}
+
       <ConsoleLayout user={user} activeModule={activeModule} setActiveModule={setActiveModule}>
         <div className="p-8">
           {renderModule()}

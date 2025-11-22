@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 import glyphLockAPI from '@/components/api/glyphLockAPI';
 import RoleGate from './RoleGate';
+import SharedSeatGate, { SeatWarningBanner } from './SharedSeatGate';
 
 const ROLE_BADGES = {
   'owner': { color: 'text-yellow-400 bg-yellow-400/20', icon: Crown },
@@ -23,6 +24,8 @@ export default function TeamAndRoles({ user }) {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState('member');
   const [sendingInvite, setSendingInvite] = useState(false);
+  const [billingStatus, setBillingStatus] = useState(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -31,12 +34,14 @@ export default function TeamAndRoles({ user }) {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [orgData, membersData] = await Promise.all([
+      const [orgData, membersData, statusData] = await Promise.all([
         glyphLockAPI.team.getOrganization(),
-        glyphLockAPI.team.listMembers()
+        glyphLockAPI.team.listMembers(),
+        glyphLockAPI.billing.getStatus()
       ]);
       setOrganization(orgData);
       setMembers(membersData);
+      setBillingStatus(statusData);
       toast.success('Team data loaded');
     } catch (error) {
       console.error('Failed to fetch team data:', error);
@@ -51,6 +56,14 @@ export default function TeamAndRoles({ user }) {
       toast.error('Please enter a valid email address');
       return;
     }
+
+    // Check seat limit
+    const maxSeats = billingStatus?.seatLimit || 5;
+    if (members.length >= maxSeats) {
+      setShowUpgradeModal(true);
+      return;
+    }
+
     setSendingInvite(true);
     try {
       await glyphLockAPI.billing.sendInvite(inviteEmail, inviteRole);
@@ -132,8 +145,29 @@ export default function TeamAndRoles({ user }) {
           </Card>
         )}
 
+        {/* Seat Warning */}
+        {billingStatus && (
+          <SeatWarningBanner 
+            currentSeats={members.length} 
+            maxSeats={billingStatus.seatLimit || 5} 
+          />
+        )}
+
         {/* Invite Member */}
-        <Card className="glass-card border-cyan-500/30">
+        {showUpgradeModal && billingStatus ? (
+          <SharedSeatGate
+            currentSeats={members.length}
+            maxSeats={billingStatus.seatLimit || 5}
+            planName={billingStatus.planName || 'Current'}
+            onUpgrade={() => {
+              setShowUpgradeModal(false);
+              window.location.href = '/enterprise-console?module=billing';
+            }}
+          >
+            <div />
+          </SharedSeatGate>
+        ) : (
+          <Card className="glass-card border-cyan-500/30">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-cyan-400">
               <UserPlus className="h-5 w-5" />
@@ -172,6 +206,7 @@ export default function TeamAndRoles({ user }) {
             </div>
           </CardContent>
         </Card>
+        )}
 
         {/* Team Members List */}
         <Card className="glass-card border-purple-500/30">

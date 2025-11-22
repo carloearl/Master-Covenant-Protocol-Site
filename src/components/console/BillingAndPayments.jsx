@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, XCircle, Loader2, Eye, FileCode, Brain, Lock, Shield, Zap, Check, Download } from 'lucide-react';
+import { CheckCircle, XCircle, Loader2, Eye, FileCode, Brain, Lock, Shield, Zap, Check, Download, AlertCircle, CreditCard, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 import glyphLockAPI from '@/components/api/glyphLockAPI';
@@ -98,25 +98,28 @@ export default function BillingAndPayments({ user }) {
   const [billingStatus, setBillingStatus] = useState(null);
   const [billingHistory, setBillingHistory] = useState(null);
   const [loadingBillingData, setLoadingBillingData] = useState(true);
+  const [retryingPayment, setRetryingPayment] = useState(false);
+  const [updatingPayment, setUpdatingPayment] = useState(false);
+
+  const fetchBillingData = async () => {
+    setLoadingBillingData(true);
+    try {
+      const [statusData, historyData] = await Promise.all([
+        glyphLockAPI.billing.getStatus(),
+        glyphLockAPI.billing.getHistory()
+      ]);
+      setBillingStatus(statusData);
+      setBillingHistory(historyData);
+      toast.success('Billing data loaded');
+    } catch (error) {
+      console.error('Failed to fetch billing data:', error);
+      toast.error('Failed to load billing data');
+    } finally {
+      setLoadingBillingData(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBillingData = async () => {
-      setLoadingBillingData(true);
-      try {
-        const [statusData, historyData] = await Promise.all([
-          glyphLockAPI.billing.getStatus(),
-          glyphLockAPI.billing.getHistory()
-        ]);
-        setBillingStatus(statusData);
-        setBillingHistory(historyData);
-        toast.success('Billing data loaded');
-      } catch (error) {
-        console.error('Failed to fetch billing data:', error);
-        toast.error('Failed to load billing data');
-      } finally {
-        setLoadingBillingData(false);
-      }
-    };
     if (user) {
       fetchBillingData();
     }
@@ -190,6 +193,33 @@ export default function BillingAndPayments({ user }) {
     return new Date(dateString).toLocaleDateString();
   };
 
+  const handleRetryPayment = async () => {
+    setRetryingPayment(true);
+    try {
+      await glyphLockAPI.billing.retryInvoice(billingStatus.lastFailedInvoiceId);
+      toast.success('Payment retry initiated');
+      fetchBillingData();
+    } catch (error) {
+      console.error('Failed to retry payment:', error);
+      toast.error('Failed to retry payment');
+    } finally {
+      setRetryingPayment(false);
+    }
+  };
+
+  const handleUpdatePaymentMethod = async () => {
+    setUpdatingPayment(true);
+    try {
+      toast.info('Opening payment method update...');
+      window.open('https://billing.stripe.com/p/login/test_PLACEHOLDER', '_blank');
+    } catch (error) {
+      console.error('Failed to update payment method:', error);
+      toast.error('Failed to update payment method');
+    } finally {
+      setUpdatingPayment(false);
+    }
+  };
+
   return (
     <div className="container mx-auto p-4 md:p-8">
       <h1 className="text-4xl font-bold text-center text-white mb-4">Billing & Payments</h1>
@@ -224,7 +254,7 @@ export default function BillingAndPayments({ user }) {
           <Skeleton className="h-48 w-full glass-card bg-white/5" />
         </div>
       ) : (
-        <>
+        <div>
           {/* Past Due Recovery Panel */}
           {billingStatus && (billingStatus.status === 'past_due' || billingStatus.status === 'payment_failed') && (
             <Card className="glass-card border-red-500/30 mb-8">
@@ -265,7 +295,7 @@ export default function BillingAndPayments({ user }) {
               </CardContent>
             </Card>
           )}
-        </>
+
           {billingStatus && (
             <Card className="glass-card border-purple-500/30 mb-8">
               <CardHeader>
@@ -348,7 +378,7 @@ export default function BillingAndPayments({ user }) {
               </CardContent>
             </Card>
           )}
-        </>
+        </div>
       )}
 
       <h2 className="text-3xl font-bold text-white mb-6 text-center">Available Plans</h2>

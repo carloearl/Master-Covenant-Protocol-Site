@@ -91,6 +91,36 @@ export default function DashboardHome({ user }) {
       {/* Usage Metrics */}
       <UsagePanel />
 
+      {/* Usage Metrics */}
+      <UsagePanel />
+
+      {/* Usage Limits Card */}
+      <Card className="bg-[#0A0F24] border-[#8C4BFF]/20">
+        <CardHeader>
+          <CardTitle className="text-white">Usage Limits & Entitlements</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-lg bg-white/5">
+              <p className="text-white/60 text-sm mb-1">API Keys Limit</p>
+              <p className="text-white font-bold text-2xl">50</p>
+            </div>
+            <div className="p-4 rounded-lg bg-white/5">
+              <p className="text-white/60 text-sm mb-1">Team Seats</p>
+              <p className="text-white font-bold text-2xl">5</p>
+            </div>
+            <div className="p-4 rounded-lg bg-white/5">
+              <p className="text-white/60 text-sm mb-1">Edge Functions</p>
+              <p className="text-white font-bold text-2xl">Unlimited</p>
+            </div>
+            <div className="p-4 rounded-lg bg-white/5">
+              <p className="text-white/60 text-sm mb-1">SDK Downloads</p>
+              <p className="text-white font-bold text-2xl">100/mo</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Recent Activity */}
       <Card className="bg-[#0A0F24] border-[#8C4BFF]/20">
         <CardHeader>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Home, Key, Download, Users, FileText, Zap, Shield, Book, LogOut, DollarSign, TrendingUp, UsersRound } from "lucide-react";
+import { Home, Key, Download, Users, FileText, Zap, Shield, Book, LogOut, DollarSign, TrendingUp, UsersRound, Clock } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 const modules = [
@@ -16,6 +16,7 @@ const modules = [
 
 const adminModules = [
   { id: "team-roles", label: "Team & Roles", icon: UsersRound, adminOnly: true },
+  { id: "audit-timeline", label: "Audit Timeline", icon: Clock, adminOnly: true },
   { id: "admin-billing", label: "Admin Billing", icon: TrendingUp, adminOnly: true },
 ];
 
