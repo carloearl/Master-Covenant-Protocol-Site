@@ -17,6 +17,8 @@ import AdminBillingOverview from "@/components/console/admin/AdminBillingOvervie
 import TeamAndRoles from "@/components/console/TeamAndRoles";
 import AuditTimeline from "@/components/console/AuditTimeline";
 import OnboardingWizard from "@/components/console/OnboardingWizard";
+import SupportCenter from "@/components/console/SupportCenter";
+import SessionGuard from "@/components/console/SessionGuard";
 
 export default function EnterpriseConsole() {
   const navigate = useNavigate();
@@ -86,6 +88,8 @@ export default function EnterpriseConsole() {
         return <TeamAndRoles user={user} />;
       case "audit-timeline":
         return <AuditTimeline user={user} />;
+      case "support":
+        return <SupportCenter user={user} />;
       default:
         return <DashboardHome user={user} />;
     }
@@ -106,11 +110,13 @@ export default function EnterpriseConsole() {
         />
       )}
 
-      <ConsoleLayout user={user} activeModule={activeModule} setActiveModule={setActiveModule}>
-        <div className="p-8">
-          {renderModule()}
-        </div>
-      </ConsoleLayout>
+      <SessionGuard>
+        <ConsoleLayout user={user} activeModule={activeModule} setActiveModule={setActiveModule}>
+          <div className="p-8">
+            {renderModule()}
+          </div>
+        </ConsoleLayout>
+      </SessionGuard>
     </>
   );
 }

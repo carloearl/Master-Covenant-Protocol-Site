@@ -331,6 +331,40 @@ export default function BillingAndPayments({ user }) {
             </Card>
           )}
 
+          {/* Feature Flags */}
+          {billingStatus && billingStatus.entitlements?.flags && (
+            <Card className="glass-card border-yellow-500/30 mb-8">
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-yellow-400">Feature Flags</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {Object.entries(billingStatus.entitlements.flags).map(([flag, enabled]) => (
+                    <div
+                      key={flag}
+                      className={`p-3 rounded-lg border ${
+                        enabled
+                          ? 'bg-green-500/10 border-green-500/30'
+                          : 'bg-red-500/10 border-red-500/30'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-white font-semibold capitalize">
+                          {flag.replace(/_/g, ' ')}
+                        </span>
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          enabled ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                        }`}>
+                          {enabled ? 'Enabled' : 'Disabled'}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {billingHistory && billingHistory.length > 0 && (
             <Card className="glass-card border-cyan-500/30 mb-8">
               <CardHeader>

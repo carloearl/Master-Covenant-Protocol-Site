@@ -190,6 +190,32 @@ export const glyphLockAPI = {
     listBillingEvents: async (filters = {}) => {
       return callFunction('listBillingEvents', filters);
     }
+  },
+
+  // Support Ticketing
+  support: {
+    listTickets: async () => {
+      return callFunction('listSupportTickets');
+    },
+
+    getTicket: async (ticketId) => {
+      return callFunction('getSupportTicket', { ticketId });
+    },
+
+    createTicket: async (ticketData) => {
+      return callFunction('createSupportTicket', ticketData);
+    },
+
+    replyToTicket: async (ticketId, message) => {
+      return callFunction('replySupportTicket', { ticketId, message });
+    }
+  },
+
+  // Organization Management
+  org: {
+    requestDeletion: async (confirmationText) => {
+      return callFunction('requestOrgDeletion', { confirmationText });
+    }
   }
 };
 
