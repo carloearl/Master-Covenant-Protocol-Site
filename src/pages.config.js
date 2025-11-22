@@ -21,7 +21,6 @@ import HSSS from './pages/HSSS';
 import SecurityDocs from './pages/SecurityDocs';
 import Payment from './pages/Payment';
 import PaymentSuccess from './pages/PaymentSuccess';
-import StripeSetup from './pages/StripeSetup';
 import Dashboard from './pages/Dashboard';
 import Admin from './pages/Admin';
 import NUPSManager from './pages/NUPSManager';
@@ -36,7 +35,6 @@ import EntertainerCheckIn from './pages/EntertainerCheckIn';
 import VIPContract from './pages/VIPContract';
 import ImageGenerator from './pages/ImageGenerator';
 import Partners from './pages/Partners';
-import StripeSubscriptionSetup from './pages/StripeSubscriptionSetup';
 import ManageSubscription from './pages/ManageSubscription';
 import Robots from './pages/Robots';
 import Sitemap from './pages/Sitemap';
@@ -54,7 +52,6 @@ import BackendTest from './pages/BackendTest';
 import EnterpriseConsole from './pages/EnterpriseConsole';
 import BillingAndPayments from './pages/BillingAndPayments';
 import PaymentCancel from './pages/PaymentCancel';
-import StripeTest from './pages/StripeTest';
 import __Layout from './Layout.jsx';
 
 
@@ -82,7 +79,6 @@ export const PAGES = {
     "SecurityDocs": SecurityDocs,
     "Payment": Payment,
     "PaymentSuccess": PaymentSuccess,
-    "StripeSetup": StripeSetup,
     "Dashboard": Dashboard,
     "Admin": Admin,
     "NUPSManager": NUPSManager,
@@ -97,7 +93,6 @@ export const PAGES = {
     "VIPContract": VIPContract,
     "ImageGenerator": ImageGenerator,
     "Partners": Partners,
-    "StripeSubscriptionSetup": StripeSubscriptionSetup,
     "ManageSubscription": ManageSubscription,
     "Robots": Robots,
     "Sitemap": Sitemap,
@@ -115,7 +110,6 @@ export const PAGES = {
     "EnterpriseConsole": EnterpriseConsole,
     "BillingAndPayments": BillingAndPayments,
     "PaymentCancel": PaymentCancel,
-    "StripeTest": StripeTest,
 }
 
 export const pagesConfig = {
