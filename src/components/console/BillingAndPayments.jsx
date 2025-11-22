@@ -225,6 +225,47 @@ export default function BillingAndPayments({ user }) {
         </div>
       ) : (
         <>
+          {/* Past Due Recovery Panel */}
+          {billingStatus && (billingStatus.status === 'past_due' || billingStatus.status === 'payment_failed') && (
+            <Card className="glass-card border-red-500/30 mb-8">
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-red-400 flex items-center gap-2">
+                  <AlertCircle className="h-6 w-6" />
+                  Payment Action Required
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="text-white/80">
+                  <p className="mb-2">Your last payment failed. Please update your payment method or retry the payment.</p>
+                  {billingStatus.gracePeriodEnd && (
+                    <p className="text-yellow-400 text-sm">
+                      Grace period ends: {formatDate(billingStatus.gracePeriodEnd)}
+                    </p>
+                  )}
+                </div>
+                <div className="flex gap-3">
+                  <Button
+                    onClick={handleUpdatePaymentMethod}
+                    disabled={updatingPayment}
+                    className="bg-gradient-to-r from-[#8C4BFF] to-[#00E4FF] hover:opacity-90"
+                  >
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    {updatingPayment ? 'Opening...' : 'Update Payment Method'}
+                  </Button>
+                  <Button
+                    onClick={handleRetryPayment}
+                    disabled={retryingPayment}
+                    variant="outline"
+                    className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                  >
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    {retryingPayment ? 'Retrying...' : 'Retry Payment'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </>
           {billingStatus && (
             <Card className="glass-card border-purple-500/30 mb-8">
               <CardHeader>

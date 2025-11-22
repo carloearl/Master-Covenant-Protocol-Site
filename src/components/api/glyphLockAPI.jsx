@@ -140,6 +140,22 @@ export const glyphLockAPI = {
 
     sendInvite: async (email, role) => {
       return callFunction('sendTeamInvite', { email, role });
+    },
+
+    retryInvoice: async (invoiceId) => {
+      return callFunction('retryInvoice', { invoiceId });
+    },
+
+    updatePaymentMethod: async (paymentMethodId) => {
+      return callFunction('updatePaymentMethod', { paymentMethodId });
+    },
+
+    getEvents: async (filters = {}) => {
+      return callFunction('getBillingEvents', filters);
+    },
+
+    completeOnboarding: async () => {
+      return callFunction('completeOnboarding');
     }
   },
 
@@ -166,6 +182,13 @@ export const glyphLockAPI = {
   usage: {
     get: async () => {
       return callFunction('getUsageMetrics');
+    }
+  },
+
+  // Logs & Events
+  logs: {
+    listBillingEvents: async (filters = {}) => {
+      return callFunction('listBillingEvents', filters);
     }
   }
 };
