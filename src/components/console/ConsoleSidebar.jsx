@@ -1,5 +1,5 @@
 import React from "react";
-import { Home, Key, Download, Users, FileText, Zap, Shield, Book, LogOut } from "lucide-react";
+import { Home, Key, Download, Users, FileText, Zap, Shield, Book, LogOut, DollarSign } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 const modules = [
@@ -11,6 +11,7 @@ const modules = [
   { id: "functions", label: "Edge Functions", icon: Zap },
   { id: "security", label: "Security", icon: Shield },
   { id: "api-reference", label: "API Reference", icon: Book },
+  { id: "billing", label: "Billing & Payments", icon: DollarSign },
 ];
 
 export default function ConsoleSidebar({ activeModule, setActiveModule, user }) {

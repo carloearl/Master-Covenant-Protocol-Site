@@ -52,6 +52,8 @@ import DeveloperConsole from './pages/DeveloperConsole';
 import BackendSetup from './pages/BackendSetup';
 import BackendTest from './pages/BackendTest';
 import EnterpriseConsole from './pages/EnterpriseConsole';
+import BillingAndPayments from './pages/BillingAndPayments';
+import PaymentCancel from './pages/PaymentCancel';
 import __Layout from './Layout.jsx';
 
 
@@ -110,6 +112,8 @@ export const PAGES = {
     "BackendSetup": BackendSetup,
     "BackendTest": BackendTest,
     "EnterpriseConsole": EnterpriseConsole,
+    "BillingAndPayments": BillingAndPayments,
+    "PaymentCancel": PaymentCancel,
 }
 
 export const pagesConfig = {

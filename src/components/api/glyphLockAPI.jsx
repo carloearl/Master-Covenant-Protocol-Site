@@ -83,6 +83,33 @@ export const glyphLockAPI = {
 
   updateSecuritySettings: async (settings) => {
     return callFunction('updateSecuritySettings', settings);
+  },
+
+  // Stripe Payments
+  stripe: {
+    startCheckout: async (productId, priceId, mode) => {
+      try {
+        const response = await base44.functions.invoke('stripeCheckout', {
+          productId,
+          priceId,
+          mode,
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error starting Stripe checkout:', error);
+        throw error;
+      }
+    },
+    
+    pollPaymentStatus: async (sessionId) => {
+      try {
+        const response = await base44.functions.invoke('stripePoll', { sessionId });
+        return response.data;
+      } catch (error) {
+        console.error('Error polling payment status:', error);
+        throw error;
+      }
+    }
   }
 };
 

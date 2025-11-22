@@ -12,6 +12,7 @@ import LogsPanel from "@/components/console/LogsPanel";
 import EdgeFunctionExplorer from "@/components/console/EdgeFunctionExplorer";
 import SecuritySettings from "@/components/console/SecuritySettings";
 import APIReference from "@/components/console/APIReference";
+import BillingAndPayments from "@/components/console/BillingAndPayments";
 
 export default function EnterpriseConsole() {
   const navigate = useNavigate();
@@ -60,6 +61,8 @@ export default function EnterpriseConsole() {
         return <SecuritySettings user={user} />;
       case "api-reference":
         return <APIReference />;
+      case "billing":
+        return <BillingAndPayments />;
       default:
         return <DashboardHome user={user} />;
     }
