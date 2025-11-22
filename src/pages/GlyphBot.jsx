@@ -645,6 +645,7 @@ export default function GlyphBot() {
 
         {/* Tab Content */}
         {renderTabContent()}
+      </div>
     </div>
   );
 }
