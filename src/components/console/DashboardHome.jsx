@@ -20,24 +20,41 @@ export default function DashboardHome({ user }) {
 
   const loadDashboardData = async () => {
     try {
-      const healthStatus = await glyphLockAPI.healthCheck();
+      // Fetch real data from backend
+      const [healthStatus, usageSummary, recentLogsData] = await Promise.all([
+        glyphLockAPI.healthCheck(),
+        glyphLockAPI.usage.getSummary(),
+        glyphLockAPI.logs.listRecent()
+      ]);
+
       setHealth(healthStatus.status);
       
-      // Mock stats for now - replace with actual API calls
+      // Set real stats from backend
       setStats({
-        apiKeys: 3,
-        functions: 8,
-        requests: 1247,
-        uptime: "99.9%"
+        apiKeys: usageSummary.api_keys?.active || 0,
+        functions: usageSummary.functions?.deployed || 0,
+        requests: usageSummary.requests?.today || 0,
+        uptime: healthStatus.uptime || "99.9%"
       });
 
-      setRecentLogs([
-        { id: 1, type: "success", message: "API key rotation completed", time: "2 mins ago" },
-        { id: 2, type: "info", message: "New function deployed", time: "15 mins ago" },
-        { id: 3, type: "warning", message: "Rate limit approaching", time: "1 hour ago" }
+      // Transform logs into activity items
+      const activities = (recentLogsData.logs || []).map(log => ({
+        id: log.id,
+        type: log.status === 'failure' ? 'warning' : 
+              log.event_type.includes('ROTATION') ? 'success' : 'info',
+        message: log.description,
+        time: new Date(log.created_date).toLocaleString()
+      }));
+
+      setRecentLogs(activities.length > 0 ? activities : [
+        { id: 1, type: "info", message: "No recent activity", time: "Just now" }
       ]);
     } catch (err) {
       console.error("Dashboard load error:", err);
+      setHealth("error");
+      setRecentLogs([
+        { id: 1, type: "warning", message: "Failed to load dashboard data", time: "Just now" }
+      ]);
     }
   };
 
