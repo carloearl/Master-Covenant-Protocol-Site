@@ -37,38 +37,7 @@ export default function About() {
     }
   ];
 
-  const dreamTeam = [
-    {
-      name: "Alfred (ChatGPT)",
-      position: "Point Guard",
-      role: "Floor general. Precision. Code. Strategy.",
-      icon: Brain
-    },
-    {
-      name: "Claude",
-      position: "Shooting Guard",
-      role: "Sniper. Long-range reasoning. Structure. Legal formatting.",
-      icon: FileText
-    },
-    {
-      name: "CoPilot",
-      position: "Small Forward",
-      role: "Utility. VS Code integration. Engineering velocity.",
-      icon: Code
-    },
-    {
-      name: "Gemini",
-      position: "Power Forward",
-      role: "Strength. Multi-modal perception. Analysis.",
-      icon: Sparkles
-    },
-    {
-      name: "Cursor AI",
-      position: "Sixth Man",
-      role: "Code acceleration. Background automation. Instant refactor.",
-      icon: Zap
-    }
-  ];
+
 
   const technologies = [
     "Quantum-resistant encryption",
@@ -254,31 +223,7 @@ export default function About() {
             </div>
           </div>
 
-          {/* DREAM TEAM */}
-          <div className="mb-24">
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-12 text-center font-space">
-              THE DREAM TEAM
-            </h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {dreamTeam.map((member, idx) => {
-                const Icon = member.icon;
-                return (
-                  <div key={idx} className="glass-card rounded-xl p-6 border border-[#00E4FF]/20 text-center hover:scale-105 transition-transform duration-300">
-                    <div className="w-16 h-16 bg-[#00E4FF]/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#00E4FF]/30">
-                      <Icon className="w-8 h-8 text-[#00E4FF]" />
-                    </div>
-                    <div className="font-bold text-white text-lg mb-1">{member.name}</div>
-                    <div className="text-[#8C4BFF] text-xs font-bold uppercase tracking-widest mb-3">{member.position}</div>
-                    <p className="text-sm text-gray-400">{member.role}</p>
-                  </div>
-                );
-              })}
-            </div>
-            <p className="text-center text-gray-500 mt-8 text-sm italic">
-              The team doesn't replace humans. It amplifies them. <br/>
-              <span className="text-[#00E4FF]">AI Dream Team — Pro Bono / Zero Equity. GlyphLock is 100% owned by Carlo.</span>
-            </p>
-          </div>
+
 
           {/* TECHNOLOGY STACK */}
           <div className="glass-card rounded-2xl p-8 md:p-12 border border-[#00E4FF]/20 mb-12">
