@@ -168,10 +168,10 @@ export default function GlyphBot() {
       stopSpeaking();
       
       // Log reset action
-      base44.asServiceRole.entities.SystemAuditLog.create({
+      base44.entities.SystemAuditLog.create({
         event_type: "GLYPHBOT_RESET",
         description: "User reset conversation",
-        actor_email: "system",
+        actor_email: user?.email || "unknown",
         resource_id: "glyphbot",
         status: "success"
       }).catch(console.error);
@@ -204,10 +204,11 @@ export default function GlyphBot() {
     setMessages(prev => [...prev, auditMessage]);
     
     // Log audit
-    await base44.asServiceRole.entities.SystemAuditLog.create({
+    const user = await base44.auth.me().catch(() => null);
+    await base44.entities.SystemAuditLog.create({
       event_type: "GLYPHBOT_AUDIT",
       description: "Security audit completed",
-      actor_email: "system",
+      actor_email: user?.email || "unknown",
       resource_id: "glyphbot",
       metadata: audit,
       status: "success"
@@ -243,10 +244,11 @@ export default function GlyphBot() {
 
     setMessages(prev => [...prev, testMessage]);
     
-    await base44.asServiceRole.entities.SystemAuditLog.create({
+    const user = await base44.auth.me().catch(() => null);
+    await base44.entities.SystemAuditLog.create({
       event_type: "GLYPHBOT_TEST",
       description: "One test integrity check",
-      actor_email: "system",
+      actor_email: user?.email || "unknown",
       resource_id: "glyphbot",
       metadata: testResult,
       status: "success"

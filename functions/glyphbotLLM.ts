@@ -145,7 +145,7 @@ Deno.serve(async (req) => {
       const result = await callGemini3(sanitized, persona);
       
       // Log successful call
-      await base44.asServiceRole.entities.SystemAuditLog.create({
+      await base44.entities.SystemAuditLog.create({
         event_type: 'GLYPHBOT_LLM_CALL',
         description: 'Successful LLM call via Gemini',
         actor_email: user.email,
@@ -162,7 +162,7 @@ Deno.serve(async (req) => {
       try {
         const result = await callOpenAI(sanitized, persona);
         
-        await base44.asServiceRole.entities.SystemAuditLog.create({
+        await base44.entities.SystemAuditLog.create({
           event_type: 'GLYPHBOT_LLM_CALL',
           description: 'Successful LLM call via OpenAI (Gemini fallback)',
           actor_email: user.email,
@@ -179,7 +179,7 @@ Deno.serve(async (req) => {
         try {
           const result = await callLocal(sanitized, persona);
           
-          await base44.asServiceRole.entities.SystemAuditLog.create({
+          await base44.entities.SystemAuditLog.create({
             event_type: 'GLYPHBOT_LLM_CALL',
             description: 'Successful LLM call via Local (Gemini + OpenAI fallback)',
             actor_email: user.email,
@@ -192,7 +192,7 @@ Deno.serve(async (req) => {
         } catch (localError) {
           console.error('All models failed:', localError);
           
-          await base44.asServiceRole.entities.SystemAuditLog.create({
+          await base44.entities.SystemAuditLog.create({
             event_type: 'GLYPHBOT_LLM_CALL',
             description: 'All LLM models failed',
             actor_email: user.email,
