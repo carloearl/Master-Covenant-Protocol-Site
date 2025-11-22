@@ -102,7 +102,12 @@ export default function TechnologyMarquee() {
     { name: "LinkedIn", logo: "https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" },
     { name: "Reddit", logo: "https://upload.wikimedia.org/wikipedia/commons/5/58/Reddit_logo_new.svg" },
     { name: "TikTok", logo: "https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" },
-    { name: "Snapchat", logo: "https://upload.wikimedia.org/wikipedia/en/c/c4/Snapchat_logo.svg" }
+    { name: "Snapchat", logo: "https://upload.wikimedia.org/wikipedia/en/c/c4/Snapchat_logo.svg" },
+    { name: "US Bank", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2d/US_Bank_logo_2020.svg" },
+    { name: "Elavon", logo: "https://cdn.worldvectorlogo.com/logos/elavon.svg" },
+    { name: "GoDaddy", logo: "https://upload.wikimedia.org/wikipedia/commons/3/36/GoDaddy_logo.svg" },
+    { name: "Square", logo: "https://cdn.worldvectorlogo.com/logos/square-2.svg" },
+    { name: "Base44", logo: "https://avatars.githubusercontent.com/u/145019558?s=200&v=4" }
   ];
 
   // Row 2: 25 logos (enterprise & security)
@@ -137,7 +142,10 @@ export default function TechnologyMarquee() {
     { name: "Cohere", logo: "https://www.vectorlogo.zone/logos/cohere/cohere-ar21.svg" },
     { name: "Varonis", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Varonis_logo.svg" },
     { name: "Ping Identity", logo: "https://upload.wikimedia.org/wikipedia/commons/7/73/Ping_Identity_logo.svg" },
-    { name: "JumpCloud", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7f/JumpCloud_logo.svg" }
+    { name: "JumpCloud", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7f/JumpCloud_logo.svg" },
+    { name: "Stripe", logo: "https://cdn.worldvectorlogo.com/logos/stripe-4.svg" },
+    { name: "Clover", logo: "https://cdn.worldvectorlogo.com/logos/clover-2.svg" },
+    { name: "Toast", logo: "https://cdn.worldvectorlogo.com/logos/toast-2.svg" }
   ];
 
   // Row 3: 25 logos (major tech & finance)
@@ -170,7 +178,11 @@ export default function TechnologyMarquee() {
     { name: "Lyft", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a0/Lyft_logo.svg" },
     { name: "DoorDash", logo: "https://upload.wikimedia.org/wikipedia/commons/f/fd/DoorDash_Logo.svg" },
     { name: "Instacart", logo: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Instacart_logo_and_wordmark.svg" },
-    { name: "Robinhood", logo: "https://upload.wikimedia.org/wikipedia/commons/9/90/Robinhood_Markets_logo.svg" }
+    { name: "Robinhood", logo: "https://upload.wikimedia.org/wikipedia/commons/9/90/Robinhood_Markets_logo.svg" },
+    { name: "Wells Fargo", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Wells_Fargo_Bank.svg" },
+    { name: "Chase", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e1/JPMorgan_Chase_Logo_2008.svg" },
+    { name: "Bank of America", logo: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Bank_of_America_logo.svg" },
+    { name: "Citibank", logo: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Citi.svg" }
   ];
 
   return (
@@ -264,17 +276,17 @@ export default function TechnologyMarquee() {
 
         /* Row 1: Fast scroll left (75 items) */
         .marquee-row-1 {
-          animation: marquee-left 45s linear infinite;
+          animation: marquee-left 30s linear infinite;
         }
 
         /* Row 2: Medium scroll right (25 items) */
         .marquee-row-2 {
-          animation: marquee-right 35s linear infinite;
+          animation: marquee-right 25s linear infinite;
         }
 
         /* Row 3: Slow scroll left (25 items) */
         .marquee-row-3 {
-          animation: marquee-left 40s linear infinite;
+          animation: marquee-left 28s linear infinite;
         }
 
         .marquee-container:hover .marquee-content {
