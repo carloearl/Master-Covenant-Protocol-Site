@@ -7,7 +7,6 @@ import InteractiveNebula from "@/components/InteractiveNebula";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GlyphLoader from "@/components/GlyphLoader";
-import "@/components/mobile/mobile.css";
 import MobileScalingSystem from "@/components/mobile/mobile-utils";
 
 export default function Layout({ children, currentPageName }) {
