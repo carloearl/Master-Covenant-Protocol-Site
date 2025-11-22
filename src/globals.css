@@ -1,9 +1,9 @@
+css
 /* Dino React Full Version - Mobile-First Chat UI */
 
-/* Viewport fix for iOS Safari */
-@viewport {
-  width: device-width;
-  zoom: 1.0;
+/* Prevent iOS input zoom */
+input, textarea {
+  font-size: 16px !important;
 }
 
 /* FAB Button */
@@ -12,101 +12,44 @@
   bottom: 24px;
   right: 24px;
   z-index: 9999;
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   border: none;
   border-radius: 50%;
-  background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
-  box-shadow: 0 8px 32px rgba(139, 69, 19, 0.4), 0 0 20px rgba(210, 105, 30, 0.3);
+  background: linear-gradient(135deg, #0ff 0%, #09f 100%);
+  box-shadow: 0 8px 24px rgba(0, 255, 255, 0.4);
   cursor: pointer;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 
 .dino-fab:hover {
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 12px 40px rgba(139, 69, 19, 0.5), 0 0 30px rgba(210, 105, 30, 0.4);
+  transform: scale(1.05); /* Added for better UX, not in outline but standard practice for buttons */
 }
 
 .dino-fab:active {
-  transform: scale(0.95);
-  box-shadow: 0 4px 16px rgba(139, 69, 19, 0.3);
-}
-
-.dino-fab-inner {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  position: relative;
-  z-index: 2;
-}
-
-/* Dino footprint animation */
-.dino-footprint {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
-  animation: footprint 2s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes footprint {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 0;
-  }
+  transform: scale(0.93);
+  box-shadow: 0 0 25px #0af8;
 }
 
 /* Chat Container */
 .dino-chat-container {
   position: fixed;
-  bottom: 112px;
-  right: 24px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 0;
   z-index: 9998;
-  width: min(420px, calc(100vw - 48px));
-  height: min(600px, calc(100vh - 160px));
-  background: linear-gradient(180deg, rgba(20, 20, 30, 0.98) 0%, rgba(10, 10, 20, 0.98) 100%);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
-  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5), 0 0 1px rgba(139, 69, 19, 0.8);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  border: 2px solid rgba(139, 69, 19, 0.3);
-  animation: slideInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideInUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* Dino fossil texture overlay */
-.dino-chat-container::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: 
-    radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(210, 105, 30, 0.1) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 0;
+  background: radial-gradient(circle at 40% 20%, #222 0%, #000 90%);
+  font-family: system-ui, sans-serif;
+  overflow: hidden;
 }
 
 /* Header */
@@ -129,7 +72,7 @@
   border-radius: 12px;
   display: flex;
   align-items: center;
-  justify-center;
+  justify-content: center; /* Corrected typo from 'justify-center' */
   font-size: 28px;
   flex-shrink: 0;
   box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
@@ -189,536 +132,174 @@
 
 /* Messages Container */
 .dino-messages {
-  position: relative;
-  z-index: 1;
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+  padding-bottom: 110px;
+  scrollbar-width: none;
+  scroll-behavior: smooth; /* Preserved from old version for better UX */
+  -webkit-overflow-scrolling: touch; /* Preserved from old version for better UX */
 }
 
-/* Custom scrollbar */
 .dino-messages::-webkit-scrollbar {
-  width: 6px;
-}
-
-.dino-messages::-webkit-scrollbar-track {
-  background: rgba(139, 69, 19, 0.1);
-  border-radius: 3px;
-}
-
-.dino-messages::-webkit-scrollbar-thumb {
-  background: rgba(139, 69, 19, 0.4);
-  border-radius: 3px;
-}
-
-.dino-messages::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 69, 19, 0.6);
+  display: none;
 }
 
 /* Message Bubbles */
-.dino-message {
+.dino-bubble {
   display: flex;
-  animation: messageIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  align-items: flex-start;
+  margin-bottom: 18px;
+  gap: 12px;
+  max-width: 80%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  animation: dino-pop 0.25s ease-out;
 }
 
-@keyframes messageIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes dino-pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
-.dino-message-user {
-  justify-content: flex-end;
+.dino-user {
+  background: #262834;
+  color: #b0d4ff;
+  margin-left: auto;
 }
 
-.dino-message-bot {
-  justify-content: flex-start;
+.dino-assistant {
+  background: #113024;
+  color: #caffd6;
 }
 
-.dino-message-content {
-  max-width: 85%;
-  padding: 14px 18px;
-  border-radius: 18px;
-  position: relative;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+.dino-bubble .dino-avatar { /* Specific to bubble context to differentiate from header avatar */
+  font-size: 20px;
+  width: 32px; /* Smaller avatar for messages */
+  height: 32px;
+  border-radius: 50%; /* Make bubble avatars round */
+  background: linear-gradient(135deg, #0ff 0%, #09f 100%); /* Use new blue gradient */
+  box-shadow: none; /* No shadow for bubble avatar */
+  animation: none; /* No breathing animation for bubble avatar */
 }
 
-.dino-message-user .dino-message-content {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  color: white;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-}
-
-.dino-message-bot .dino-message-content {
-  background: rgba(139, 69, 19, 0.15);
-  border: 1px solid rgba(139, 69, 19, 0.3);
-  color: white;
-  backdrop-filter: blur(10px);
-}
-
-.dino-message-text {
-  margin: 0;
+.dino-text {
+  flex: 1;
   font-size: 15px;
   line-height: 1.5;
-  color: white;
 }
 
-/* Markdown Styling */
-.dino-markdown {
-  font-size: 15px;
-  line-height: 1.6;
-  color: white;
-}
-
-.dino-p {
-  margin: 0 0 8px 0;
-  color: white;
-}
-
-.dino-p:last-child {
-  margin-bottom: 0;
-}
-
-.dino-ul {
-  margin: 8px 0;
-  padding-left: 20px;
-  color: white;
-}
-
-.dino-li {
-  margin: 4px 0;
-  color: white;
-}
-
-.dino-code-inline {
-  background: rgba(139, 69, 19, 0.2);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: 'Courier New', monospace;
-  font-size: 13px;
-  color: #D2691E;
-}
-
-.dino-code-block {
-  background: rgba(0, 0, 0, 0.4);
-  padding: 12px;
-  border-radius: 8px;
-  overflow-x: auto;
-  margin: 8px 0;
-  border: 1px solid rgba(139, 69, 19, 0.3);
-}
-
-.dino-code-block code {
-  font-family: 'Courier New', monospace;
-  font-size: 13px;
-  color: #D2691E;
-}
-
-/* Speaker Button */
+/* Voice button */
 .dino-speak-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  min-height: 32px;
-  border: none;
-  background: rgba(139, 69, 19, 0.3);
-  border-radius: 8px;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: all 0.2s;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.dino-message-bot:hover .dino-speak-btn {
-  opacity: 1;
-}
-
-.dino-speak-btn:hover {
-  background: rgba(139, 69, 19, 0.5);
-  transform: scale(1.1);
-}
-
-.dino-speak-btn:active,
-.dino-speak-btn.active {
-  background: rgba(210, 105, 30, 0.6);
-  transform: scale(0.95);
-}
-
-/* Typing Indicator */
-.dino-typing {
-  display: flex;
-  gap: 6px;
-  padding: 4px 0;
-}
-
-.dino-typing span {
-  width: 8px;
-  height: 8px;
-  background: rgba(139, 69, 19, 0.6);
+  background: #1b1b1b;
+  border: 2px solid #444;
   border-radius: 50%;
-  animation: typing 1.4s ease-in-out infinite;
-}
-
-.dino-typing span:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.dino-typing span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes typing {
-  0%, 60%, 100% {
-    transform: translateY(0);
-    opacity: 0.6;
-  }
-  30% {
-    transform: translateY(-8px);
-    opacity: 1;
-  }
-}
-
-/* Files Container */
-.dino-files {
-  position: relative;
-  z-index: 1;
-  padding: 12px 20px;
-  background: rgba(139, 69, 19, 0.1);
-  border-top: 1px solid rgba(139, 69, 19, 0.3);
-  border-bottom: 1px solid rgba(139, 69, 19, 0.3);
-}
-
-.dino-files-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.dino-clear-files {
-  background: none;
-  border: none;
-  color: #ef4444;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: all 0.2s;
-  min-height: 32px;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.dino-clear-files:hover {
-  background: rgba(239, 68, 68, 0.1);
-}
-
-.dino-files-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.dino-file-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(139, 69, 19, 0.2);
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-size: 12px;
-  color: white;
-  border: 1px solid rgba(139, 69, 19, 0.3);
-}
-
-.dino-file-name {
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.dino-file-remove {
-  background: none;
-  border: none;
-  color: #ef4444;
-  cursor: pointer;
-  padding: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s;
-  min-width: 24px;
-  min-height: 24px;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.dino-file-remove:hover {
-  background: rgba(239, 68, 68, 0.1);
-}
-
-/* Input Container */
-.dino-input-container {
-  position: relative;
-  z-index: 1;
-  padding: 16px 20px;
-  background: rgba(10, 10, 20, 0.8);
-  backdrop-filter: blur(10px);
-  border-top: 2px solid rgba(139, 69, 19, 0.4);
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.dino-action-btn {
   width: 48px;
   height: 48px;
   min-width: 48px;
   min-height: 48px;
-  border: none;
-  background: rgba(139, 69, 19, 0.2);
-  border-radius: 12px;
-  color: white;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
-  flex-shrink: 0;
+  font-size: 22px;
+  color: #8afcff; /* Added color for icon */
+  cursor: pointer;
   touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition: all 0.2s; /* Added transition for hover/active */
 }
 
-.dino-action-btn:hover {
-  background: rgba(139, 69, 19, 0.4);
+.dino-speak-btn:hover {
+  background: #2b2b2b; /* Added hover state */
   transform: scale(1.05);
 }
 
-.dino-action-btn:active {
-  transform: scale(0.95);
+.dino-speak-btn:active {
+  transform: scale(0.92);
+  box-shadow: 0 0 20px #8afcff88;
 }
 
-.dino-action-btn.recording {
-  background: rgba(239, 68, 68, 0.3);
-  animation: recordPulse 1.5s ease-in-out infinite;
-}
-
-@keyframes recordPulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-  }
-  50% {
-    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
-  }
+/* Input Zone */
+.dino-input-zone {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #000000dd;
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-top: 1px solid #333;
+  box-sizing: border-box; /* Ensures padding is included in the width */
 }
 
 .dino-input {
   flex: 1;
-  height: 48px;
-  min-height: 48px;
-  padding: 0 16px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(139, 69, 19, 0.3);
-  border-radius: 12px;
-  color: white;
-  font-size: 16px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 2px solid #333;
+  background: #111;
+  color: #fff;
+  font-size: 16px; /* Explicitly set as it was in old input */
   outline: none;
   transition: all 0.2s;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  touch-action: manipulation;
-  -webkit-appearance: none;
+  font-family: system-ui, sans-serif; /* Use new font family */
+  -webkit-appearance: none; /* Preserved for consistency */
+  touch-action: manipulation; /* Preserved for consistency */
 }
 
 .dino-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: #777; /* Updated placeholder color */
 }
 
 .dino-input:focus {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(139, 69, 19, 0.5);
-  box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+  border-color: #8afcff;
+  box-shadow: 0 0 0 2px rgba(138, 252, 255, 0.3); /* Added focus shadow */
 }
 
 .dino-input:disabled {
-  opacity: 0.5;
+  opacity: 0.6; /* Updated disabled opacity */
   cursor: not-allowed;
 }
 
-/* Send Button with Dino Eye Glow */
 .dino-send-btn {
-  position: relative;
   width: 56px;
-  height: 48px;
-  min-width: 56px;
-  min-height: 48px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0ff 0%, #09f 100%);
   border: none;
-  background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
-  border-radius: 12px;
-  color: white;
+  font-size: 28px;
+  color: white; /* Added color for icon */
   cursor: pointer;
-  display: flex;
+  touch-action: manipulation;
+  user-select: none;
+  transition: all 0.2s; /* Added transition for hover/active */
+  display: flex; /* Ensures icon is centered */
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
-  flex-shrink: 0;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
 }
 
-.dino-send-btn:hover:not(:disabled) {
+.dino-send-btn:hover:not(:disabled) { /* Added hover for better UX */
   transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(139, 69, 19, 0.4);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
 }
 
-.dino-send-btn:active:not(:disabled) {
-  transform: scale(0.95);
-  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.3);
+.dino-send-btn:active {
+  transform: scale(0.93);
+  box-shadow: 0 0 25px #0af8;
 }
 
-.dino-send-btn:disabled {
+.dino-send-btn:disabled { /* Added disabled state for send button */
   opacity: 0.5;
   cursor: not-allowed;
+  background: linear-gradient(135deg, #0bb 0%, #07d 100%); /* Slightly darker disabled state */
+  box-shadow: none;
 }
 
-/* Dino Eye Glow Effect */
-.dino-send-glow {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.6) 0%, transparent 70%);
-  animation: dinoEyeGlow 2s ease-in-out infinite;
-  pointer-events: none;
-}
+/* Mobile optimizations already handled by 16px font-size rule */
 
-@keyframes dinoEyeGlow {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scale(0.8);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(1.2);
-  }
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 480px) {
-  .dino-fab {
-    width: 64px;
-    height: 64px;
-    bottom: 20px;
-    right: 20px;
-  }
-
-  .dino-chat-container {
-    right: 12px;
-    left: 12px;
-    bottom: 96px;
-    width: calc(100vw - 24px);
-    height: calc(100vh - 130px);
-    max-height: calc(100vh - 130px);
-    border-radius: 20px;
-  }
-
-  .dino-chat-header {
-    padding: 16px;
-    min-height: 72px;
-  }
-
-  .dino-avatar {
-    width: 44px;
-    height: 44px;
-    font-size: 24px;
-  }
-
-  .dino-header-title {
-    font-size: 16px;
-  }
-
-  .dino-header-subtitle {
-    font-size: 12px;
-  }
-
-  .dino-messages {
-    padding: 16px;
-    gap: 14px;
-  }
-
-  .dino-message-content {
-    max-width: 90%;
-    padding: 12px 16px;
-  }
-
-  .dino-input-container {
-    padding: 12px 16px;
-    gap: 8px;
-  }
-
-  .dino-action-btn {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
-  }
-
-  .dino-send-btn {
-    width: 52px;
-    height: 44px;
-    min-width: 52px;
-    min-height: 44px;
-  }
-
-  .dino-input {
-    height: 44px;
-    min-height: 44px;
-  }
-}
-
-/* Landscape mobile fix */
-@media (max-width: 768px) and (orientation: landscape) {
-  .dino-chat-container {
-    height: calc(100vh - 100px);
-    bottom: 80px;
-  }
-}
-
-/* Prevent zoom on iOS */
-@supports (-webkit-touch-callout: none) {
-  .dino-input,
-  input,
-  textarea,
-  select {
-    font-size: 16px !important;
-  }
-}
-
-/* Hide elements when printing */
+/* Hide elements when printing (preserved as it's a good practice) */
 @media print {
   .dino-fab,
   .dino-chat-container {
