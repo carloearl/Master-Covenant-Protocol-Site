@@ -30,7 +30,7 @@ const NAV = [
       { label: "Blockchain Verification", page: "Blockchain" },
       { label: "Interactive Image Studio", page: "InteractiveImageStudio" },
       { label: "Steganography", page: "Steganography" },
-      { label: "Hotzone Security Mapper", page: "HotzoneMapper" },
+      { label: "Security Hotzone Mapper", page: "HotzoneMapper" },
       { label: "NUPS POS System", page: "NUPSLogin" },
     ],
   },
