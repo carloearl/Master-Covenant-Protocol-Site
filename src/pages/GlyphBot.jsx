@@ -9,6 +9,8 @@ import SecurityScanner from "../components/glyphbot/SecurityScanner";
 import AuditGenerator from "../components/glyphbot/AuditGenerator";
 import LanguageSelector from "../components/glyphbot/LanguageSelector";
 import KnowledgeBaseConnector from "../components/glyphbot/KnowledgeBaseConnector";
+import SecurityDashboard from "../components/glyphbot/SecurityDashboard";
+import ProactiveMonitor from "../components/glyphbot/ProactiveMonitor";
 
 const PERSONAS = [
   { id: "alfred", name: "Alfred Point Guard", desc: "Sharp, direct coach energy" },
@@ -18,6 +20,7 @@ const PERSONAS = [
 
 const TABS = [
   { id: "chat", name: "Chat", icon: MessageCircle },
+  { id: "dashboard", name: "Security Dashboard", icon: Shield },
   { id: "files", name: "File Analysis", icon: Upload },
   { id: "code", name: "Code Executor", icon: Code },
   { id: "scanner", name: "Security Scanner", icon: Search },
@@ -357,6 +360,8 @@ export default function GlyphBot() {
 
   const renderTabContent = () => {
     switch (activeTab) {
+      case "dashboard":
+        return <SecurityDashboard />;
       case "files":
         return <FileAnalysisView />;
       case "code":
@@ -519,6 +524,9 @@ export default function GlyphBot() {
 
   return (
     <div className="h-screen flex bg-black text-white">
+      {/* Proactive Background Monitor */}
+      <ProactiveMonitor />
+      
       {/* Sidebar */}
       {showSidebar && (
         <div className="w-80 flex-shrink-0 border-r border-gray-800">

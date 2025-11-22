@@ -123,10 +123,29 @@ export default function KnowledgeBaseConnector({ onKnowledgeUpdate }) {
               className="flex items-center justify-between p-3 bg-gray-800 rounded-lg group"
             >
               <div className="flex items-center gap-3 flex-1 min-w-0">
-                <span className="text-xs px-2 py-1 bg-cyan-600/20 text-cyan-400 rounded uppercase font-semibold">
-                  {source.type}
-                </span>
-                <p className="text-sm text-white truncate flex-1">{source.value}</p>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs px-2 py-1 bg-cyan-600/20 text-cyan-400 rounded uppercase font-semibold">
+                      {source.type}
+                    </span>
+                    {source.autoScanResult?.includes("WARNING") && (
+                      <span className="text-xs px-2 py-1 bg-yellow-600/20 text-yellow-400 rounded">
+                        ⚠️ Warning
+                      </span>
+                    )}
+                    {source.autoScanResult?.includes("ALERT") && (
+                      <span className="text-xs px-2 py-1 bg-red-600/20 text-red-400 rounded">
+                        🚨 Alert
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-white truncate">{source.value}</p>
+                  {source.lastAutoScan && (
+                    <p className="text-xs text-gray-500">
+                      Auto-scanned: {new Date(source.lastAutoScan).toLocaleString()}
+                    </p>
+                  )}
+                </div>
                 {source.type === "url" && (
                   <a
                     href={source.value}
