@@ -204,26 +204,45 @@ export default function TechnologyMarquee() {
           overflow: hidden;
           position: relative;
           width: 100%;
-          padding: 1rem 0;
+          padding: 0.75rem 0;
+          mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 10%,
+            black 90%,
+            transparent
+          );
+          -webkit-mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 10%,
+            black 90%,
+            transparent
+          );
         }
 
-        .marquee-content-left,
-        .marquee-content-right {
+        .marquee-content {
           display: flex;
-          gap: 3rem;
+          gap: 2.5rem;
           will-change: transform;
         }
 
-        .marquee-content-left {
-          animation: marquee-left 60s linear infinite;
+        /* Row 1: Fast scroll left (75 items) */
+        .marquee-row-1 {
+          animation: marquee-left 45s linear infinite;
         }
 
-        .marquee-content-right {
-          animation: marquee-right 60s linear infinite;
+        /* Row 2: Medium scroll right (25 items) */
+        .marquee-row-2 {
+          animation: marquee-right 35s linear infinite;
         }
 
-        .marquee-container:hover .marquee-content-left,
-        .marquee-container:hover .marquee-content-right {
+        /* Row 3: Slow scroll left (25 items) */
+        .marquee-row-3 {
+          animation: marquee-left 40s linear infinite;
+        }
+
+        .marquee-container:hover .marquee-content {
           animation-play-state: paused;
         }
 
@@ -232,45 +251,87 @@ export default function TechnologyMarquee() {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 140px;
-          height: 70px;
-          padding: 0.75rem;
-          transition: all 0.3s ease-in-out;
+          width: 120px;
+          height: 60px;
+          padding: 0.5rem;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
         }
 
         .logo-img {
           max-width: 100%;
           max-height: 100%;
           object-fit: contain;
-          filter: brightness(0) invert(1);
-          transition: all 0.3s ease-in-out;
+          filter: brightness(0) invert(1) opacity(0.7);
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .logo-item:hover {
-          transform: scale(1.1);
+          transform: scale(1.15) translateY(-2px);
+          z-index: 10;
         }
 
         .logo-item:hover .logo-img {
-          filter: brightness(1) invert(0);
-          opacity: 1;
+          filter: brightness(1) invert(0) opacity(1);
+          drop-shadow: 0 0 20px rgba(0, 228, 255, 0.6));
         }
 
+        /* Combination lock effect: alternating directions at different speeds */
         @keyframes marquee-left {
           0% {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-33.333%);
+            transform: translateX(-50%);
           }
         }
 
         @keyframes marquee-right {
           0% {
-            transform: translateX(-33.333%);
+            transform: translateX(-50%);
           }
           100% {
             transform: translateX(0);
           }
+        }
+
+        /* Add slight vertical offset for combination lock effect */
+        .marquee-container:nth-child(1) {
+          transform: translateY(-2px);
+        }
+
+        .marquee-container:nth-child(2) {
+          transform: translateY(2px);
+        }
+
+        .marquee-container:nth-child(3) {
+          transform: translateY(-2px);
+        }
+
+        /* Add subtle scan line effect */
+        @keyframes scan {
+          0%, 100% {
+            opacity: 0;
+          }
+          50% {
+            opacity: 0.3;
+          }
+        }
+
+        .marquee-container::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(0, 228, 255, 0.1),
+            transparent
+          );
+          animation: scan 4s linear infinite;
         }
       `}</style>
     </div>
