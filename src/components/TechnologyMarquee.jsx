@@ -195,11 +195,11 @@ export default function TechnologyMarquee() {
       </div>
 
       <div className="space-y-1 relative overflow-hidden">
-        {/* Row 1: 75 logos - scroll left fast */}
+        {/* Row 1: 111 logos - scroll left fast */}
         <div className="marquee-container">
           <div className="marquee-content marquee-row-1">
-            {[...row1Logos, ...row1Logos].map((company, idx) => (
-              <div key={idx} className="logo-item">
+            {[...row1Logos, ...row1Logos, ...row1Logos].map((company, idx) => (
+              <div key={`r1-${idx}`} className="logo-item">
                 <img 
                   src={company.logo} 
                   alt={company.name}
@@ -211,11 +211,11 @@ export default function TechnologyMarquee() {
           </div>
         </div>
 
-        {/* Row 2: 25 logos - scroll right medium */}
+        {/* Row 2: 34 logos - scroll right medium */}
         <div className="marquee-container">
           <div className="marquee-content marquee-row-2">
-            {[...row2Logos, ...row2Logos, ...row2Logos, ...row2Logos].map((company, idx) => (
-              <div key={idx} className="logo-item">
+            {[...row2Logos, ...row2Logos, ...row2Logos, ...row2Logos, ...row2Logos, ...row2Logos].map((company, idx) => (
+              <div key={`r2-${idx}`} className="logo-item">
                 <img 
                   src={company.logo} 
                   alt={company.name}
@@ -227,11 +227,11 @@ export default function TechnologyMarquee() {
           </div>
         </div>
 
-        {/* Row 3: 25 logos - scroll left slow */}
+        {/* Row 3: 33 logos - scroll left slow */}
         <div className="marquee-container">
           <div className="marquee-content marquee-row-3">
-            {[...row3Logos, ...row3Logos, ...row3Logos, ...row3Logos].map((company, idx) => (
-              <div key={idx} className="logo-item">
+            {[...row3Logos, ...row3Logos, ...row3Logos, ...row3Logos, ...row3Logos, ...row3Logos].map((company, idx) => (
+              <div key={`r3-${idx}`} className="logo-item">
                 <img 
                   src={company.logo} 
                   alt={company.name}
@@ -253,38 +253,38 @@ export default function TechnologyMarquee() {
           mask-image: linear-gradient(
             to right,
             transparent,
-            black 10%,
-            black 90%,
+            black 5%,
+            black 95%,
             transparent
           );
           -webkit-mask-image: linear-gradient(
             to right,
             transparent,
-            black 10%,
-            black 90%,
+            black 5%,
+            black 95%,
             transparent
           );
         }
 
         .marquee-content {
           display: flex;
-          gap: 2.5rem;
+          gap: 2rem;
           will-change: transform;
         }
 
-        /* Row 1: Fast scroll left (75 items) */
+        /* Row 1: Fast scroll left (111 items x3 = 333 visible) */
         .marquee-row-1 {
-          animation: marquee-left 30s linear infinite;
+          animation: marquee-left 90s linear infinite;
         }
 
-        /* Row 2: Medium scroll right (25 items) */
+        /* Row 2: Medium scroll right (34 items x6 = 204 visible) */
         .marquee-row-2 {
-          animation: marquee-right 25s linear infinite;
+          animation: marquee-right 70s linear infinite;
         }
 
-        /* Row 3: Slow scroll left (25 items) */
+        /* Row 3: Slow scroll left (33 items x6 = 198 visible) */
         .marquee-row-3 {
-          animation: marquee-left 28s linear infinite;
+          animation: marquee-left 80s linear infinite;
         }
 
         .marquee-container:hover .marquee-content {
@@ -327,13 +327,13 @@ export default function TechnologyMarquee() {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-50%);
+            transform: translateX(-33.333%);
           }
         }
 
         @keyframes marquee-right {
           0% {
-            transform: translateX(-50%);
+            transform: translateX(-33.333%);
           }
           100% {
             transform: translateX(0);
