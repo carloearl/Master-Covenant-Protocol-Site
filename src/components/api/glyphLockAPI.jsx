@@ -2,28 +2,24 @@ import { base44 } from '@/api/base44Client';
 
 /**
  * GlyphLock Enterprise API Layer
- * All backend functions with Base44 authentication
+ * Calls Supabase Edge Functions via Base44 proxy
  */
 
-const FUNCTIONS_URL = 'https://kygisdokikvzgzwonzxk.supabase.co/functions/v1';
-
 const callFunction = async (functionName, payload = {}) => {
-  const user = await base44.auth.me();
-  
-  const response = await fetch(`${FUNCTIONS_URL}/${functionName}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ ...payload, userId: user.id, userEmail: user.email }),
-  });
+  try {
+    const user = await base44.auth.me();
+    
+    // Use Base44 proxy to call Supabase functions
+    const response = await base44.functions.invoke('supabaseProxy', {
+      functionName,
+      payload: { ...payload, userId: user.id, userEmail: user.email }
+    });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'API call failed');
+    return response.data;
+  } catch (error) {
+    console.error(`Error calling ${functionName}:`, error);
+    throw error;
   }
-
-  return await response.json();
 };
 
 export const glyphLockAPI = {
