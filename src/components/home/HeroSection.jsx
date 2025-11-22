@@ -22,7 +22,7 @@ export default function HeroSection() {
           
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
           
-          <div className="absolute z-10 bottom-4 right-4 md:bottom-6 md:right-6 flex items-center gap-3">
+          <div className="absolute z-10 bottom-3 right-3 md:bottom-5 md:right-5 flex items-center gap-3">
             <span className="text-white/80 font-bold font-space tracking-widest text-xs md:text-sm uppercase hidden sm:block">
               System Active
             </span>
