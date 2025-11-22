@@ -50,7 +50,6 @@ export default function Footer() {
             <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Company</h4>
             <div className="flex flex-col gap-4">
               <Link to={createPageUrl("About")} className="hover:text-[#00E4FF] transition-colors">About Us</Link>
-              <Link to={createPageUrl("DreamTeam")} className="hover:text-[#00E4FF] transition-colors">Leadership</Link>
               <Link to={createPageUrl("Partners")} className="hover:text-[#00E4FF] transition-colors">Partners</Link>
               <Link to={createPageUrl("MasterCovenant")} className="hover:text-[#00E4FF] transition-colors">Governance</Link>
               <Link to={createPageUrl("Contact")} className="hover:text-[#00E4FF] transition-colors">Contact</Link>
