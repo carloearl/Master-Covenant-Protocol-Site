@@ -149,10 +149,11 @@ export default function TechnologyMarquee() {
         </p>
       </div>
 
-      <div className="space-y-2">
-        <div className="marquee-container group">
-          <div className="marquee-content-left">
-            {[...row1Logos, ...row1Logos, ...row1Logos].map((company, idx) => (
+      <div className="space-y-1 relative overflow-hidden">
+        {/* Row 1: 75 logos - scroll left fast */}
+        <div className="marquee-container">
+          <div className="marquee-content marquee-row-1">
+            {[...row1Logos, ...row1Logos].map((company, idx) => (
               <div key={idx} className="logo-item">
                 <img 
                   src={company.logo} 
@@ -165,9 +166,10 @@ export default function TechnologyMarquee() {
           </div>
         </div>
 
-        <div className="marquee-container group">
-          <div className="marquee-content-right">
-            {[...row2Logos, ...row2Logos, ...row2Logos].map((company, idx) => (
+        {/* Row 2: 25 logos - scroll right medium */}
+        <div className="marquee-container">
+          <div className="marquee-content marquee-row-2">
+            {[...row2Logos, ...row2Logos, ...row2Logos, ...row2Logos].map((company, idx) => (
               <div key={idx} className="logo-item">
                 <img 
                   src={company.logo} 
@@ -180,9 +182,10 @@ export default function TechnologyMarquee() {
           </div>
         </div>
 
-        <div className="marquee-container group">
-          <div className="marquee-content-left">
-            {[...row3Logos, ...row3Logos, ...row3Logos].map((company, idx) => (
+        {/* Row 3: 25 logos - scroll left slow */}
+        <div className="marquee-container">
+          <div className="marquee-content marquee-row-3">
+            {[...row3Logos, ...row3Logos, ...row3Logos, ...row3Logos].map((company, idx) => (
               <div key={idx} className="logo-item">
                 <img 
                   src={company.logo} 
