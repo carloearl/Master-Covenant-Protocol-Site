@@ -1,5 +1,5 @@
 import React from "react";
-import { Home, Key, Download, Users, FileText, Zap, Shield, Book, LogOut, DollarSign } from "lucide-react";
+import { Home, Key, Download, Users, FileText, Zap, Shield, Book, LogOut, DollarSign, TrendingUp } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 const modules = [
@@ -12,6 +12,10 @@ const modules = [
   { id: "security", label: "Security", icon: Shield },
   { id: "api-reference", label: "API Reference", icon: Book },
   { id: "billing", label: "Billing & Payments", icon: DollarSign },
+];
+
+const adminModules = [
+  { id: "admin-billing", label: "Admin Billing", icon: TrendingUp, adminOnly: true },
 ];
 
 export default function ConsoleSidebar({ activeModule, setActiveModule, user }) {
@@ -70,6 +74,34 @@ export default function ConsoleSidebar({ activeModule, setActiveModule, user }) 
             </button>
           );
         })}
+
+        {/* Admin Section */}
+        {user?.role === 'admin' && (
+          <>
+            <div className="pt-4 pb-2">
+              <p className="text-xs text-white/40 font-semibold px-4">ADMIN</p>
+            </div>
+            {adminModules.map((module) => {
+              const Icon = module.icon;
+              const isActive = activeModule === module.id;
+              
+              return (
+                <button
+                  key={module.id}
+                  onClick={() => setActiveModule(module.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    isActive
+                      ? "bg-[#8C4BFF]/20 text-[#8C4BFF] shadow-lg shadow-[#8C4BFF]/10"
+                      : "text-white/70 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="text-sm font-medium">{module.label}</span>
+                </button>
+              );
+            })}
+          </>
+        )}
       </nav>
 
       {/* Footer */}
