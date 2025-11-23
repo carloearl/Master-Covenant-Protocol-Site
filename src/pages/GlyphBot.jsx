@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { MessageCircle, Volume2, VolumeX, Trash2, RotateCcw, Shield, FileText, AlertTriangle, Upload, Code, Search, FileCheck, BookOpen, Globe, Menu } from "lucide-react";
+import { MessageCircle, Volume2, VolumeX, Trash2, RotateCcw, Shield, FileText, AlertTriangle, Upload, Code, Search, FileCheck, BookOpen, Globe, Menu, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import ConversationList from "../components/glyphbot/ConversationList";
 import FileAnalysisView from "../components/glyphbot/FileAnalysisView";
@@ -66,6 +66,8 @@ export default function GlyphBot() {
   const [language, setLanguage] = useState(() => localStorage.getItem("glyphbot_language") || "en");
   const [showSidebar, setShowSidebar] = useState(false);
   const [knowledgeSources, setKnowledgeSources] = useState([]);
+  const [urlToScrape, setUrlToScrape] = useState("");
+  const [scrapedUrls, setScrapedUrls] = useState([]);
   
   const messagesEndRef = useRef(null);
   const listRef = useRef(null);
@@ -292,6 +294,30 @@ export default function GlyphBot() {
     window.speechSynthesis.speak(utterance);
   };
 
+  const addUrlToScrape = async () => {
+    if (!urlToScrape.trim() || scrapedUrls.some(u => u.url === urlToScrape)) return;
+    
+    try {
+      const urlData = await base44.integrations.Core.InvokeLLM({
+        prompt: `Extract key information from this URL: ${urlToScrape}. Provide a concise summary.`,
+        add_context_from_internet: true
+      });
+      
+      setScrapedUrls([...scrapedUrls, {
+        url: urlToScrape,
+        summary: urlData,
+        timestamp: new Date().toISOString()
+      }]);
+      setUrlToScrape("");
+    } catch (error) {
+      console.error("Failed to scrape URL:", error);
+    }
+  };
+
+  const removeScrapedUrl = (urlToRemove) => {
+    setScrapedUrls(scrapedUrls.filter(u => u.url !== urlToRemove));
+  };
+
   // Send message
   const handleSend = async () => {
     const trimmed = input.trim();
@@ -311,8 +337,21 @@ export default function GlyphBot() {
     setUserScrolledUp(false);
 
     try {
+      // Build context from scraped URLs
+      let contextPrefix = "";
+      if (scrapedUrls.length > 0) {
+        contextPrefix = "Web Context:\n" + scrapedUrls.map(u => 
+          `[${u.url}]: ${u.summary}`
+        ).join("\n\n") + "\n\nUser Question:\n";
+      }
+
       const response = await base44.functions.invoke("glyphbotLLM", {
-        messages: newMessages.map(m => ({ role: m.role, content: m.content })),
+        messages: newMessages.map((m, idx) => ({
+          role: m.role,
+          content: idx === newMessages.length - 1 && contextPrefix 
+            ? contextPrefix + m.content 
+            : m.content
+        })),
         persona
       });
 
@@ -579,6 +618,44 @@ export default function GlyphBot() {
       {/* Input Area */}
       <div className="border-t border-gray-800 bg-black/80 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto px-4 py-4">
+          {/* Scraped URLs Display */}
+          {scrapedUrls.length > 0 && (
+            <div className="mb-3 flex flex-wrap gap-2">
+              {scrapedUrls.map((scraped, idx) => (
+                <div key={idx} className="flex items-center gap-2 px-3 py-1 rounded-lg bg-cyan-900/20 border border-cyan-600/30 text-xs">
+                  <Globe className="w-3 h-3 text-cyan-400" />
+                  <span className="text-cyan-300 max-w-[200px] truncate">{scraped.url}</span>
+                  <button
+                    onClick={() => removeScrapedUrl(scraped.url)}
+                    className="text-cyan-400 hover:text-red-400 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* URL Scraper Input */}
+          <div className="mb-3 flex items-center gap-2">
+            <Globe className="w-4 h-4 text-gray-500" />
+            <input
+              type="url"
+              value={urlToScrape}
+              onChange={(e) => setUrlToScrape(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && addUrlToScrape()}
+              placeholder="Add URL to scrape (e.g., https://example.com)..."
+              className="flex-1 px-3 py-2 rounded-lg bg-gray-900 border border-gray-700 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors"
+            />
+            <button
+              onClick={addUrlToScrape}
+              disabled={!urlToScrape.trim()}
+              className="px-4 py-2 rounded-lg bg-cyan-600/20 border border-cyan-600/30 text-cyan-400 text-sm font-medium hover:bg-cyan-600/30 disabled:opacity-50 transition-colors"
+            >
+              Scrape
+            </button>
+          </div>
+
           <div className="flex items-end gap-3">
             <textarea
               ref={textareaRef}
@@ -590,7 +667,7 @@ export default function GlyphBot() {
               className="flex-1 resize-none p-3 rounded-xl bg-gray-900 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors"
               style={{ minHeight: "44px", maxHeight: "160px" }}
             />
-            
+
             <button
               onClick={handleSend}
               disabled={loading || !input.trim()}
