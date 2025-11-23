@@ -58,47 +58,67 @@ Deno.serve(async (req) => {
 
 ${conversationText}`;
 
-    // Route through Base44 LLM broker with retry
+    // Route through Base44 LLM broker with exponential backoff
     let result;
-    let attempt = 0;
-    const maxAttempts = 3;
+    let lastError;
+    const maxAttempts = 5;
     
-    while (attempt < maxAttempts) {
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
         result = await base44.integrations.Core.InvokeLLM({
           prompt: fullPrompt,
           add_context_from_internet: false
         });
-        break;
+        
+        // Log successful call with attempt count
+        await base44.entities.SystemAuditLog.create({
+          event_type: 'GLYPHBOT_LLM_CALL',
+          description: 'LLM call via Base44 broker',
+          actor_email: user.email,
+          resource_id: 'glyphbot',
+          metadata: { 
+            persona, 
+            messageCount: messages.length,
+            broker: 'base44',
+            attempts: attempt + 1
+          },
+          status: 'success'
+        }).catch(console.error);
+        
+        return Response.json({
+          text: result,
+          model: 'base44-broker',
+          promptVersion: 'v2.0'
+        });
+        
       } catch (error) {
-        attempt++;
-        if (attempt === maxAttempts) {
-          throw new Error(`All LLM models unavailable after ${maxAttempts} attempts. Please try again shortly.`);
+        lastError = error;
+        
+        // Log failed attempt
+        await base44.entities.SystemAuditLog.create({
+          event_type: 'GLYPHBOT_LLM_RETRY',
+          description: `LLM attempt ${attempt + 1} failed`,
+          actor_email: user.email,
+          resource_id: 'glyphbot',
+          metadata: { 
+            attempt: attempt + 1,
+            maxAttempts,
+            error: error?.message || String(error)
+          },
+          status: 'failure'
+        }).catch(console.error);
+        
+        if (attempt < maxAttempts - 1) {
+          const delay = Math.min(1000 * Math.pow(2, attempt), 8000);
+          await new Promise(resolve => setTimeout(resolve, delay));
         }
-        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
       }
     }
+    
+    // All attempts failed
+    throw new Error(`AI models temporarily unavailable. Tried ${maxAttempts} times over ${Math.floor((Math.pow(2, maxAttempts) - 1) * 1000 / 1000)}s. The platform's LLM broker is experiencing issues. Please try again in a moment.`);
 
-    // Log successful LLM call
-    await base44.entities.SystemAuditLog.create({
-      event_type: 'GLYPHBOT_LLM_CALL',
-      description: 'LLM call via Base44 broker',
-      actor_email: user.email,
-      resource_id: 'glyphbot',
-      metadata: { 
-        persona, 
-        messageCount: messages.length,
-        broker: 'base44',
-        attempts: attempt + 1
-      },
-      status: 'success'
-    }).catch(console.error);
 
-    return Response.json({
-      text: result,
-      model: 'base44-broker',
-      promptVersion: 'v2.0'
-    });
   } catch (error) {
     console.error('GlyphBot LLM error:', error);
     return Response.json({ error: error.message }, { status: 500 });

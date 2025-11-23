@@ -236,14 +236,19 @@ export default function GlyphBot() {
       speakText(assistantMessage.content);
     } catch (error) {
       console.error("LLM error:", error);
-      
+
+      const errorMsg = error?.data?.error || error?.message || "Unknown error";
+      const isTemporary = errorMsg.includes("unavailable") || errorMsg.includes("temporarily");
+
       const errorMessage = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: "⚠️ All AI models are currently unavailable. Please try again in a moment.",
+        content: isTemporary 
+          ? `⚠️ **AI Services Temporarily Unavailable**\n\nThe platform's LLM broker is experiencing high load or temporary issues. All fallback models have been attempted.\n\n**What you can do:**\n- Wait 30-60 seconds and try again\n- Your message is saved and will be processed when services recover\n- Check [status.base44.com] for platform updates\n\n*This is a platform-level issue, not a GlyphBot issue. Your security and data remain protected.*`
+          : `⚠️ **Error Processing Request**\n\n${errorMsg}\n\nPlease try again or contact support if the issue persists.`,
         timestamp: new Date().toISOString()
       };
-      
+
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setLoading(false);
