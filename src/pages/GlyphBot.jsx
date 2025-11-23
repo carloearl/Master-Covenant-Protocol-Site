@@ -111,13 +111,50 @@ export default function GlyphBot() {
       const availableVoices = window.speechSynthesis.getVoices();
       setVoices(availableVoices);
       if (availableVoices.length > 0 && !selectedVoice) {
-        setSelectedVoice(availableVoices[0].name);
+        const defaultVoice = getPersonaVoice(availableVoices, persona);
+        setSelectedVoice(defaultVoice?.name || availableVoices[0].name);
       }
     };
 
     loadVoices();
     window.speechSynthesis.onvoiceschanged = loadVoices;
   }, []);
+
+  // Auto-switch voice when persona changes
+  useEffect(() => {
+    if (voices.length > 0) {
+      const personaVoice = getPersonaVoice(voices, persona);
+      if (personaVoice) {
+        setSelectedVoice(personaVoice.name);
+      }
+    }
+  }, [persona, voices]);
+
+  const getPersonaVoice = (voiceList, personaType) => {
+    // Persona voice preferences
+    const personaPrefs = {
+      alfred: ['Daniel', 'Aaron', 'Alex', 'Fred', 'Google UK English Male', 'Microsoft David'],
+      neutral: ['Samantha', 'Karen', 'Google US English', 'Microsoft Zira', 'Victoria'],
+      playful: ['Fiona', 'Moira', 'Tessa', 'Google UK English Female', 'Microsoft Hazel']
+    };
+
+    const prefs = personaPrefs[personaType] || personaPrefs.alfred;
+    
+    // Try to find matching voice
+    for (const pref of prefs) {
+      const match = voiceList.find(v => v.name.includes(pref));
+      if (match) return match;
+    }
+
+    // Fallback: use gender-based selection
+    if (personaType === 'alfred') {
+      return voiceList.find(v => v.name.toLowerCase().includes('male') || v.name.includes('David')) || voiceList[0];
+    } else if (personaType === 'playful') {
+      return voiceList.find(v => v.name.toLowerCase().includes('female') && !v.name.includes('Victoria')) || voiceList[0];
+    }
+    
+    return voiceList[0];
+  };
 
   useEffect(() => {
     localStorage.setItem("glyphbot_language", language);
@@ -595,7 +632,7 @@ export default function GlyphBot() {
             {showTools && (
               <div className="p-4 bg-gray-900 border border-gray-800 rounded-lg space-y-3">
                 <div>
-                  <label className="text-xs text-gray-500 mb-2 block">Voice</label>
+                  <label className="text-xs text-gray-500 mb-2 block">Voice ({persona === 'alfred' ? 'Authoritative' : persona === 'neutral' ? 'Professional' : 'Friendly'})</label>
                   <select
                     value={selectedVoice}
                     onChange={(e) => setSelectedVoice(e.target.value)}
@@ -607,6 +644,7 @@ export default function GlyphBot() {
                       </option>
                     ))}
                   </select>
+                  <p className="text-xs text-gray-600 mt-1">Auto-selected for {persona === 'alfred' ? 'Alfred' : persona === 'neutral' ? 'Neutral Pro' : 'Prankster'}</p>
                 </div>
 
                 <div className="grid grid-cols-3 gap-3">
