@@ -39,6 +39,7 @@ export default function GlyphBot() {
   const [input, setInput] = useState(() => localStorage.getItem("glyphbot_draft") || "");
   const [persona, setPersona] = useState(() => localStorage.getItem("glyphbot_persona") || "alfred");
   const [loading, setLoading] = useState(false);
+  const [llmStatus, setLlmStatus] = useState({ available: true, checking: false, lastCheck: null });
   const [autoTalkback, setAutoTalkback] = useState(() => {
     const saved = localStorage.getItem("glyphbot_talkback");
     return saved ? JSON.parse(saved) : false;
@@ -125,7 +126,25 @@ export default function GlyphBot() {
   // Load conversations
   useEffect(() => {
     loadConversations();
+    checkLLMStatus();
+    
+    // Check LLM status every 30 seconds
+    const interval = setInterval(checkLLMStatus, 30000);
+    return () => clearInterval(interval);
   }, []);
+
+  const checkLLMStatus = async () => {
+    try {
+      setLlmStatus(prev => ({ ...prev, checking: true }));
+      const response = await base44.functions.invoke("glyphbotLLM", {
+        messages: [{ role: "user", content: "ping" }],
+        persona: "neutral"
+      });
+      setLlmStatus({ available: true, checking: false, lastCheck: Date.now() });
+    } catch (error) {
+      setLlmStatus({ available: false, checking: false, lastCheck: Date.now() });
+    }
+  };
 
   const loadConversations = async () => {
     try {
@@ -280,15 +299,20 @@ export default function GlyphBot() {
       console.error("LLM error:", error);
 
       const errorMsg = error?.data?.error || error?.message || "Unknown error";
-      const isTemporary = errorMsg.includes("unavailable") || errorMsg.includes("temporarily");
+      const isTemporary = errorMsg.includes("unavailable") || errorMsg.includes("temporarily") || 
+                         errorMsg.includes("429") || errorMsg.includes("503");
+
+      // Update LLM status
+      setLlmStatus({ available: false, checking: false, lastCheck: Date.now() });
 
       const errorMessage = {
         id: crypto.randomUUID(),
         role: "assistant",
         content: isTemporary 
-          ? `⚠️ **AI Services Temporarily Unavailable**\n\nThe platform's LLM broker is experiencing high load or temporary issues. All fallback models have been attempted.\n\n**What you can do:**\n- Wait 30-60 seconds and try again\n- Your message is saved and will be processed when services recover\n- Check [status.base44.com] for platform updates\n\n*This is a platform-level issue, not a GlyphBot issue. Your security and data remain protected.*`
-          : `⚠️ **Error Processing Request**\n\n${errorMsg}\n\nPlease try again or contact support if the issue persists.`,
-        timestamp: new Date().toISOString()
+          ? `🔄 **AI Models Temporarily Unavailable**\n\nGlyphBot's AI engine is experiencing high load. We're automatically retrying with fallback models.\n\n**Your options:**\n✓ Wait 30-60 seconds - services typically recover quickly\n✓ Your message is saved and secure\n✓ Try the "Retry" button below when ready\n\n*All your data remains protected. This is a temporary platform issue.*`
+          : `⚠️ **Request Failed**\n\n${errorMsg}\n\n**Next steps:**\n- Check your connection\n- Try again in a moment\n- Contact support if this persists`,
+        timestamp: new Date().toISOString(),
+        isError: true
       };
 
       setMessages(prev => [...prev, errorMessage]);
@@ -474,6 +498,15 @@ export default function GlyphBot() {
                     {msg.model} • {msg.promptVersion}
                   </div>
                 )}
+
+                {msg.isError && msg.role === "assistant" && (
+                  <button
+                    onClick={handleSend}
+                    className="mt-3 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    🔄 Retry Message
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -526,7 +559,7 @@ export default function GlyphBot() {
               disabled={loading || !input.trim()}
               className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:from-cyan-500 hover:to-blue-500 transition-all"
             >
-              Send
+              {loading ? "Sending..." : "Send"}
             </button>
           </div>
 
@@ -683,11 +716,23 @@ export default function GlyphBot() {
                 >
                   <Menu className="w-5 h-5" />
                 </button>
-                
+
                 <MessageCircle className="w-6 h-6 text-cyan-400" />
                 <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
                   GlyphBot
                 </h1>
+
+                {/* AI Status Indicator */}
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-gray-900 border border-gray-700">
+                  <div className={`w-2 h-2 rounded-full ${
+                    llmStatus.checking ? 'bg-yellow-500 animate-pulse' :
+                    llmStatus.available ? 'bg-green-500' : 'bg-red-500 animate-pulse'
+                  }`} />
+                  <span className="text-xs text-gray-400">
+                    {llmStatus.checking ? 'Checking...' : 
+                     llmStatus.available ? 'AI Online' : 'AI Unavailable'}
+                  </span>
+                </div>
               </div>
               
               <div className="flex items-center gap-2">
