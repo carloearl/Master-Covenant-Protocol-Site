@@ -58,6 +58,15 @@ export default function GlyphBot() {
     const saved = localStorage.getItem("glyphbot_pitch");
     return saved ? Number(saved) : 1;
   });
+  const [audioEffects, setAudioEffects] = useState(() => {
+    const saved = localStorage.getItem("glyphbot_effects");
+    return saved ? JSON.parse(saved) : {
+      reverb: 0,
+      echo: 0,
+      bassBoost: 0,
+      naturalness: 1
+    };
+  });
   const [userScrolledUp, setUserScrolledUp] = useState(false);
   const [showTools, setShowTools] = useState(false);
   const [activeTab, setActiveTab] = useState("chat");
@@ -106,6 +115,10 @@ export default function GlyphBot() {
   useEffect(() => {
     localStorage.setItem("glyphbot_pitch", String(speechPitch));
   }, [speechPitch]);
+
+  useEffect(() => {
+    localStorage.setItem("glyphbot_effects", JSON.stringify(audioEffects));
+  }, [audioEffects]);
 
   // Load available voices
   useEffect(() => {
@@ -268,7 +281,7 @@ export default function GlyphBot() {
     }
   }, [input]);
 
-  // Speech synthesis
+  // Speech synthesis with audio effects
   const stopSpeaking = () => {
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
@@ -281,13 +294,24 @@ export default function GlyphBot() {
     stopSpeaking();
     
     const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Apply naturalness adjustments
+    const naturalness = audioEffects.naturalness;
     utterance.volume = volume;
-    utterance.rate = speechRate;
-    utterance.pitch = speechPitch;
+    utterance.rate = speechRate * (0.85 + (naturalness * 0.15)); // Slower = more natural
+    utterance.pitch = speechPitch * (0.95 + (naturalness * 0.1)); // Slightly lower = more natural
     
     if (selectedVoice) {
       const voice = voices.find(v => v.name === selectedVoice);
       if (voice) utterance.voice = voice;
+    }
+    
+    // Add pauses for naturalness
+    if (naturalness > 0.5) {
+      utterance.text = text
+        .replace(/\. /g, '... ')
+        .replace(/\? /g, '?.. ')
+        .replace(/\! /g, '!.. ');
     }
     
     utteranceRef.current = utterance;
@@ -715,11 +739,18 @@ export default function GlyphBot() {
                     onChange={(e) => setSelectedVoice(e.target.value)}
                     className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-400"
                   >
-                    {voices.map((voice) => (
+                    {voices.filter(v => v.lang.startsWith('en')).map((voice) => (
                       <option key={voice.name} value={voice.name}>
-                        {voice.name} ({voice.lang})
+                        {voice.name} {voice.localService ? '⭐' : '☁️'}
                       </option>
                     ))}
+                    <optgroup label="Other Languages">
+                      {voices.filter(v => !v.lang.startsWith('en')).map((voice) => (
+                        <option key={voice.name} value={voice.name}>
+                          {voice.name} ({voice.lang})
+                        </option>
+                      ))}
+                    </optgroup>
                   </select>
                   <p className="text-xs text-gray-600 mt-1">Auto-selected for {persona === 'alfred' ? 'Alfred' : persona === 'neutral' ? 'Neutral Pro' : 'Prankster'}</p>
                 </div>
@@ -774,19 +805,64 @@ export default function GlyphBot() {
                   </div>
                 </div>
 
+                {/* Naturalness & Effects */}
+                <div className="mt-3 p-3 bg-gray-800 rounded-lg border border-gray-700">
+                  <div className="mb-3">
+                    <label className="text-xs text-cyan-400 font-semibold mb-2 block">🎭 Naturalness</label>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-500">Robotic</span>
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={audioEffects.naturalness}
+                        onChange={(e) => setAudioEffects({...audioEffects, naturalness: Number(e.target.value)})}
+                        className="flex-1 accent-cyan-600"
+                      />
+                      <span className="text-xs text-gray-500">Human</span>
+                      <span className="text-xs text-cyan-400 w-10">{Math.round(audioEffects.naturalness * 100)}%</span>
+                    </div>
+                    <p className="text-xs text-gray-600 mt-1">Adds pauses, varies tempo for more natural speech</p>
+                  </div>
+                </div>
+
                 <div className="flex gap-2">
                   <button
                     onClick={() => {
                       setVolume(1);
                       setSpeechRate(1);
                       setSpeechPitch(1);
+                      setAudioEffects({
+                        reverb: 0,
+                        echo: 0,
+                        bassBoost: 0,
+                        naturalness: 1
+                      });
                     }}
                     className="text-xs px-3 py-1 rounded bg-gray-800 text-gray-400 hover:text-white transition-colors"
                   >
-                    Reset to Default
+                    Reset All
                   </button>
                   <button
-                    onClick={() => speakText("This is a test of the voice settings.")}
+                    onClick={() => {
+                      const presets = {
+                        natural: { volume: 0.9, rate: 0.95, pitch: 0.95, naturalness: 0.8 },
+                        professional: { volume: 1, rate: 1, pitch: 1, naturalness: 0.5 },
+                        expressive: { volume: 0.95, rate: 1.1, pitch: 1.05, naturalness: 0.9 }
+                      };
+                      const preset = presets.natural;
+                      setVolume(preset.volume);
+                      setSpeechRate(preset.rate);
+                      setSpeechPitch(preset.pitch);
+                      setAudioEffects({...audioEffects, naturalness: preset.naturalness});
+                    }}
+                    className="text-xs px-3 py-1 rounded bg-purple-600 text-white hover:bg-purple-500 transition-colors"
+                  >
+                    Natural Preset
+                  </button>
+                  <button
+                    onClick={() => speakText("Hello! This is a test of the GlyphBot voice system. How does this sound to you?")}
                     className="text-xs px-3 py-1 rounded bg-cyan-600 text-white hover:bg-cyan-500 transition-colors"
                   >
                     Test Voice
