@@ -56,7 +56,28 @@ Deno.serve(async (req) => {
 
     const fullPrompt = `${systemPrompt}
 
-${conversationText}
+${conversationText}`;
+
+    // Use Base44's built-in LLM integration
+    const result = await base44.integrations.Core.InvokeLLM({
+      prompt: fullPrompt,
+      add_context_from_internet: false
+    });
+
+    await base44.entities.SystemAuditLog.create({
+      event_type: 'GLYPHBOT_LLM_CALL',
+      description: 'Successful LLM call',
+      actor_email: user.email,
+      resource_id: 'glyphbot',
+      metadata: { persona, messageCount: messages.length },
+      status: 'success'
+    }).catch(console.error);
+
+    return Response.json({
+      text: result,
+      model: 'base44-llm',
+      promptVersion: 'v2.0'
+    });
   } catch (error) {
     console.error('GlyphBot LLM error:', error);
     return Response.json({ error: error.message }, { status: 500 });
