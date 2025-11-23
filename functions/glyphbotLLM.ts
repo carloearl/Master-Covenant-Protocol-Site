@@ -58,11 +58,26 @@ Deno.serve(async (req) => {
 
 ${conversationText}`;
 
-    // Route through Base44 LLM broker
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: fullPrompt,
-      add_context_from_internet: false
-    });
+    // Route through Base44 LLM broker with retry
+    let result;
+    let attempt = 0;
+    const maxAttempts = 3;
+    
+    while (attempt < maxAttempts) {
+      try {
+        result = await base44.integrations.Core.InvokeLLM({
+          prompt: fullPrompt,
+          add_context_from_internet: false
+        });
+        break;
+      } catch (error) {
+        attempt++;
+        if (attempt === maxAttempts) {
+          throw new Error(`All LLM models unavailable after ${maxAttempts} attempts. Please try again shortly.`);
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+      }
+    }
 
     // Log successful LLM call
     await base44.entities.SystemAuditLog.create({
@@ -74,7 +89,7 @@ ${conversationText}`;
         persona, 
         messageCount: messages.length,
         broker: 'base44',
-        directCalls: 0
+        attempts: attempt + 1
       },
       status: 'success'
     }).catch(console.error);

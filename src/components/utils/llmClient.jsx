@@ -14,6 +14,21 @@
 import { base44 } from "@/api/base44Client";
 
 /**
+ * Retry with exponential backoff
+ */
+async function retryWithBackoff(fn, maxRetries = 3, initialDelay = 1000) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+      const delay = initialDelay * Math.pow(2, i);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+}
+
+/**
  * Central LLM call wrapper
  * @param {Object} options - LLM options
  * @param {string} options.prompt - The prompt text
@@ -22,6 +37,7 @@ import { base44 } from "@/api/base44Client";
  * @param {Array} options.fileUrls - File URLs for additional context
  * @param {Object} options.jsonSchema - Response JSON schema for structured output
  * @param {string} options.systemPrompt - System prompt override
+ * @param {boolean} options.retry - Enable retry with backoff (default: true)
  * @returns {Promise<string|Object>} LLM response
  */
 export async function invokeLLM(options = {}) {
@@ -31,7 +47,8 @@ export async function invokeLLM(options = {}) {
     useInternet = false,
     fileUrls = null,
     jsonSchema = null,
-    systemPrompt = null
+    systemPrompt = null,
+    retry = true
   } = options;
 
   // Build final prompt
@@ -67,7 +84,20 @@ export async function invokeLLM(options = {}) {
     params.response_json_schema = jsonSchema;
   }
 
-  return await base44.integrations.Core.InvokeLLM(params);
+  const callLLM = async () => {
+    try {
+      return await base44.integrations.Core.InvokeLLM(params);
+    } catch (error) {
+      const errorMsg = error?.message || String(error);
+      throw new Error(`LLM broker error: ${errorMsg}`);
+    }
+  };
+
+  if (retry) {
+    return await retryWithBackoff(callLLM, 3, 1000);
+  } else {
+    return await callLLM();
+  }
 }
 
 /**
