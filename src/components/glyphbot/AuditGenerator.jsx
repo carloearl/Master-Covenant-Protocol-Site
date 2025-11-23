@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { promptLLM } from "@/utils/llmClient";
+import { promptLLM } from "@/components/utils/llmClient";
 import { FileText, Download, Loader2, Shield, CheckCircle } from "lucide-react";
 
 export default function AuditGenerator() {

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { securityLLM } from "@/utils/llmClient";
+import { securityLLM } from "@/components/utils/llmClient";
 
 /**
  * Background service that runs proactive security monitoring

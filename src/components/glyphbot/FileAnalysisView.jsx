@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { analyzeLLM } from "@/utils/llmClient";
+import { analyzeLLM } from "@/components/utils/llmClient";
 import { Upload, File, X, Loader2, AlertCircle } from "lucide-react";
 
 export default function FileAnalysisView() {

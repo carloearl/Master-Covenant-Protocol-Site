@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { securityLLM } from "@/utils/llmClient";
+import { securityLLM } from "@/components/utils/llmClient";
 import { Shield, Search, Loader2, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 
 export default function SecurityScanner() {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { structuredLLM, securityLLM } from "@/utils/llmClient";
+import { structuredLLM, securityLLM } from "@/components/utils/llmClient";
 import { Shield, Activity, AlertTriangle, CheckCircle, TrendingUp, Clock, FileText, ExternalLink, RefreshCw } from "lucide-react";
 
 export default function SecurityDashboard() {

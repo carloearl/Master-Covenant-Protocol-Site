@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { promptLLM } from "@/utils/llmClient";
+import { promptLLM } from "@/components/utils/llmClient";
 import { Play, Loader2, AlertTriangle, Terminal } from "lucide-react";
 
 export default function CodeExecutor() {
