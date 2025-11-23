@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Activity, Key, Zap, Shield, TrendingUp, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { glyphLockAPI } from "@/components/api/glyphLockAPI";
-import UsagePanel from "./UsagePanel";
+import DashboardMetrics from "./DashboardMetrics";
+import RealtimeActivityFeed from "./RealtimeActivityFeed";
+import SystemHealthMonitor from "./SystemHealthMonitor";
 
 export default function DashboardHome({ user }) {
   const [stats, setStats] = useState({
@@ -101,36 +103,10 @@ export default function DashboardHome({ user }) {
       </div>
 
       {/* System Health */}
-      <Card className="bg-[#0A0F24] border-[#00E4FF]/20 hover:border-[#00E4FF]/40 transition-all">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className={`w-3 h-3 rounded-full ${health === 'healthy' ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'}`} />
-              <span className="text-white font-medium">System Status: {health === 'healthy' ? 'All Systems Operational' : 'Checking...'}</span>
-            </div>
-            <Shield className="w-5 h-5 text-[#00E4FF]" />
-          </div>
-        </CardContent>
-      </Card>
+      <SystemHealthMonitor />
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statCards.map((stat, idx) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={idx} className="bg-[#0A0F24]/80 border-[#00E4FF]/20 hover:border-[#00E4FF]/50 transition-all backdrop-blur-xl">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <Icon className="w-8 h-8" style={{ color: stat.color }} />
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br opacity-20" style={{ backgroundImage: `linear-gradient(to bottom right, ${stat.color}, ${stat.color}40)` }} />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-1">{stat.value}</h3>
-                <p className="text-sm text-white/60">{stat.label}</p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      {/* Stats Grid - Realtime Metrics */}
+      <DashboardMetrics />
 
       {/* Usage Limits Card */}
       <Card className="bg-[#0A0F24]/80 border-[#00E4FF]/20 backdrop-blur-xl">
@@ -159,23 +135,8 @@ export default function DashboardHome({ user }) {
         </CardContent>
       </Card>
 
-      {/* Recent Activity */}
-      <Card className="bg-[#0A0F24]/80 border-[#00E4FF]/20 backdrop-blur-xl">
-        <CardHeader>
-          <CardTitle className="text-white">Recent Activity</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {recentLogs.map((log) => (
-              <div key={log.id} className="flex items-center gap-3 p-3 rounded-lg bg-[#00E4FF]/5 border border-[#00E4FF]/10 hover:border-[#00E4FF]/30 transition-all">
-                <div className={`w-2 h-2 rounded-full ${log.type === 'success' ? 'bg-green-500' : log.type === 'warning' ? 'bg-yellow-500' : 'bg-[#00E4FF]'}`} />
-                <span className="flex-1 text-sm text-white">{log.message}</span>
-                <span className="text-xs text-white/50">{log.time}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Recent Activity - Real-time Feed */}
+      <RealtimeActivityFeed maxItems={15} />
 
       {/* Quick Actions */}
       <Card className="bg-[#0A0F24]/80 border-[#00E4FF]/20 backdrop-blur-xl">

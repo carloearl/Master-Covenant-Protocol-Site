@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { Home, Key, Download, Users, FileText, Zap, Shield, Book, LogOut, DollarSign, TrendingUp, UsersRound, Clock, Code, Settings2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
+const coreModules = [
+  { id: "dashboard", label: "Dashboard", icon: Home },
+];
+
 const developerModules = [
   { id: "api-keys", label: "API Keys", icon: Key },
   { id: "sdk", label: "SDK Center", icon: Download },
@@ -88,6 +92,29 @@ export default function ConsoleSidebar({ activeModule, setActiveModule, user }) 
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        {/* Core Modules - Always Visible */}
+        {coreModules.map((module) => {
+          const Icon = module.icon;
+          const isActive = activeModule === module.id;
+          
+          return (
+            <button
+              key={module.id}
+              onClick={() => setActiveModule(module.id)}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all mb-2 ${
+                isActive
+                  ? "bg-gradient-to-r from-[#00E4FF]/20 to-[#8C4BFF]/20 text-white shadow-lg"
+                  : "text-white/70 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              <Icon className="w-5 h-5" />
+              <span className="text-sm font-medium">{module.label}</span>
+            </button>
+          );
+        })}
+
+        <div className="my-3 border-t border-white/10"></div>
+
         {mode === "developer" ? (
           <>
             <div className="pb-2">
