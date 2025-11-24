@@ -42,11 +42,11 @@ export default function QrPreviewCanvas({
   };
 
   return (
-    <Card className="w-full bg-gray-900/50 border-gray-700">
-      <CardHeader>
-        <CardTitle className="text-white flex items-center justify-between">
-          <span>{title}</span>
-          <div className="flex gap-2">
+    <Card className="w-full bg-gray-900/50 border-gray-800 shadow-xl">
+      <CardHeader className="border-b border-gray-800">
+        <CardTitle className="text-white flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+          <span className="text-lg lg:text-xl">{title}</span>
+          <div className="flex gap-2 flex-wrap w-full lg:w-auto">
             {safeQrImageUrl && (
               <Button
                 size="sm"
@@ -80,9 +80,9 @@ export default function QrPreviewCanvas({
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6 pt-6">
         {/* Scannability Meter */}
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
             <Label className="text-gray-300">Scannability</Label>
             <div className="flex items-center gap-2">
@@ -118,12 +118,12 @@ export default function QrPreviewCanvas({
         )}
 
         {/* QR Image Display */}
-        <div className="relative bg-white rounded-lg p-4">
+        <div className="relative bg-white rounded-lg p-4 lg:p-6">
           {currentImageUrl ? (
             <img
               src={currentImageUrl}
               alt="QR Code Preview"
-              className={`w-full h-auto ${safeArtMode ? 'filter contrast-150' : ''}`}
+              className={`w-full h-auto mx-auto max-w-md ${safeArtMode ? 'filter contrast-150' : ''}`}
               style={{
                 imageRendering: 'pixelated',
                 padding: safeArtMode ? '12px' : '4px'
@@ -131,28 +131,28 @@ export default function QrPreviewCanvas({
             />
           ) : (
             <div className="w-full aspect-square bg-gray-200 rounded flex items-center justify-center">
-              <span className="text-gray-500">No preview available</span>
+              <span className="text-gray-500 text-sm lg:text-base">No preview available</span>
             </div>
           )}
         </div>
 
         {/* Download Buttons */}
-        <div className="flex gap-2 flex-wrap">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Button
             onClick={() => handleDownload('png')}
-            className="flex-1 gap-2 bg-cyan-600 hover:bg-cyan-700 min-h-[44px]"
+            className="gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 min-h-[48px] text-base shadow-lg shadow-cyan-500/30"
             disabled={!currentImageUrl}
           >
-            <Download className="w-4 h-4" />
+            <Download className="w-5 h-5" />
             Download PNG
           </Button>
           <Button
             onClick={() => handleDownload('svg')}
             variant="outline"
-            className="flex-1 gap-2 min-h-[44px]"
+            className="gap-2 min-h-[48px] text-base border-gray-700 hover:bg-gray-800"
             disabled={!currentImageUrl}
           >
-            <Download className="w-4 h-4" />
+            <Download className="w-5 h-5" />
             Download SVG
           </Button>
         </div>

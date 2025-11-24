@@ -79,29 +79,34 @@ export default function QrHotZoneEditor({ qrImageUrl, hotZones = [], onHotZonesC
   const selectedZone = hotZones.find(z => z.zoneId === selectedZoneId);
 
   return (
-    <Card className="w-full bg-gray-900/50 border-gray-700">
-      <CardHeader>
-        <CardTitle className="text-white flex items-center justify-between">
-          <span>Hot Zone Editor</span>
+    <Card className="w-full bg-gray-900/50 border-gray-800 shadow-xl">
+      <CardHeader className="border-b border-gray-800">
+        <CardTitle className="text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <span className="text-lg lg:text-xl">Hot Zone Editor</span>
           <Button
             onClick={addZone}
             size="sm"
-            className="gap-2 bg-cyan-600 hover:bg-cyan-700 min-h-[44px]"
+            className="gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 min-h-[48px] px-6 shadow-lg shadow-cyan-500/30"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-5 h-5" />
             Add Zone
           </Button>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6 pt-6">
         {/* QR Image with Overlays */}
         <div
           ref={containerRef}
-          className="relative bg-white rounded-lg overflow-hidden"
-          style={{ aspectRatio: '1/1' }}
+          className="relative bg-white rounded-lg overflow-hidden shadow-lg"
+          style={{ aspectRatio: '1/1', maxWidth: '600px', margin: '0 auto' }}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
+          onTouchMove={(e) => {
+            const touch = e.touches[0];
+            handleMouseMove({ clientX: touch.clientX, clientY: touch.clientY });
+          }}
+          onTouchEnd={handleMouseUp}
         >
           {qrImageUrl ? (
             <>
@@ -139,20 +144,20 @@ export default function QrHotZoneEditor({ qrImageUrl, hotZones = [], onHotZonesC
 
         {/* Zone Properties */}
         {selectedZone && (
-          <div className="space-y-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+          <div className="space-y-4 p-4 lg:p-6 bg-gray-800/50 rounded-lg border border-gray-700 shadow-inner">
             <div className="flex items-center justify-between">
-              <Label className="text-gray-300">Zone: {selectedZone.zoneId}</Label>
+              <Label className="text-gray-300 text-base font-semibold">Zone: {selectedZone.zoneId}</Label>
               <Button
                 onClick={() => removeZone(selectedZone.zoneId)}
                 size="sm"
                 variant="destructive"
-                className="min-h-[44px]"
+                className="min-h-[48px] px-4"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-5 h-5" />
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="triggerType" className="text-gray-300">Trigger</Label>
                 <Select

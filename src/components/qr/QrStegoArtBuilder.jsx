@@ -70,43 +70,43 @@ export default function QrStegoArtBuilder({ qrAssetDraft, onEmbedded }) {
   };
 
   return (
-    <Card className="w-full bg-gray-900/50 border-gray-700">
-      <CardHeader>
-        <CardTitle className="text-white">Stego Disguised Art Builder</CardTitle>
+    <Card className="w-full bg-gray-900/50 border-gray-800 shadow-xl">
+      <CardHeader className="border-b border-gray-800">
+        <CardTitle className="text-white text-lg lg:text-xl">Stego Disguised Art Builder</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 pt-6">
         {/* Upload Cover Image */}
-        <div className="space-y-2">
-          <Label htmlFor="coverImage" className="text-gray-300">
+        <div className="space-y-3">
+          <Label htmlFor="coverImage" className="text-gray-300 text-base">
             Cover Image
           </Label>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <Input
               id="coverImage"
               type="file"
               accept="image/png,image/jpeg,image/jpg"
               onChange={handleFileUpload}
               disabled={isUploading}
-              className="min-h-[44px]"
+              className="min-h-[48px] text-base bg-gray-800 border-gray-700"
             />
             {isUploading && <Loader2 className="w-6 h-6 animate-spin text-cyan-400" />}
           </div>
           {coverPreviewUrl && (
-            <div className="mt-2">
+            <div className="mt-4">
               <img
                 src={coverPreviewUrl}
                 alt="Cover preview"
-                className="w-full max-w-md rounded-lg border border-gray-700"
+                className="w-full max-w-md mx-auto lg:mx-0 rounded-lg border-2 border-gray-700 shadow-lg"
               />
             </div>
           )}
         </div>
 
         {/* Mode Selection */}
-        <div className="space-y-2">
-          <Label htmlFor="stegoMode" className="text-gray-300">Stego Mode</Label>
+        <div className="space-y-3">
+          <Label htmlFor="stegoMode" className="text-gray-300 text-base">Stego Mode</Label>
           <Select value={mode} onValueChange={setMode}>
-            <SelectTrigger id="stegoMode" className="min-h-[44px]">
+            <SelectTrigger id="stegoMode" className="min-h-[48px] text-base bg-gray-800 border-gray-700">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -122,8 +122,8 @@ export default function QrStegoArtBuilder({ qrAssetDraft, onEmbedded }) {
 
         {/* Hidden Payload for Dual Layer */}
         {mode === 'dualLayerDisguised' && (
-          <div className="space-y-2">
-            <Label htmlFor="hiddenPayload" className="text-gray-300">
+          <div className="space-y-3">
+            <Label htmlFor="hiddenPayload" className="text-gray-300 text-base">
               Hidden Payload (GlyphLock Only)
             </Label>
             <Textarea
@@ -131,7 +131,7 @@ export default function QrStegoArtBuilder({ qrAssetDraft, onEmbedded }) {
               value={hiddenPayload}
               onChange={(e) => setHiddenPayload(e.target.value)}
               placeholder="Secret data only GlyphLock scanner can read"
-              className="min-h-[80px]"
+              className="min-h-[100px] text-base bg-gray-800 border-gray-700"
             />
           </div>
         )}
@@ -140,16 +140,16 @@ export default function QrStegoArtBuilder({ qrAssetDraft, onEmbedded }) {
         <Button
           onClick={handleBuild}
           disabled={isEmbedding || !coverFileUri || !qrAssetDraft}
-          className="w-full bg-purple-600 hover:bg-purple-700 min-h-[44px]"
+          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 min-h-[52px] text-base font-semibold shadow-lg shadow-purple-500/30"
         >
           {isEmbedding ? (
             <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
               Embedding QR...
             </>
           ) : (
             <>
-              <ImageIcon className="w-4 h-4 mr-2" />
+              <ImageIcon className="w-5 h-5 mr-2" />
               Build Disguised Image
             </>
           )}
@@ -157,22 +157,22 @@ export default function QrStegoArtBuilder({ qrAssetDraft, onEmbedded }) {
 
         {/* Result Preview */}
         {disguisedResult && (
-          <div className="space-y-4 pt-4 border-t border-gray-700">
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-gray-300">Before (Cover)</Label>
+          <div className="space-y-6 pt-6 border-t border-gray-800">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <Label className="text-gray-300 text-base font-semibold">Before (Cover)</Label>
                 <img
                   src={coverPreviewUrl}
                   alt="Before"
-                  className="w-full rounded-lg border border-gray-700"
+                  className="w-full rounded-lg border-2 border-gray-700 shadow-lg"
                 />
               </div>
-              <div className="space-y-2">
-                <Label className="text-gray-300">After (Disguised QR)</Label>
+              <div className="space-y-3">
+                <Label className="text-gray-300 text-base font-semibold">After (Disguised QR)</Label>
                 <img
                   src={disguisedResult.disguisedImageUrl}
                   alt="After"
-                  className="w-full rounded-lg border border-cyan-500/50"
+                  className="w-full rounded-lg border-2 border-cyan-500/50 shadow-lg shadow-cyan-500/20"
                 />
               </div>
             </div>
