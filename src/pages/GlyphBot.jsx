@@ -469,7 +469,7 @@ export default function GlyphBot() {
       <div className="glyph-orb fixed bottom-40 left-40 opacity-15" style={{ animation: 'float-orb 10s ease-in-out infinite', width: '150px', height: '150px' }}></div>
 
       <header className="flex-none z-20 glyph-glass-dark border-b border-purple-500/20 shadow-lg glyph-glow">
-        <div className="px-4 py-2">
+        <div className="px-4 py-1.5">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-3">
               <MessageCircle className="w-7 h-7 text-purple-400" />
@@ -485,7 +485,7 @@ export default function GlyphBot() {
               <select
                 value={personaId}
                 onChange={e => setPersonaId(e.target.value)}
-                className="bg-purple-950/50 border border-purple-500/30 rounded-lg px-2 py-1 text-xs min-h-[36px] text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                className="bg-blue-900/50 border border-blue-500/50 rounded-lg px-3 py-1.5 text-xs min-h-[36px] text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
                 {PERSONAS.map(p => (
                   <option key={p.id} value={p.id}>{p.name}</option>
@@ -494,9 +494,8 @@ export default function GlyphBot() {
 
               <Button
                 onClick={() => setAutoplay(v => !v)}
-                variant={autoplay ? "default" : "outline"}
                 size="sm"
-                className={`min-h-[36px] text-xs ${autoplay ? "bg-purple-600 hover:bg-purple-700" : "border-purple-500/30"}`}
+                className={`min-h-[36px] text-xs ${autoplay ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50"}`}
               >
                 {autoplay ? <Volume2 className="w-3 h-3 mr-1" /> : <VolumeX className="w-3 h-3 mr-1" />}
                 Voice
@@ -504,9 +503,8 @@ export default function GlyphBot() {
 
               <Button
                 onClick={() => setShowVoiceStudio(!showVoiceStudio)}
-                variant="outline"
                 size="sm"
-                className="min-h-[36px] border-purple-500/30 text-xs"
+                className="min-h-[36px] bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50 text-xs"
               >
                 <Sliders className="w-3 h-3 mr-1" />
                 Studio
@@ -514,9 +512,8 @@ export default function GlyphBot() {
 
               <Button
                 onClick={() => setAuditMode(v => !v)}
-                variant={auditMode ? "default" : "outline"}
                 size="sm"
-                className={`min-h-[36px] text-xs ${auditMode ? "bg-green-600 hover:bg-green-700" : "border-purple-500/30"}`}
+                className={`min-h-[36px] text-xs ${auditMode ? "bg-green-600 hover:bg-green-700" : "bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50"}`}
               >
                 <Shield className="w-3 h-3 mr-1" />
                 Audit
@@ -524,9 +521,8 @@ export default function GlyphBot() {
 
               <Button
                 onClick={() => setOneTestMode(v => !v)}
-                variant={oneTestMode ? "default" : "outline"}
                 size="sm"
-                className={`min-h-[36px] text-xs ${oneTestMode ? "bg-blue-600 hover:bg-blue-700" : "border-purple-500/30"}`}
+                className={`min-h-[36px] text-xs ${oneTestMode ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50"}`}
               >
                 <AlertTriangle className="w-3 h-3 mr-1" />
                 Test
@@ -534,18 +530,16 @@ export default function GlyphBot() {
 
               <Button
                 onClick={() => setShowConversations(!showConversations)}
-                variant="outline"
                 size="sm"
-                className="min-h-[36px] border-purple-500/30 text-xs"
+                className="min-h-[36px] bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50 text-xs"
               >
                 <FolderOpen className="w-3 h-3" />
               </Button>
 
               <Button
                 onClick={clearChat}
-                variant="outline"
                 size="sm"
-                className="min-h-[36px] border-red-500/30 text-red-400 hover:bg-red-950/20 text-xs"
+                className="min-h-[36px] bg-red-900/50 hover:bg-red-800/50 border border-red-500/50 text-red-400 text-xs"
               >
                 Clear
               </Button>
@@ -812,8 +806,8 @@ export default function GlyphBot() {
         <div className="flex-1 flex flex-col overflow-hidden">
           <main
             ref={listRef}
-            className="flex-1 overflow-y-auto px-4 py-3 space-y-3"
-            style={{ WebkitOverflowScrolling: "touch", maxHeight: "calc(100vh - 160px)" }}
+            className="flex-1 overflow-y-auto px-4 py-2 space-y-2"
+            style={{ WebkitOverflowScrolling: "touch", maxHeight: "calc(100vh - 140px)" }}
           >
             {messages.length === 0 && (
               <div className="text-center py-12">
@@ -851,12 +845,11 @@ export default function GlyphBot() {
                 </ReactMarkdown>
 
                 {m.role === "assistant" && !m.isTyping && (
-                  <div className="mt-2 flex gap-2 flex-wrap">
+                  <div className="mt-2 flex gap-1.5 flex-wrap">
                     <Button
                       onClick={() => speak(m.text, m.id)}
                       size="sm"
-                      variant="outline"
-                      className="border-purple-500/30 text-purple-300 hover:bg-purple-950/20 min-h-[36px] text-xs"
+                      className="bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50 text-blue-300 h-7 text-xs px-2"
                     >
                       <Volume2 className="w-3 h-3 mr-1" />
                       Speak
@@ -864,8 +857,7 @@ export default function GlyphBot() {
                     <Button
                       onClick={stopAudio}
                       size="sm"
-                      variant="outline"
-                      className="border-purple-500/30 text-purple-300 hover:bg-purple-950/20 min-h-[36px] text-xs"
+                      className="bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50 text-blue-300 h-7 text-xs px-2"
                     >
                       Stop
                     </Button>
@@ -902,15 +894,15 @@ export default function GlyphBot() {
             </div>
           )}
 
-          <footer className="flex-none glyph-glass-dark border-t border-purple-500/20">
-            <div className="px-4 py-2">
+          <footer className="flex-none glyph-glass-dark border-t border-purple-500/20 pb-1">
+            <div className="px-3 pt-1.5">
               {oneTestMode && (
-                <div className="mb-2">
+                <div className="mb-1.5">
                   <Button
                     onClick={runOneTest}
-                    className="w-full bg-blue-600 hover:bg-blue-700 min-h-[36px] text-sm"
+                    className="w-full bg-blue-600 hover:bg-blue-700 h-8 text-xs"
                   >
-                    <AlertTriangle className="w-3 h-3 mr-2" />
+                    <AlertTriangle className="w-3 h-3 mr-1.5" />
                     Run One Test
                   </Button>
                 </div>
@@ -924,14 +916,14 @@ export default function GlyphBot() {
                   onKeyDown={onKeyDown}
                   rows={1}
                   placeholder="Type your message..."
-                  className="flex-1 resize-none bg-purple-950/50 border border-purple-500/30 rounded-xl px-4 py-2 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-purple-400 min-h-[44px] max-h-[44px] text-white placeholder-gray-400"
+                  className="flex-1 resize-none bg-purple-950/50 border border-purple-500/30 rounded-xl px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-400 h-10 text-white placeholder-gray-400"
                   style={{ fontSize: "16px" }}
                 />
 
                 <Button
                   onClick={sendMessage}
                   disabled={isSending}
-                  className={`min-w-[80px] h-[44px] rounded-xl text-sm font-semibold bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 glyph-glow ${
+                  className={`min-w-[70px] h-10 rounded-xl text-sm font-semibold bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 glyph-glow ${
                     isSending ? "opacity-50" : ""
                   }`}
                 >
@@ -942,8 +934,7 @@ export default function GlyphBot() {
                   <Button
                     onClick={() => setShowAuditPanel(!showAuditPanel)}
                     size="sm"
-                    variant="outline"
-                    className="border-green-500/30 text-green-400 h-[44px]"
+                    className="bg-green-900/50 hover:bg-green-800/50 border border-green-500/50 text-green-400 h-10"
                   >
                     <FileText className="w-4 h-4" />
                   </Button>
@@ -952,15 +943,10 @@ export default function GlyphBot() {
                 <Button
                   onClick={saveConversation}
                   size="sm"
-                  variant="ghost"
-                  className="text-purple-400 hover:text-purple-300 h-[44px]"
+                  className="bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50 text-blue-400 h-10"
                 >
                   <Save className="w-4 h-4" />
                 </Button>
-              </div>
-              
-              <div className="mt-1 text-xs text-gray-500 text-center">
-                Enter to send • Shift+Enter for new line
               </div>
             </div>
           </footer>
