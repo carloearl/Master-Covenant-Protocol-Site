@@ -22,70 +22,40 @@ const PERSONAS = [
   }
 ];
 
-const TABS = [
-  { id: "chat", name: "Chat", icon: MessageCircle },
-  { id: "dashboard", name: "Security Dashboard", icon: Shield },
-  { id: "files", name: "File Analysis", icon: Upload },
-  { id: "code", name: "Code Executor", icon: Code },
-  { id: "scanner", name: "Security Scanner", icon: Search },
-  { id: "audit", name: "Audit Generator", icon: FileCheck }
-];
-
 export default function GlyphBot() {
-  const [messages, setMessages] = useState(() => {
+  const [messages, setMessages] = useState(() => []);
+  const [input, setInput] = useState("");
+  const [isSending, setIsSending] = useState(false);
+
+  const [personaId, setPersonaId] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem("glyphbot_messages") || "[]");
+      return localStorage.getItem("glyphbot_persona") || PERSONAS[0].id;
     } catch {
-      return [];
+      return PERSONAS[0].id;
     }
   });
-  
-  const [input, setInput] = useState(() => localStorage.getItem("glyphbot_draft") || "");
-  const [persona, setPersona] = useState(() => localStorage.getItem("glyphbot_persona") || "alfred");
-  const [loading, setLoading] = useState(false);
-  const [llmStatus, setLlmStatus] = useState({ available: true, checking: false, lastCheck: null });
-  const [autoTalkback, setAutoTalkback] = useState(() => {
-    const saved = localStorage.getItem("glyphbot_talkback");
-    return saved ? JSON.parse(saved) : false;
+
+  const persona = useMemo(
+    () => PERSONAS.find(p => p.id === personaId) || PERSONAS[0],
+    [personaId]
+  );
+
+  const [autoplay, setAutoplay] = useState(() => {
+    try {
+      return localStorage.getItem("glyphbot_autoplay") === "true";
+    } catch {
+      return false;
+    }
   });
-  const [volume, setVolume] = useState(() => {
-    const saved = localStorage.getItem("glyphbot_volume");
-    return saved ? Number(saved) : 1;
-  });
-  const [voices, setVoices] = useState([]);
-  const [selectedVoice, setSelectedVoice] = useState(() => localStorage.getItem("glyphbot_voice") || "");
-  const [speechRate, setSpeechRate] = useState(() => {
-    const saved = localStorage.getItem("glyphbot_rate");
-    return saved ? Number(saved) : 1;
-  });
-  const [speechPitch, setSpeechPitch] = useState(() => {
-    const saved = localStorage.getItem("glyphbot_pitch");
-    return saved ? Number(saved) : 1;
-  });
-  const [audioEffects, setAudioEffects] = useState(() => {
-    const saved = localStorage.getItem("glyphbot_effects");
-    return saved ? JSON.parse(saved) : {
-      reverb: 0,
-      echo: 0,
-      bassBoost: 0,
-      naturalness: 1
-    };
-  });
-  const [userScrolledUp, setUserScrolledUp] = useState(false);
-  const [showTools, setShowTools] = useState(false);
-  const [activeTab, setActiveTab] = useState("chat");
-  const [conversations, setConversations] = useState([]);
-  const [currentConvId, setCurrentConvId] = useState(null);
-  const [language, setLanguage] = useState(() => localStorage.getItem("glyphbot_language") || "en");
-  const [showSidebar, setShowSidebar] = useState(false);
-  const [knowledgeSources, setKnowledgeSources] = useState([]);
-  const [urlToScrape, setUrlToScrape] = useState("");
-  const [scrapedUrls, setScrapedUrls] = useState([]);
-  
-  const messagesEndRef = useRef(null);
+
+  const [auditMode, setAuditMode] = useState(false);
+  const [oneTestMode, setOneTestMode] = useState(false);
+
   const listRef = useRef(null);
-  const textareaRef = useRef(null);
-  const utteranceRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const audioRef = useRef(null);
+  const lastSpokenIdRef = useRef(null);
 
   // Persist state
   useEffect(() => {
