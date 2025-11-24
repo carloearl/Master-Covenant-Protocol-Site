@@ -191,13 +191,21 @@ export default function GlyphBot() {
     localStorage.setItem("glyphbot_voice_humanize_effect", String(voiceHumanizeEffect));
   }, [voiceHumanizeEffect]);
 
-  // Auto-scroll messages only
+  // Auto-scroll messages only when assistant finishes
   useEffect(() => {
     const el = listRef.current;
     if (!el) return;
-    requestAnimationFrame(() => {
-      el.scrollTop = el.scrollHeight;
-    });
+    
+    const lastMsg = messages[messages.length - 1];
+    if (lastMsg?.role === 'assistant' && !lastMsg.isTyping) {
+      // Only auto-scroll if user is near bottom (within 200px)
+      const isNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 200;
+      if (isNearBottom) {
+        requestAnimationFrame(() => {
+          el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+        });
+      }
+    }
   }, [messages]);
 
   // Autoplay latest assistant message
@@ -289,26 +297,19 @@ export default function GlyphBot() {
       const cleanText = text.replace(/[#*`🦕💠🦖🌟✨]/g, '').trim();
       if (!cleanText) return;
 
-      const audioUrl = await generateAudio(voiceProvider, voiceId, cleanText, {
+      const response = await base44.functions.invoke('textToSpeechAdvanced', {
+        text: cleanText,
+        provider: voiceProvider,
+        voice: voiceId,
         speed: voiceSpeed,
         pitch: voicePitch,
-        volume: voiceVolume,
-        bass: voiceBass,
-        treble: voiceTreble,
-        mid: voiceWarmth,
         stability: 0.5,
         similarity: 0.75,
         style: 0.0,
-        useSpeakerBoost: true,
-        effects: {
-          echo: voiceEchoEffect,
-          delay: voiceDelayEffect,
-          gate: voiceGateEffect,
-          enhance: voiceEnhance,
-          humanize: voiceHumanizeEffect
-        }
+        useSpeakerBoost: true
       });
 
+      const audioUrl = response.data?.audioUrl;
       if (!audioUrl) {
         throw new Error("No audio URL returned from provider");
       }
@@ -321,12 +322,7 @@ export default function GlyphBot() {
         bass: voiceBass,
         treble: voiceTreble,
         mid: voiceWarmth,
-        volume: voiceVolume,
-        echo: voiceEchoEffect,
-        delay: voiceDelayEffect,
-        gate: voiceGateEffect,
-        enhance: voiceEnhance,
-        humanize: voiceHumanizeEffect
+        volume: voiceVolume
       });
 
       await audio.play();
@@ -367,7 +363,7 @@ export default function GlyphBot() {
       const res = await base44.functions.invoke("glyphbotLLM", payload);
       const endTime = Date.now();
 
-      const reply = res.data.text || "No response returned.";
+      const reply = typeof res.data === 'string' ? res.data : (res.data?.text || "No response returned.");
 
       setMessages(prev =>
         prev.map(m => (m.id === typingId ? { 
@@ -461,15 +457,15 @@ export default function GlyphBot() {
   }
 
   return (
-    <div className="h-screen w-full text-white flex flex-col relative overflow-hidden" style={{ background: 'var(--cosmic-bg)' }}>
+    <div className="h-screen w-full text-white flex flex-col relative overflow-hidden bg-gradient-to-br from-black via-purple-950/20 to-black">
       {/* Cosmic background effects */}
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent pointer-events-none z-0" />
-      <div className="fixed inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDEwNiwgMCwgMjU1LCAwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20 pointer-events-none z-0" />
-      <div className="glyph-orb fixed top-20 right-20 opacity-20" style={{ animation: 'float-orb 8s ease-in-out infinite' }}></div>
-      <div className="glyph-orb fixed bottom-40 left-40 opacity-15" style={{ animation: 'float-orb 10s ease-in-out infinite', width: '150px', height: '150px' }}></div>
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/30 via-cyan-900/10 to-transparent pointer-events-none z-0" />
+      <div className="fixed inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDYsIDE4MiwgMjEyLCAwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20 pointer-events-none z-0" />
+      <div className="glyph-orb fixed top-20 right-20 opacity-20" style={{ animation: 'float-orb 8s ease-in-out infinite', background: 'radial-gradient(circle, rgba(6,182,212,0.3), rgba(59,130,246,0.2))' }}></div>
+      <div className="glyph-orb fixed bottom-40 left-40 opacity-15" style={{ animation: 'float-orb 10s ease-in-out infinite', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(168,85,247,0.3), rgba(59,130,246,0.2))' }}></div>
 
-      <header className="flex-none z-20 glyph-glass-dark border-b border-purple-500/20 shadow-lg glyph-glow">
-        <div className="px-4 py-1.5">
+      <header className="flex-none z-20 glyph-glass-dark border-b border-cyan-500/20 shadow-lg glyph-glow">
+        <div className="px-4 py-2">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-3">
               <MessageCircle className="w-7 h-7 text-purple-400" />
@@ -485,7 +481,7 @@ export default function GlyphBot() {
               <select
                 value={personaId}
                 onChange={e => setPersonaId(e.target.value)}
-                className="bg-blue-900/50 border border-blue-500/50 rounded-lg px-3 py-1.5 text-xs min-h-[36px] text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="bg-gradient-to-r from-cyan-900/60 to-blue-900/60 border-2 border-cyan-500/40 rounded-xl px-4 py-2 text-sm min-h-[40px] text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 shadow-lg font-semibold"
               >
                 {PERSONAS.map(p => (
                   <option key={p.id} value={p.id}>{p.name}</option>
@@ -495,51 +491,51 @@ export default function GlyphBot() {
               <Button
                 onClick={() => setAutoplay(v => !v)}
                 size="sm"
-                className={`min-h-[36px] text-xs ${autoplay ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50"}`}
+                className={`min-h-[40px] text-sm px-4 rounded-xl shadow-lg font-semibold ${autoplay ? "bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 border-2 border-cyan-400/40" : "bg-cyan-900/60 hover:bg-cyan-800/60 border-2 border-cyan-500/40"}`}
               >
-                {autoplay ? <Volume2 className="w-3 h-3 mr-1" /> : <VolumeX className="w-3 h-3 mr-1" />}
+                {autoplay ? <Volume2 className="w-4 h-4 mr-2" /> : <VolumeX className="w-4 h-4 mr-2" />}
                 Voice
               </Button>
 
               <Button
                 onClick={() => setShowVoiceStudio(!showVoiceStudio)}
                 size="sm"
-                className="min-h-[36px] bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50 text-xs"
+                className="min-h-[40px] bg-gradient-to-r from-purple-900/60 to-blue-900/60 hover:from-purple-800/60 hover:to-blue-800/60 border-2 border-purple-500/40 text-sm px-4 rounded-xl shadow-lg font-semibold"
               >
-                <Sliders className="w-3 h-3 mr-1" />
+                <Sliders className="w-4 h-4 mr-2" />
                 Studio
               </Button>
 
               <Button
                 onClick={() => setAuditMode(v => !v)}
                 size="sm"
-                className={`min-h-[36px] text-xs ${auditMode ? "bg-green-600 hover:bg-green-700" : "bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50"}`}
+                className={`min-h-[40px] text-sm px-4 rounded-xl shadow-lg font-semibold ${auditMode ? "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 border-2 border-green-400/40" : "bg-green-900/60 hover:bg-green-800/60 border-2 border-green-500/40"}`}
               >
-                <Shield className="w-3 h-3 mr-1" />
+                <Shield className="w-4 h-4 mr-2" />
                 Audit
               </Button>
 
               <Button
                 onClick={() => setOneTestMode(v => !v)}
                 size="sm"
-                className={`min-h-[36px] text-xs ${oneTestMode ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50"}`}
+                className={`min-h-[40px] text-sm px-4 rounded-xl shadow-lg font-semibold ${oneTestMode ? "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 border-2 border-blue-400/40" : "bg-blue-900/60 hover:bg-blue-800/60 border-2 border-blue-500/40"}`}
               >
-                <AlertTriangle className="w-3 h-3 mr-1" />
+                <AlertTriangle className="w-4 h-4 mr-2" />
                 Test
               </Button>
 
               <Button
                 onClick={() => setShowConversations(!showConversations)}
                 size="sm"
-                className="min-h-[36px] bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50 text-xs"
+                className="min-h-[40px] bg-gradient-to-r from-indigo-900/60 to-purple-900/60 hover:from-indigo-800/60 hover:to-purple-800/60 border-2 border-indigo-500/40 text-sm px-4 rounded-xl shadow-lg font-semibold"
               >
-                <FolderOpen className="w-3 h-3" />
+                <FolderOpen className="w-4 h-4" />
               </Button>
 
               <Button
                 onClick={clearChat}
                 size="sm"
-                className="min-h-[36px] bg-red-900/50 hover:bg-red-800/50 border border-red-500/50 text-red-400 text-xs"
+                className="min-h-[40px] bg-gradient-to-r from-red-900/60 to-pink-900/60 hover:from-red-800/60 hover:to-pink-800/60 border-2 border-red-500/40 text-red-300 text-sm px-4 rounded-xl shadow-lg font-semibold"
               >
                 Clear
               </Button>
@@ -803,11 +799,11 @@ export default function GlyphBot() {
         )}
 
         {/* Main Chat Area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col min-h-0">
           <main
             ref={listRef}
-            className="flex-1 overflow-y-auto px-4 py-2 space-y-2"
-            style={{ WebkitOverflowScrolling: "touch" }}
+            className="flex-1 overflow-y-auto px-4 py-4 space-y-3"
+            style={{ WebkitOverflowScrolling: "touch", overscrollBehavior: "contain" }}
           >
             {messages.length === 0 && (
               <div className="text-center py-12">
@@ -820,11 +816,12 @@ export default function GlyphBot() {
             {messages.map(m => (
               <div
                 key={m.id}
-                className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
+                className={`max-w-[80%] rounded-3xl px-5 py-4 text-base leading-relaxed shadow-xl ${
                   m.role === "user"
-                    ? "ml-auto bg-gradient-to-br from-purple-600/90 to-blue-600/90 text-white glyph-glow"
-                    : "mr-auto glyph-glass-dark border border-purple-500/30 text-white"
+                    ? "ml-auto bg-gradient-to-br from-cyan-600/80 to-blue-600/80 text-white border-2 border-cyan-400/30"
+                    : "mr-auto glyph-glass-dark border-2 border-purple-500/30 text-white"
                 }`}
+                style={m.role === "user" ? { boxShadow: '0 0 20px rgba(6,182,212,0.3)' } : {}}
               >
                 <ReactMarkdown
                   className="prose prose-invert prose-sm max-w-none"
@@ -845,19 +842,19 @@ export default function GlyphBot() {
                 </ReactMarkdown>
 
                 {m.role === "assistant" && !m.isTyping && (
-                  <div className="mt-2 flex gap-1.5 flex-wrap">
+                  <div className="mt-3 flex gap-2 flex-wrap">
                     <Button
                       onClick={() => speak(m.text, m.id)}
                       size="sm"
-                      className="bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50 text-blue-300 h-7 text-xs px-2"
+                      className="bg-gradient-to-r from-cyan-900/60 to-blue-900/60 hover:from-cyan-800/60 hover:to-blue-800/60 border border-cyan-500/40 text-cyan-300 h-9 text-sm px-4 rounded-xl shadow-lg"
                     >
-                      <Volume2 className="w-3 h-3 mr-1" />
+                      <Volume2 className="w-4 h-4 mr-2" />
                       Speak
                     </Button>
                     <Button
                       onClick={stopAudio}
                       size="sm"
-                      className="bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50 text-blue-300 h-7 text-xs px-2"
+                      className="bg-gradient-to-r from-red-900/60 to-purple-900/60 hover:from-red-800/60 hover:to-purple-800/60 border border-red-500/40 text-red-300 h-9 text-sm px-4 rounded-xl shadow-lg"
                     >
                       Stop
                     </Button>
@@ -894,21 +891,21 @@ export default function GlyphBot() {
             </div>
           )}
 
-          <footer className="flex-none glyph-glass-dark border-t border-purple-500/20 py-3">
-            <div className="max-w-4xl mx-auto px-4">
+          <footer className="flex-none glyph-glass-dark border-t border-cyan-500/20 py-4 shadow-2xl">
+            <div className="max-w-4xl mx-auto px-6">
               {oneTestMode && (
-                <div className="mb-2">
+                <div className="mb-3">
                   <Button
                     onClick={runOneTest}
-                    className="w-full bg-blue-600 hover:bg-blue-700 h-8 text-xs"
+                    className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 h-10 text-sm font-semibold glyph-glow"
                   >
-                    <AlertTriangle className="w-3 h-3 mr-1.5" />
+                    <AlertTriangle className="w-4 h-4 mr-2" />
                     Run One Test
                   </Button>
                 </div>
               )}
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <div className="flex-1 relative">
                   <textarea
                     ref={inputRef}
@@ -917,37 +914,38 @@ export default function GlyphBot() {
                     onKeyDown={onKeyDown}
                     rows={1}
                     placeholder="Type your message..."
-                    className="w-full resize-none bg-gradient-to-br from-purple-950/80 to-blue-950/80 border-2 border-blue-500/40 rounded-3xl px-5 py-3 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 h-12 text-white placeholder-gray-400 shadow-lg glyph-glow"
-                    style={{ fontSize: "16px" }}
+                    className="w-full resize-none bg-gradient-to-br from-purple-950/70 to-blue-950/70 backdrop-blur-xl border-2 border-cyan-500/30 rounded-2xl px-6 py-4 text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 min-h-[56px] max-h-[200px] text-white placeholder-gray-400 shadow-2xl transition-all"
+                    style={{ fontSize: "16px", scrollbarWidth: 'thin', scrollbarColor: 'rgba(6,182,212,0.3) transparent' }}
                   />
                 </div>
 
                 <Button
                   onClick={sendMessage}
                   disabled={isSending}
-                  className={`min-w-[80px] h-12 rounded-full text-sm font-semibold bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 glyph-glow shadow-lg ${
-                    isSending ? "opacity-50" : ""
+                  className={`min-w-[100px] h-14 rounded-2xl text-base font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 hover:from-cyan-500 hover:via-blue-500 hover:to-purple-500 shadow-2xl transition-all ${
+                    isSending ? "opacity-50" : "glyph-glow"
                   }`}
+                  style={{ boxShadow: '0 0 30px rgba(6,182,212,0.4), 0 0 60px rgba(59,130,246,0.2)' }}
                 >
-                  {isSending ? "..." : "Send"}
+                  {isSending ? <span className="animate-pulse">...</span> : "Send"}
                 </Button>
                 
                 {auditMode && auditData && (
                   <Button
                     onClick={() => setShowAuditPanel(!showAuditPanel)}
                     size="sm"
-                    className="bg-green-900/50 hover:bg-green-800/50 border border-green-500/50 text-green-400 h-12 rounded-full"
+                    className="bg-green-900/70 hover:bg-green-800/70 border-2 border-green-500/40 text-green-400 h-14 rounded-2xl px-4 shadow-lg"
                   >
-                    <FileText className="w-4 h-4" />
+                    <FileText className="w-5 h-5" />
                   </Button>
                 )}
                 
                 <Button
                   onClick={saveConversation}
                   size="sm"
-                  className="bg-blue-900/50 hover:bg-blue-800/50 border border-blue-500/50 text-blue-400 h-12 rounded-full"
+                  className="bg-blue-900/70 hover:bg-blue-800/70 border-2 border-blue-500/40 text-blue-400 h-14 rounded-2xl px-4 shadow-lg"
                 >
-                  <Save className="w-4 h-4" />
+                  <Save className="w-5 h-5" />
                 </Button>
               </div>
             </div>
