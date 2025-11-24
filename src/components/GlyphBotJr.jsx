@@ -61,6 +61,23 @@ export default function GlyphBotJr() {
     setLoading(true);
 
     try {
+      const { QR_KNOWLEDGE_BASE } = await import('./qr/QrKnowledgeBase');
+      const { IMAGE_LAB_KNOWLEDGE } = await import('./imageLab/ImageLabKnowledge');
+      const { default: faqData } = await import('@/components/content/faqMasterData');
+      const { default: sitemapKnowledge } = await import('@/components/content/sitemapKnowledge');
+      
+      const faqContext = faqData.map(item => 
+        `Q: ${item.q}\nA: ${item.a.join(' ')}`
+      ).join('\n\n');
+
+      const sitemapContext = `
+Site Structure:
+${sitemapKnowledge.tools.map(t => `- ${t.name} at ${t.path}`).join('\n')}
+
+Navigation Questions:
+${sitemapKnowledge.commonQuestions.map(q => `Q: ${q.q}\nA: ${q.a}`).join('\n')}
+`;
+
       const conversationHistory = messages.map(msg => ({
         role: msg.role,
         content: msg.text
@@ -69,10 +86,21 @@ export default function GlyphBotJr() {
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `${jrPersona.system}
 
+QR Studio Knowledge Base:
+${QR_KNOWLEDGE_BASE}
+
+Image Lab Knowledge Base:
+${JSON.stringify(IMAGE_LAB_KNOWLEDGE, null, 2)}
+
+GlyphLock FAQ Knowledge Base:
+${faqContext}
+
+${sitemapContext}
+
 Conversation history:
 ${conversationHistory.map(m => `${m.role}: ${m.content}`).join('\n')}
 
-Remember to be friendly, helpful, and explain things simply!`,
+When answering questions, use the knowledge bases to provide accurate information about GlyphLock features, pricing, navigation, and tools. Be friendly, helpful, and explain things simply!`,
         add_context_from_internet: false
       });
 
@@ -102,7 +130,8 @@ Remember to be friendly, helpful, and explain things simply!`,
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-[9999] w-16 h-16 rounded-full bg-gradient-to-r from-yellow-400 to-pink-500 hover:from-yellow-500 hover:to-pink-600 text-white shadow-2xl flex items-center justify-center transition-all hover:scale-110"
+        className="fixed bottom-6 right-6 z-[9999] w-16 h-16 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 text-white shadow-2xl flex items-center justify-center transition-all hover:scale-105"
+        style={{ boxShadow: '0 0 30px rgba(37, 99, 235, 0.6), 0 0 60px rgba(37, 99, 235, 0.3)' }}
         aria-label="Open GlyphBot Junior"
       >
         <Sparkles className="w-8 h-8" />
@@ -111,26 +140,35 @@ Remember to be friendly, helpful, and explain things simply!`,
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] w-[400px] max-w-[calc(100vw-48px)] h-[600px] max-h-[calc(100vh-100px)] bg-gradient-to-br from-indigo-900 via-purple-800 to-pink-700 flex flex-col relative overflow-hidden rounded-2xl shadow-2xl border border-white/20">
+    <div 
+      className="fixed bottom-6 right-6 z-[9999] flex flex-col overflow-hidden rounded-2xl shadow-2xl border border-blue-400/30 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900"
+      style={{ 
+        width: '400px',
+        height: '600px',
+        maxWidth: 'calc(100vw - 48px)',
+        maxHeight: 'calc(100vh - 100px)',
+        boxShadow: '0 0 40px rgba(37, 99, 235, 0.5), 0 0 80px rgba(37, 99, 235, 0.2)'
+      }}
+    >
       {/* Playful background */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxLTEuNzktNC00LTRzLTQgMS43OS00IDQgMS43OSA0IDQgNCA0LTEuNzkgNC00em0wLTEwYzAtMi4yMS0xLjc5LTQtNC00cy00IDEuNzktNCA0IDEuNzkgNCA0IDQgNC0xLjc5IDQtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30 pointer-events-none"></div>
       
       {/* Header */}
-      <header className="bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-lg relative z-10">
+      <header className="bg-blue-900/30 backdrop-blur-xl border-b border-blue-400/20 shadow-lg relative z-10" style={{ boxShadow: '0 4px 20px rgba(37, 99, 235, 0.3)' }}>
         <div className="px-4 py-3">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-400 to-pink-500 flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center shadow-lg" style={{ boxShadow: '0 0 20px rgba(37, 99, 235, 0.5)' }}>
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h1 className="text-lg font-bold text-white">GlyphBot Jr</h1>
-                <p className="text-xs text-white/80">24/7 Helper 🌈</p>
+                <p className="text-xs text-blue-200">24/7 Helper 💠</p>
               </div>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+              className="w-8 h-8 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 flex items-center justify-center text-white transition-colors"
             >
               ✕
             </button>
@@ -148,12 +186,13 @@ Remember to be friendly, helpful, and explain things simply!`,
             <div
               className={`max-w-[85%] rounded-2xl px-5 py-3 shadow-lg ${
                 msg.role === "user"
-                  ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white"
-                  : "bg-white/95 backdrop-blur text-gray-800"
+                  ? "bg-gradient-to-br from-blue-600 to-blue-800 text-white"
+                  : "bg-blue-950/80 backdrop-blur text-white border border-blue-400/30"
               }`}
+              style={msg.role === "assistant" ? { boxShadow: '0 0 20px rgba(37, 99, 235, 0.3)' } : {}}
             >
               <ReactMarkdown
-                className={`prose ${msg.role === "assistant" ? "prose-gray" : "prose-invert"} prose-sm max-w-none`}
+                className="prose prose-invert prose-sm max-w-none"
                 components={{
                   p: ({ children }) => <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>,
                   code: ({ inline, children }) =>
@@ -171,9 +210,9 @@ Remember to be friendly, helpful, and explain things simply!`,
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-white/95 backdrop-blur rounded-2xl px-5 py-3 shadow-lg flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin text-purple-600" />
-              <span className="text-gray-600 text-sm">Thinking...</span>
+            <div className="bg-blue-950/80 backdrop-blur rounded-2xl px-5 py-3 shadow-lg flex items-center gap-2 border border-blue-400/30" style={{ boxShadow: '0 0 20px rgba(37, 99, 235, 0.3)' }}>
+              <Loader2 className="w-4 h-4 animate-spin text-blue-400" />
+              <span className="text-blue-200 text-sm">Thinking...</span>
             </div>
           </div>
         )}
@@ -181,27 +220,28 @@ Remember to be friendly, helpful, and explain things simply!`,
       </main>
 
       {/* Input Area */}
-      <footer className="bg-white/10 backdrop-blur-xl border-t border-white/20 px-4 py-4 relative z-10">
+      <footer className="bg-blue-900/30 backdrop-blur-xl border-t border-blue-400/20 px-4 py-4 relative z-10">
         <div className="flex items-center gap-3">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder="Ask me anything! 🌟"
+            placeholder="Ask me anything! 💠"
             disabled={loading}
-            className="flex-1 bg-white/90 border-2 border-white/30 rounded-xl px-4 py-3 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent min-h-[52px]"
+            className="flex-1 bg-blue-950/50 border-2 border-blue-400/30 rounded-xl px-4 py-3 text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent min-h-[52px]"
             style={{ fontSize: "16px" }}
           />
           <button
             onClick={handleSend}
             disabled={loading || !input.trim()}
-            className="bg-gradient-to-r from-yellow-400 to-pink-500 hover:from-yellow-500 hover:to-pink-600 text-white rounded-xl px-6 py-3 font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all min-h-[52px] min-w-[80px] flex items-center justify-center"
+            className="bg-gradient-to-br from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 text-white rounded-xl px-6 py-3 font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all min-h-[52px] min-w-[80px] flex items-center justify-center"
+            style={{ boxShadow: '0 0 20px rgba(37, 99, 235, 0.4)' }}
           >
             <Send className="w-5 h-5" />
           </button>
         </div>
-        <p className="text-center text-white/60 text-xs mt-2">Press Enter to send</p>
+        <p className="text-center text-blue-300 text-xs mt-2">Press Enter to send</p>
       </footer>
     </div>
   );
