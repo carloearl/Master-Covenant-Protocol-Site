@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Sparkles, Send, Loader2, X, Volume2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { PERSONAS } from "@/components/glyphbot/personas";
+import { generateAudio } from "@/components/utils/ttsEngine";
 
 export default function GlyphBotJr() {
   const jrPersona = PERSONAS.find(p => p.id === "glyphbot_jr") || PERSONAS[4];
@@ -26,31 +27,67 @@ export default function GlyphBotJr() {
     }
   }, []);
 
-  const playVoice = (text) => {
+  const playVoice = async (text) => {
     try {
-      const cleanText = text.replace(/[🌟💠✨🦕]/g, '').trim();
+      const cleanText = text.replace(/[🌟💠✨🦕#*`]/g, '').trim();
       if (!cleanText) return;
 
-      // Cancel any ongoing speech
-      window.speechSynthesis.cancel();
-
-      const utterance = new SpeechSynthesisUtterance(cleanText);
-      utterance.rate = 1.1;
-      utterance.pitch = 1.0;
-      utterance.volume = 1.0;
-
-      // Try to get Microsoft or Google voice
-      const voices = window.speechSynthesis.getVoices();
-      const preferredVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Microsoft') || v.name.includes('Google')))
-        || voices.find(v => v.lang.startsWith('en'));
-      
-      if (preferredVoice) {
-        utterance.voice = preferredVoice;
+      // Cancel any ongoing browser speech
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
       }
 
-      window.speechSynthesis.speak(utterance);
+      // Try TTS providers in order
+      const providers = ['openai', 'elevenlabs', 'google', 'microsoft', 'streamelements'];
+      
+      for (const provider of providers) {
+        try {
+          const audioUrl = await generateAudio(
+            provider,
+            provider === 'openai' ? 'alloy' : 
+            provider === 'elevenlabs' ? 'Rachel' :
+            provider === 'google' ? 'en-US-Neural2-F' :
+            provider === 'microsoft' ? 'en-US-JennyNeural' :
+            'Matthew',
+            cleanText,
+            {
+              speed: 1.1,
+              pitch: 1.0,
+              volume: 1.0
+            }
+          );
+
+          if (audioUrl) {
+            const audio = new Audio(audioUrl);
+            audio.playbackRate = 1.1;
+            await audio.play();
+            return; // Success, exit
+          }
+        } catch (err) {
+          console.log(`${provider} failed, trying next provider...`);
+          continue;
+        }
+      }
+
+      // Final fallback: browser speech synthesis
+      if (window.speechSynthesis) {
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.rate = 1.1;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+
+        const voices = window.speechSynthesis.getVoices();
+        const preferredVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Microsoft') || v.name.includes('Google')))
+          || voices.find(v => v.lang.startsWith('en'));
+        
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
+
+        window.speechSynthesis.speak(utterance);
+      }
     } catch (err) {
-      console.error("Voice error:", err);
+      console.error("All voice options failed:", err);
     }
   };
 
