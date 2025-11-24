@@ -266,6 +266,48 @@ export default function VoiceSettingsPanel({ settings, onChange }) {
           step={1}
           format={(v) => `${v > 0 ? '+' : ''}${v} dB`}
         />
+
+        <div className="pt-2 space-y-2">
+          <div className="flex items-center justify-between py-2">
+            <Label className="text-gray-300">Echo</Label>
+            <Switch
+              checked={settings.effects?.echo || false}
+              onCheckedChange={(v) => updateSetting("effects", { ...(settings.effects || {}), echo: v })}
+            />
+          </div>
+
+          <div className="flex items-center justify-between py-2">
+            <Label className="text-gray-300">Delay</Label>
+            <Switch
+              checked={settings.effects?.delay || false}
+              onCheckedChange={(v) => updateSetting("effects", { ...(settings.effects || {}), delay: v })}
+            />
+          </div>
+
+          <div className="flex items-center justify-between py-2">
+            <Label className="text-gray-300">Noise Gate</Label>
+            <Switch
+              checked={settings.effects?.gate !== false}
+              onCheckedChange={(v) => updateSetting("effects", { ...(settings.effects || {}), gate: v })}
+            />
+          </div>
+
+          <div className="flex items-center justify-between py-2">
+            <Label className="text-gray-300">Enhance</Label>
+            <Switch
+              checked={settings.effects?.enhance !== false}
+              onCheckedChange={(v) => updateSetting("effects", { ...(settings.effects || {}), enhance: v })}
+            />
+          </div>
+
+          <div className="flex items-center justify-between py-2">
+            <Label className="text-gray-300">Humanize</Label>
+            <Switch
+              checked={settings.effects?.humanize || false}
+              onCheckedChange={(v) => updateSetting("effects", { ...(settings.effects || {}), humanize: v })}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
