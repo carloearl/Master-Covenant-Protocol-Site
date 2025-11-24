@@ -76,6 +76,14 @@ export default function Chat() {
       const faqContext = faqData.map(item => 
         `Q: ${item.q}\nA: ${item.a.join(' ')}`
       ).join('\n\n');
+
+      const sitemapContext = `
+Site Structure:
+${sitemapKnowledge.tools.map(t => `- ${t.name} at ${t.path}`).join('\n')}
+
+Navigation Questions:
+${sitemapKnowledge.commonQuestions.map(q => `Q: ${q.q}\nA: ${q.a}`).join('\n')}
+`;
       
       // Build conversation context from message history
       const conversationHistory = messages.slice(1).map(msg => 
@@ -98,9 +106,11 @@ ${JSON.stringify(IMAGE_LAB_KNOWLEDGE, null, 2)}
 GlyphLock FAQ Knowledge Base (use this to answer common questions about pricing, features, security, etc.):
 ${faqContext}
 
+${sitemapContext}
+
 ${contextPrompt}
 
-When answering questions, check the FAQ knowledge base first for common questions. For QR or Image Lab specific questions, use those knowledge bases. Be concise and accurate.`,
+When answering questions, check the FAQ knowledge base first for common questions. For QR or Image Lab specific questions, use those knowledge bases. If they ask about navigation or where to find pages, use the sitemap context. Be concise and accurate.`,
         add_context_from_internet: false
       });
 
