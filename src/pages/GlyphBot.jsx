@@ -1,21 +1,25 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { MessageCircle, Volume2, VolumeX, Trash2, RotateCcw, Shield, FileText, AlertTriangle, Upload, Code, Search, FileCheck, BookOpen, Globe, Menu, X } from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import ConversationList from "../components/glyphbot/ConversationList";
-import FileAnalysisView from "../components/glyphbot/FileAnalysisView";
-import CodeExecutor from "../components/glyphbot/CodeExecutor";
-import SecurityScanner from "../components/glyphbot/SecurityScanner";
-import AuditGenerator from "../components/glyphbot/AuditGenerator";
-import LanguageSelector from "../components/glyphbot/LanguageSelector";
-import KnowledgeBaseConnector from "../components/glyphbot/KnowledgeBaseConnector";
-import SecurityDashboard from "../components/glyphbot/SecurityDashboard";
-import ProactiveMonitor from "../components/glyphbot/ProactiveMonitor";
 
 const PERSONAS = [
-  { id: "alfred", name: "Alfred Point Guard", desc: "Sharp, direct coach energy" },
-  { id: "neutral", name: "Neutral Pro", desc: "Clear and business-clean" },
-  { id: "playful", name: "Prankster", desc: "Jokey, lighter vibe" }
+  {
+    id: "glyphbot_default",
+    name: "GlyphBot",
+    system:
+      "You are GlyphBot, a sharp, helpful, confident assistant for GlyphLock and Glyph Tech. Speak clearly, be practical, match Carlo energy, do not reveal private methods unless asked directly."
+  },
+  {
+    id: "glyphbot_cynical",
+    name: "GlyphBot Cynical",
+    system:
+      "You are GlyphBot in cynical mode. You are blunt, a little roasted, still helpful, never cruel. Keep it real. Do not reveal private methods unless asked directly."
+  },
+  {
+    id: "glyphbot_legal",
+    name: "GlyphBot Legal",
+    system:
+      "You are GlyphBot in legal mode. You communicate clearly and precisely, avoid speculation, and provide structured guidance. Do not reveal private methods unless asked directly."
+  }
 ];
 
 const TABS = [
