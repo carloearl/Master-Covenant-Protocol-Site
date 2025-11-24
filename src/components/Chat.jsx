@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { MessageCircle, X, Save, FolderOpen, Plus, Settings, Volume2 } from "lucide-react";
-import { generateAudio, applyAudioEffects } from "@/utils/ttsEngine";
+import { generateAudio, applyAudioEffects } from "@/components/utils/ttsEngine";
 import VoiceSettingsPanel from "@/components/chat/VoiceSettingsPanel";
 
 export default function Chat() {

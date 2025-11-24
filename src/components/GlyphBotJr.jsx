@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { generateAudio, applyAudioEffects } from "@/utils/ttsEngine";
+import { generateAudio, applyAudioEffects } from "@/components/utils/ttsEngine";
 import VoiceSettingsPanel from "@/components/chat/VoiceSettingsPanel";
 
 export default function GlyphBotJr() {

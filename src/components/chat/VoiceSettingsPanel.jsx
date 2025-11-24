@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Volume2, Sparkles, Zap, Play } from "lucide-react";
-import { TTS_PROVIDERS, getVoicesForProvider, generateAudio } from "@/utils/ttsEngine";
+import { TTS_PROVIDERS, getVoicesForProvider, generateAudio } from "@/components/utils/ttsEngine";
 import { toast } from "sonner";
 
 export default function VoiceSettingsPanel({ settings, onChange }) {
