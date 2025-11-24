@@ -487,15 +487,16 @@ export default function GlyphBot() {
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
-              <select
-                value={personaId}
-                onChange={e => setPersonaId(e.target.value)}
-                className="bg-gradient-to-r from-cyan-900/60 to-blue-900/60 border-2 border-cyan-500/40 rounded-xl px-4 py-2 text-sm min-h-[40px] text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 shadow-lg font-semibold"
-              >
-                {PERSONAS.map(p => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
-                ))}
-              </select>
+              <Select value={personaId} onValueChange={setPersonaId}>
+                <SelectTrigger className="bg-gradient-to-r from-cyan-900/60 to-blue-900/60 border-2 border-cyan-500/40 rounded-xl px-4 py-2 text-sm min-h-[40px] text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 shadow-lg font-semibold w-48">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-900 border-2 border-cyan-500/40 text-white">
+                  {PERSONAS.map(p => (
+                    <SelectItem key={p.id} value={p.id} className="text-white hover:bg-cyan-900/50 focus:bg-cyan-900/50">{p.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
               <Button
                 onClick={() => setAutoplay(v => !v)}
@@ -576,12 +577,12 @@ export default function GlyphBot() {
                 <div>
                   <Label className="text-purple-200 mb-1 text-xs">Provider</Label>
                   <Select value={voiceProvider} onValueChange={setVoiceProvider}>
-                    <SelectTrigger className="bg-purple-950/50 border-purple-500/30 h-9 text-sm">
+                    <SelectTrigger className="bg-purple-950/50 border-purple-500/30 h-9 text-sm text-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-gray-900 border-2 border-purple-500/40 text-white">
                       {Object.entries(TTS_PROVIDERS).map(([key, config]) => (
-                        <SelectItem key={key} value={key}>{config.label}</SelectItem>
+                        <SelectItem key={key} value={key} className="text-white hover:bg-purple-900/50 focus:bg-purple-900/50">{config.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -590,12 +591,12 @@ export default function GlyphBot() {
                 <div>
                   <Label className="text-purple-200 mb-1 text-xs">Voice</Label>
                   <Select value={voiceId} onValueChange={setVoiceId}>
-                    <SelectTrigger className="bg-purple-950/50 border-purple-500/30 h-9 text-sm">
+                    <SelectTrigger className="bg-purple-950/50 border-purple-500/30 h-9 text-sm text-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="max-h-[200px]">
+                    <SelectContent className="max-h-[200px] bg-gray-900 border-2 border-purple-500/40 text-white">
                       {voices.map(v => (
-                        <SelectItem key={v} value={v}>{v}</SelectItem>
+                        <SelectItem key={v} value={v} className="text-white hover:bg-purple-900/50 focus:bg-purple-900/50">{v}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -839,10 +840,10 @@ export default function GlyphBot() {
         )}
 
         {/* Main Chat Area */}
-        <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 flex flex-col min-h-0 pb-32">
           <main
             ref={listRef}
-            className="flex-1 overflow-y-auto px-4 py-4 space-y-3"
+            className="flex-1 overflow-y-auto px-4 py-4 space-y-3 pb-8"
             style={{ WebkitOverflowScrolling: "touch", overscrollBehavior: "contain" }}
           >
             {messages.length === 0 && (
@@ -933,7 +934,7 @@ export default function GlyphBot() {
             </div>
           )}
 
-          <footer className="flex-none glyph-glass-dark border-t border-cyan-500/20 py-4 shadow-2xl">
+          <footer className="flex-none glyph-glass-dark border-t border-cyan-500/20 py-4 shadow-2xl sticky bottom-0 z-30">
             <div className="max-w-4xl mx-auto px-6">
               {oneTestMode && (
                 <div className="mb-3">
@@ -956,7 +957,7 @@ export default function GlyphBot() {
                     onKeyDown={onKeyDown}
                     rows={1}
                     placeholder="Type your message..."
-                    className="w-full resize-none bg-gradient-to-br from-purple-950/70 to-blue-950/70 backdrop-blur-xl border-2 border-cyan-500/30 rounded-2xl px-6 py-4 text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 min-h-[56px] max-h-[200px] text-white placeholder-gray-400 shadow-2xl transition-all"
+                    className="w-full resize-none bg-gradient-to-br from-purple-950/90 to-blue-950/90 backdrop-blur-xl border-2 border-cyan-500/40 rounded-2xl px-6 py-4 text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 min-h-[56px] max-h-[200px] text-white placeholder-gray-400 shadow-2xl transition-all"
                     style={{ fontSize: "16px", scrollbarWidth: 'thin', scrollbarColor: 'rgba(6,182,212,0.3) transparent' }}
                   />
                 </div>
