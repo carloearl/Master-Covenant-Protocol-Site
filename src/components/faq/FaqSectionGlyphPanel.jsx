@@ -62,7 +62,7 @@ import {
   Trash,
   AlertCircle
 } from "lucide-react"
-import faqData from "@/components/content/faqMaster.json"
+import FAQ_MASTER_DATA from "@/components/content/faqMasterData"
 
 const ICON_MAP = {
   ShieldCheck, Sparkles, ScanLine, AlertTriangle, LockKeyhole, HelpCircle,
@@ -74,7 +74,7 @@ const ICON_MAP = {
   Wrench, Briefcase, Trash, AlertCircle
 }
 
-const CATEGORIES = ["All", ...Array.from(new Set(faqData.map(f => f.category)))]
+const CATEGORIES = ["All", ...Array.from(new Set(FAQ_MASTER_DATA.map(f => f.category)))]
 
 export default function FaqSectionGlyphPanel() {
   const [query, setQuery] = useState("")
@@ -82,7 +82,7 @@ export default function FaqSectionGlyphPanel() {
 
   const filteredFaqs = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return faqData.filter(item => {
+    return FAQ_MASTER_DATA.filter(item => {
       const inCategory = category === "All" || item.category === category
       const inQuery =
         !q ||
