@@ -44,6 +44,9 @@ export default function QrStudio() {
   const [riskFlags, setRiskFlags] = useState([]);
   const [qrAssetDraft, setQrAssetDraft] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showPayloadSelector, setShowPayloadSelector] = useState(false);
+
+  const selectedPayloadType = PAYLOAD_TYPES.find(t => t.id === payloadType);
 
   // Risk evaluation with debounce
   useEffect(() => {
