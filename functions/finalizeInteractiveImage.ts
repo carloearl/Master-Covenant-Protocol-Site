@@ -1,20 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { createHash } from 'node:crypto';
 
-async function computeSHA256(data) {
-  const encoder = new TextEncoder();
-  const dataBuffer = encoder.encode(data);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-async function hashFileFromUrl(url) {
-  const response = await fetch(url);
-  const arrayBuffer = await response.arrayBuffer();
-  const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
+/**
+ * Finalize Interactive Image - Compute immutable hash for cryptographic verification
+ */
 
 Deno.serve(async (req) => {
   try {
@@ -26,59 +15,53 @@ Deno.serve(async (req) => {
     }
 
     const { imageId } = await req.json();
-    
+
     if (!imageId) {
-      return Response.json({ error: 'No imageId provided' }, { status: 400 });
+      return Response.json({ error: 'Image ID is required' }, { status: 400 });
     }
 
+    // Fetch the image
     const images = await base44.entities.InteractiveImage.filter({ id: imageId });
-    if (images.length === 0) {
-      return Response.json({ error: 'Image not found' }, { status: 404 });
-    }
     const image = images[0];
 
-    const hotspots = await base44.entities.ImageHotspot.filter({ imageId });
+    if (!image) {
+      return Response.json({ error: 'Image not found' }, { status: 404 });
+    }
 
-    const imageFileHash = await hashFileFromUrl(image.fileUrl);
+    // Verify ownership
+    if (image.ownerEmail !== user.email) {
+      return Response.json({ error: 'Unauthorized' }, { status: 403 });
+    }
 
-    const canonicalData = {
+    // Fetch image file to hash it
+    const imageResponse = await fetch(image.fileUrl);
+    const imageBuffer = await imageResponse.arrayBuffer();
+    const imageFileHash = createHash('sha256').update(new Uint8Array(imageBuffer)).digest('hex');
+
+    // Create immutable hash: hash(imageFileHash + hotspots JSON)
+    const hotspotsJson = JSON.stringify(image.hotspots || []);
+    const combinedData = imageFileHash + hotspotsJson;
+    const immutableHash = createHash('sha256').update(combinedData).digest('hex');
+
+    // Log the finalization
+    await base44.entities.ImageHashLog.create({
       imageId: image.id,
+      imageUrl: image.fileUrl,
+      immutableHash,
       imageFileHash,
-      hotspots: hotspots.map(h => ({
-        x: h.x,
-        y: h.y,
-        width: h.width,
-        height: h.height,
-        label: h.label,
-        description: h.description,
-        actionType: h.actionType,
-        actionValue: h.actionValue
-      }))
-    };
-
-    const canonicalJSON = JSON.stringify(canonicalData, null, 0);
-    const hash = await computeSHA256(canonicalJSON);
-
-    const hashLog = await base44.entities.ImageHashLog.create({
-      imageId,
-      hash,
-      imageFileHash,
-      hotspotsSnapshot: JSON.stringify(canonicalData.hotspots),
-      ownerEmail: user.email
-    });
-
-    await base44.asServiceRole.entities.InteractiveImage.update(imageId, {
-      status: 'finalized'
+      hotspotsCount: (image.hotspots || []).length,
+      finalizedBy: user.email,
+      status: 'finalized',
     });
 
     return Response.json({
       success: true,
-      logId: hashLog.id,
-      hash,
+      hash: immutableHash,
       imageFileHash,
-      createdAt: hashLog.created_date
     });
+
   } catch (error) {
+    console.error('Finalize error:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
