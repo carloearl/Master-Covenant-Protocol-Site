@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { MessageCircle, X, Send, Menu } from "lucide-react";
+import { MessageCircle, X, Send, Menu, Volume2, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { generateVoice, applyAudioEffects } from "@/components/utils/voiceEngine";
+import VoiceSettingsPanel from "@/components/chat/VoiceSettingsPanel";
 
 export default function GlyphBotJr() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +25,23 @@ export default function GlyphBotJr() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+  const [voiceSettings, setVoiceSettings] = useState({
+    provider: 'streamelements',
+    voice: 'Matthew',
+    speed: 1.0,
+    pitch: 1.0,
+    bass: 0,
+    treble: 0,
+    mid: 0,
+    depth: 0,
+    accent: 5,
+    stability: 0.5,
+    similarity: 0.75,
+    style: 0.0,
+    useSpeakerBoost: true
+  });
+  const audioRef = useRef(new Audio());
 
   const quickLinks = [
     { label: "Home", page: "Home" },
@@ -34,6 +53,31 @@ export default function GlyphBotJr() {
     { label: "Governance Hub", page: "GovernanceHub" },
     { label: "Pricing", page: "Pricing" }
   ];
+
+  const playVoice = async (text) => {
+    try {
+      const audioUrl = await generateVoice(voiceSettings.provider, text, voiceSettings);
+      
+      if (audioUrl) {
+        const audio = audioRef.current;
+        audio.pause();
+        audio.currentTime = 0;
+        audio.src = audioUrl;
+        audio.playbackRate = voiceSettings.speed;
+        
+        applyAudioEffects(audio, {
+          bass: voiceSettings.bass,
+          treble: voiceSettings.treble,
+          mid: voiceSettings.mid,
+          delay: voiceSettings.depth
+        });
+        
+        audio.play().catch(() => {});
+      }
+    } catch (e) {
+      console.error("Voice error:", e);
+    }
+  };
 
   const handleSend = async () => {
     if (!input.trim() || loading) return;
@@ -115,7 +159,17 @@ Provide a helpful, professional response (2-3 sentences max). No emojis. Guide t
                 <span className="text-xs text-white/80">Navigation Assistant</span>
               </div>
             </div>
-            <DropdownMenu>
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowVoiceSettings(!showVoiceSettings)}
+                className="text-white hover:bg-white/10"
+                title="Voice Settings"
+              >
+                <Volume2 className="w-5 h-5" />
+              </Button>
+              <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   size="sm"
@@ -145,32 +199,50 @@ Provide a helpful, professional response (2-3 sentences max). No emojis. Guide t
             </DropdownMenu>
           </div>
 
-          <div className="p-4 h-[340px] overflow-y-auto space-y-4">
-            {messages.map((msg, idx) => (
-              <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div 
-                  className={`max-w-[80%] p-3 rounded-lg ${
-                    msg.role === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'glass-card text-white'
-                  }`}
-                >
-                  <p className="text-sm">{msg.content}</p>
-                </div>
-              </div>
-            ))}
-            {loading && (
-              <div className="flex justify-start">
-                <div className="glass-card p-3 rounded-lg">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+          {showVoiceSettings ? (
+            <div className="p-4 h-[400px] overflow-y-auto">
+              <VoiceSettingsPanel
+                settings={voiceSettings}
+                onSettingsChange={setVoiceSettings}
+              />
+            </div>
+          ) : (
+            <div className="p-4 h-[340px] overflow-y-auto space-y-4">
+              {messages.map((msg, idx) => (
+                <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div 
+                    className={`max-w-[80%] p-3 rounded-lg ${
+                      msg.role === 'user'
+                        ? 'bg-blue-600 text-white'
+                        : 'glass-card text-white'
+                    }`}
+                  >
+                    <p className="text-sm">{msg.content}</p>
+                    {msg.role === 'assistant' && (
+                      <button
+                        onClick={() => playVoice(msg.content)}
+                        className="mt-2 text-xs text-blue-300 hover:text-blue-200 flex items-center gap-1"
+                      >
+                        <Volume2 className="w-3 h-3" />
+                        Play
+                      </button>
+                    )}
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
+              ))}
+              {loading && (
+                <div className="flex justify-start">
+                  <div className="glass-card p-3 rounded-lg">
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="border-t border-blue-500/30 p-3">
             <div className="flex gap-2">
