@@ -45,18 +45,26 @@ export default function GlyphBotJr() {
 
     try {
       const { QR_KNOWLEDGE_BASE } = await import('./qr/QrKnowledgeBase');
+      const faqData = await import('@/content/faq/faqMaster.json');
+      
+      const faqContext = faqData.default.map(item => 
+        `Q: ${item.q}\nA: ${item.a.join(' ')}`
+      ).join('\n\n');
       
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `You are GlyphBot Jr., a professional AI navigation assistant for GlyphLock Security Platform.
 
-Available pages: Home, QR Studio, N.U.P.S. POS, Security Tools, Visual Cryptography, Security Operations Center, Blockchain, GlyphBot AI, Governance Hub, Pricing, Contact, Consultation.
+Available pages: Home, QR Studio, Image Lab, N.U.P.S. POS, Security Tools, Visual Cryptography, Security Operations Center, Blockchain, GlyphBot AI, Governance Hub, Pricing, Contact, Consultation, FAQ.
 
-QR Studio Knowledge Base (use this to answer QR-related questions):
+QR Studio Knowledge Base:
 ${QR_KNOWLEDGE_BASE}
+
+GlyphLock FAQ Knowledge Base (use this to answer common questions):
+${faqContext}
 
 User question: ${userMessage}
 
-Provide a helpful, professional response (2-3 sentences max). No emojis. Guide them to relevant pages. If they ask about QR codes, use the knowledge base. Keep responses unique and varied.`,
+Provide a helpful, professional response (2-3 sentences max). No emojis. Guide them to relevant pages. If they ask common questions, use the FAQ knowledge base first. Keep responses unique and varied.`,
         add_context_from_internet: false
       });
 

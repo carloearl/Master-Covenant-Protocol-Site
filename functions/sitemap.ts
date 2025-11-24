@@ -13,6 +13,7 @@ Deno.serve(async (req) => {
       { path: '/pricing', priority: '0.9', changefreq: 'weekly' },
       { path: '/qr-generator', priority: '0.9', changefreq: 'weekly' },
       { path: '/image-lab', priority: '0.9', changefreq: 'weekly' },
+      { path: '/faq', priority: '0.85', changefreq: 'weekly' },
       { path: '/blockchain', priority: '0.8', changefreq: 'monthly' },
       { path: '/steganography', priority: '0.8', changefreq: 'monthly' },
       { path: '/security-tools', priority: '0.8', changefreq: 'monthly' },

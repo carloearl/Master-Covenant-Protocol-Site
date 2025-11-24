@@ -69,6 +69,12 @@ export default function Chat() {
 
     try {
       const { QR_KNOWLEDGE_BASE } = await import('./qr/QrKnowledgeBase');
+      const { IMAGE_LAB_KNOWLEDGE } = await import('./imageLab/ImageLabKnowledge');
+      const faqData = await import('@/content/faq/faqMaster.json');
+      
+      const faqContext = faqData.default.map(item => 
+        `Q: ${item.q}\nA: ${item.a.join(' ')}`
+      ).join('\n\n');
       
       // Build conversation context from message history
       const conversationHistory = messages.slice(1).map(msg => 
@@ -82,10 +88,18 @@ export default function Chat() {
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `You are DinoBot, a friendly AI assistant for GlyphLock Security. Be helpful and professional. Maintain context from the conversation history and reference previous messages when relevant.
 
-QR Studio Knowledge Base (use this to answer QR-related questions):
+QR Studio Knowledge Base:
 ${QR_KNOWLEDGE_BASE}
 
-${contextPrompt}`,
+Image Lab Knowledge Base:
+${JSON.stringify(IMAGE_LAB_KNOWLEDGE, null, 2)}
+
+GlyphLock FAQ Knowledge Base (use this to answer common questions about pricing, features, security, etc.):
+${faqContext}
+
+${contextPrompt}
+
+When answering questions, check the FAQ knowledge base first for common questions. For QR or Image Lab specific questions, use those knowledge bases. Be concise and accurate.`,
         add_context_from_internet: false
       });
 
