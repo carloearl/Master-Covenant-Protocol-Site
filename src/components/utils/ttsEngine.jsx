@@ -102,6 +102,7 @@ export async function generateAudio(provider, voiceId, text, settings = {}) {
     bass: 0,
     treble: 0,
     mid: 0,
+    warmth: 0.5,
     stability: 0.5,
     similarity: 0.75,
     style: 0.0,
@@ -118,51 +119,35 @@ export async function generateAudio(provider, voiceId, text, settings = {}) {
   const finalSettings = { ...defaultSettings, ...settings, effects: { ...defaultSettings.effects, ...(settings.effects || {}) } };
 
   try {
-    let audioUrl = null;
-    
-    switch (provider) {
-      case 'openai':
-        audioUrl = await generateOpenAI(voiceId, cleanText, finalSettings);
-        break;
-      case 'elevenlabs':
-        audioUrl = await generateElevenLabs(voiceId, cleanText, finalSettings);
-        break;
-      case 'google':
-        audioUrl = await generateGoogle(voiceId, cleanText, finalSettings);
-        break;
-      case 'microsoft':
-        audioUrl = await generateMicrosoft(voiceId, cleanText, finalSettings);
-        break;
-      case 'coqui':
-        audioUrl = await generateCoqui(voiceId, cleanText, finalSettings);
-        break;
-      case 'streamelements':
-        audioUrl = generateStreamElements(voiceId, cleanText);
-        break;
+    // Call unified backend function
+    const response = await base44.functions.invoke('textToSpeechAdvanced', {
+      text: cleanText,
+      provider: provider || 'google',
+      voice: voiceId,
+      speed: finalSettings.speed,
+      pitch: finalSettings.pitch,
+      volume: finalSettings.volume,
+      bass: finalSettings.bass,
+      treble: finalSettings.treble,
+      mid: finalSettings.mid,
+      warmth: finalSettings.warmth,
+      stability: finalSettings.stability,
+      similarity: finalSettings.similarity,
+      style: finalSettings.style,
+      useSpeakerBoost: finalSettings.useSpeakerBoost,
+      echo: finalSettings.effects.echo,
+      delay: finalSettings.effects.delay,
+      noiseGate: finalSettings.effects.gate,
+      enhancement: finalSettings.effects.enhance,
+      humanize: finalSettings.effects.humanize
+    });
+
+    if (response.data?.audioUrl) {
+      return response.data.audioUrl;
     }
-    
-    if (!audioUrl) {
-      // Try fallback providers in sequence
-      const fallbacks = ['google', 'microsoft', 'streamelements'];
-      for (const fallback of fallbacks) {
-        if (fallback === provider) continue;
-        try {
-          console.log(`Trying fallback provider: ${fallback}`);
-          if (fallback === 'google') {
-            audioUrl = await generateGoogle('en-US-Neural2-A', cleanText, finalSettings);
-          } else if (fallback === 'microsoft') {
-            audioUrl = await generateMicrosoft('en-US-JennyNeural', cleanText, finalSettings);
-          } else {
-            audioUrl = generateStreamElements('Matthew', cleanText);
-          }
-          if (audioUrl) break;
-        } catch (e) {
-          console.log(`Fallback ${fallback} failed:`, e);
-        }
-      }
-    }
-    
-    return audioUrl;
+
+    // Fallback to StreamElements
+    return generateStreamElements(voiceId, cleanText);
   } catch (error) {
     console.error(`TTS Error [${provider}]:`, error);
     // Final fallback
@@ -170,81 +155,7 @@ export async function generateAudio(provider, voiceId, text, settings = {}) {
   }
 }
 
-/**
- * OpenAI TTS
- */
-async function generateOpenAI(voice, text, settings) {
-  const response = await base44.functions.invoke('textToSpeechAdvanced', {
-    text,
-    provider: 'openai',
-    voice: voice || 'alloy',
-    speed: settings.speed
-  });
 
-  return response.data?.audioUrl || null;
-}
-
-/**
- * ElevenLabs TTS
- */
-async function generateElevenLabs(voice, text, settings) {
-  const response = await base44.functions.invoke('textToSpeechAdvanced', {
-    text,
-    provider: 'elevenlabs',
-    voice: voice || 'Rachel',
-    speed: settings.speed,
-    stability: settings.stability,
-    similarity: settings.similarity,
-    style: settings.style,
-    useSpeakerBoost: settings.useSpeakerBoost
-  });
-
-  return response.data?.audioUrl || null;
-}
-
-/**
- * Google Cloud TTS
- */
-async function generateGoogle(voice, text, settings) {
-  const response = await base44.functions.invoke('textToSpeechAdvanced', {
-    text,
-    provider: 'google',
-    voice: voice || 'en-US-Neural2-A',
-    speed: settings.speed,
-    pitch: settings.pitch
-  });
-
-  return response.data?.audioUrl || null;
-}
-
-/**
- * Microsoft Azure TTS
- */
-async function generateMicrosoft(voice, text, settings) {
-  const response = await base44.functions.invoke('textToSpeechAdvanced', {
-    text,
-    provider: 'microsoft',
-    voice: voice || 'en-US-JennyNeural',
-    speed: settings.speed,
-    pitch: settings.pitch
-  });
-
-  return response.data?.audioUrl || null;
-}
-
-/**
- * Coqui Local TTS
- */
-async function generateCoqui(voice, text, settings) {
-  const response = await base44.functions.invoke('coquiTTS', {
-    text,
-    voice: voice || 'default',
-    speed: settings.speed,
-    pitch: settings.pitch
-  });
-
-  return response.data?.audioUrl || null;
-}
 
 /**
  * StreamElements (Free fallback)
