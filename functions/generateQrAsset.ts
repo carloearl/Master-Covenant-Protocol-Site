@@ -132,6 +132,8 @@ Deno.serve(async (req) => {
       payloadValue
     });
 
+    const riskData = riskResult.data || {};
+
     // Create QrAsset
     const qrAsset = await base44.entities.QrAsset.create({
       title,
@@ -147,8 +149,8 @@ Deno.serve(async (req) => {
       errorCorrectionLevel,
       hotZones,
       stegoConfig,
-      riskScore: riskResult.riskScore || 0,
-      riskFlags: riskResult.riskFlags || [],
+      riskScore: riskData.riskScore || 0,
+      riskFlags: riskData.riskFlags || [],
       ownerSignature: '',
       immutableHash,
       status: 'draft'
@@ -160,8 +162,8 @@ Deno.serve(async (req) => {
       safeQrImageUrl: safeSignedUrl,
       artQrImageUrl: artSignedUrl,
       immutableHash,
-      riskScore: riskResult.riskScore,
-      riskFlags: riskResult.riskFlags
+      riskScore: riskData.riskScore || 0,
+      riskFlags: riskData.riskFlags || []
     });
 
   } catch (error) {
