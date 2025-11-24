@@ -1,253 +1,283 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Volume2, Sparkles, Zap } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Slider } from "@/components/ui/slider";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { Volume2, Sparkles, Zap, Play } from "lucide-react";
+import { TTS_PROVIDERS, getVoicesForProvider, generateAudio } from "@/utils/ttsEngine";
+import { toast } from "sonner";
 
-export default function VoiceSettingsPanel({ settings, onSettingsChange }) {
-  const updateSetting = (key, value) => {
-    onSettingsChange({ ...settings, [key]: value });
-  };
+export default function VoiceSettingsPanel({ settings, onChange }) {
+  const [provider, setProvider] = useState(settings.provider || "openai");
+  const [voice, setVoice] = useState(settings.voice || "alloy");
+  const [voices, setVoices] = useState([]);
+  const [previewPlaying, setPreviewPlaying] = useState(false);
 
-  const voiceOptions = {
-    elevenlabs: [
-      { value: 'Rachel', label: 'Rachel (Natural)' },
-      { value: 'Domi', label: 'Domi (Warm)' },
-      { value: 'Bella', label: 'Bella (Soft)' },
-      { value: 'Antoni', label: 'Antoni (Deep)' },
-      { value: 'Elli', label: 'Elli (Energetic)' },
-      { value: 'Josh', label: 'Josh (Professional)' },
-      { value: 'Arnold', label: 'Arnold (Celebrity)' },
-      { value: 'Adam', label: 'Adam (Narrative)' }
-    ],
-    openai: [
-      { value: 'alloy', label: 'Alloy' },
-      { value: 'echo', label: 'Echo' },
-      { value: 'fable', label: 'Fable' },
-      { value: 'onyx', label: 'Onyx' },
-      { value: 'nova', label: 'Nova' },
-      { value: 'shimmer', label: 'Shimmer' }
-    ],
-    google: [
-      { value: 'en-US-Neural2-A', label: 'Neural2 A (Female)' },
-      { value: 'en-US-Neural2-C', label: 'Neural2 C (Female)' },
-      { value: 'en-US-Neural2-D', label: 'Neural2 D (Male)' },
-      { value: 'en-US-Neural2-F', label: 'Neural2 F (Female)' },
-      { value: 'en-US-Neural2-J', label: 'Neural2 J (Male)' }
-    ],
-    microsoft: [
-      { value: 'en-US-JennyNeural', label: 'Jenny (Female)' },
-      { value: 'en-US-GuyNeural', label: 'Guy (Male)' },
-      { value: 'en-US-AriaNeural', label: 'Aria (Female)' },
-      { value: 'en-US-DavisNeural', label: 'Davis (Male)' },
-      { value: 'en-US-JaneNeural', label: 'Jane (Female)' }
-    ],
-    streamelements: [
-      { value: 'Joanna', label: 'Joanna' },
-      { value: 'Matthew', label: 'Matthew' },
-      { value: 'Amy', label: 'Amy' },
-      { value: 'Brian', label: 'Brian' }
-    ],
-    coqui: [
-      { value: 'default', label: 'Default Voice' },
-      { value: 'jenny', label: 'Jenny' },
-      { value: 'p273', label: 'P273 (British Male)' }
-    ]
-  };
+  useEffect(() => {
+    async function loadVoices() {
+      const v = await getVoicesForProvider(provider);
+      setVoices(v);
+      if (!v.includes(voice)) {
+        const newVoice = v[0];
+        setVoice(newVoice);
+        onChange({ ...settings, provider, voice: newVoice });
+      }
+    }
+    loadVoices();
+  }, [provider]);
+
+  function updateSetting(field, value) {
+    const updated = { ...settings, [field]: value };
+    onChange(updated);
+  }
+
+  function handleProviderChange(newProvider) {
+    setProvider(newProvider);
+    updateSetting("provider", newProvider);
+  }
+
+  function handleVoiceChange(newVoice) {
+    setVoice(newVoice);
+    updateSetting("voice", newVoice);
+  }
+
+  async function handlePreview() {
+    setPreviewPlaying(true);
+    try {
+      const audioUrl = await generateAudio(
+        provider,
+        voice,
+        "Hello! This is a preview of my voice. How do I sound?",
+        settings
+      );
+      
+      if (audioUrl) {
+        const audio = new Audio(audioUrl);
+        audio.playbackRate = settings.speed || 1.0;
+        await audio.play();
+        audio.onended = () => setPreviewPlaying(false);
+      }
+    } catch (error) {
+      console.error("Preview error:", error);
+      toast.error("Failed to preview voice");
+      setPreviewPlaying(false);
+    }
+  }
+
+  const providerConfig = TTS_PROVIDERS[provider] || {};
 
   return (
-    <Card className="bg-black/90 border-cyan-500/30 backdrop-blur-xl">
-      <CardHeader className="border-b border-cyan-500/20">
-        <CardTitle className="flex items-center gap-2 text-white">
-          <Volume2 className="w-5 h-5 text-cyan-400" />
-          Voice Settings
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6 pt-6">
-        {/* Provider Selection */}
-        <div className="space-y-2">
-          <Label className="text-gray-300 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-purple-400" />
-            TTS Provider
-          </Label>
-          <Select value={settings.provider} onValueChange={(v) => updateSetting('provider', v)}>
-            <SelectTrigger className="bg-gray-800/50 border-gray-700 text-white">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="elevenlabs">
-                <span className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-purple-400" />
-                  ElevenLabs (Celebrity Voices)
-                </span>
+    <div className="space-y-6 p-4 bg-gradient-to-br from-[#0a0d14] to-[#0f1419] rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10">
+      
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Volume2 className="w-6 h-6 text-cyan-400" />
+          <h2 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            Voice Settings
+          </h2>
+        </div>
+        <Button
+          onClick={handlePreview}
+          disabled={previewPlaying}
+          className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white"
+          size="sm"
+        >
+          <Play className="w-4 h-4 mr-1" />
+          Preview
+        </Button>
+      </div>
+
+      {/* Provider Selection */}
+      <div className="space-y-2">
+        <Label className="text-gray-300 flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-purple-400" />
+          TTS Provider
+        </Label>
+        <Select value={provider} onValueChange={handleProviderChange}>
+          <SelectTrigger className="bg-black/40 border-cyan-500/30 text-white hover:border-cyan-400/50 transition-all">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-[#0a0d14] border-cyan-500/30">
+            {Object.entries(TTS_PROVIDERS).map(([key, config]) => (
+              <SelectItem 
+                key={key} 
+                value={key}
+                className="text-white hover:bg-cyan-500/20 focus:bg-cyan-500/20"
+              >
+                {config.label}
               </SelectItem>
-              <SelectItem value="openai">OpenAI TTS</SelectItem>
-              <SelectItem value="google">Google Cloud TTS</SelectItem>
-              <SelectItem value="microsoft">Microsoft Azure TTS</SelectItem>
-              <SelectItem value="streamelements">StreamElements (Free)</SelectItem>
-              <SelectItem value="coqui">Coqui Local (Open Source)</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-        {/* Voice Selection */}
-        <div className="space-y-2">
-          <Label className="text-gray-300">Voice</Label>
-          <Select value={settings.voice} onValueChange={(v) => updateSetting('voice', v)}>
-            <SelectTrigger className="bg-gray-800/50 border-gray-700 text-white">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {(voiceOptions[settings.provider] || []).map((voice) => (
-                <SelectItem key={voice.value} value={voice.value}>
-                  {voice.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      {/* Voice Selection */}
+      <div className="space-y-2">
+        <Label className="text-gray-300">Voice</Label>
+        <Select value={voice} onValueChange={handleVoiceChange}>
+          <SelectTrigger className="bg-black/40 border-cyan-500/30 text-white hover:border-cyan-400/50 transition-all">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-[#0a0d14] border-cyan-500/30 max-h-[300px]">
+            {voices.map((v) => (
+              <SelectItem 
+                key={v} 
+                value={v}
+                className="text-white hover:bg-cyan-500/20 focus:bg-cyan-500/20"
+              >
+                {v}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-        {/* Basic Controls */}
-        <VoiceSlider
+      {/* Speed Control */}
+      {providerConfig.supportsSpeed && (
+        <SliderControl
           label="Speed"
-          value={settings.speed}
-          onChange={(v) => updateSetting('speed', v)}
+          value={settings.speed || 1.0}
+          onChange={(v) => updateSetting("speed", v)}
           min={0.5}
           max={2.0}
-          step={0.1}
-          unit="x"
+          step={0.05}
+          format={(v) => `${v.toFixed(2)}x`}
         />
+      )}
 
-        <VoiceSlider
+      {/* Pitch Control */}
+      {providerConfig.supportsPitch && (
+        <SliderControl
           label="Pitch"
-          value={settings.pitch}
-          onChange={(v) => updateSetting('pitch', v)}
+          value={settings.pitch || 1.0}
+          onChange={(v) => updateSetting("pitch", v)}
           min={0.5}
           max={2.0}
-          step={0.1}
-          unit=""
+          step={0.05}
+          format={(v) => `${v.toFixed(2)}`}
         />
+      )}
 
-        {/* Audio Processing */}
-        <div className="pt-4 border-t border-gray-800">
-          <Label className="text-gray-300 flex items-center gap-2 mb-4">
+      {/* Naturalness Control */}
+      <SliderControl
+        label="Naturalness"
+        value={settings.naturalness || 0.8}
+        onChange={(v) => updateSetting("naturalness", v)}
+        min={0}
+        max={1}
+        step={0.05}
+        format={(v) => `${Math.round(v * 100)}%`}
+      />
+
+      {/* Volume Control */}
+      <SliderControl
+        label="Volume"
+        value={settings.volume || 1.0}
+        onChange={(v) => updateSetting("volume", v)}
+        min={0}
+        max={2}
+        step={0.1}
+        format={(v) => `${Math.round(v * 100)}%`}
+      />
+
+      {/* ElevenLabs Advanced Settings */}
+      {provider === 'elevenlabs' && providerConfig.supportsEmotion && (
+        <div className="pt-4 border-t border-cyan-500/20 space-y-4">
+          <Label className="text-gray-300 flex items-center gap-2">
             <Zap className="w-4 h-4 text-cyan-400" />
-            Audio Processing
+            ElevenLabs Advanced
           </Label>
 
-          <div className="space-y-4">
-            <VoiceSlider
-              label="Bass"
-              value={settings.bass}
-              onChange={(v) => updateSetting('bass', v)}
-              min={-10}
-              max={10}
-              step={1}
-              unit="dB"
-            />
+          <SliderControl
+            label="Stability"
+            value={settings.stability || 0.5}
+            onChange={(v) => updateSetting("stability", v)}
+            min={0}
+            max={1}
+            step={0.05}
+            format={(v) => `${Math.round(v * 100)}%`}
+          />
 
-            <VoiceSlider
-              label="Treble"
-              value={settings.treble}
-              onChange={(v) => updateSetting('treble', v)}
-              min={-10}
-              max={10}
-              step={1}
-              unit="dB"
-            />
+          <SliderControl
+            label="Similarity"
+            value={settings.similarity || 0.75}
+            onChange={(v) => updateSetting("similarity", v)}
+            min={0}
+            max={1}
+            step={0.05}
+            format={(v) => `${Math.round(v * 100)}%`}
+          />
 
-            <VoiceSlider
-              label="Mid"
-              value={settings.mid}
-              onChange={(v) => updateSetting('mid', v)}
-              min={-10}
-              max={10}
-              step={1}
-              unit="dB"
-            />
+          <SliderControl
+            label="Style"
+            value={settings.style || 0.0}
+            onChange={(v) => updateSetting("style", v)}
+            min={0}
+            max={1}
+            step={0.05}
+            format={(v) => `${Math.round(v * 100)}%`}
+          />
 
-            <VoiceSlider
-              label="Depth (Delay)"
-              value={settings.depth}
-              onChange={(v) => updateSetting('depth', v)}
-              min={0}
-              max={1}
-              step={0.1}
-              unit="s"
-            />
-
-            <VoiceSlider
-              label="Accent Strength"
-              value={settings.accent}
-              onChange={(v) => updateSetting('accent', v)}
-              min={0}
-              max={10}
-              step={1}
-              unit=""
+          <div className="flex items-center justify-between py-2">
+            <Label className="text-gray-300">Speaker Boost</Label>
+            <Switch
+              checked={settings.useSpeakerBoost !== false}
+              onCheckedChange={(v) => updateSetting("useSpeakerBoost", v)}
             />
           </div>
         </div>
+      )}
 
-        {/* ElevenLabs Advanced Settings */}
-        {settings.provider === 'elevenlabs' && (
-          <div className="pt-4 border-t border-gray-800">
-            <Label className="text-gray-300 mb-4 block">ElevenLabs Advanced</Label>
-            
-            <div className="space-y-4">
-              <VoiceSlider
-                label="Stability"
-                value={settings.stability}
-                onChange={(v) => updateSetting('stability', v)}
-                min={0}
-                max={1}
-                step={0.05}
-                unit=""
-              />
+      {/* Audio Effects */}
+      <div className="pt-4 border-t border-cyan-500/20 space-y-4">
+        <Label className="text-gray-300 flex items-center gap-2">
+          <Zap className="w-4 h-4 text-cyan-400" />
+          Audio Effects
+        </Label>
 
-              <VoiceSlider
-                label="Similarity"
-                value={settings.similarity}
-                onChange={(v) => updateSetting('similarity', v)}
-                min={0}
-                max={1}
-                step={0.05}
-                unit=""
-              />
+        <SliderControl
+          label="Bass"
+          value={settings.bass || 0}
+          onChange={(v) => updateSetting("bass", v)}
+          min={-10}
+          max={10}
+          step={1}
+          format={(v) => `${v > 0 ? '+' : ''}${v} dB`}
+        />
 
-              <VoiceSlider
-                label="Style"
-                value={settings.style}
-                onChange={(v) => updateSetting('style', v)}
-                min={0}
-                max={1}
-                step={0.05}
-                unit=""
-              />
+        <SliderControl
+          label="Treble"
+          value={settings.treble || 0}
+          onChange={(v) => updateSetting("treble", v)}
+          min={-10}
+          max={10}
+          step={1}
+          format={(v) => `${v > 0 ? '+' : ''}${v} dB`}
+        />
 
-              <div className="flex items-center justify-between py-2">
-                <Label className="text-gray-300">Speaker Boost</Label>
-                <Switch
-                  checked={settings.useSpeakerBoost}
-                  onCheckedChange={(v) => updateSetting('useSpeakerBoost', v)}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+        <SliderControl
+          label="Mid"
+          value={settings.mid || 0}
+          onChange={(v) => updateSetting("mid", v)}
+          min={-10}
+          max={10}
+          step={1}
+          format={(v) => `${v > 0 ? '+' : ''}${v} dB`}
+        />
+      </div>
+    </div>
   );
 }
 
-function VoiceSlider({ label, value, onChange, min, max, step, unit }) {
+function SliderControl({ label, value, onChange, min, max, step, format }) {
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center">
         <Label className="text-gray-300">{label}</Label>
         <span className="text-cyan-400 text-sm font-mono">
-          {value.toFixed(step < 0.1 ? 2 : 1)}{unit}
+          {format(value)}
         </span>
       </div>
       <Slider

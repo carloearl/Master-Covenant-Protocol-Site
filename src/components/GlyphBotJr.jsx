@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { generateVoice, applyAudioEffects } from "@/components/utils/voiceEngine";
+import { generateAudio, applyAudioEffects } from "@/utils/ttsEngine";
 import VoiceSettingsPanel from "@/components/chat/VoiceSettingsPanel";
 
 export default function GlyphBotJr() {
@@ -27,15 +27,15 @@ export default function GlyphBotJr() {
   const [loading, setLoading] = useState(false);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
   const [voiceSettings, setVoiceSettings] = useState({
-    provider: 'streamelements',
-    voice: 'Matthew',
+    provider: 'openai',
+    voice: 'echo',
     speed: 1.0,
     pitch: 1.0,
+    naturalness: 0.8,
+    volume: 1.0,
     bass: 0,
     treble: 0,
     mid: 0,
-    depth: 0,
-    accent: 5,
     stability: 0.5,
     similarity: 0.75,
     style: 0.0,
@@ -56,20 +56,25 @@ export default function GlyphBotJr() {
 
   const playVoice = async (text) => {
     try {
-      const audioUrl = await generateVoice(voiceSettings.provider, text, voiceSettings);
+      const audioUrl = await generateAudio(
+        voiceSettings.provider,
+        voiceSettings.voice,
+        text,
+        voiceSettings
+      );
       
       if (audioUrl) {
         const audio = audioRef.current;
         audio.pause();
         audio.currentTime = 0;
         audio.src = audioUrl;
-        audio.playbackRate = voiceSettings.speed;
+        audio.playbackRate = voiceSettings.speed || 1.0;
         
         applyAudioEffects(audio, {
-          bass: voiceSettings.bass,
-          treble: voiceSettings.treble,
-          mid: voiceSettings.mid,
-          delay: voiceSettings.depth
+          bass: voiceSettings.bass || 0,
+          treble: voiceSettings.treble || 0,
+          mid: voiceSettings.mid || 0,
+          volume: voiceSettings.volume || 1.0
         });
         
         audio.play().catch(() => {});
@@ -203,7 +208,7 @@ Provide a helpful, professional response (2-3 sentences max). No emojis. Guide t
             <div className="p-4 h-[400px] overflow-y-auto">
               <VoiceSettingsPanel
                 settings={voiceSettings}
-                onSettingsChange={setVoiceSettings}
+                onChange={setVoiceSettings}
               />
             </div>
           ) : (

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { MessageCircle, X, Save, FolderOpen, Plus, Settings, Volume2 } from "lucide-react";
-import { generateVoice, applyAudioEffects } from "@/components/utils/voiceEngine";
+import { generateAudio, applyAudioEffects } from "@/utils/ttsEngine";
 import VoiceSettingsPanel from "@/components/chat/VoiceSettingsPanel";
 
 export default function Chat() {
@@ -16,15 +16,15 @@ export default function Chat() {
   const [showConvList, setShowConvList] = useState(false);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
   const [voiceSettings, setVoiceSettings] = useState({
-    provider: 'elevenlabs',
-    voice: 'Rachel',
+    provider: 'openai',
+    voice: 'alloy',
     speed: 1.0,
     pitch: 1.0,
+    naturalness: 0.8,
+    volume: 1.0,
     bass: 0,
     treble: 0,
     mid: 0,
-    depth: 0,
-    accent: 5,
     stability: 0.5,
     similarity: 0.75,
     style: 0.0,
@@ -45,8 +45,38 @@ export default function Chat() {
   useEffect(() => {
     if (isOpen) {
       loadConversations();
+      loadUserPreferences();
     }
   }, [isOpen]);
+
+  const loadUserPreferences = async () => {
+    try {
+      const prefs = await base44.entities.UserPreferences.list();
+      if (prefs.length > 0 && prefs[0].voiceSettings) {
+        setVoiceSettings(prefs[0].voiceSettings);
+      }
+    } catch (e) {
+      console.error("Failed to load preferences:", e);
+    }
+  };
+
+  const saveVoiceSettings = async (newSettings) => {
+    setVoiceSettings(newSettings);
+    try {
+      const prefs = await base44.entities.UserPreferences.list();
+      if (prefs.length > 0) {
+        await base44.entities.UserPreferences.update(prefs[0].id, {
+          voiceSettings: newSettings
+        });
+      } else {
+        await base44.entities.UserPreferences.create({
+          voiceSettings: newSettings
+        });
+      }
+    } catch (e) {
+      console.error("Failed to save preferences:", e);
+    }
+  };
 
   const loadConversations = async () => {
     try {
@@ -59,21 +89,25 @@ export default function Chat() {
 
   const playVoice = async (text) => {
     try {
-      const audioUrl = await generateVoice(voiceSettings.provider, text, voiceSettings);
+      const audioUrl = await generateAudio(
+        voiceSettings.provider,
+        voiceSettings.voice,
+        text,
+        voiceSettings
+      );
       
       if (audioUrl) {
         const audio = audioRef.current;
         audio.pause();
         audio.currentTime = 0;
         audio.src = audioUrl;
-        audio.playbackRate = voiceSettings.speed;
+        audio.playbackRate = voiceSettings.speed || 1.0;
         
-        // Apply audio effects
         applyAudioEffects(audio, {
-          bass: voiceSettings.bass,
-          treble: voiceSettings.treble,
-          mid: voiceSettings.mid,
-          delay: voiceSettings.depth
+          bass: voiceSettings.bass || 0,
+          treble: voiceSettings.treble || 0,
+          mid: voiceSettings.mid || 0,
+          volume: voiceSettings.volume || 1.0
         });
         
         audio.play().catch(() => {});
@@ -258,7 +292,7 @@ When answering questions, check the FAQ knowledge base first for common question
           </div>
           <VoiceSettingsPanel
             settings={voiceSettings}
-            onSettingsChange={setVoiceSettings}
+            onChange={saveVoiceSettings}
           />
         </div>
       )}
