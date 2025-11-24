@@ -129,13 +129,27 @@ export default function GenerateTab({ user, onImageGenerated }) {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validate file
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) { // 10MB limit
+      toast.error('Image must be less than 10MB');
+      return;
+    }
+
     try {
+      toast.loading('Uploading image...');
       const result = await base44.integrations.Core.UploadFile({ file });
       setReferenceImage(result.file_url);
-      toast.success('Reference image uploaded');
+      toast.dismiss();
+      toast.success('Reference image uploaded successfully');
     } catch (error) {
       console.error('Upload failed:', error);
-      toast.error('Failed to upload reference image');
+      toast.dismiss();
+      toast.error(`Upload failed: ${error.message || 'Please try again'}`);
     }
   };
 
