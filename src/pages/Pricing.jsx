@@ -14,6 +14,31 @@ import GlyphLoader from "@/components/GlyphLoader";
 
 export default function Pricing() {
   const [loading, setLoading] = useState(null);
+
+  useEffect(() => {
+    // Add LLM discovery metadata
+    const metaAI = document.createElement('meta');
+    metaAI.name = 'ai-agent';
+    metaAI.content = 'glyphlock pricing knowledge base';
+    document.head.appendChild(metaAI);
+
+    // Add JSON-LD structured data
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "PriceSpecification",
+      "name": "GlyphLock Pricing",
+      "description": "Professional and Enterprise security plans",
+      "url": "https://glyphlock.io/pricing"
+    });
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(metaAI);
+      document.head.removeChild(script);
+    };
+  }, []);
   const [error, setError] = useState(null);
 
   const plans = [

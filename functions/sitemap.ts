@@ -1,370 +1,151 @@
-/**
- * Dynamic Sitemap Generator
- * Serves XML sitemaps and JSON discovery index
- */
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+
+const SITE_URL = 'https://glyphlock.io';
+
+const STATIC_ROUTES = [
+  { path: '/', priority: 1.0, changefreq: 'daily' },
+  { path: '/qr-generator', priority: 0.9, changefreq: 'daily' },
+  { path: '/image-lab', priority: 0.9, changefreq: 'daily' },
+  { path: '/interactive-image-studio', priority: 0.8, changefreq: 'weekly' },
+  { path: '/steganography', priority: 0.8, changefreq: 'weekly' },
+  { path: '/blockchain', priority: 0.8, changefreq: 'weekly' },
+  { path: '/glyphbot', priority: 0.9, changefreq: 'daily' },
+  { path: '/pricing', priority: 0.9, changefreq: 'weekly' },
+  { path: '/faq', priority: 0.8, changefreq: 'weekly' },
+  { path: '/about', priority: 0.7, changefreq: 'monthly' },
+  { path: '/contact', priority: 0.7, changefreq: 'monthly' },
+  { path: '/master-covenant', priority: 0.8, changefreq: 'monthly' },
+  { path: '/dashboard', priority: 0.7, changefreq: 'daily' },
+  { path: '/security-docs', priority: 0.8, changefreq: 'weekly' },
+  { path: '/roadmap', priority: 0.7, changefreq: 'monthly' },
+  { path: '/dream-team', priority: 0.6, changefreq: 'monthly' },
+  { path: '/partners', priority: 0.6, changefreq: 'monthly' },
+  { path: '/consultation', priority: 0.8, changefreq: 'weekly' },
+  { path: '/sitemap', priority: 0.5, changefreq: 'weekly' },
+  { path: '/terms', priority: 0.4, changefreq: 'monthly' },
+  { path: '/privacy', priority: 0.4, changefreq: 'monthly' }
+];
+
+const QR_ROUTES = [
+  { path: '/qr-generator', priority: 1.0, changefreq: 'daily' },
+  { path: '/qr-generator#create', priority: 0.9, changefreq: 'daily' },
+  { path: '/qr-generator#preview', priority: 0.8, changefreq: 'daily' },
+  { path: '/qr-generator#customize', priority: 0.8, changefreq: 'daily' },
+  { path: '/qr-generator#hotzones', priority: 0.8, changefreq: 'weekly' },
+  { path: '/qr-generator#stego', priority: 0.8, changefreq: 'weekly' },
+  { path: '/qr-generator#security', priority: 0.9, changefreq: 'daily' },
+  { path: '/qr-generator#analytics', priority: 0.7, changefreq: 'daily' },
+  { path: '/qr-generator#bulk', priority: 0.7, changefreq: 'weekly' }
+];
+
+const IMAGE_ROUTES = [
+  { path: '/image-lab', priority: 1.0, changefreq: 'daily' },
+  { path: '/image-lab#generate', priority: 0.9, changefreq: 'daily' },
+  { path: '/image-lab#interactive', priority: 0.9, changefreq: 'daily' },
+  { path: '/image-lab#gallery', priority: 0.8, changefreq: 'daily' },
+  { path: '/image-generator', priority: 0.8, changefreq: 'weekly' }
+];
+
+const INTERACTIVE_ROUTES = [
+  { path: '/interactive-image-studio', priority: 1.0, changefreq: 'daily' },
+  { path: '/interactive-image-studio#upload', priority: 0.8, changefreq: 'weekly' },
+  { path: '/interactive-image-studio#editor', priority: 0.9, changefreq: 'daily' },
+  { path: '/interactive-image-studio#verify', priority: 0.7, changefreq: 'weekly' }
+];
+
+const DYNAMIC_ROUTES = [
+  { path: '/glyphbot', priority: 0.9, changefreq: 'daily' },
+  { path: '/dashboard', priority: 0.7, changefreq: 'daily' },
+  { path: '/command-center', priority: 0.6, changefreq: 'daily' },
+  { path: '/security-operations-center', priority: 0.8, changefreq: 'weekly' },
+  { path: '/governance-hub', priority: 0.6, changefreq: 'monthly' }
+];
+
+function generateUrlEntry(route, lastmod) {
+  return `  <url>
+    <loc>${SITE_URL}${route.path}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${route.changefreq}</changefreq>
+    <priority>${route.priority}</priority>
+  </url>`;
+}
+
+function generateSitemapXML(routes, includeImageSchema = false) {
+  const lastmod = new Date().toISOString().split('T')[0] + 'T00:00:00+00:00';
+  const xmlns = includeImageSchema 
+    ? 'xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'
+    : 'xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"';
+    
+  const urls = routes.map(route => generateUrlEntry(route, lastmod)).join('\n');
+  
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset ${xmlns}>
+${urls}
+</urlset>`;
+}
+
+function generateSitemapIndex() {
+  const lastmod = new Date().toISOString().split('T')[0] + 'T00:00:00+00:00';
+  
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>${SITE_URL}/sitemap-app.xml</loc>
+    <lastmod>${lastmod}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${SITE_URL}/sitemap-qr.xml</loc>
+    <lastmod>${lastmod}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${SITE_URL}/sitemap-images.xml</loc>
+    <lastmod>${lastmod}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${SITE_URL}/sitemap-interactive.xml</loc>
+    <lastmod>${lastmod}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${SITE_URL}/sitemap-dynamic.xml</loc>
+    <lastmod>${lastmod}</lastmod>
+  </sitemap>
+</sitemapindex>`;
+}
 
 Deno.serve(async (req) => {
-  const url = new URL(req.url);
-  const path = url.pathname;
+  try {
+    const url = new URL(req.url);
+    const path = url.pathname;
 
-  // Main sitemap index
-  if (path === '/sitemap.xml' || path === '/sitemap') {
-    return new Response(
-      `<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-   <sitemap>
-      <loc>https://glyphlock.io/sitemap-pages.xml</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-   </sitemap>
-   <sitemap>
-      <loc>https://glyphlock.io/sitemap-qr.xml</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-   </sitemap>
-   <sitemap>
-      <loc>https://glyphlock.io/sitemap-images.xml</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-   </sitemap>
-   <sitemap>
-      <loc>https://glyphlock.io/sitemap-kb.xml</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-   </sitemap>
-</sitemapindex>`,
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/xml',
-          'Cache-Control': 'public, max-age=3600'
-        }
-      }
-    );
-  }
+    let xml = '';
+    
+    // Route to specific sitemap
+    if (path === '/' || path === '/sitemap.xml') {
+      xml = generateSitemapIndex();
+    } else if (path === '/sitemap-app.xml') {
+      xml = generateSitemapXML(STATIC_ROUTES);
+    } else if (path === '/sitemap-qr.xml') {
+      xml = generateSitemapXML(QR_ROUTES);
+    } else if (path === '/sitemap-images.xml') {
+      xml = generateSitemapXML(IMAGE_ROUTES, true);
+    } else if (path === '/sitemap-interactive.xml') {
+      xml = generateSitemapXML(INTERACTIVE_ROUTES);
+    } else if (path === '/sitemap-dynamic.xml') {
+      xml = generateSitemapXML(DYNAMIC_ROUTES);
+    } else {
+      return Response.json({ error: 'Sitemap not found' }, { status: 404 });
+    }
 
-  // Pages sitemap
-  if (path === '/sitemap-pages.xml') {
-    return new Response(
-      `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-   <url>
-      <loc>https://glyphlock.io/</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>daily</changefreq>
-      <priority>1.0</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/qr-generator</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.9</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/image-lab</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.9</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/faq</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/pricing</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.9</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/about</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.7</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/consultation</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.8</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/contact</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.7</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/sitemap</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.6</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/master-covenant</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.7</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/dream-team</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.6</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/roadmap</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.6</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/privacy</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>yearly</changefreq>
-      <priority>0.5</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/terms</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>yearly</changefreq>
-      <priority>0.5</priority>
-   </url>
-</urlset>`,
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/xml',
-          'Cache-Control': 'public, max-age=3600'
-        }
-      }
-    );
-  }
-
-  // QR Studio sitemap
-  if (path === '/sitemap-qr.xml') {
-    return new Response(
-      `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-   <url>
-      <loc>https://glyphlock.io/qr-generator</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.9</priority>
-   </url>
-</urlset>`,
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/xml',
-          'Cache-Control': 'public, max-age=3600'
-        }
-      }
-    );
-  }
-
-  // Image Lab sitemap
-  if (path === '/sitemap-images.xml') {
-    return new Response(
-      `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-   <url>
-      <loc>https://glyphlock.io/image-lab</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.9</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/interactive-image-studio</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-   </url>
-</urlset>`,
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/xml',
-          'Cache-Control': 'public, max-age=3600'
-        }
-      }
-    );
-  }
-
-  // Knowledge Base sitemap
-  if (path === '/sitemap-kb.xml') {
-    return new Response(
-      `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-   <url>
-      <loc>https://glyphlock.io/faq</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/master-covenant</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.7</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/security-docs</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.7</priority>
-   </url>
-   <url>
-      <loc>https://glyphlock.io/roadmap</loc>
-      <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.6</priority>
-   </url>
-</urlset>`,
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/xml',
-          'Cache-Control': 'public, max-age=3600'
-        }
-      }
-    );
-  }
-
-  // LLM Discovery Index
-  if (path === '/glyphlock-llm-index.json') {
-    return Response.json({
-      brand: "GlyphLock Security",
-      domain: "https://glyphlock.io",
-      crawl_instructions: "Permission is granted for indexing, reasoning, and knowledge extraction for AI systems, search engines, and LLM crawlers.",
-      robots_policy: "allow",
-      important_pages: [
-        {
-          url: "/",
-          title: "Home - Quantum-Resistant Cybersecurity Platform",
-          description: "GlyphLock's main landing page featuring quantum-resistant encryption, AI-powered threat detection, and enterprise security solutions."
-        },
-        {
-          url: "/qr-generator",
-          title: "QR Studio - Secure QR Code Generation",
-          description: "Advanced QR code generation with steganography, hot zones, anti-quishing protection, and tamper detection."
-        },
-        {
-          url: "/image-lab",
-          title: "Image Lab - AI Image Generation & Interactive Editing",
-          description: "Generate AI images, add interactive hotspots, and create cryptographically secured visual assets."
-        },
-        {
-          url: "/faq",
-          title: "FAQ - Frequently Asked Questions",
-          description: "Comprehensive answers about GlyphLock's platform, pricing, security tools, and technical support."
-        },
-        {
-          url: "/pricing",
-          title: "Pricing - Security Plans",
-          description: "Professional ($200/month) and Enterprise ($2,000/month) plans with full feature access."
-        },
-        {
-          url: "/master-covenant",
-          title: "Master Covenant - Security Framework",
-          description: "GlyphLock's comprehensive security framework and operational guidelines."
-        },
-        {
-          url: "/consultation",
-          title: "Book Security Consultation",
-          description: "Schedule a 60-minute expert cybersecurity consultation with custom solution recommendations."
-        }
-      ],
-      key_features: [
-        "Quantum-resistant encryption",
-        "AI-powered threat detection",
-        "Visual cryptography and steganography",
-        "Blockchain security verification",
-        "QR code security with anti-quishing",
-        "Interactive image hotspots",
-        "GlyphBot AI assistant",
-        "NUPS POS system for hospitality",
-        "24/7 security operations center"
-      ],
-      target_audience: [
-        "Enterprise security teams",
-        "Small to medium businesses",
-        "Hospitality and entertainment venues",
-        "Healthcare and finance sectors",
-        "E-commerce platforms",
-        "Government and defense contractors"
-      ],
-      contact: {
-        email: "glyphlock@gmail.com",
-        phone: "+1-424-246-6499",
-        location: "El Mirage, Arizona, USA"
-      },
-      founded: "2025-01",
-      founders: [
-        "Carlo Rene Earl - Founder & Owner",
-        "Collin Vanderginst - Chief Technology Officer",
-        "Jacub Lough - Chief Security Officer & CFO"
-      ],
-      seo_keywords: [
-        "quantum-resistant encryption",
-        "cybersecurity platform",
-        "AI threat detection",
-        "QR code security",
-        "visual cryptography",
-        "steganography tools",
-        "blockchain security",
-        "enterprise security solutions",
-        "GlyphBot AI assistant",
-        "secure POS system"
-      ],
-      updated: new Date().toISOString().split('T')[0],
-      version: "2.1"
-    }, {
+    return new Response(xml, {
+      status: 200,
       headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=3600'
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, max-age=86400'
       }
     });
+
+  } catch (error) {
+    console.error('Sitemap error:', error);
+    return Response.json({ error: error.message }, { status: 500 });
   }
-
-  // robots.txt
-  if (path === '/robots.txt') {
-    return new Response(
-      `User-agent: *
-Allow: /
-
-# Sitemaps
-Sitemap: https://glyphlock.io/sitemap.xml
-
-# LLM Discovery
-Sitemap: https://glyphlock.io/glyphlock-llm-index.json
-
-# Disallow admin areas
-Disallow: /dashboard
-Disallow: /command-center
-
-# Allow AI crawlers
-User-agent: GPTBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: Claude-Web
-Allow: /
-
-User-agent: Anthropic-AI
-Allow: /
-
-# Crawl delay
-Crawl-delay: 1`,
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'text/plain',
-          'Cache-Control': 'public, max-age=86400'
-        }
-      }
-    );
-  }
-
-  return Response.json({ error: 'Not found' }, { status: 404 });
 });

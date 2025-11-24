@@ -11,6 +11,11 @@ Disallow: /nups-staff
 Disallow: /nups-owner
 
 Sitemap: https://glyphlock.io/sitemap.xml
+Sitemap: https://glyphlock.io/sitemap-qr.xml
+Sitemap: https://glyphlock.io/sitemap-images.xml
+Sitemap: https://glyphlock.io/sitemap-interactive.xml
+Sitemap: https://glyphlock.io/sitemap-app.xml
+Sitemap: https://glyphlock.io/sitemap-dynamic.xml
 `;
     
     // Create blob and trigger download
@@ -37,7 +42,12 @@ Disallow: /command-center
 Disallow: /nups-staff
 Disallow: /nups-owner
 
-Sitemap: https://glyphlock.io/sitemap.xml`}
+Sitemap: https://glyphlock.io/sitemap.xml
+Sitemap: https://glyphlock.io/sitemap-qr.xml
+Sitemap: https://glyphlock.io/sitemap-images.xml
+Sitemap: https://glyphlock.io/sitemap-interactive.xml
+Sitemap: https://glyphlock.io/sitemap-app.xml
+Sitemap: https://glyphlock.io/sitemap-dynamic.xml`}
         </pre>
       </div>
     </div>
