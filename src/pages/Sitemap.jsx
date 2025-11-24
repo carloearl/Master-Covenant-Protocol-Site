@@ -8,6 +8,61 @@ import { Shield, Map, FileText, Cpu, Lock, Globe, ArrowRight, ExternalLink } fro
 import SEOHead from "@/components/SEOHead";
 
 export default function Sitemap() {
+  // Generate XML sitemap content
+  const generateSitemapXML = () => {
+    const baseUrl = 'https://glyphlock.io';
+    const pages = [
+      { url: '/', priority: 1.0, changefreq: 'daily' },
+      { url: '/about', priority: 0.9, changefreq: 'monthly' },
+      { url: '/contact', priority: 0.8, changefreq: 'monthly' },
+      { url: '/pricing', priority: 0.9, changefreq: 'weekly' },
+      { url: '/qrgenerator', priority: 1.0, changefreq: 'weekly' },
+      { url: '/blockchain', priority: 0.8, changefreq: 'monthly' },
+      { url: '/steganography', priority: 0.8, changefreq: 'monthly' },
+      { url: '/glyphbot', priority: 0.9, changefreq: 'weekly' },
+      { url: '/security-docs', priority: 0.8, changefreq: 'weekly' },
+      { url: '/roadmap', priority: 0.7, changefreq: 'monthly' },
+      { url: '/faq', priority: 0.7, changefreq: 'monthly' },
+      { url: '/dream-team', priority: 0.7, changefreq: 'monthly' },
+      { url: '/partners', priority: 0.7, changefreq: 'monthly' },
+      { url: '/master-covenant', priority: 0.8, changefreq: 'monthly' },
+      { url: '/privacy', priority: 0.5, changefreq: 'yearly' },
+      { url: '/terms', priority: 0.5, changefreq: 'yearly' },
+    ];
+
+    const lastmod = new Date().toISOString().split('T')[0];
+    
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+`;
+    
+    pages.forEach(page => {
+      xml += `  <url>
+    <loc>${baseUrl}${page.url}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
+  </url>
+`;
+    });
+    
+    xml += `</urlset>`;
+    return xml;
+  };
+
+  const downloadSitemap = () => {
+    const xml = generateSitemapXML();
+    const blob = new Blob([xml], { type: 'application/xml' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'sitemap.xml';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   // Group pages for display
   const groups = {
     Core: ["Home", "About", "Contact", "Pricing", "Consultation"],
@@ -52,6 +107,13 @@ export default function Sitemap() {
             <p className="text-gray-400 max-w-2xl mx-auto text-lg">
               Navigate the complete GlyphLock ecosystem. From quantum-resistant tools and AI security agents to corporate governance and compliance.
             </p>
+            <button
+              onClick={downloadSitemap}
+              className="mt-6 px-6 py-3 rounded-lg border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 transition-all text-sm font-bold flex items-center gap-2 mx-auto"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Download sitemap.xml
+            </button>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
