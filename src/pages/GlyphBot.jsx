@@ -11,7 +11,6 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { PERSONAS } from "@/components/glyphbot/personas";
 import GlyphBotJr from "@/components/GlyphBotJr";
-import "@/styles/glyphlockTheme.css";
 
 export default function GlyphBot() {
   const [messages, setMessages] = useState(() => {
