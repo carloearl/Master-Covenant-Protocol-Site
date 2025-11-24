@@ -57,42 +57,17 @@ export default function GlyphBot() {
   const audioRef = useRef(null);
   const lastSpokenIdRef = useRef(null);
 
-  // Persist state
   useEffect(() => {
-    localStorage.setItem("glyphbot_messages", JSON.stringify(messages));
-  }, [messages]);
+    try {
+      localStorage.setItem("glyphbot_persona", personaId);
+    } catch {}
+  }, [personaId]);
 
   useEffect(() => {
-    localStorage.setItem("glyphbot_draft", input);
-  }, [input]);
-
-  useEffect(() => {
-    localStorage.setItem("glyphbot_persona", persona);
-  }, [persona]);
-
-  useEffect(() => {
-    localStorage.setItem("glyphbot_talkback", JSON.stringify(autoTalkback));
-  }, [autoTalkback]);
-
-  useEffect(() => {
-    localStorage.setItem("glyphbot_volume", String(volume));
-  }, [volume]);
-
-  useEffect(() => {
-    localStorage.setItem("glyphbot_voice", selectedVoice);
-  }, [selectedVoice]);
-
-  useEffect(() => {
-    localStorage.setItem("glyphbot_rate", String(speechRate));
-  }, [speechRate]);
-
-  useEffect(() => {
-    localStorage.setItem("glyphbot_pitch", String(speechPitch));
-  }, [speechPitch]);
-
-  useEffect(() => {
-    localStorage.setItem("glyphbot_effects", JSON.stringify(audioEffects));
-  }, [audioEffects]);
+    try {
+      localStorage.setItem("glyphbot_autoplay", String(autoplay));
+    } catch {}
+  }, [autoplay]);
 
   // Load available voices
   useEffect(() => {
