@@ -122,8 +122,8 @@ GlyphLock QR Studio is an advanced QR code generation platform with military-gra
 ### 7. Batch Generation
 **CSV Upload:**
 - Maximum 100 QR codes per batch
-- Required columns: `title`, `payloadValue`
-- Optional column: `payloadType` (defaults to URL)
+- Required columns: title, payloadValue
+- Optional column: payloadType (defaults to URL)
 
 **Workflow:**
 1. Upload CSV file
