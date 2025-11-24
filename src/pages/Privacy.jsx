@@ -10,25 +10,26 @@ export default function Privacy() {
         description="GlyphLock Privacy Policy - How we protect, encrypt, and manage your data."
         url="/privacy"
       />
-      <div className="min-h-screen bg-black text-white py-32 relative overflow-hidden">
-        {/* Background */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#8C4BFF]/10 rounded-full blur-[120px] pointer-events-none"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#00E4FF]/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="min-h-screen bg-gradient-to-br from-black via-purple-950/20 to-black text-white py-32 relative overflow-hidden">
+        {/* Cosmic Background */}
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/30 via-cyan-900/10 to-transparent pointer-events-none z-0" />
+        <div className="fixed inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDYsIDE4MiwgMjEyLCAwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20 pointer-events-none z-0" />
+        <div className="glyph-orb fixed top-20 right-20 opacity-20 glyph-pulse" style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.3), rgba(59,130,246,0.2))' }}></div>
         
         <div className="container mx-auto px-6 max-w-4xl relative z-10">
           <div className="text-center mb-20">
-            <div className="inline-block p-4 bg-white/5 rounded-2xl mb-6 border border-white/10">
-              <Shield className="w-12 h-12 text-[#00E4FF]" />
+            <div className="inline-flex items-center justify-center p-4 glyph-glass border-2 border-cyan-500/40 rounded-2xl mb-6 glyph-glow">
+              <Shield className="w-12 h-12 text-cyan-400" />
             </div>
             <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter font-space">
-              PRIVACY <span className="text-transparent bg-gradient-to-r from-[#00E4FF] to-[#8C4BFF] bg-clip-text">POLICY</span>
+              PRIVACY <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">POLICY</span>
             </h1>
-            <div className="inline-block px-4 py-2 bg-[#00E4FF]/10 border border-[#00E4FF]/30 rounded-full">
-              <p className="text-[#00E4FF] text-sm font-bold uppercase tracking-widest">Last Updated: May 2025</p>
+            <div className="inline-block px-4 py-2 glyph-glass border border-cyan-500/30 rounded-full">
+              <p className="text-cyan-300 text-sm font-bold uppercase tracking-widest">Last Updated: May 2025</p>
             </div>
           </div>
 
-          <div className="glass-card rounded-3xl border border-white/10 p-8 md:p-12 space-y-12 backdrop-blur-xl bg-[#0A0F24]/90">
+          <div className="glyph-glass-dark rounded-3xl border-2 border-cyan-500/30 p-8 md:p-12 space-y-12 glyph-glow">
             
             {/* Scope and Purpose */}
             <section>
