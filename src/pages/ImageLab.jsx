@@ -16,9 +16,9 @@ import {
 } from '@/components/imageLab/design/GlyphImageDesignSystem';
 
 // Tab Components
-import GenerateTab from '@/components/imageLab/tabs/GenerateTab';
-import InteractiveTab from '@/components/imageLab/tabs/InteractiveTab';
-import GalleryTab from '@/components/imageLab/tabs/GalleryTab';
+import GenerateTab from '@/components/imageLab/tabs/GenerateTab.jsx';
+import InteractiveTab from '@/components/imageLab/tabs/InteractiveTab.jsx';
+import GalleryTab from '@/components/imageLab/tabs/GalleryTab.jsx';
 
 export default function ImageLab() {
   const [activeTab, setActiveTab] = useState('generate');
