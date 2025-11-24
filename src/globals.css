@@ -231,109 +231,300 @@ p {
   }
 }
 
-/* DinoBot Voice Settings */
-.dino-voice-settings {
+/* DinoBot Chat Styles */
+.dino-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  color: white;
+  border: none;
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.dino-fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 32px rgba(6, 182, 212, 0.6);
+}
+
+.dino-chat-container {
+  position: fixed;
+  bottom: 100px;
+  right: 24px;
+  width: 400px;
+  max-width: calc(100vw - 48px);
+  height: 600px;
+  max-height: calc(100vh - 150px);
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dino-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  border-bottom: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.dino-title {
+  flex: 1;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.dino-icon-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.dino-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.dino-close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.dino-close-btn:hover {
+  background: rgba(255, 0, 0, 0.3);
+}
+
+.dino-messages {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dino-bubble {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.dino-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.dino-user {
+  flex-direction: row-reverse;
+}
+
+.dino-user .dino-avatar {
+  background: linear-gradient(135deg, #8b5cf6, #a855f7);
+}
+
+.dino-text {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  line-height: 1.5;
+  max-width: 70%;
+}
+
+.dino-user .dino-text {
+  background: linear-gradient(135deg, #8b5cf6, #a855f7);
+}
+
+.dino-speak-btn {
+  margin-top: 8px;
+  background: rgba(6, 182, 212, 0.2);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  color: #06b6d4;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.dino-speak-btn:hover {
+  background: rgba(6, 182, 212, 0.3);
+  transform: scale(1.05);
+}
+
+.dino-input-zone {
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+  border-top: 1px solid rgba(6, 182, 212, 0.2);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.dino-input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  color: white;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.dino-input:focus {
+  border-color: #06b6d4;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dino-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.dino-send-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.dino-send-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+}
+
+.dino-send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dino-conv-list {
   position: absolute;
   top: 60px;
   left: 0;
   right: 0;
   bottom: 60px;
-  background: rgba(15, 23, 42, 0.98);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(96, 165, 250, 0.2);
+  background: rgba(0, 0, 0, 0.98);
   z-index: 10;
   overflow-y: auto;
 }
 
-.dino-voice-header {
+.dino-conv-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px;
-  border-bottom: 1px solid rgba(96, 165, 250, 0.2);
+  border-bottom: 1px solid rgba(6, 182, 212, 0.2);
 }
 
-.dino-voice-header h3 {
+.dino-conv-header h3 {
+  color: #06b6d4;
   font-size: 16px;
   font-weight: 600;
-  color: #60a5fa;
   margin: 0;
 }
 
-.dino-voice-content {
-  padding: 16px;
-}
-
-.dino-voice-group {
-  margin-bottom: 20px;
-}
-
-.dino-voice-group label {
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-  color: #cbd5e1;
-  margin-bottom: 8px;
-}
-
-.dino-voice-select {
-  width: 100%;
-  padding: 10px 12px;
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(96, 165, 250, 0.3);
+.dino-new-conv {
+  background: rgba(6, 182, 212, 0.2);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  color: #06b6d4;
+  padding: 6px 12px;
   border-radius: 8px;
-  color: #e2e8f0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 14px;
-  outline: none;
   transition: all 0.2s;
 }
 
-.dino-voice-select:focus {
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+.dino-new-conv:hover {
+  background: rgba(6, 182, 212, 0.3);
 }
 
-.dino-voice-slider {
-  width: 100%;
-  height: 6px;
-  -webkit-appearance: none;
-  appearance: none;
-  background: rgba(30, 41, 59, 0.8);
-  border-radius: 3px;
-  outline: none;
+.dino-conv-items {
+  padding: 8px;
 }
 
-.dino-voice-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  background: linear-gradient(135deg, #60a5fa, #3b82f6);
-  border-radius: 50%;
+.dino-conv-item {
+  padding: 12px;
+  border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   transition: all 0.2s;
+  margin-bottom: 4px;
 }
 
-.dino-voice-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 12px rgba(96, 165, 250, 0.6);
+.dino-conv-item:hover {
+  background: rgba(6, 182, 212, 0.1);
 }
 
-.dino-voice-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  background: linear-gradient(135deg, #60a5fa, #3b82f6);
-  border-radius: 50%;
-  cursor: pointer;
-  border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+.dino-conv-item.active {
+  background: rgba(6, 182, 212, 0.2);
+  border-left: 3px solid #06b6d4;
 }
 
-.dino-voice-group input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  margin-right: 8px;
-  cursor: pointer;
-  accent-color: #60a5fa;
+.dino-conv-title {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.dino-conv-date {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+}
+
+.dino-conv-empty {
+  color: rgba(255, 255, 255, 0.3);
+  text-align: center;
+  padding: 32px 16px;
+  font-size: 14px;
 }
