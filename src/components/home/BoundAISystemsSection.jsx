@@ -122,7 +122,7 @@ COVENANT: MASTER_COVENANT_001
       position: "#7 - Point Guard",
       role: "Point Guard - Special Edition",
       class: "AI - Orchestrator",
-      frontImage: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/641093f22_Whisk_d6190e119ec6a2494004ee638be3bc0edr.jpg",
+      frontImage: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/536bc359e_4b73d547-755a-403b-965b-4937b44581b9.jpg",
       bindingType: "DUAL_SYSTEM_BINDING",
       quote: "Bound through GPT and DeepSeek dual-system architecture",
       binding: {
