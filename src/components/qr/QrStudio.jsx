@@ -133,12 +133,12 @@ export default function QrStudio() {
       </div>
 
       {/* Header */}
-      <div className="border-b border-cyan-500/20 bg-black/80 backdrop-blur-xl sticky top-0 z-50 shadow-2xl shadow-black/50">
+      <div className="border-b border-cyan-500/20 glyph-glass-dark sticky top-0 z-50 shadow-2xl glyph-glow">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex flex-col space-y-2">
-              <h1 className={`${GlyphTypography.display.md} ${GlyphGradients.primaryText} flex items-center gap-3`}>
-                <Zap className="w-10 h-10 text-cyan-400 animate-pulse" />
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center gap-3">
+                <Zap className="w-10 h-10 text-cyan-400 glyph-pulse" />
                 GlyphLock QR Studio
               </h1>
               <p className="text-sm sm:text-base text-gray-400 flex items-center gap-2">
@@ -146,12 +146,12 @@ export default function QrStudio() {
                 Military-grade QR generation with steganography, hot zones & anti-quishing
               </p>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-lg">
-                <p className="text-xs text-cyan-400 font-semibold">90+ Payload Types</p>
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="px-4 py-2 glyph-glass border border-cyan-500/50 rounded-lg glyph-glow">
+                <p className="text-xs text-cyan-300 font-semibold">90+ Payload Types</p>
               </div>
-              <div className="px-4 py-2 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-                <p className="text-xs text-purple-400 font-semibold flex items-center gap-1">
+              <div className="px-4 py-2 glyph-glass border border-purple-500/50 rounded-lg">
+                <p className="text-xs text-purple-300 font-semibold flex items-center gap-1">
                   <Sparkles className="w-3 h-3" />
                   Premium Features
                 </p>
@@ -165,32 +165,32 @@ export default function QrStudio() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         {/* Desktop Tabs - Horizontal */}
-        <TabsList className="hidden lg:flex w-full mb-6 bg-gray-900/50 border border-gray-800 p-1">
-          <TabsTrigger value="create" className="flex-1 min-h-[44px] data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
+        <TabsList className="hidden lg:flex w-full mb-6 glyph-glass-dark border border-cyan-500/20 p-2 shadow-lg">
+          <TabsTrigger value="create" className="flex-1 min-h-[44px] rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:glyph-glow text-gray-400 hover:text-white transition-all">
             <Wand2 className="w-4 h-4 mr-2" />
             Create
           </TabsTrigger>
-          <TabsTrigger value="preview" className="flex-1 min-h-[44px] data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
+          <TabsTrigger value="preview" className="flex-1 min-h-[44px] rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:glyph-glow text-gray-400 hover:text-white transition-all">
             Preview
           </TabsTrigger>
-          <TabsTrigger value="customize" className="flex-1 min-h-[44px] data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
+          <TabsTrigger value="customize" className="flex-1 min-h-[44px] rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:glyph-glow text-gray-400 hover:text-white transition-all">
             Customize
           </TabsTrigger>
-          <TabsTrigger value="hotzones" className="flex-1 min-h-[44px] data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
+          <TabsTrigger value="hotzones" className="flex-1 min-h-[44px] rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:glyph-glow text-gray-400 hover:text-white transition-all">
             <Layers className="w-4 h-4 mr-2" />
             Hot Zones
           </TabsTrigger>
-          <TabsTrigger value="stego" className="flex-1 min-h-[44px] data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
+          <TabsTrigger value="stego" className="flex-1 min-h-[44px] rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:glyph-glow text-gray-400 hover:text-white transition-all">
             Stego
           </TabsTrigger>
-          <TabsTrigger value="security" className="flex-1 min-h-[44px] data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
+          <TabsTrigger value="security" className="flex-1 min-h-[44px] rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:glyph-glow text-gray-400 hover:text-white transition-all">
             <Shield className="w-4 h-4 mr-2" />
             Security
           </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex-1 min-h-[44px] data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
+          <TabsTrigger value="analytics" className="flex-1 min-h-[44px] rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:glyph-glow text-gray-400 hover:text-white transition-all">
             Analytics
           </TabsTrigger>
-          <TabsTrigger value="bulk" className="flex-1 min-h-[44px] data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
+          <TabsTrigger value="bulk" className="flex-1 min-h-[44px] rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:glyph-glow text-gray-400 hover:text-white transition-all">
             Bulk
           </TabsTrigger>
         </TabsList>
@@ -215,8 +215,8 @@ export default function QrStudio() {
                   onClick={() => setActiveTab(tab.value)}
                   className={`flex items-center gap-2 px-4 py-2.5 rounded-full whitespace-nowrap text-sm font-medium transition-all min-h-[44px] ${
                     activeTab === tab.value
-                      ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/50'
-                      : 'bg-gray-900/50 text-gray-400 border border-gray-800'
+                      ? 'bg-gradient-to-r from-purple-600 to-cyan-600 text-white shadow-lg glyph-glow'
+                      : 'glyph-glass-dark text-gray-400 border border-cyan-500/20 hover:border-cyan-500/40'
                   }`}
                 >
                   {Icon && <Icon className="w-4 h-4" />}

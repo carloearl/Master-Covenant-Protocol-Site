@@ -188,8 +188,8 @@ export default function GenerateTab({ user, onImageGenerated }) {
                     onClick={() => setSelectedStyle(style.id)}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all min-h-[44px] flex items-center gap-2 ${
                       selectedStyle === style.id
-                        ? 'bg-gradient-to-r from-purple-600 to-cyan-600 text-white shadow-lg shadow-purple-500/30'
-                        : 'bg-gray-800/50 text-gray-400 border border-gray-700 hover:bg-gray-800'
+                        ? 'bg-gradient-to-r from-purple-600 to-cyan-600 text-white shadow-lg glyph-glow'
+                        : 'glyph-glass-dark text-gray-400 border border-cyan-500/20 hover:border-cyan-500/40'
                     }`}
                   >
                     <span>{style.icon}</span>

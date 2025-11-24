@@ -84,8 +84,8 @@ export default function Privacy() {
                   </div>
                 </div>
 
-                <div className="mt-6 p-4 bg-[#00E4FF]/5 border border-[#00E4FF]/20 rounded-xl text-center">
-                  <p className="text-[#00E4FF] font-bold text-sm uppercase tracking-wide">We do not sell, rent, or trade your personal information.</p>
+                <div className="mt-6 p-4 glyph-glass border-2 border-cyan-500/40 rounded-xl text-center glyph-glow">
+                  <p className="text-cyan-300 font-bold text-sm uppercase tracking-wide">We do not sell, rent, or trade your personal information.</p>
                 </div>
               </div>
             </section>
@@ -93,8 +93,8 @@ export default function Privacy() {
             {/* How We Use Your Information */}
             <section>
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 bg-[#8C4BFF]/10 rounded-xl border border-[#8C4BFF]/20">
-                  <Eye className="w-6 h-6 text-[#8C4BFF]" />
+                <div className="p-3 glyph-glass border border-purple-500/40 rounded-xl">
+                  <Eye className="w-6 h-6 text-purple-400" />
                 </div>
                 <h2 className="text-2xl font-bold text-white font-space">How We Use Your Information</h2>
               </div>
@@ -243,15 +243,15 @@ export default function Privacy() {
             </section>
 
             {/* Contact */}
-            <section className="mt-16 p-8 bg-gradient-to-r from-[#00E4FF]/10 to-[#8C4BFF]/10 border border-[#00E4FF]/30 rounded-2xl text-center">
+            <section className="mt-16 p-8 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-2 border-cyan-500/30 rounded-2xl text-center glyph-glow">
               <h2 className="text-3xl font-bold text-white mb-4 font-space">Contact Privacy Officer</h2>
               <p className="text-gray-300 mb-2">Privacy Officer, GlyphLock LLC</p>
               <p className="text-gray-400 mb-6">El Mirage, Arizona</p>
               <a 
-                href="mailto:support@glyphlock.io" 
-                className="inline-flex items-center justify-center bg-[#00E4FF] text-black font-bold uppercase tracking-wide px-8 py-4 rounded-xl hover:bg-[#00D4FF] transition-colors shadow-lg shadow-[#00E4FF]/20"
+                href="mailto:glyphlock@gmail.com" 
+                className="inline-flex items-center justify-center bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold uppercase tracking-wide px-8 py-4 rounded-xl transition-all shadow-lg glyph-glow min-h-[52px]"
               >
-                support@glyphlock.io
+                glyphlock@gmail.com
               </a>
             </section>
           </div>
