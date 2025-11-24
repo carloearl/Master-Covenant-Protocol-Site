@@ -150,7 +150,7 @@ When answering questions, use the knowledge bases to provide accurate informatio
               </div>
               <a
                 href="/glyphbot"
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600/80 to-blue-600/80 hover:from-purple-500/80 hover:to-blue-500/80 border-2 border-purple-400/40 rounded-xl text-sm font-semibold text-white shadow-lg transition-all"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600/80 to-blue-600/80 hover:from-purple-500/80 hover:to-blue-500/80 border-2 border-purple-400/40 rounded-xl text-sm font-semibold text-white shadow-lg transition-all min-h-[40px]"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back to GlyphBot
