@@ -42,6 +42,12 @@ import PaymentCancel from './pages/PaymentCancel';
 import CommandCenter from './pages/CommandCenter';
 import IntegrationTests from './pages/IntegrationTests';
 import ImageLab from './pages/ImageLab';
+import SitemapXml from './pages/SitemapXml';
+import SitemapApp from './pages/SitemapApp';
+import SitemapQr from './pages/SitemapQr';
+import SitemapImages from './pages/SitemapImages';
+import SitemapInteractive from './pages/SitemapInteractive';
+import SitemapDynamic from './pages/SitemapDynamic';
 import __Layout from './Layout.jsx';
 
 
@@ -90,6 +96,12 @@ export const PAGES = {
     "CommandCenter": CommandCenter,
     "IntegrationTests": IntegrationTests,
     "ImageLab": ImageLab,
+    "SitemapXml": SitemapXml,
+    "SitemapApp": SitemapApp,
+    "SitemapQr": SitemapQr,
+    "SitemapImages": SitemapImages,
+    "SitemapInteractive": SitemapInteractive,
+    "SitemapDynamic": SitemapDynamic,
 }
 
 export const pagesConfig = {
