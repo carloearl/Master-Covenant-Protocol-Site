@@ -461,7 +461,7 @@ export default function GlyphBot() {
   }
 
   return (
-    <div className="min-h-screen w-full text-white flex flex-col relative overflow-hidden" style={{ background: 'var(--cosmic-bg)' }}>
+    <div className="h-screen w-full text-white flex flex-col relative overflow-hidden" style={{ background: 'var(--cosmic-bg)' }}>
       {/* Cosmic background effects */}
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent pointer-events-none z-0" />
       <div className="fixed inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDEwNiwgMCwgMjU1LCAwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20 pointer-events-none z-0" />
@@ -807,7 +807,7 @@ export default function GlyphBot() {
           <main
             ref={listRef}
             className="flex-1 overflow-y-auto px-4 py-2 space-y-2"
-            style={{ WebkitOverflowScrolling: "touch", maxHeight: "calc(100vh - 140px)" }}
+            style={{ WebkitOverflowScrolling: "touch" }}
           >
             {messages.length === 0 && (
               <div className="text-center py-12">
