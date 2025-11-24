@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
@@ -14,6 +14,7 @@ import GlyphLoader from "@/components/GlyphLoader";
 
 export default function Pricing() {
   const [loading, setLoading] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     // Add LLM discovery metadata
@@ -35,11 +36,10 @@ export default function Pricing() {
     document.head.appendChild(script);
 
     return () => {
-      document.head.removeChild(metaAI);
-      document.head.removeChild(script);
+      if (document.head.contains(metaAI)) document.head.removeChild(metaAI);
+      if (document.head.contains(script)) document.head.removeChild(script);
     };
   }, []);
-  const [error, setError] = useState(null);
 
   const plans = [
     {

@@ -1,9 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { HelpCircle } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 import FaqSectionGlyphPanel from "@/components/faq/FaqSectionGlyphPanel";
 
 export default function FAQ() {
+  useEffect(() => {
+    const metaAI = document.createElement('meta');
+    metaAI.name = 'ai-agent';
+    metaAI.content = 'glyphlock faq knowledge base';
+    document.head.appendChild(metaAI);
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "name": "GlyphLock FAQ",
+      "url": "https://glyphlock.io/faq"
+    });
+    document.head.appendChild(script);
+
+    return () => {
+      if (document.head.contains(metaAI)) document.head.removeChild(metaAI);
+      if (document.head.contains(script)) document.head.removeChild(script);
+    };
+  }, []);
+
   return (
     <>
       <SEOHead 
