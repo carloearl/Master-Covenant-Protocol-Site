@@ -47,6 +47,7 @@ const NAV = [
       { label: "Documentation", page: "SecurityDocs" },
       { label: "Roadmap", page: "Roadmap" },
       { label: "FAQ", page: "FAQ" },
+      { label: "Sitemap", page: "Sitemap" },
     ],
   },
 ];
