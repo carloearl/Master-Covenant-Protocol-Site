@@ -16,21 +16,24 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { priceId, mode = 'subscription', successUrl, cancelUrl } = await req.json();
+    const { priceId, lineItems, mode = 'subscription', successUrl, cancelUrl } = await req.json();
 
-    if (!priceId) {
-      return Response.json({ error: 'Price ID is required' }, { status: 400 });
+    if (!priceId && !lineItems) {
+      return Response.json({ error: 'Price ID or line items are required' }, { status: 400 });
     }
+
+    // Build line items - either from priceId or custom lineItems
+    const checkoutLineItems = lineItems || [
+      {
+        price: priceId,
+        quantity: 1,
+      },
+    ];
 
     // Create Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
+      line_items: checkoutLineItems,
       mode: mode, // 'payment' for one-time, 'subscription' for recurring
       success_url: successUrl || `${req.headers.get('origin')}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: cancelUrl || `${req.headers.get('origin')}/pricing`,

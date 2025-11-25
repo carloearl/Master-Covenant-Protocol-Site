@@ -33,11 +33,38 @@ export default function Consultation() {
   }, []);
 
   const createConsultation = useMutation({
-    mutationFn: (data) => base44.entities.Consultation.create(data),
-    onSuccess: (result) => {
-      window.location.href = "https://47e53f12-cfe7-45aa-a4ff-ded5a8f02bbe.paylinks.godaddy.com/90586091-d76f-44ec-a22f-b07";
+    mutationFn: async (data) => {
+      // First create the consultation record
+      const consultation = await base44.entities.Consultation.create(data);
+      
+      // Then create Stripe checkout for the $200 consultation fee
+      const response = await base44.functions.invoke('stripeCreateCheckout', {
+        priceId: null,
+        mode: 'payment',
+        lineItems: [{
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'GlyphLock Security Consultation',
+              description: '60-minute expert cybersecurity analysis session',
+            },
+            unit_amount: 20000, // $200.00 in cents
+          },
+          quantity: 1,
+        }],
+        successUrl: `${window.location.origin}${createPageUrl('ConsultationSuccess')}?consultation_id=${consultation.id}&session_id={CHECKOUT_SESSION_ID}`,
+        cancelUrl: `${window.location.origin}${createPageUrl('Consultation')}?cancelled=true`
+      });
+      
+      if (response.data?.url) {
+        window.location.href = response.data.url;
+      } else {
+        throw new Error(response.data?.error || "Failed to create checkout session");
+      }
+      
+      return consultation;
     }
-    });
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
