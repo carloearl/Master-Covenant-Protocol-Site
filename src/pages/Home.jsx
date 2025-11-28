@@ -12,6 +12,7 @@ import BoundAISystemsSection from '@/components/home/BoundAISystemsSection';
 import CTASection from '@/components/home/CTASection';
 import SEOHead from '@/components/SEOHead';
 import SecurityMonitor from '@/components/SecurityMonitor';
+import DreamTeamRoster from '@/components/DreamTeamRoster';
 
 const useScrollEffect = (sectionRef) => {
   const [style, setStyle] = useState({ transform: 'perspective(1000px)', opacity: 1 });
