@@ -68,9 +68,7 @@ class GlyphBotClient {
       messages: enhancedMessages,
       persona: options.persona || this.defaultPersona,
       auditMode: finalOptions.auditMode,
-      oneTestMode: finalOptions.oneTestMode,
-      enforceGlyphFormat: true,
-      formatOverride: true
+      oneTestMode: finalOptions.oneTestMode
     };
 
     const response = await base44.functions.invoke('glyphbotLLM', payload);
