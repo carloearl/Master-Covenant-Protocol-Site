@@ -11,22 +11,45 @@ export default function DreamTeamCard({ card, member }) {
 
   return (
     <div 
-      className={`relative w-full cursor-pointer perspective-1000 transition-all duration-700 ${isFlipped ? 'min-h-[550px] md:h-[600px]' : ''}`}
+      className="relative w-full cursor-pointer group"
+      style={{ perspective: '1000px' }}
       onClick={() => setIsFlipped(!isFlipped)}
+      onMouseEnter={() => setIsFlipped(true)}
+      onMouseLeave={() => setIsFlipped(false)}
     >
-      <div className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+      <div 
+        className="relative w-full transition-transform duration-700 ease-in-out"
+        style={{ 
+          transformStyle: 'preserve-3d',
+          transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
+        }}
+      >
         {/* Front of Card */}
-        <div className="relative backface-hidden">
+        <div 
+          className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-purple-500/30 group-hover:border-purple-500/60 transition-all"
+          style={{ backfaceVisibility: 'hidden' }}
+        >
           <img 
             src={data.frontImage} 
             alt={data.name}
-            className="w-full h-auto"
+            className="w-full h-auto object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 via-purple-500/20 to-cyan-500/30 animate-pulse-slow pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/10 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+          
+          {/* Tap to flip indicator on mobile */}
+          <div className="absolute bottom-2 right-2 md:hidden bg-black/60 px-2 py-1 rounded text-xs text-white/70">
+            Tap to flip
+          </div>
         </div>
 
         {/* Back of Card */}
-        <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl overflow-hidden border-2 border-blue-500/50">
+        <div 
+          className="absolute inset-0 rounded-2xl overflow-hidden border-2 border-blue-500/50"
+          style={{ 
+            backfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg)'
+          }}
+        >
           <div className="relative w-full h-full bg-gradient-to-br from-gray-900 via-black to-gray-900 p-3 md:p-4 flex flex-col overflow-y-auto">
             <div className="flex items-center justify-between mb-2">
               <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/50 px-2 py-1 text-[10px] md:text-xs">
@@ -84,33 +107,6 @@ export default function DreamTeamCard({ card, member }) {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .perspective-1000 {
-          perspective: 1000px;
-        }
-        .transform-style-3d {
-          transform-style: preserve-3d;
-        }
-        .backface-hidden {
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-        }
-        .rotate-y-180 {
-          transform: rotateY(180deg);
-        }
-        @keyframes pulse-slow {
-          0%, 100% {
-            opacity: 0.3;
-          }
-          50% {
-            opacity: 0.6;
-          }
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 3s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 }
