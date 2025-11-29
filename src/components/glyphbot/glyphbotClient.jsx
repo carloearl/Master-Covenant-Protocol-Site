@@ -164,6 +164,17 @@ class GlyphBotClient {
   }
 
   /**
+   * System check / ping with status
+   * @returns {Promise<Object>}
+   */
+  async systemCheck() {
+    const response = await base44.functions.invoke('glyphbotLLM', {
+      messages: [{ role: 'user', content: 'ping' }]
+    });
+    return response.data;
+  }
+
+  /**
    * Get available personas
    * @returns {Promise<Array>}
    */
