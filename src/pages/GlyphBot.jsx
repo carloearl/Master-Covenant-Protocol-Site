@@ -35,6 +35,7 @@ const GlyphBotPage = () => {
 
   const [input, setInput] = useState('');
   const [persona, setPersona] = useState('GENERAL');
+  const [provider, setProvider] = useState('AUTO');
   const [isSending, setIsSending] = useState(false);
 
   const [voiceOn, setVoiceOn] = useState(false);
