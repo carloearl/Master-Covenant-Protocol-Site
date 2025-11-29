@@ -1,8 +1,9 @@
 // Shared Navigation Configuration for Navbar and Footer
 // Single source of truth for all navigation links
 
-export const NAV_SECTIONS = {
-  products: {
+// NAV_SECTIONS as an ARRAY for Navbar iteration
+export const NAV_SECTIONS = [
+  {
     label: "Products",
     items: [
       { label: "QR Generator", page: "QRGenerator", description: "Secure QR code generation" },
@@ -12,7 +13,7 @@ export const NAV_SECTIONS = {
       { label: "Blockchain", page: "Blockchain", description: "Decentralized security" }
     ]
   },
-  solutions: {
+  {
     label: "Solutions",
     items: [
       { label: "Security Tools", page: "SecurityTools", description: "Enterprise security suite" },
@@ -22,7 +23,7 @@ export const NAV_SECTIONS = {
       { label: "Master Covenant", page: "MasterCovenant", description: "AI governance" }
     ]
   },
-  company: {
+  {
     label: "Company",
     items: [
       { label: "About", page: "About" },
@@ -32,7 +33,7 @@ export const NAV_SECTIONS = {
       { label: "Roadmap", page: "Roadmap" }
     ]
   },
-  resources: {
+  {
     label: "Resources",
     items: [
       { label: "Documentation", page: "SecurityDocs" },
@@ -41,7 +42,7 @@ export const NAV_SECTIONS = {
       { label: "Consultation", page: "Consultation" }
     ]
   }
-};
+];
 
 export const FOOTER_LINKS = {
   company: [
@@ -73,5 +74,8 @@ export const LEGAL_LINKS = [
   { label: "Cookie Policy", page: "Cookies" },
   { label: "Accessibility", page: "Accessibility" }
 ];
+
+// Add legal to FOOTER_LINKS for Footer component
+FOOTER_LINKS.legal = LEGAL_LINKS;
 
 export default { NAV_SECTIONS, FOOTER_LINKS, LEGAL_LINKS };
