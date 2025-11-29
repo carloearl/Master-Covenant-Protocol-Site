@@ -382,39 +382,80 @@ Deno.serve(async (req) => {
 
 ${testPrefix}${conversationText}`;
 
-    // Multi-provider LLM routing with fallback chain
-    const providers = buildProviderChain();
-    let result;
-    let lastError;
-    let providerUsed = 'none';
+    // =====================================================
+    // MULTI-PROVIDER ROUTING WITH OSS PRIORITY
+    // =====================================================
     
-    for (const provider of providers) {
+    // Choose initial provider
+    const providerChoice = chooseProvider({
+      requestedProvider,
+      autoProvider,
+      auditMode,
+      persona,
+      realTime
+    });
+    
+    // If no providers available at all
+    if (providerChoice.error && !providerChoice.providerId) {
+      return Response.json({
+        text: 'GlyphBot could not reach any language model provider. Check system configuration or connectivity.',
+        audit: null,
+        providerUsed: null,
+        model: 'none',
+        promptVersion: 'v4.0-multi-provider',
+        auditEngineActive: isAuditActive
+      });
+    }
+    
+    // Build ordered provider chain for fallback
+    const enabledProviders = getEnabledProviders();
+    const providerCallOrder = [];
+    
+    // Put chosen provider first
+    if (providerChoice.providerId) {
+      providerCallOrder.push(providerChoice.providerId);
+    }
+    
+    // Add remaining providers as fallbacks
+    for (const p of enabledProviders) {
+      if (!providerCallOrder.includes(p.id)) {
+        providerCallOrder.push(p.id);
+      }
+    }
+    
+    let result;
+    let providerUsed = 'none';
+    let providerLabel = 'Unknown';
+    
+    // Try providers in order
+    for (const providerId of providerCallOrder) {
       try {
-        console.log(`Attempting LLM call with provider: ${provider.name}`);
-        result = await provider.call(fullPrompt);
-        providerUsed = provider.name;
+        console.log(`Attempting LLM call with provider: ${providerId}`);
+        result = await callProvider(providerId, fullPrompt);
+        providerUsed = providerId;
+        providerLabel = PROVIDERS[providerId]?.label || providerId;
         
-        // ========================================
-        // WEBHOOK HOOK POINT: Message Completed
-        // Uncomment and configure to send webhooks on completion
-        // ========================================
-        // await sendWebhook({
-        //   event: 'message_completed',
-        //   user: user.email,
-        //   provider: providerUsed,
-        //   timestamp: new Date().toISOString()
-        // });
+        logModelChoice({
+          providerId,
+          persona,
+          auditMode,
+          realTime,
+          timestamp: new Date().toISOString(),
+          success: true,
+          errorType: null
+        });
         
         // Log successful call
         await base44.entities.SystemAuditLog.create({
           event_type: 'GLYPHBOT_LLM_CALL',
-          description: `LLM call via ${providerUsed}`,
+          description: `LLM call via ${providerLabel}`,
           actor_email: user.email,
           resource_id: 'glyphbot',
           metadata: { 
             persona, 
             messageCount: messages.length,
-            provider: providerUsed
+            provider: providerUsed,
+            providerLabel
           },
           status: 'success'
         }).catch(console.error);
@@ -425,24 +466,34 @@ ${testPrefix}${conversationText}`;
         return Response.json({
           text: parsedResult.text,
           audit: parsedResult.audit,
-          model: providerUsed,
-          promptVersion: 'v3.1-audit-engine',
+          model: providerLabel,
+          promptVersion: 'v4.0-multi-provider',
           providerUsed,
+          providerLabel,
           auditEngineActive: isAuditActive
         });
         
       } catch (error) {
-        lastError = error;
-        console.error(`Provider ${provider.name} failed:`, error.message);
+        console.error(`Provider ${providerId} failed:`, error.message);
+        
+        logModelChoice({
+          providerId,
+          persona,
+          auditMode,
+          realTime,
+          timestamp: new Date().toISOString(),
+          success: false,
+          errorType: error?.message || 'unknown'
+        });
         
         // Log failed attempt
         await base44.entities.SystemAuditLog.create({
           event_type: 'GLYPHBOT_LLM_RETRY',
-          description: `Provider ${provider.name} failed`,
+          description: `Provider ${providerId} failed`,
           actor_email: user.email,
           resource_id: 'glyphbot',
           metadata: { 
-            provider: provider.name,
+            provider: providerId,
             error: error?.message || String(error)
           },
           status: 'failure'
@@ -461,6 +512,16 @@ ${testPrefix}${conversationText}`;
         add_context_from_internet: false
       });
       
+      logModelChoice({
+        providerId: 'BASE44_BROKER',
+        persona,
+        auditMode,
+        realTime,
+        timestamp: new Date().toISOString(),
+        success: true,
+        errorType: null
+      });
+      
       await base44.entities.SystemAuditLog.create({
         event_type: 'GLYPHBOT_LLM_CALL',
         description: 'LLM call via Base44 broker fallback',
@@ -476,19 +537,33 @@ ${testPrefix}${conversationText}`;
       return Response.json({
         text: parsedBrokerResult.text,
         audit: parsedBrokerResult.audit,
-        model: 'base44-broker',
-        promptVersion: 'v3.1-audit-engine',
-        providerUsed: 'base44-broker',
+        model: 'Base44 Broker',
+        promptVersion: 'v4.0-multi-provider',
+        providerUsed: 'BASE44_BROKER',
+        providerLabel: 'Base44 Broker',
         auditEngineActive: isAuditActive
       });
     } catch (brokerError) {
       console.error('Base44 broker also failed:', brokerError);
       
+      logModelChoice({
+        providerId: 'BASE44_BROKER',
+        persona,
+        auditMode,
+        realTime,
+        timestamp: new Date().toISOString(),
+        success: false,
+        errorType: brokerError?.message || 'unknown'
+      });
+      
       // All providers failed - return friendly error message
       return Response.json({
-        text: "I apologize, but I'm experiencing technical difficulties right now. Our AI systems are temporarily unavailable. Please try again in a moment, or contact support if this persists.",
+        text: 'GlyphBot could not reach any language model provider. All configured providers failed. Please try again later.',
+        audit: null,
         model: 'error',
-        promptVersion: 'v3.0',
+        promptVersion: 'v4.0-multi-provider',
+        providerUsed: null,
+        providerLabel: 'None',
         error: brokerError?.message
       });
     }
