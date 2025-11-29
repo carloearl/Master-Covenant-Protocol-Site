@@ -94,7 +94,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { messages, persona = 'glyphbot_default', auditMode = false, oneTestMode = false } = await req.json();
+    const { messages, persona = 'GENERAL', auditMode = false, oneTestMode = false, enforceGlyphFormat = true } = await req.json();
     
     // Handle ping/status check
     if (messages?.length === 1 && messages[0].content === "ping") {
