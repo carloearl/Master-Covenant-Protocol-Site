@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { MessageCircle, Volume2, VolumeX, Settings, Shield, FileText, AlertTriangle, Save, FolderOpen, Plus, X, Sliders, Wand2, Globe, Mic } from "lucide-react";
+import glyphbotClient from "@/components/glyphbot/glyphbotClient";
+import { MessageCircle, Volume2, VolumeX, Settings, Shield, FileText, AlertTriangle, Save, FolderOpen, Plus, X, Sliders, Wand2, Globe, Mic, Zap, Send, Trash2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { generateAudio, applyAudioEffects, TTS_PROVIDERS, getVoicesForProvider } from "@/components/utils/ttsEngine";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { PERSONAS } from "@/components/glyphbot/personas";
 import SEOHead from "@/components/SEOHead";
 import useTTS from "@/components/glyphbot/useTTS";
