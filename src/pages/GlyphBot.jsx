@@ -1076,54 +1076,84 @@ export default function GlyphBot() {
             {messages.map(m => (
               <div
                 key={m.id}
-                className={`max-w-[80%] rounded-3xl px-5 py-4 text-base leading-relaxed shadow-xl ${
+                className={`max-w-[80%] rounded-2xl px-5 py-4 text-base leading-relaxed ${
                   m.role === "user"
-                    ? "ml-auto bg-gradient-to-br from-cyan-600/80 to-blue-600/80 text-white border-2 border-cyan-400/30"
-                    : "mr-auto glyph-glass-dark border-2 border-purple-500/30 text-white"
+                    ? "ml-auto bg-gradient-to-br from-cyan-600 to-blue-600 text-white shadow-lg"
+                    : "mr-auto bg-gray-900/80 border border-purple-500/30 text-white backdrop-blur-sm"
                 }`}
                 style={m.role === "user" ? { boxShadow: '0 0 20px rgba(6,182,212,0.3)' } : {}}
               >
-                <ReactMarkdown
-                  className="prose prose-invert prose-sm max-w-none"
-                  components={{
-                    code: ({ inline, children, ...props }) =>
-                      inline ? (
-                        <code className="bg-black/50 px-1.5 py-0.5 rounded text-cyan-400" {...props}>
-                          {children}
-                        </code>
-                      ) : (
-                        <code className="block bg-black p-3 rounded-lg text-xs overflow-x-auto" {...props}>
-                          {children}
-                        </code>
-                      )
-                  }}
-                >
-                  {m.text}
-                </ReactMarkdown>
-
-                {m.role === "assistant" && !m.isTyping && (
-                  <div className="mt-3 flex gap-2 flex-wrap">
-                    <Button
-                      onClick={() => speak(m.text, m.id)}
-                      size="sm"
-                      className="bg-gradient-to-r from-cyan-900/60 to-blue-900/60 hover:from-cyan-800/60 hover:to-blue-800/60 border border-cyan-500/40 text-cyan-300 h-9 text-sm px-4 rounded-xl shadow-lg"
-                    >
-                      <Volume2 className="w-4 h-4 mr-2" />
-                      Speak
-                    </Button>
-                    <Button
-                      onClick={stopAudio}
-                      size="sm"
-                      className="bg-gradient-to-r from-red-900/60 to-purple-900/60 hover:from-red-800/60 hover:to-purple-800/60 border border-red-500/40 text-red-300 h-9 text-sm px-4 rounded-xl shadow-lg"
-                    >
-                      Stop
-                    </Button>
+                {/* Typing indicator */}
+                {m.isTyping ? (
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1">
+                      <span className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
+                    <span className="text-gray-400 text-sm">Thinking...</span>
                   </div>
+                ) : (
+                  <ReactMarkdown
+                    className="prose prose-invert prose-sm max-w-none"
+                    components={{
+                      code: ({ inline, children, ...props }) =>
+                        inline ? (
+                          <code className="bg-black/50 px-1.5 py-0.5 rounded text-cyan-400 text-sm" {...props}>
+                            {children}
+                          </code>
+                        ) : (
+                          <pre className="bg-black/70 p-3 rounded-lg text-xs overflow-x-auto my-2 border border-gray-700">
+                            <code {...props}>{children}</code>
+                          </pre>
+                        )
+                    }}
+                  >
+                    {m.text}
+                  </ReactMarkdown>
                 )}
 
-                {m.model && (
-                  <div className="mt-1 text-xs text-gray-500">
-                    {m.model} • v{m.promptVersion}
+                {/* Assistant message footer */}
+                {m.role === "assistant" && !m.isTyping && (
+                  <div className="mt-3 pt-3 border-t border-gray-700/50 flex items-center justify-between flex-wrap gap-2">
+                    {/* Meta info */}
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      {m.model && (
+                        <span className="bg-purple-900/30 px-2 py-0.5 rounded text-purple-400">
+                          {m.model}
+                        </span>
+                      )}
+                      {m.providerUsed && (
+                        <span className="bg-gray-800 px-2 py-0.5 rounded">
+                          {m.providerUsed}
+                        </span>
+                      )}
+                      {m.realTimeUsed && (
+                        <span className="bg-orange-900/30 px-2 py-0.5 rounded text-orange-400">
+                          <Globe className="w-3 h-3 inline mr-1" />
+                          real-time
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Voice controls */}
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => speak(m.text, m.id)}
+                        size="sm"
+                        className="bg-cyan-900/40 hover:bg-cyan-800/50 border border-cyan-500/30 text-cyan-300 h-8 text-xs px-3 rounded-lg"
+                      >
+                        <Volume2 className="w-3.5 h-3.5 mr-1.5" />
+                        Speak
+                      </Button>
+                      <Button
+                        onClick={stopAudio}
+                        size="sm"
+                        className="bg-red-900/40 hover:bg-red-800/50 border border-red-500/30 text-red-300 h-8 text-xs px-3 rounded-lg"
+                      >
+                        Stop
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>
