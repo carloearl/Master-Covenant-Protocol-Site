@@ -118,6 +118,7 @@ class GlyphBotClient {
       realTimeUsed: !!realTimeContext,
       shouldSpeak: finalOptions.tts,
       providerUsed: response.data?.providerUsed || 'base44-broker',
+      providerLabel: response.data?.providerLabel || response.data?.providerUsed || 'Unknown',
       auditEngineActive: isAuditActive && !!response.data?.audit
     };
   }
