@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import { NAV_SECTIONS } from "@/components/NavigationConfig.js";
+import { NAV_SECTIONS } from "@/components/NavigationConfig";
 
 // Use shared navigation config
 const NAV = NAV_SECTIONS;

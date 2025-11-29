@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Shield, Twitter, Linkedin, Instagram, Github, Mail, Phone } from "lucide-react";
-import { FOOTER_LINKS } from "@/components/NavigationConfig.js";
+import { FOOTER_LINKS } from "@/components/NavigationConfig";
 
 const certifications = [
   { name: "SOC 2", subtitle: "TYPE II" },
