@@ -90,6 +90,7 @@ const GlyphBotPage = () => {
       setLastMeta({
         model: response.model,
         providerUsed: response.providerUsed,
+        providerLabel: response.providerLabel,
         realTimeUsed: response.realTimeUsed,
         shouldSpeak: response.shouldSpeak
       });
