@@ -15,14 +15,14 @@ export const NAV_SECTIONS = [
     title: "Products",
     label: "Products",
     links: [
-      { label: "QR Generator", href: "/QRGenerator", page: "QRGenerator" },
+      { label: "QR Generator", href: "/qr-generator", page: "QrGenerator" },
       { label: "Image Lab", href: "/ImageLab", page: "ImageLab" },
       { label: "Steganography", href: "/Steganography", page: "Steganography" },
       { label: "GlyphBot", href: "/GlyphBot", page: "GlyphBot" },
       { label: "Blockchain", href: "/Blockchain", page: "Blockchain" }
     ],
     items: [
-      { label: "QR Generator", page: "QRGenerator" },
+      { label: "QR Generator", page: "QrGenerator" },
       { label: "Image Lab", page: "ImageLab" },
       { label: "Steganography", page: "Steganography" },
       { label: "GlyphBot", page: "GlyphBot" },
@@ -105,7 +105,7 @@ export const FOOTER_LINKS = {
   ],
   solutions: [
     { label: "Security Tools", page: "SecurityTools" },
-    { label: "QR Generator", page: "QRGenerator" },
+    { label: "QR Generator", page: "QrGenerator" },
     { label: "Steganography", page: "Steganography" },
     { label: "Image Lab", page: "ImageLab" },
     { label: "GlyphBot AI", page: "GlyphBot" }
