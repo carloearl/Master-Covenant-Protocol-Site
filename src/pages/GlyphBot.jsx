@@ -263,8 +263,7 @@ const GlyphBotPage = () => {
         {/* Meta line */}
         {lastMeta && (
           <div className="mb-2 text-xs text-slate-500 flex flex-wrap gap-3 bg-slate-900/50 rounded-lg px-3 py-2 border border-slate-800">
-            <span>Model: <span className="text-purple-400">{lastMeta.model || 'unknown'}</span></span>
-            <span>Provider: <span className="text-slate-300">{lastMeta.providerUsed || 'base44-broker'}</span></span>
+            <span>Provider: <span className="text-cyan-400">{lastMeta.providerLabel || lastMeta.model || 'unknown'}</span></span>
             {lastMeta.realTimeUsed && <span className="text-emerald-400">✓ real-time web</span>}
             {lastMeta.shouldSpeak && <span className="text-sky-400">✓ voice-ready</span>}
           </div>
