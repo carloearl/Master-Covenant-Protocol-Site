@@ -14,6 +14,16 @@ const PERSONAS = [
   { id: 'ANALYTICS', label: 'Analytics', desc: 'Logs & pattern detection' },
 ];
 
+const MODEL_OPTIONS = [
+  { id: 'AUTO', label: 'Auto (GlyphBot chooses)' },
+  { id: 'LLAMA_OSS', label: 'Llama (OSS)' },
+  { id: 'MISTRAL_OSS', label: 'Mistral (OSS)' },
+  { id: 'GEMMA_OSS', label: 'Gemma (OSS)' },
+  { id: 'DEEPSEEK_OSS', label: 'DeepSeek (OSS)' },
+  { id: 'CLAUDE', label: 'Claude' },
+  { id: 'OPENAI', label: 'OpenAI' },
+];
+
 const GlyphBotPage = () => {
   const [messages, setMessages] = useState([
     {
