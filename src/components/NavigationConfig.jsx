@@ -107,7 +107,8 @@ export const FOOTER_LINKS = {
   ],
   solutions: [
     { label: "Security Tools", page: "SecurityTools" },
-    { label: "QR Generator", page: "QrGenerator" },
+    { label: "QR Generator", page: "QrGenerator", href: "/qr-generator" },
+    { label: "QR Create", page: "QrGeneratorCreate", href: "/qr-generator/create" },
     { label: "Steganography", page: "Steganography" },
     { label: "Image Lab", page: "ImageLab" },
     { label: "GlyphBot AI", page: "GlyphBot" }

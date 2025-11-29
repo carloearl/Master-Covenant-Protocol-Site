@@ -9,8 +9,16 @@ const ROUTES = [
   // Homepage
   { path: '/', priority: 1.0, changefreq: 'daily' },
   
-  // Core Tools (Public)
+  // Core Tools (Public) - QR Generator subroutes are in sitemap-qr.xml
   { path: '/qr-generator', priority: 0.95, changefreq: 'daily' },
+  { path: '/qr-generator/create', priority: 0.9, changefreq: 'daily' },
+  { path: '/qr-generator/preview', priority: 0.85, changefreq: 'daily' },
+  { path: '/qr-generator/customize', priority: 0.85, changefreq: 'daily' },
+  { path: '/qr-generator/hotzones', priority: 0.8, changefreq: 'weekly' },
+  { path: '/qr-generator/stego', priority: 0.8, changefreq: 'weekly' },
+  { path: '/qr-generator/security', priority: 0.85, changefreq: 'daily' },
+  { path: '/qr-generator/analytics', priority: 0.75, changefreq: 'daily' },
+  { path: '/qr-generator/bulk', priority: 0.75, changefreq: 'weekly' },
   { path: '/image-lab', priority: 0.9, changefreq: 'daily' },
   { path: '/interactive-image-studio', priority: 0.85, changefreq: 'weekly' },
   { path: '/steganography', priority: 0.85, changefreq: 'weekly' },
