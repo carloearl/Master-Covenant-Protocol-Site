@@ -116,13 +116,13 @@ Deno.serve(async (req) => {
       content: sanitizeInput(m.content)
     }));
 
-    // Build conversation context
-    const systemPrompt = getSystemPrompt(persona);
+    // Build conversation context with format enforcement
+    const systemPrompt = getSystemPrompt(persona, enforceGlyphFormat);
     const conversationText = sanitized.map(m => 
       `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`
     ).join('\n\n');
 
-    const modePrefix = auditMode ? '[AUDIT MODE ACTIVE: Provide detailed reasoning and citations.]\n' : '';
+    const modePrefix = auditMode ? '[AUDIT MODE: Provide detailed reasoning. No headers or lists.]\n' : '';
     const testPrefix = oneTestMode ? '[ONE TEST MODE: Run a system integrity check.]\n' : '';
     
     const fullPrompt = `${systemPrompt}
