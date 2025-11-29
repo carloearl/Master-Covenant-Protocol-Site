@@ -1005,19 +1005,70 @@ export default function GlyphBot() {
             style={{ WebkitOverflowScrolling: "touch", overscrollBehavior: "contain" }}
           >
             {messages.length === 0 && (
-              <div className="text-center py-16">
-                <MessageCircle className="w-16 h-16 mx-auto mb-4 text-purple-400 opacity-50" />
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
-                  GlyphBot - Elite AI Security Expert
-                </h1>
-                <p className="text-base text-gray-400 mb-4">Ask anything about security, code, blockchain, or get expert debugging help.</p>
-                <div className="flex flex-wrap justify-center gap-2 text-xs text-gray-500">
-                  <span className="px-2 py-1 bg-purple-900/30 rounded-lg">Security Analysis</span>
-                  <span className="px-2 py-1 bg-cyan-900/30 rounded-lg">Code Auditing</span>
-                  <span className="px-2 py-1 bg-blue-900/30 rounded-lg">Blockchain</span>
-                  <span className="px-2 py-1 bg-green-900/30 rounded-lg">Debugging</span>
-                  {realTimeMode && <span className="px-2 py-1 bg-orange-900/30 rounded-lg">🌐 Live Web Search</span>}
-                  {ttsAvailable && <span className="px-2 py-1 bg-pink-900/30 rounded-lg">🔊 Voice Ready</span>}
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center max-w-lg">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center mx-auto mb-6 shadow-2xl" style={{ boxShadow: '0 0 40px rgba(168,85,247,0.4)' }}>
+                    <Zap className="w-10 h-10 text-white" />
+                  </div>
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent mb-3">
+                    GlyphBot — Elite AI Security Expert
+                  </h1>
+                  <p className="text-base text-gray-400 mb-6 leading-relaxed">
+                    Your trusted AI companion for security analysis, code auditing, blockchain expertise, and expert debugging assistance.
+                  </p>
+                  
+                  {/* Persona Info */}
+                  <div className="bg-purple-900/20 border border-purple-500/30 rounded-xl p-4 mb-6">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <span className="text-purple-400 font-semibold">Current Persona:</span>
+                      <Badge className="bg-purple-500/30 text-purple-300 border-purple-400/40">
+                        {persona.name}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-400">{persona.description}</p>
+                  </div>
+
+                  {/* Capabilities */}
+                  <div className="flex flex-wrap justify-center gap-2 mb-6">
+                    <Badge className="bg-purple-900/40 text-purple-300 border-purple-500/30 px-3 py-1">
+                      <Shield className="w-3 h-3 mr-1.5" />
+                      Security Analysis
+                    </Badge>
+                    <Badge className="bg-cyan-900/40 text-cyan-300 border-cyan-500/30 px-3 py-1">
+                      <FileText className="w-3 h-3 mr-1.5" />
+                      Code Auditing
+                    </Badge>
+                    <Badge className="bg-blue-900/40 text-blue-300 border-blue-500/30 px-3 py-1">
+                      <Zap className="w-3 h-3 mr-1.5" />
+                      Blockchain
+                    </Badge>
+                    <Badge className="bg-green-900/40 text-green-300 border-green-500/30 px-3 py-1">
+                      <Wand2 className="w-3 h-3 mr-1.5" />
+                      Debugging
+                    </Badge>
+                  </div>
+
+                  {/* Active Features */}
+                  <div className="flex justify-center gap-3 text-xs">
+                    {realTimeMode && (
+                      <span className="flex items-center gap-1 text-orange-400">
+                        <Globe className="w-3 h-3" />
+                        Live Web Search
+                      </span>
+                    )}
+                    {autoplay && (
+                      <span className="flex items-center gap-1 text-cyan-400">
+                        <Volume2 className="w-3 h-3" />
+                        Voice Enabled
+                      </span>
+                    )}
+                    {auditMode && (
+                      <span className="flex items-center gap-1 text-green-400">
+                        <Shield className="w-3 h-3" />
+                        Audit Mode
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
