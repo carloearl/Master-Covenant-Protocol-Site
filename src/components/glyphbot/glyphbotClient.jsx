@@ -90,7 +90,9 @@ class GlyphBotClient {
       messages: enhancedMessages,
       persona: options.persona || this.defaultPersona,
       auditMode: finalOptions.auditMode,
-      oneTestMode: finalOptions.oneTestMode
+      oneTestMode: finalOptions.oneTestMode,
+      enforceGlyphFormat: true, // Always inject format override
+      formatDirective: GLYPH_FORMAT_DIRECTIVE
     };
 
     const response = await base44.functions.invoke('glyphbotLLM', payload);
