@@ -71,7 +71,9 @@ const GlyphBotPage = () => {
         tts: voiceOn,
         enforceGlyphFormat: true,
         formatOverride: true,
-        systemFirst: true
+        systemFirst: true,
+        provider: provider === 'AUTO' ? null : provider,
+        autoProvider: provider === 'AUTO'
       });
 
       const botText = response.text || '[No response text]';
