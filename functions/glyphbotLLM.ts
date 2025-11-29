@@ -1,16 +1,162 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 /**
- * GlyphBot LLM Engine v3.0
- * Multi-provider LLM backend with fallback chain and real-time tool support
+ * GlyphBot LLM Engine v4.0 — Multi-Provider with OSS Priority
  * 
- * Supported Providers (via env vars):
+ * Provider Priority (OSS-first):
+ * 1. Llama (via Together/OpenRouter)
+ * 2. Mistral (via Mistral API/OpenRouter/Together)
+ * 3. Gemma (via OpenRouter)
+ * 4. DeepSeek (via DeepSeek API/OpenRouter)
+ * 5. Claude (Anthropic)
+ * 6. OpenAI GPT-4
+ * 7. Base44 broker (always available fallback)
+ * 
+ * Environment Variables:
+ * - TOGETHER_API_KEY: Together.ai (Llama, Mistral, Gemma)
+ * - OPENROUTER_API_KEY: OpenRouter (all models)
+ * - MISTRAL_API_KEY: Mistral native API
+ * - DEEPSEEK_API_KEY: DeepSeek native API
+ * - ANTHROPIC_API_KEY: Claude
  * - OPENAI_API_KEY: OpenAI GPT-4
- * - ANTHROPIC_API_KEY: Claude Opus
  * - GEMINI_API_KEY: Google Gemini
- * - HF_API_KEY + HF_API_URL: Hugging Face
- * - Base44 broker (always available as fallback)
  */
+
+// =====================================================
+// PROVIDER REGISTRY — OSS-first priority order
+// =====================================================
+const PROVIDERS = {
+  AUTO: { id: 'AUTO', label: 'Auto (GlyphBot chooses)', priority: 0 },
+  LLAMA_OSS: {
+    id: 'LLAMA_OSS',
+    label: 'Llama (Open Source)',
+    envHints: ['TOGETHER_API_KEY', 'OPENROUTER_API_KEY'],
+    priority: 1
+  },
+  MISTRAL_OSS: {
+    id: 'MISTRAL_OSS',
+    label: 'Mistral (Open Source)',
+    envHints: ['MISTRAL_API_KEY', 'OPENROUTER_API_KEY', 'TOGETHER_API_KEY'],
+    priority: 2
+  },
+  GEMMA_OSS: {
+    id: 'GEMMA_OSS',
+    label: 'Gemma (Open Source)',
+    envHints: ['OPENROUTER_API_KEY', 'TOGETHER_API_KEY'],
+    priority: 3
+  },
+  DEEPSEEK_OSS: {
+    id: 'DEEPSEEK_OSS',
+    label: 'DeepSeek (Open Source)',
+    envHints: ['DEEPSEEK_API_KEY', 'OPENROUTER_API_KEY'],
+    priority: 4
+  },
+  CLAUDE: {
+    id: 'CLAUDE',
+    label: 'Claude',
+    envHints: ['ANTHROPIC_API_KEY'],
+    priority: 10
+  },
+  OPENAI: {
+    id: 'OPENAI',
+    label: 'OpenAI',
+    envHints: ['OPENAI_API_KEY'],
+    priority: 11
+  },
+  GEMINI: {
+    id: 'GEMINI',
+    label: 'Gemini',
+    envHints: ['GEMINI_API_KEY'],
+    priority: 12
+  }
+};
+
+// Get list of enabled providers based on env var presence
+function getEnabledProviders() {
+  const result = [];
+  for (const key of Object.keys(PROVIDERS)) {
+    const provider = PROVIDERS[key];
+    if (key === 'AUTO') continue;
+    if (!provider.envHints || provider.envHints.length === 0) {
+      result.push(provider);
+      continue;
+    }
+    const anySet = provider.envHints.some(name => !!Deno.env.get(name));
+    if (anySet) {
+      result.push(provider);
+    }
+  }
+  return result.sort((a, b) => (a.priority || 999) - (b.priority || 999));
+}
+
+// Choose provider based on request settings
+function chooseProvider({ requestedProvider, autoProvider, auditMode, persona, realTime }) {
+  const enabled = getEnabledProviders();
+
+  if (!enabled.length) {
+    return {
+      providerId: null,
+      providerLabel: 'None',
+      error: 'No LLM providers available. Check environment configuration.'
+    };
+  }
+
+  // Explicit provider request (not AUTO)
+  if (requestedProvider && requestedProvider !== 'AUTO') {
+    const match = enabled.find(p => p.id === requestedProvider);
+    if (match) {
+      return { providerId: match.id, providerLabel: match.label, error: null };
+    }
+    return {
+      providerId: null,
+      providerLabel: 'Unavailable',
+      error: `Requested provider ${requestedProvider} is not enabled`
+    };
+  }
+
+  // AUTO mode selection
+  const ossProviders = enabled.filter(p =>
+    ['LLAMA_OSS', 'MISTRAL_OSS', 'GEMMA_OSS', 'DEEPSEEK_OSS'].includes(p.id)
+  );
+
+  if (autoProvider || !requestedProvider || requestedProvider === 'AUTO') {
+    let ordered = [];
+
+    // For audit mode, prefer OSS models first, then Claude/OpenAI
+    if (auditMode || persona === 'AUDIT' || persona === 'AUDITOR') {
+      const preferredOrder = ['LLAMA_OSS', 'MISTRAL_OSS', 'GEMMA_OSS', 'DEEPSEEK_OSS', 'CLAUDE', 'OPENAI', 'GEMINI'];
+      ordered = preferredOrder
+        .map(id => enabled.find(p => p.id === id))
+        .filter(Boolean);
+    } else {
+      // Normal mode: OSS first, then commercial
+      ordered = ossProviders.length ? ossProviders : enabled;
+    }
+
+    const chosen = ordered[0] || enabled[0];
+    return {
+      providerId: chosen.id,
+      providerLabel: chosen.label,
+      error: null
+    };
+  }
+
+  const fallbackDefault = enabled[0];
+  return {
+    providerId: fallbackDefault.id,
+    providerLabel: fallbackDefault.label,
+    error: null
+  };
+}
+
+// Log model choice for diagnostics
+function logModelChoice(event) {
+  try {
+    console.log('[GlyphBotProvider]', JSON.stringify(event));
+  } catch (e) {
+    // ignore logging errors
+  }
+}
 
 // =====================================================
 // GLYPHLOCK FORMAT DIRECTIVE — OMEGA PATCH v3
