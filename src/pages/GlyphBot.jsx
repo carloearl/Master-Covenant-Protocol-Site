@@ -6,12 +6,11 @@ const PERSONAS = [
   { id: 'GENERAL', label: 'General', desc: 'Default security assistant' },
   { id: 'SECURITY', label: 'Security', desc: 'Threat analysis & safety' },
   { id: 'BLOCKCHAIN', label: 'Blockchain', desc: 'Smart contracts & DeFi' },
-  { id: 'AUDIT', label: 'Audit', desc: 'Deep code & security reviews' },
+  { id: 'AUDIT', label: 'Audit', desc: 'Forensic precision, risk-focused' },
   { id: 'DEBUGGER', label: 'Debugger', desc: 'Bug fixes & stack traces' },
   { id: 'PERFORMANCE', label: 'Performance', desc: 'Optimization focus' },
   { id: 'REFACTOR', label: 'Refactor', desc: 'Code cleanup & architecture' },
   { id: 'ANALYTICS', label: 'Analytics', desc: 'Logs & pattern detection' },
-  { id: 'AUDITOR', label: 'Auditor', desc: 'Forensic audits' },
 ];
 
 const GlyphBotPage = () => {
