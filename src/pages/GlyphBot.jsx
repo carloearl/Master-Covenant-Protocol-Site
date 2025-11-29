@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import glyphbotClient from '@/components/glyphbot/glyphbotClient';
 import SEOHead from '@/components/SEOHead';
+import { ChevronDown, ChevronUp, Shield } from 'lucide-react';
 
 const PERSONAS = [
   { id: 'GENERAL', label: 'General', desc: 'Default security assistant' },
@@ -17,7 +18,8 @@ const GlyphBotPage = () => {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: 'Hi, I am GlyphBot. Ask me anything about security, code, or blockchain.'
+      content: 'Hi, I am GlyphBot. Ask me anything about security, code, or blockchain.',
+      audit: null
     }
   ]);
 
@@ -65,7 +67,11 @@ const GlyphBotPage = () => {
 
       setMessages(prev => [
         ...prev,
-        { role: 'assistant', content: botText }
+        { 
+          role: 'assistant', 
+          content: botText,
+          audit: response.audit || null
+        }
       ]);
 
       setLastMeta({
@@ -79,7 +85,7 @@ const GlyphBotPage = () => {
       console.error('GlyphBot send error:', err);
       setMessages(prev => [
         ...prev,
-        { role: 'assistant', content: 'Something went wrong talking to GlyphBot. Try again.' }
+        { role: 'assistant', content: 'Something went wrong talking to GlyphBot. Try again.', audit: null }
       ]);
     } finally {
       setIsSending(false);
@@ -113,7 +119,7 @@ const GlyphBotPage = () => {
 
   const clearChat = () => {
     setMessages([
-      { role: 'assistant', content: 'Chat cleared. How can I help you?' }
+      { role: 'assistant', content: 'Chat cleared. How can I help you?', audit: null }
     ]);
     setLastMeta(null);
   };
@@ -244,7 +250,7 @@ const GlyphBotPage = () => {
         {/* Chat area */}
         <div className="flex-1 min-h-[320px] max-h-[520px] rounded-2xl bg-slate-950/70 border border-slate-800 overflow-y-auto p-4 space-y-3">
           {messages.map((m, idx) => (
-            <ChatBubble key={idx} role={m.role} content={m.content} />
+            <ChatBubble key={idx} role={m.role} content={m.content} audit={m.audit} />
           ))}
           {isSending && (
             <div className="flex justify-start">
@@ -283,18 +289,53 @@ const GlyphBotPage = () => {
   );
 };
 
-const ChatBubble = ({ role, content }) => {
+const ChatBubble = ({ role, content, audit }) => {
   const isUser = role === 'user';
+  const [showAuditJson, setShowAuditJson] = useState(false);
+  
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-      <div
-        className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap leading-relaxed ${
-          isUser
-            ? 'bg-gradient-to-br from-cyan-600 to-blue-600 text-white rounded-br-sm shadow-lg'
-            : 'bg-slate-800/80 text-slate-50 rounded-bl-sm border border-slate-700'
-        }`}
-      >
-        {content}
+      <div className="max-w-[80%] space-y-2">
+        <div
+          className={`rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap leading-relaxed ${
+            isUser
+              ? 'bg-gradient-to-br from-cyan-600 to-blue-600 text-white rounded-br-sm shadow-lg'
+              : 'bg-slate-800/80 text-slate-50 rounded-bl-sm border border-slate-700'
+          }`}
+        >
+          {content}
+        </div>
+        
+        {audit && audit.json && (
+          <div className="bg-slate-900/90 border border-purple-500/30 rounded-xl overflow-hidden">
+            <button
+              onClick={() => setShowAuditJson(!showAuditJson)}
+              className="w-full px-4 py-2 flex items-center justify-between text-xs text-purple-300 hover:bg-purple-500/10 transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                <Shield className="w-3 h-3" />
+                Audit JSON Payload
+                <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${
+                  audit.json.severity === 'critical' ? 'bg-red-500/20 text-red-300' :
+                  audit.json.severity === 'high' ? 'bg-orange-500/20 text-orange-300' :
+                  audit.json.severity === 'moderate' ? 'bg-yellow-500/20 text-yellow-300' :
+                  'bg-green-500/20 text-green-300'
+                }`}>
+                  {audit.json.severity} / {audit.json.risk_score}
+                </span>
+              </span>
+              {showAuditJson ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
+            
+            {showAuditJson && (
+              <div className="px-4 py-3 border-t border-purple-500/20">
+                <pre className="text-[11px] text-slate-300 overflow-x-auto whitespace-pre-wrap font-mono">
+                  {JSON.stringify(audit.json, null, 2)}
+                </pre>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

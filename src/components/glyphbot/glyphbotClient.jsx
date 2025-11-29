@@ -98,13 +98,18 @@ class GlyphBotClient {
 
     const response = await base44.functions.invoke('glyphbotLLM', payload);
     
+    // Determine if audit engine was active
+    const isAuditActive = finalOptions.auditMode || options.persona === 'AUDIT' || options.persona === 'AUDITOR';
+    
     return {
       text: response.data?.text || response.data,
+      audit: response.data?.audit || null,
       model: response.data?.model || 'unknown',
       promptVersion: response.data?.promptVersion || 'unknown',
       realTimeUsed: !!realTimeContext,
       shouldSpeak: finalOptions.tts,
-      providerUsed: response.data?.providerUsed || 'base44-broker'
+      providerUsed: response.data?.providerUsed || 'base44-broker',
+      auditEngineActive: isAuditActive && !!response.data?.audit
     };
   }
 
