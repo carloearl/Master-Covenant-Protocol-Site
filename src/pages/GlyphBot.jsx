@@ -57,7 +57,9 @@ const GlyphBotPage = () => {
         oneTestMode: testOn,
         realTime: realTimeOn,
         tts: voiceOn,
-        enforceGlyphFormat: true // OMEGA PATCH: Always enforce GlyphLock format
+        enforceGlyphFormat: true,
+        formatOverride: true,
+        systemFirst: true
       });
 
       const botText = response.text || '[No response text]';

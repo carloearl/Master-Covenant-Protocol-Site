@@ -14,25 +14,19 @@
 
 import { base44 } from '@/api/base44Client';
 
-// GLYPHLOCK FORMAT OVERRIDE - Enforces security-expert tone on ALL responses
-const GLYPH_FORMAT_DIRECTIVE = `
-FORMAT RULES (MANDATORY):
-1. NO hashtags (#), Markdown headers, or blog-style section titles.
-2. NO bullet lists unless explicitly requested.
-3. NO Wikipedia-style explanations or generic AI phrasing.
-4. NO phrases like "here's how", "key concepts", "benefits", "for example".
+// GLYPHLOCK FORMAT OVERRIDE v2 - Absolute priority directive
+const GLYPH_FORMAT_DIRECTIVE = `[SYSTEM PRIORITY OVERRIDE — READ FIRST]
 
-TONE: Senior security auditor. Code forensic analyst. AI systems architect.
-- Direct, concise, authoritative
-- Professional but not clinical
-- Zero fluff, zero filler
+You MUST follow these rules with zero exceptions:
 
-STRUCTURE:
-- Direct explanation in plain English
-- One technically accurate example if needed
-- Actionable steps or implications
-- Max 2 short paragraphs unless depth requested
-- No Markdown headers. No bold tagging except for code emphasis.
+DO NOT use hashtags, Markdown headers, or section titles.
+DO NOT use bullet points or numbered lists.
+DO NOT use phrases like "here's how", "key concepts", "benefits", "for example", "let me explain".
+DO NOT write Wikipedia-style or tutorial-style explanations.
+
+Write as a senior security auditor. Two paragraphs maximum. Direct, authoritative, zero fluff. Code blocks only when showing actual code.
+
+[END PRIORITY OVERRIDE]
 `;
 
 class GlyphBotClient {
@@ -86,13 +80,20 @@ class GlyphBotClient {
       };
     });
 
+    // Prepend format directive as system message BEFORE all other messages
+    const systemMessage = {
+      role: 'system',
+      content: GLYPH_FORMAT_DIRECTIVE
+    };
+    
     const payload = {
-      messages: enhancedMessages,
+      messages: [systemMessage, ...enhancedMessages],
       persona: options.persona || this.defaultPersona,
       auditMode: finalOptions.auditMode,
       oneTestMode: finalOptions.oneTestMode,
-      enforceGlyphFormat: true, // Always inject format override
-      formatDirective: GLYPH_FORMAT_DIRECTIVE
+      enforceGlyphFormat: true,
+      formatOverride: true,
+      systemFirst: true
     };
 
     const response = await base44.functions.invoke('glyphbotLLM', payload);
