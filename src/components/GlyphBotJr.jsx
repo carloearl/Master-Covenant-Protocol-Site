@@ -142,9 +142,9 @@ When answering questions, use the knowledge bases to provide accurate informatio
 
   return (
     <div 
-        className="fixed bottom-6 right-6 z-[9999] flex flex-col overflow-hidden rounded-2xl shadow-2xl border glyph-glass-dark"
-        style={{ borderColor: 'rgba(37, 99, 235, 0.3)' }}
+      className="fixed bottom-6 right-6 z-[9999] flex flex-col overflow-hidden rounded-2xl shadow-2xl border glyph-glass-dark"
       style={{ 
+        borderColor: 'rgba(37, 99, 235, 0.3)',
         width: '400px',
         height: '600px',
         maxWidth: 'calc(100vw - 48px)',
