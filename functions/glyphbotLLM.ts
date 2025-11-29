@@ -169,13 +169,40 @@ ${modePrefix}${testPrefix}${conversationText}`;
       }
     }
     
-    // All providers failed - return friendly error message
-    return Response.json({
-      text: "I apologize, but I'm experiencing technical difficulties right now. Our AI systems are temporarily unavailable. Please try again in a moment, or contact support if this persists.",
-      model: 'error',
-      promptVersion: 'v3.0',
-      error: lastError?.message
-    });
+    // Final fallback: Base44 broker (always available)
+    try {
+      console.log('Attempting Base44 broker fallback...');
+      const brokerResult = await base44.integrations.Core.InvokeLLM({
+        prompt: fullPrompt,
+        add_context_from_internet: false
+      });
+      
+      await base44.entities.SystemAuditLog.create({
+        event_type: 'GLYPHBOT_LLM_CALL',
+        description: 'LLM call via Base44 broker fallback',
+        actor_email: user.email,
+        resource_id: 'glyphbot',
+        metadata: { persona, messageCount: messages.length, provider: 'base44-broker' },
+        status: 'success'
+      }).catch(console.error);
+      
+      return Response.json({
+        text: brokerResult,
+        model: 'base44-broker',
+        promptVersion: 'v3.0',
+        providerUsed: 'base44-broker'
+      });
+    } catch (brokerError) {
+      console.error('Base44 broker also failed:', brokerError);
+      
+      // All providers failed - return friendly error message
+      return Response.json({
+        text: "I apologize, but I'm experiencing technical difficulties right now. Our AI systems are temporarily unavailable. Please try again in a moment, or contact support if this persists.",
+        model: 'error',
+        promptVersion: 'v3.0',
+        error: brokerError?.message
+      });
+    }
 
 
   } catch (error) {
@@ -287,19 +314,6 @@ function buildProviderChain() {
       }
     });
   }
-  
-  // Provider 5: Base44 Broker (always available as fallback)
-  providers.push({
-    name: 'base44-broker',
-    call: async (prompt) => {
-      // This uses the base44 client which should be in scope
-      // We need to re-import here since this is a helper function
-      const { createClientFromRequest } = await import('npm:@base44/sdk@0.8.4');
-      // Note: We can't access the request here, so we use a simpler approach
-      // The base44 broker is called directly via the integration
-      throw new Error('Base44 broker requires request context - use InvokeLLM directly');
-    }
-  });
   
   return providers;
 }
