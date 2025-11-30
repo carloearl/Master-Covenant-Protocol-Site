@@ -4,8 +4,10 @@ import { createPageUrl } from '@/utils';
 import SEOHead from '@/components/SEOHead';
 import { 
   Activity, Zap, CheckCircle, XCircle, AlertCircle, Clock,
-  ArrowLeft, RefreshCw, Shield, Cpu, TrendingUp, Home
+  ArrowLeft, RefreshCw, Shield, Cpu, TrendingUp, Home, Settings
 } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ChainConfigBuilder from '@/components/provider/ChainConfigBuilder';
 import { Button } from '@/components/ui/button';
 
 // OMEGA CHAIN V3: Gemini Primary (FREE) → OpenAI → Claude → OpenRouter → OSS
@@ -107,6 +109,23 @@ export default function ProviderConsole() {
           </Button>
         </div>
 
+        <Tabs defaultValue="monitor" className="w-full">
+          <TabsList className="bg-slate-900/80 border border-slate-800 p-1 mb-6">
+            <TabsTrigger value="monitor" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
+              <Activity className="w-4 h-4 mr-2" />
+              Monitoring
+            </TabsTrigger>
+            <TabsTrigger value="config" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+              <Settings className="w-4 h-4 mr-2" />
+              Chain Builder
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="config" className="mt-0">
+            <ChainConfigBuilder />
+          </TabsContent>
+
+          <TabsContent value="monitor" className="mt-0">
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="animate-spin w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full" />
@@ -288,6 +307,8 @@ export default function ProviderConsole() {
             </div>
           </div>
         )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
