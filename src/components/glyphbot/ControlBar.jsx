@@ -1,5 +1,6 @@
 import React from 'react';
-import { Volume2, Wifi, FileSearch, FlaskConical, Braces, Layout, Trash2 } from 'lucide-react';
+import { Volume2, Wifi, FileSearch, FlaskConical, Braces, Layout, Trash2, Settings2 } from 'lucide-react';
+import VoiceSettings from './VoiceSettings';
 
 const PERSONAS = [
   { id: 'GENERAL', name: 'General', desc: 'Default assistant' },
@@ -55,7 +56,8 @@ export default function ControlBar({
   setProvider,
   modes,
   onToggleMode,
-  onClear
+  onClear,
+  onVoiceSettingsChange
 }) {
   return (
     <div className="px-4 py-3 border-b border-slate-800/80 bg-slate-950/60 backdrop-blur-sm">
@@ -98,6 +100,7 @@ export default function ControlBar({
             onClick={() => onToggleMode('voice')}
             color="purple"
           />
+          <VoiceSettings onSettingsChange={onVoiceSettingsChange} />
           <ModeToggle 
             active={modes.live} 
             icon={Wifi} 

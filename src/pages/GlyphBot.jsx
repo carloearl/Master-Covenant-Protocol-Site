@@ -47,8 +47,16 @@ export default function GlyphBotPage() {
   const [providerMeta, setProviderMeta] = useState(null);
   const chatContainerRef = useRef(null);
   
-  // TTS Hook
-  const { speak, stop: stopTTS, isSpeaking } = useTTS({ voice: 'Brian' });
+  // TTS settings state
+  const [voiceSettings, setVoiceSettings] = useState({
+    voice: null,
+    speed: 0.95,
+    pitch: 1.0,
+    volume: 1.0
+  });
+
+  // TTS Hook with dynamic settings
+  const { speak, stop: stopTTS, isSpeaking } = useTTS(voiceSettings);
 
   // Auto-scroll chat
   useEffect(() => {
@@ -224,6 +232,7 @@ export default function GlyphBotPage() {
             modes={modes}
             onToggleMode={handleToggleMode}
             onClear={handleClear}
+            onVoiceSettingsChange={setVoiceSettings}
           />
 
           {/* Provider Chain */}

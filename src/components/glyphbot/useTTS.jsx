@@ -50,9 +50,17 @@ export default function useTTS(options = {}) {
     };
   }, []);
 
-  // Find the best natural-sounding voice
+  // Find the best natural-sounding voice (or use user-selected)
   const getBestVoice = useCallback(() => {
     if (voices.length === 0) return null;
+
+    // If user selected a specific voice, use that
+    if (defaultSettings.preferredVoice) {
+      const userVoice = voices.find(v => v.name === defaultSettings.preferredVoice);
+      if (userVoice) {
+        return userVoice;
+      }
+    }
 
     // Priority order for natural voices (most natural first)
     const preferredVoices = [
@@ -84,7 +92,6 @@ export default function useTTS(options = {}) {
     for (const name of preferredVoices) {
       const found = voices.find(v => v.name.includes(name));
       if (found) {
-        console.log('[TTS] Using voice:', found.name);
         return found;
       }
     }
@@ -97,15 +104,13 @@ export default function useTTS(options = {}) {
     );
 
     if (englishVoice) {
-      console.log('[TTS] Using fallback voice:', englishVoice.name);
       return englishVoice;
     }
 
     // Last resort: first English voice
     const anyEnglish = voices.find(v => v.lang.startsWith('en'));
-    console.log('[TTS] Using any English voice:', anyEnglish?.name);
     return anyEnglish || voices[0];
-  }, [voices]);
+  }, [voices, defaultSettings.preferredVoice]);
 
   /**
    * Stop any currently playing speech
