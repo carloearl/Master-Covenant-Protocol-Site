@@ -320,6 +320,23 @@ p {
   }
 }
 
+/* Vertical Slider Support */
+[data-orientation="vertical"] {
+  flex-direction: column;
+  width: 20px;
+  height: 100%;
+}
+
+[data-orientation="vertical"] [data-radix-slider-track] {
+  width: 4px;
+  height: 100%;
+}
+
+[data-orientation="vertical"] [data-radix-slider-thumb] {
+  width: 14px;
+  height: 14px;
+}
+
 /* GlyphAudit Custom Styles */
 .glyph-navy { background-color: #020617; }
 .glyph-neon-blue { color: #00E4FF; }
