@@ -196,6 +196,13 @@ export default function GlyphBotPage() {
         }
       ]);
 
+      // Increment chat count
+      setChatCount(prev => {
+        const newCount = prev + 1;
+        localStorage.setItem(STORAGE_KEYS.CHAT_COUNT, newCount.toString());
+        return newCount;
+      });
+
       setLastMeta({
         model: response.model,
         providerUsed: response.providerUsed,
