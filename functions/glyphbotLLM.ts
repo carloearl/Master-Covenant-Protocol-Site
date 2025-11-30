@@ -84,9 +84,9 @@ const PROVIDERS = {
   },
   GEMINI: {
     id: 'GEMINI',
-    label: 'Gemini',
+    label: 'Gemini 2.0 Flash',
     envHints: ['GEMINI_API_KEY'],
-    priority: 12,
+    priority: 6,
     jsonMode: true,
     supportsSchema: false,
     supportsRegex: false
@@ -1066,17 +1066,34 @@ async function callProvider(providerId, prompt, jsonModePayload = null) {
     case 'GEMINI': {
       const geminiKey = Deno.env.get('GEMINI_API_KEY');
       if (!geminiKey) throw new Error('GEMINI_API_KEY not set');
+      
+      const body = {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          maxOutputTokens: 8192,
+          temperature: 0.7
+        }
+      };
+      
+      // Add JSON mode if requested
+      if (jsonModePayload) {
+        body.generationConfig.responseMimeType = 'application/json';
+      }
+      
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }]
-          })
+          body: JSON.stringify(body)
         }
       );
-      if (!response.ok) throw new Error(`Gemini error: ${response.status}`);
+      
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Gemini error: ${response.status} - ${errText}`);
+      }
+      
       const data = await response.json();
       return data.candidates[0].content.parts[0].text;
     }
