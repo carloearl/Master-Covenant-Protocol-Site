@@ -17,11 +17,21 @@ const PROVIDER_CONFIG = {
     priority: 1,
     costTier: 'free',
     jsonMode: true,
+    jsonMimeType: 'application/json', // Uses responseMimeType for JSON
     maxTokens: 8192,
-    models: ['gemini-1.5-flash', 'gemini-1.5-pro'],
-    defaultModel: 'gemini-1.5-flash',
+    models: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-pro'],
+    defaultModel: 'gemini-2.0-flash',
     supportsAudit: true,
-    supportsStreaming: true
+    supportsStreaming: true,
+    supportsImages: true,
+    imageModels: ['imagen-4.0-generate-001', 'imagen-4.0-ultra-generate-001', 'imagen-4.0-fast-generate-001', 'imagen-3.0-generate-002'],
+    defaultImageModel: 'imagen-4.0-generate-001',
+    imageConfig: {
+      maxImages: 4,
+      aspectRatios: ['1:1', '3:4', '4:3', '9:16', '16:9'],
+      imageSizes: ['1K', '2K'],
+      personGeneration: ['dont_allow', 'allow_adult', 'allow_all']
+    }
   },
   OPENAI: {
     id: 'OPENAI',
@@ -29,12 +39,15 @@ const PROVIDER_CONFIG = {
     priority: 2,
     costTier: 'paid',
     jsonMode: true,
-    jsonSchema: true, // Supports strict JSON schema
+    jsonSchema: true, // Supports strict JSON schema mode
     maxTokens: 4096,
     models: ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo'],
     defaultModel: 'gpt-4o',
     supportsAudit: true,
-    supportsStreaming: true
+    supportsStreaming: true,
+    supportsImages: true,
+    imageModels: ['dall-e-3', 'dall-e-2'],
+    defaultImageModel: 'dall-e-3'
   },
   CLAUDE: {
     id: 'CLAUDE',
@@ -42,11 +55,13 @@ const PROVIDER_CONFIG = {
     priority: 3,
     costTier: 'paid',
     jsonMode: true,
+    jsonViaPrompt: true, // JSON mode via system prompt
     maxTokens: 4096,
-    models: ['claude-3-5-sonnet-20241022', 'claude-3-opus-20240229'],
-    defaultModel: 'claude-3-5-sonnet-20241022',
+    models: ['claude-sonnet-4-20250514', 'claude-3-5-sonnet-20241022', 'claude-3-opus-20240229'],
+    defaultModel: 'claude-sonnet-4-20250514',
     supportsAudit: true,
-    supportsStreaming: true
+    supportsStreaming: true,
+    supportsImages: false
   },
   OPENROUTER: {
     id: 'OPENROUTER',
@@ -58,7 +73,8 @@ const PROVIDER_CONFIG = {
     models: ['google/gemini-flash-1.5', 'anthropic/claude-3.5-sonnet', 'openai/gpt-4o'],
     defaultModel: 'google/gemini-flash-1.5',
     supportsAudit: true,
-    supportsStreaming: false
+    supportsStreaming: false,
+    supportsImages: false
   },
   LOCAL_OSS: {
     id: 'LOCAL_OSS',
@@ -70,7 +86,8 @@ const PROVIDER_CONFIG = {
     models: ['local-stub'],
     defaultModel: 'local-stub',
     supportsAudit: false,
-    supportsStreaming: false
+    supportsStreaming: false,
+    supportsImages: false
   }
 };
 
@@ -81,7 +98,9 @@ const CHAIN_MODES = {
   'claude-first': ['CLAUDE', 'OPENAI', 'GEMINI', 'OPENROUTER', 'LOCAL_OSS'],
   'balanced': ['GEMINI', 'OPENAI', 'CLAUDE', 'OPENROUTER', 'LOCAL_OSS'],
   'free-only': ['GEMINI', 'OPENROUTER', 'LOCAL_OSS'],
-  'audit-optimized': ['OPENAI', 'CLAUDE', 'GEMINI', 'OPENROUTER', 'LOCAL_OSS']
+  'audit-optimized': ['OPENAI', 'CLAUDE', 'GEMINI', 'OPENROUTER', 'LOCAL_OSS'],
+  'image-generation': ['GEMINI', 'OPENAI'], // Providers with image generation
+  'cost-optimized': ['GEMINI', 'OPENROUTER', 'OPENAI', 'CLAUDE', 'LOCAL_OSS']
 };
 
 // Persona configurations
@@ -414,6 +433,52 @@ class ChainManager {
 
   resetHealth() {
     this.healthMonitor.reset();
+  }
+
+  /**
+   * Get providers that support image generation
+   */
+  getImageProviders() {
+    return Object.values(PROVIDER_CONFIG)
+      .filter(p => p.supportsImages)
+      .map(p => ({
+        id: p.id,
+        label: p.label,
+        models: p.imageModels,
+        defaultModel: p.defaultImageModel,
+        config: p.imageConfig
+      }));
+  }
+
+  /**
+   * Build image generation request payload
+   */
+  buildImageRequestPayload(providerId, options) {
+    const providerConfig = PROVIDER_CONFIG[providerId];
+    
+    if (!providerConfig?.supportsImages) {
+      throw new Error(`Provider ${providerId} does not support image generation`);
+    }
+
+    const payload = {
+      provider: providerId,
+      model: options.model || providerConfig.defaultImageModel,
+      prompt: options.prompt,
+      numberOfImages: Math.min(options.numberOfImages || 1, 4),
+      aspectRatio: options.aspectRatio || '1:1'
+    };
+
+    // Gemini/Imagen specific options
+    if (providerId === 'GEMINI') {
+      if (options.imageSize && ['1K', '2K'].includes(options.imageSize)) {
+        payload.imageSize = options.imageSize;
+      }
+      if (options.personGeneration) {
+        payload.personGeneration = options.personGeneration;
+      }
+    }
+
+    return payload;
   }
 }
 

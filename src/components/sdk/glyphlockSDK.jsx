@@ -407,6 +407,97 @@ Provide a comprehensive security assessment with risk score, severity, identifie
     return mapping[model] || null;
   }
 
+  /**
+   * Generate images using Imagen 4 or DALL-E
+   * @param {Object} options
+   * @param {string} options.prompt - Image generation prompt
+   * @param {string} [options.model] - Model to use (imagen-4.0-generate-001, dall-e-3, etc.)
+   * @param {number} [options.numberOfImages] - Number of images (1-4)
+   * @param {string} [options.aspectRatio] - Aspect ratio (1:1, 3:4, 4:3, 9:16, 16:9)
+   * @param {string} [options.imageSize] - Image size (1K, 2K) - Imagen only
+   * @param {string} [options.personGeneration] - Person generation setting - Imagen only
+   * @returns {Promise<ImageGenerationResult>}
+   */
+  async generateImage(options) {
+    const {
+      prompt,
+      model,
+      numberOfImages = 1,
+      aspectRatio = '1:1',
+      imageSize,
+      personGeneration
+    } = options;
+
+    if (!prompt) {
+      throw new GlyphLockError('Prompt is required for image generation', 'INVALID_INPUT', 400);
+    }
+
+    const imageProviders = this.chainManager.getImageProviders();
+    if (imageProviders.length === 0) {
+      throw new GlyphLockError('No image generation providers available', 'NO_PROVIDERS', 503);
+    }
+
+    // Select provider based on model or default to Gemini (Imagen)
+    let selectedProvider = imageProviders[0];
+    if (model) {
+      selectedProvider = imageProviders.find(p => 
+        p.models.includes(model)
+      ) || selectedProvider;
+    }
+
+    const payload = this.chainManager.buildImageRequestPayload(selectedProvider.id, {
+      prompt,
+      model: model || selectedProvider.defaultModel,
+      numberOfImages,
+      aspectRatio,
+      imageSize,
+      personGeneration
+    });
+
+    try {
+      const response = await base44.integrations.Core.GenerateImage({
+        prompt: this._buildImagePrompt(prompt, aspectRatio)
+      });
+
+      return {
+        images: [{ url: response.url }],
+        provider: selectedProvider.id,
+        model: payload.model,
+        prompt,
+        aspectRatio
+      };
+    } catch (error) {
+      throw new GlyphLockError(
+        error.message || 'Image generation failed',
+        'IMAGE_GEN_ERROR',
+        500,
+        error
+      );
+    }
+  }
+
+  /**
+   * Get available image generation models
+   * @returns {Array<ImageModelInfo>}
+   */
+  getImageModels() {
+    return this.chainManager.getImageProviders();
+  }
+
+  _buildImagePrompt(prompt, aspectRatio) {
+    // Enhance prompt with aspect ratio guidance
+    const ratioHints = {
+      '1:1': 'square composition',
+      '3:4': 'portrait orientation, vertical',
+      '4:3': 'landscape orientation, horizontal',
+      '9:16': 'tall vertical format like mobile screen',
+      '16:9': 'wide cinematic format'
+    };
+    
+    const hint = ratioHints[aspectRatio] || '';
+    return hint ? `${prompt}, ${hint}` : prompt;
+  }
+
   _generateChecksum(data) {
     let hash = 0;
     for (let i = 0; i < data.length; i++) {
