@@ -2,26 +2,26 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Zap, AlertCircle, CheckCircle, XCircle, Clock } from 'lucide-react';
 
+// OMEGA CHAIN PATCH: OpenAI Primary → Claude/Gemini Chain → OSS Fallback
 const PRIORITY_ORDER = [
-  'DEEPSEEK_OSS',
-  'LLAMA_OSS',
-  'MISTRAL_OSS', 
-  'GEMMA_OSS',
-  'CLAUDE',
-  'OPENAI',
-  'GEMINI',
+  'OPENAI',       // PRIMARY (always entry/exit)
+  'CLAUDE',       // Chain Module
+  'GEMINI',       // Chain Module
+  'LLAMA_OSS',    // Secondary OSS
+  'MISTRAL_OSS',  // Secondary OSS
+  'GEMMA_OSS',    // Secondary OSS
   'BASE44_BROKER',
   'LOCAL_OSS'
+  // DeepSeek REMOVED
 ];
 
 const PROVIDER_LABELS = {
-  'CLAUDE': 'Claude 4.5',
-  'OPENAI': 'GPT-4',
-  'DEEPSEEK_OSS': 'DeepSeek',
+  'OPENAI': 'GPT-4 (Primary)',
+  'CLAUDE': 'Claude (Chain)',
+  'GEMINI': 'Gemini (Chain)',
   'LLAMA_OSS': 'Llama',
   'MISTRAL_OSS': 'Mistral',
   'GEMMA_OSS': 'Gemma',
-  'GEMINI': 'Gemini',
   'LOCAL_OSS': 'Local',
   'BASE44_BROKER': 'Base44'
 };

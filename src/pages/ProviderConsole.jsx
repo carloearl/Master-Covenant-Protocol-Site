@@ -8,28 +8,29 @@ import ProviderStatsCard from '@/components/provider/ProviderStatsCard';
 import GlyphProviderChain from '@/components/provider/GlyphProviderChain';
 import AutoSelectorExplainer from '@/components/provider/AutoSelectorExplainer';
 
+// OMEGA CHAIN PATCH: OpenAI Primary → Claude/Gemini Chain → OSS Fallback
 const PRIORITY_ORDER_AUDIT = [
-  'LLAMA_OSS',
-  'MISTRAL_OSS',
-  'GEMMA_OSS',
-  'DEEPSEEK_OSS',
-  'CLAUDE',
-  'OPENAI',
-  'GEMINI',
+  'OPENAI',       // PRIMARY (always entry/exit)
+  'CLAUDE',       // Chain Module
+  'GEMINI',       // Chain Module
+  'LLAMA_OSS',    // Secondary OSS
+  'MISTRAL_OSS',  // Secondary OSS
+  'GEMMA_OSS',    // Secondary OSS
   'BASE44_BROKER',
   'LOCAL_OSS'
+  // DeepSeek REMOVED
 ];
 
 const PRIORITY_ORDER_GENERAL = [
-  'LLAMA_OSS',
-  'MISTRAL_OSS',
-  'GEMMA_OSS',
-  'DEEPSEEK_OSS',
-  'CLAUDE',
-  'OPENAI',
-  'GEMINI',
+  'OPENAI',       // PRIMARY (always entry/exit)
+  'CLAUDE',       // Chain fallback
+  'GEMINI',       // Chain fallback
+  'LLAMA_OSS',    // Secondary OSS
+  'MISTRAL_OSS',  // Secondary OSS
+  'GEMMA_OSS',    // Secondary OSS
   'BASE44_BROKER',
   'LOCAL_OSS'
+  // DeepSeek REMOVED
 ];
 
 export default function ProviderConsole() {
