@@ -24,10 +24,18 @@ const MODEL_OPTIONS = [
 
 function ModeToggle({ active, icon: Icon, label, onClick, color = 'cyan' }) {
   const colors = {
-    cyan: active ? 'bg-cyan-500/15 border-cyan-400/70 text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.4)]' : '',
-    purple: active ? 'bg-purple-500/15 border-purple-400/70 text-purple-300 shadow-[0_0_10px_rgba(168,85,247,0.4)]' : '',
-    amber: active ? 'bg-amber-500/15 border-amber-400/70 text-amber-300 shadow-[0_0_10px_rgba(245,158,11,0.4)]' : '',
-    rose: active ? 'bg-rose-500/15 border-rose-400/70 text-rose-300 shadow-[0_0_10px_rgba(244,63,94,0.4)]' : '',
+    cyan: active 
+      ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.6),inset_0_0_15px_rgba(6,182,212,0.2)]' 
+      : 'hover:border-cyan-500/50 hover:text-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)]',
+    purple: active 
+      ? 'bg-purple-500/20 border-purple-400 text-purple-300 shadow-[0_0_20px_rgba(168,85,247,0.6),inset_0_0_15px_rgba(168,85,247,0.2)]' 
+      : 'hover:border-purple-500/50 hover:text-purple-400 hover:shadow-[0_0_15px_rgba(168,85,247,0.3)]',
+    amber: active 
+      ? 'bg-amber-500/20 border-amber-400 text-amber-300 shadow-[0_0_20px_rgba(245,158,11,0.6),inset_0_0_15px_rgba(245,158,11,0.2)]' 
+      : 'hover:border-amber-500/50 hover:text-amber-400 hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]',
+    rose: active 
+      ? 'bg-rose-500/20 border-rose-400 text-rose-300 shadow-[0_0_20px_rgba(244,63,94,0.6),inset_0_0_15px_rgba(244,63,94,0.2)]' 
+      : 'hover:border-rose-500/50 hover:text-rose-400 hover:shadow-[0_0_15px_rgba(244,63,94,0.3)]',
   };
 
   return (
@@ -35,15 +43,15 @@ function ModeToggle({ active, icon: Icon, label, onClick, color = 'cyan' }) {
       type="button"
       onClick={onClick}
       className={`
-        flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium
-        border transition-all duration-200
+        flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-semibold uppercase tracking-wide
+        border-2 transition-all duration-300 backdrop-blur-sm
         ${active 
           ? colors[color]
-          : 'bg-slate-950/50 border-slate-700/60 text-slate-500 hover:border-slate-500/80 hover:text-slate-400'
+          : `bg-slate-900/60 border-slate-700/50 text-slate-400 ${colors[color]}`
         }
       `}
     >
-      <Icon className="w-3.5 h-3.5" />
+      <Icon className={`w-3.5 h-3.5 ${active ? 'drop-shadow-[0_0_6px_currentColor]' : ''}`} />
       <span className="hidden sm:inline">{label}</span>
     </button>
   );
