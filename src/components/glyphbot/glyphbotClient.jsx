@@ -41,7 +41,9 @@ class GlyphBotClient {
       provider: null,
       autoProvider: true,
       jsonModeForced: false,
-      structuredMode: false
+      structuredMode: false,
+      usePuter: true,  // Enable Puter (free Gemini) by default
+      puterModel: 'gemini-2.5-flash'
     };
   }
 
