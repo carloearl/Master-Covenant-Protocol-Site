@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, Shield, Zap, Fingerprint, Lock, Hash, Clock } from 'lucide-react';
 
@@ -13,14 +13,14 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
 
   if (!card) return null;
 
-  const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
+  const handleMouseMove = useCallback((e) => {
+    if (!cardRef.current || isFlipped) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width;
     const y = (e.clientY - rect.top) / rect.height;
     
-    const tiltX = (y - 0.5) * 20;
-    const tiltY = (x - 0.5) * -20;
+    const tiltX = (y - 0.5) * 15;
+    const tiltY = (x - 0.5) * -15;
     const glareX = x * 100;
     const glareY = y * 100;
 
@@ -29,14 +29,17 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
       '--glare-x': `${glareX}%`,
       '--glare-y': `${glareY}%`,
     });
-  };
+  }, [isFlipped]);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setTiltStyle({});
-    setIsFlipped(false);
-  };
+    // Keep flip state on mouse leave - user must click to toggle
+  }, []);
 
-  const handleClick = () => setIsFlipped(!isFlipped);
+  const handleClick = useCallback(() => {
+    setIsFlipped(prev => !prev);
+    setTiltStyle({});
+  }, []);
 
   const formatDate = (dateStr) => {
     return new Date(dateStr).toLocaleDateString('en-US', { 
@@ -54,18 +57,23 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
   return (
     <div
       ref={cardRef}
-      className={`relative ${sizeClasses[size]} cursor-pointer group`}
+      className={`relative ${sizeClasses[size]} cursor-pointer group select-none`}
       style={{ perspective: '1200px' }}
       onClick={handleClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && handleClick()}
     >
       <div
-        className="relative w-full aspect-[3/4] transition-transform duration-700 ease-out"
+        className="relative w-full aspect-[3/4]"
         style={{
           transformStyle: 'preserve-3d',
-          transform: isFlipped ? 'rotateY(180deg)' : tiltStyle.transform || 'rotateY(0deg)',
-          ...tiltStyle
+          transform: isFlipped ? 'rotateY(180deg)' : (tiltStyle.transform || 'rotateY(0deg)'),
+          transition: isFlipped ? 'transform 0.6s ease-in-out' : 'transform 0.15s ease-out',
+          willChange: 'transform',
+          ...(!isFlipped ? tiltStyle : {})
         }}
       >
         {/* ══════════════════════════════════════════════════════════
@@ -73,7 +81,7 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
             ══════════════════════════════════════════════════════════ */}
         <div
           className="absolute inset-0 rounded-2xl overflow-hidden"
-          style={{ backfaceVisibility: 'hidden' }}
+          style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
         >
           {/* Foil border effect */}
           <div
@@ -157,6 +165,7 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
           className="absolute inset-0 rounded-2xl overflow-hidden"
           style={{
             backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
             boxShadow: `0 0 50px ${card.glowColor}`
           }}
