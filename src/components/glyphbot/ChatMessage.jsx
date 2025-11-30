@@ -8,7 +8,8 @@ export default function ChatMessage({
   msg, 
   isAssistant, 
   providerLabel, 
-  ttsAvailable, 
+  ttsAvailable = true, 
+  isSpeaking = false,
   onPlayTTS,
   showFeedback = true,
   persona
@@ -16,6 +17,12 @@ export default function ChatMessage({
   const [copied, setCopied] = useState(false);
   const [feedbackGiven, setFeedbackGiven] = useState(false);
   const hasAudit = msg.audit && (msg.audit.json || msg.audit.report);
+
+  const handleTTS = () => {
+    if (onPlayTTS) {
+      onPlayTTS(msg.id);
+    }
+  };
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(msg.content);
