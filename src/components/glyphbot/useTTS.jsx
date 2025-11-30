@@ -202,16 +202,29 @@ export default function useTTS(options = {}) {
    * Test TTS functionality
    */
   const testTTS = useCallback(async () => {
-    return speak('Hello! This is a test of the GlyphBot voice system.');
+    return speak('Hello! This is GlyphBot, your elite security assistant. How can I help you today?');
   }, [speak]);
+
+  /**
+   * Get available voices for UI selection
+   */
+  const getVoices = useCallback(() => {
+    return voices.filter(v => v.lang.startsWith('en')).map(v => ({
+      name: v.name,
+      lang: v.lang,
+      local: v.localService
+    }));
+  }, [voices]);
 
   return {
     speak,
     stop,
     testTTS,
+    getVoices,
     isSpeaking,
     isLoading,
     ttsAvailable,
-    lastError
+    lastError,
+    currentVoice: getBestVoice()?.name || 'Default'
   };
 }
