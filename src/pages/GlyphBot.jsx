@@ -244,6 +244,8 @@ export default function GlyphBotPage() {
                   providerLabel={msg.providerId ? providers.find(p => p.id === msg.providerId)?.label : undefined}
                   ttsAvailable={modes.voice}
                   onPlayTTS={() => {}}
+                  showFeedback={msg.role === 'assistant' && msg.id !== 'welcome-1'}
+                  persona={persona}
                 />
               ))}
 
