@@ -19,10 +19,10 @@ export default function useTTS(options = {}) {
   const audioRef = useRef(null);
   const utteranceRef = useRef(null);
 
-  // Default settings
+  // Default settings - StreamElements voices: Brian, Amy, Emma, Geraint, Ivy, Joanna, Joey, Justin, Kendra, Kimberly, Matthew, Salli
   const defaultSettings = {
     provider: options.provider || 'streamelements',
-    voice: options.voice || 'Matthew',
+    voice: options.voice || 'Brian', // Brian is clearer for technical content
     speed: options.speed || 1.0,
     pitch: options.pitch || 1.0,
     volume: options.volume || 1.0,
