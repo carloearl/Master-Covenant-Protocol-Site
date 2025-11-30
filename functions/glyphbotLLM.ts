@@ -1,97 +1,36 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 /**
- * GlyphBot LLM Engine v5.0 — OMEGA CHAIN PATCH
+ * GlyphBot LLM Engine v6.0 — FREE TIER ONLY
  * 
- * PRIMARY MODEL: OpenAI GPT-4 (Carlo's key - ALWAYS entry/exit point)
+ * PRIMARY MODEL: Google Gemini 2.0 Flash (FREE TIER)
+ * FALLBACK: Local OSS Engine (no external API)
  * 
- * CHAIN MODE MODULES (assistants only):
- * 2. Claude (Anthropic) - chain enhancement
- * 3. Gemini - chain enhancement
- * 
- * FALLBACK ORDER (only if OpenAI DOWN):
- * 1. Claude
- * 2. Gemini
- * 
- * REMOVED: DeepSeek (PERMANENTLY DISABLED)
+ * PAID APIs REMOVED: OpenAI, Anthropic, Together, OpenRouter, Mistral, DeepSeek
  * 
  * Environment Variables:
- * - OPENAI_API_KEY: OpenAI GPT-4 (PRIMARY)
- * - ANTHROPIC_API_KEY: Claude (chain/fallback)
- * - GEMINI_API_KEY: Google Gemini (chain/fallback)
- * - TOGETHER_API_KEY: Together.ai (Llama, Mistral, Gemma - secondary OSS)
- * - OPENROUTER_API_KEY: OpenRouter (secondary OSS)
- * - MISTRAL_API_KEY: Mistral native API (secondary OSS)
+ * - GEMINI_API_KEY: Google Gemini (FREE TIER - Primary)
+ * 
+ * PAID APIS REMOVED: OpenAI, Anthropic, Together, OpenRouter, Mistral
  */
 
 // =====================================================
-// PROVIDER REGISTRY — OSS-first priority order
+// PROVIDER REGISTRY — FREE PROVIDERS ONLY (No paid APIs)
 // =====================================================
 const PROVIDERS = {
   AUTO: { id: 'AUTO', label: 'Auto (GlyphBot Omega)', priority: 0, jsonMode: false, supportsSchema: false, supportsRegex: false },
-  // PRIMARY MODEL - Always entry/exit point
-  OPENAI: {
-    id: 'OPENAI',
-    label: 'OpenAI GPT-4 (Primary)',
-    envHints: ['OPENAI_API_KEY'],
-    priority: 1,
-    jsonMode: true,
-    supportsSchema: true,
-    supportsRegex: false,
-    isPrimary: true
-  },
-  // CHAIN MODE MODULES - Assistants only
-  CLAUDE: {
-    id: 'CLAUDE',
-    label: 'Claude Sonnet 4.5 (Chain)',
-    envHints: ['ANTHROPIC_API_KEY'],
-    priority: 2,
-    jsonMode: true,
-    supportsSchema: true,
-    supportsRegex: false,
-    supportsFiles: true,
-    isChainModule: true
-  },
+  // PRIMARY MODEL - Gemini Free Tier
   GEMINI: {
     id: 'GEMINI',
-    label: 'Gemini 2.0 Flash (Chain)',
+    label: 'Gemini 2.0 Flash (Free)',
     envHints: ['GEMINI_API_KEY'],
-    priority: 3,
+    priority: 1,
     jsonMode: true,
     supportsSchema: false,
     supportsRegex: false,
-    isChainModule: true
+    isPrimary: true
   },
-  // SECONDARY OSS MODELS
-  LLAMA_OSS: {
-    id: 'LLAMA_OSS',
-    label: 'Llama 3.3 70B',
-    envHints: ['TOGETHER_API_KEY', 'OPENROUTER_API_KEY'],
-    priority: 10,
-    jsonMode: true,
-    supportsSchema: true,
-    supportsRegex: false
-  },
-  MISTRAL_OSS: {
-    id: 'MISTRAL_OSS',
-    label: 'Mistral Large',
-    envHints: ['MISTRAL_API_KEY', 'OPENROUTER_API_KEY', 'TOGETHER_API_KEY'],
-    priority: 11,
-    jsonMode: true,
-    supportsSchema: true,
-    supportsRegex: false
-  },
-  GEMMA_OSS: {
-    id: 'GEMMA_OSS',
-    label: 'Gemma 3n',
-    envHints: ['OPENROUTER_API_KEY', 'TOGETHER_API_KEY'],
-    priority: 12,
-    jsonMode: true,
-    supportsSchema: true,
-    supportsRegex: false
-  },
-  // DeepSeek PERMANENTLY DISABLED - Do not use
-  // DEEPSEEK_OSS: REMOVED
+  // LOCAL FALLBACK - Always available
   LOCAL_OSS: {
     id: 'LOCAL_OSS',
     label: 'Local OSS Engine (No Key)',
@@ -278,55 +217,19 @@ function chooseProvider({ requestedProvider, autoProvider, auditMode, persona, r
     };
   }
 
-  // AUTO mode selection
+  // AUTO mode selection - FREE TIER ONLY
   // Exclude LOCAL_OSS from primary selection (use only as last resort)
   const externalProviders = enabled.filter(p => p.id !== 'LOCAL_OSS');
-  // DeepSeek PERMANENTLY DISABLED - removed from OSS list
-  const ossProviders = externalProviders.filter(p =>
-    ['LLAMA_OSS', 'MISTRAL_OSS', 'GEMMA_OSS'].includes(p.id)
-  );
 
   if (autoProvider || !requestedProvider || requestedProvider === 'AUTO') {
-    // OMEGA CHAIN PATCH: OpenAI is ALWAYS primary entry/exit point
-    const openaiProvider = externalProviders.find(p => p.id === 'OPENAI');
-    if (openaiProvider) {
-      return {
-        providerId: 'OPENAI',
-        providerLabel: 'OpenAI GPT-4 (Primary)',
-        error: null
-      };
-    }
-    
-    // FALLBACK ORDER (only if OpenAI DOWN): Claude → Gemini
-    const claudeProvider = externalProviders.find(p => p.id === 'CLAUDE');
-    if (claudeProvider) {
-      return {
-        providerId: 'CLAUDE',
-        providerLabel: 'Claude Sonnet 4.5 (Fallback)',
-        error: null
-      };
-    }
-    
+    // FREE TIER ONLY: Gemini is primary (free tier available)
     const geminiProvider = externalProviders.find(p => p.id === 'GEMINI');
     if (geminiProvider) {
       return {
         providerId: 'GEMINI',
-        providerLabel: 'Gemini 2.0 Flash (Fallback)',
+        providerLabel: 'Gemini 2.0 Flash (Free)',
         error: null
       };
-    }
-    
-    // Secondary OSS fallbacks
-    const ossOrder = ['LLAMA_OSS', 'MISTRAL_OSS', 'GEMMA_OSS'];
-    for (const id of ossOrder) {
-      const provider = externalProviders.find(p => p.id === id);
-      if (provider) {
-        return {
-          providerId: provider.id,
-          providerLabel: provider.label,
-          error: null
-        };
-      }
     }
 
     // If we have any external providers, use first available; otherwise LOCAL_OSS
@@ -617,7 +520,7 @@ ${testPrefix}${conversationText}`;
       });
     }
     
-    // Build ordered provider chain for fallback
+    // Build ordered provider chain for fallback (FREE TIER ONLY)
     const enabledProviders = getEnabledProviders();
     const providerCallOrder = [];
     
@@ -626,7 +529,7 @@ ${testPrefix}${conversationText}`;
       providerCallOrder.push(providerChoice.providerId);
     }
     
-    // Add remaining providers as fallbacks
+    // Add remaining FREE providers as fallbacks
     for (const p of enabledProviders) {
       if (!providerCallOrder.includes(p.id)) {
         providerCallOrder.push(p.id);
@@ -887,186 +790,10 @@ ${testPrefix}${conversationText}`;
 
 /**
  * Call a specific provider by ID with optional JSON mode
+ * FREE PROVIDERS ONLY - Paid APIs removed
  */
 async function callProvider(providerId, prompt, jsonModePayload = null) {
   switch (providerId) {
-    case 'LLAMA_OSS': {
-      const togetherKey = Deno.env.get('TOGETHER_API_KEY');
-      if (togetherKey) {
-        const body = {
-          model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
-          messages: [{ role: 'user', content: prompt }],
-          max_tokens: 4096,
-          temperature: 0.7
-        };
-        if (jsonModePayload) {
-          body.response_format = jsonModePayload;
-        }
-        const response = await fetch('https://api.together.xyz/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${togetherKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(body)
-        });
-        if (!response.ok) throw new Error(`Together/Llama error: ${response.status}`);
-        const data = await response.json();
-        return data.choices[0].message.content;
-      }
-      const openrouterKey = Deno.env.get('OPENROUTER_API_KEY');
-      if (openrouterKey) {
-        return await callOpenRouter(openrouterKey, 'meta-llama/llama-3.3-70b-instruct', prompt, jsonModePayload);
-      }
-      throw new Error('No Llama provider available');
-    }
-    
-    case 'MISTRAL_OSS': {
-      const mistralKey = Deno.env.get('MISTRAL_API_KEY');
-      if (mistralKey) {
-        const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${mistralKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'mistral-large-latest',
-            messages: [{ role: 'user', content: prompt }],
-            max_tokens: 4096
-          })
-        });
-        if (!response.ok) throw new Error(`Mistral error: ${response.status}`);
-        const data = await response.json();
-        return data.choices[0].message.content;
-      }
-      const openrouterKey = Deno.env.get('OPENROUTER_API_KEY');
-      if (openrouterKey) {
-        return await callOpenRouter(openrouterKey, 'mistralai/mistral-large', prompt);
-      }
-      const togetherKey = Deno.env.get('TOGETHER_API_KEY');
-      if (togetherKey) {
-        const response = await fetch('https://api.together.xyz/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${togetherKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'mistralai/Mixtral-8x22B-Instruct-v0.1',
-            messages: [{ role: 'user', content: prompt }],
-            max_tokens: 4096
-          })
-        });
-        if (!response.ok) throw new Error(`Together/Mistral error: ${response.status}`);
-        const data = await response.json();
-        return data.choices[0].message.content;
-      }
-      throw new Error('No Mistral provider available');
-    }
-    
-    case 'GEMMA_OSS': {
-      const openrouterKey = Deno.env.get('OPENROUTER_API_KEY');
-      if (openrouterKey) {
-        return await callOpenRouter(openrouterKey, 'google/gemma-2-27b-it', prompt);
-      }
-      const togetherKey = Deno.env.get('TOGETHER_API_KEY');
-      if (togetherKey) {
-        const response = await fetch('https://api.together.xyz/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${togetherKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'google/gemma-2-27b-it',
-            messages: [{ role: 'user', content: prompt }],
-            max_tokens: 4096
-          })
-        });
-        if (!response.ok) throw new Error(`Together/Gemma error: ${response.status}`);
-        const data = await response.json();
-        return data.choices[0].message.content;
-      }
-      throw new Error('No Gemma provider available');
-    }
-    
-    // DeepSeek PERMANENTLY DISABLED per Omega Chain Patch
-    // case 'DEEPSEEK_OSS': REMOVED
-    
-    case 'CLAUDE': {
-      const anthropicKey = Deno.env.get('ANTHROPIC_API_KEY');
-      if (!anthropicKey) throw new Error('ANTHROPIC_API_KEY not set');
-      
-      const headers = {
-        'x-api-key': anthropicKey,
-        'anthropic-version': '2023-06-01',
-        'Content-Type': 'application/json'
-      };
-      
-      // Build request body
-      const body = {
-        model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 20000,
-        temperature: 1,
-        messages: [{ role: 'user', content: prompt }]
-      };
-      
-      // Add JSON mode if requested (Claude uses prefill technique)
-      if (jsonModePayload) {
-        body.messages.push({
-          role: 'assistant',
-          content: '{'
-        });
-      }
-      
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body)
-      });
-      
-      if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`Anthropic error: ${response.status} - ${errText}`);
-      }
-      
-      const data = await response.json();
-      let text = data.content[0].text;
-      
-      // If JSON mode was used, prepend the opening brace
-      if (jsonModePayload) {
-        text = '{' + text;
-      }
-      
-      return text;
-    }
-    
-    case 'OPENAI': {
-      const openaiKey = Deno.env.get('OPENAI_API_KEY');
-      if (!openaiKey) throw new Error('OPENAI_API_KEY not set');
-      const body = {
-        model: 'gpt-4-turbo-preview',
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 4096,
-        temperature: 0.7
-      };
-      if (jsonModePayload) {
-        body.response_format = jsonModePayload;
-      }
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${openaiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      });
-      if (!response.ok) throw new Error(`OpenAI error: ${response.status}`);
-      const data = await response.json();
-      return data.choices[0].message.content;
-    }
-    
     case 'GEMINI': {
       const geminiKey = Deno.env.get('GEMINI_API_KEY');
       if (!geminiKey) throw new Error('GEMINI_API_KEY not set');
@@ -1120,30 +847,7 @@ To enable full GlyphBot capabilities, configure at least one provider API key: T
   }
 }
 
-// OpenRouter helper with JSON mode support
-async function callOpenRouter(apiKey, model, prompt, jsonModePayload = null) {
-  const body = {
-    model,
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: 4096
-  };
-  if (jsonModePayload) {
-    body.response_format = jsonModePayload;
-  }
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://glyphlock.io',
-      'X-Title': 'GlyphBot'
-    },
-    body: JSON.stringify(body)
-  });
-  if (!response.ok) throw new Error(`OpenRouter error: ${response.status}`);
-  const data = await response.json();
-  return data.choices[0].message.content;
-}
+// Paid API helpers removed - using free tier only
 
 /**
  * WEBHOOK HOOK POINT
