@@ -842,39 +842,27 @@ async function callProvider(providerId, prompt, jsonModePayload = null) {
       const openrouterKey = Deno.env.get('OPENROUTER_API_KEY');
       if (!openrouterKey) throw new Error('OPENROUTER_API_KEY not set');
       
+      const { OpenRouter } = await import('npm:@openrouter/sdk');
+      
+      const openRouter = new OpenRouter({
+        apiKey: openrouterKey,
+        defaultHeaders: {
+          'HTTP-Referer': 'https://glyphlock.io',
+          'X-Title': 'GlyphBot'
+        }
+      });
+      
       const model = PROVIDERS.OPENROUTER.defaultModel;
-      const body = {
+      
+      const completion = await openRouter.chat.send({
         model,
         messages: [
           { role: 'user', content: prompt }
         ],
-        max_tokens: 4096,
-        temperature: 0.7
-      };
-      
-      // Add JSON mode if requested
-      if (jsonModePayload) {
-        body.response_format = { type: 'json_object' };
-      }
-      
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${openrouterKey}`,
-          'HTTP-Referer': 'https://glyphlock.io',
-          'X-Title': 'GlyphBot'
-        },
-        body: JSON.stringify(body)
+        stream: false
       });
       
-      if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`OpenRouter error: ${response.status} - ${errText}`);
-      }
-      
-      const data = await response.json();
-      return data.choices[0].message.content;
+      return completion.choices[0].message.content;
     }
     
     case 'LOCAL_OSS': {
