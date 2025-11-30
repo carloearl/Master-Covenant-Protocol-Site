@@ -128,8 +128,8 @@ export default function DreamTeamPage() {
             </div>
           </header>
 
-          {/* Card Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-12">
+          {/* Card Grid - Larger Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-10 mb-16 max-w-6xl mx-auto">
             {DREAM_TEAM_ROSTER.map((card) => (
               <PlayerCard 
                 key={card.id} 
@@ -174,25 +174,25 @@ function StatPill({ icon: Icon, label, value }) {
 }
 
 function PlayerCard({ card, onClick }) {
-  const { name, number, position, edition, imageSrc, borderColor, glowColor, signature } = card;
+  const { name, number, position, edition, series, tagline, imageSrc, team, stats, borderColor, glowColor, signature } = card;
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className="group relative w-full aspect-[3/4] rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
-      style={{ boxShadow: `0 0 40px ${glowColor}` }}
+      className="group relative w-full aspect-[3/4] rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-3 hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
+      style={{ boxShadow: `0 0 60px ${glowColor}, 0 20px 60px rgba(0,0,0,0.5)` }}
     >
       {/* Holographic border */}
-      <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${borderColor} p-[2px]`}>
-        <div className="absolute inset-0 rounded-2xl bg-slate-950" />
+      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${borderColor} p-[3px]`}>
+        <div className="absolute inset-0 rounded-3xl bg-slate-950" />
       </div>
 
       {/* Foil shimmer effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%]" style={{ transition: 'transform 0.8s ease-out, opacity 0.3s' }} />
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%]" style={{ transition: 'transform 0.8s ease-out, opacity 0.3s' }} />
 
       {/* Card content */}
-      <div className="relative h-full w-full rounded-2xl overflow-hidden">
+      <div className="relative h-full w-full rounded-3xl overflow-hidden">
         {/* Image */}
         <img
           src={imageSrc}
@@ -202,38 +202,71 @@ function PlayerCard({ card, onClick }) {
         />
 
         {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-slate-950/40" />
         
         {/* Top bar */}
-        <div className="absolute top-0 inset-x-0 px-3 py-2 flex items-center justify-between">
-          <div className="text-[9px] uppercase tracking-[0.15em] text-slate-300/90 font-medium">
-            {edition}
+        <div className="absolute top-0 inset-x-0 px-4 py-3 flex items-center justify-between bg-gradient-to-b from-slate-950/80 to-transparent">
+          <div className="flex flex-col">
+            <div className="text-[10px] uppercase tracking-[0.2em] text-fuchsia-300/90 font-bold">
+              {series}
+            </div>
+            <div className="text-[9px] uppercase tracking-[0.15em] text-slate-400/90">
+              {edition}
+            </div>
           </div>
           {signature && (
-            <div className="px-1.5 py-0.5 rounded bg-amber-500/20 border border-amber-400/50 text-[8px] text-amber-300 uppercase tracking-wider">
-              Signed
+            <div className="px-2 py-1 rounded-lg bg-amber-500/25 border border-amber-400/60 text-[9px] text-amber-300 uppercase tracking-wider font-bold shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+              ✦ Signed
             </div>
           )}
         </div>
 
         {/* Number badge */}
-        <div className="absolute top-2 right-3 text-2xl font-black text-white/20">
+        <div className="absolute top-3 right-4 text-4xl font-black text-white/15">
           {number}
         </div>
 
+        {/* Team badge */}
+        <div className="absolute top-16 right-3 px-2 py-1 rounded bg-slate-900/80 border border-slate-700/50 backdrop-blur-sm">
+          <span className="text-[8px] uppercase tracking-wider text-cyan-300">{team}</span>
+        </div>
+
+        {/* Stats preview on hover */}
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 space-y-1">
+          {stats && Object.entries(stats).slice(0, 4).map(([key, val]) => (
+            <div key={key} className="flex items-center gap-1.5 bg-slate-950/80 backdrop-blur-sm rounded px-2 py-0.5 border border-slate-700/50">
+              <span className="text-[8px] uppercase text-slate-400 w-12">{key}</span>
+              <div className="w-12 h-1 bg-slate-800 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 rounded-full"
+                  style={{ width: `${val}%` }}
+                />
+              </div>
+              <span className="text-[9px] font-bold text-white w-6 text-right">{val}</span>
+            </div>
+          ))}
+        </div>
+
         {/* Bottom info */}
-        <div className="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-slate-950 via-slate-950/95 to-transparent">
-          <div className="text-[9px] uppercase tracking-[0.12em] text-slate-400 mb-0.5">
+        <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-slate-950 via-slate-950/98 to-transparent">
+          <div className="text-[10px] uppercase tracking-[0.15em] text-cyan-400 mb-1 font-semibold">
             {position}
           </div>
-          <div className="text-lg font-bold text-white">{name}</div>
+          <div className="text-2xl font-black text-white mb-1">{name}</div>
+          <p className="text-[10px] text-slate-400 leading-tight mb-3 line-clamp-2">{tagline}</p>
           
           {/* BPAA badge */}
-          <div className="mt-2 flex items-center gap-2">
-            <div className="h-5 w-5 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center">
-              <Shield className="w-2.5 h-2.5 text-slate-400" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="h-6 w-6 rounded-full bg-gradient-to-br from-cyan-500/20 to-fuchsia-500/20 border border-cyan-400/40 flex items-center justify-center">
+                <Shield className="w-3 h-3 text-cyan-400" />
+              </div>
+              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-medium">BPAA Certified</span>
             </div>
-            <span className="text-[9px] uppercase tracking-wider text-slate-500">BPAA Certified</span>
+            <div className="flex items-center gap-1 text-[9px] text-green-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+              <span>Bound</span>
+            </div>
           </div>
         </div>
       </div>
@@ -246,70 +279,118 @@ function CardModal({ card, onClose }) {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
       onClick={onClose}
     >
       <div 
-        className="relative w-full max-w-lg animate-in fade-in zoom-in-95 duration-200"
+        className="relative w-full max-w-2xl animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Card */}
         <div 
           className="relative rounded-3xl overflow-hidden"
-          style={{ boxShadow: `0 0 60px ${glowColor}` }}
+          style={{ boxShadow: `0 0 100px ${glowColor}, 0 0 200px ${glowColor}40` }}
         >
           {/* Border gradient */}
-          <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${borderColor} p-[3px]`}>
+          <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${borderColor} p-[4px]`}>
             <div className="absolute inset-0 rounded-3xl bg-slate-950" />
           </div>
 
           <div className="relative rounded-3xl overflow-hidden bg-slate-950">
-            {/* Image section */}
-            <div className="relative aspect-[4/5]">
+            {/* Image section - Larger */}
+            <div className="relative aspect-[4/5] md:aspect-[3/4]">
               <img
                 src={imageSrc}
                 alt={name}
                 className="absolute inset-0 w-full h-full object-cover object-top"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-slate-950/50" />
               
-              {/* Top header */}
-              <div className="absolute top-0 inset-x-0 p-4 flex items-start justify-between">
+              {/* Top header - Enhanced */}
+              <div className="absolute top-0 inset-x-0 p-6 flex items-start justify-between bg-gradient-to-b from-slate-950/80 to-transparent">
                 <div>
-                  <div className="text-[10px] uppercase tracking-[0.2em] text-fuchsia-300/90 mb-1">{series}</div>
-                  <div className="text-3xl font-black text-white">{name}</div>
-                  <div className="text-sm text-slate-300">{position}</div>
+                  <div className="text-[11px] uppercase tracking-[0.25em] text-fuchsia-300 font-bold mb-2">{series}</div>
+                  <div className="text-4xl md:text-5xl font-black text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">{name}</div>
+                  <div className="text-base text-cyan-300 mt-1">{position}</div>
+                  <div className="text-sm text-slate-400 mt-1">{team}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-4xl font-black text-white/30">{number}</div>
+                  <div className="text-5xl md:text-6xl font-black text-white/20">{number}</div>
                   {signature && (
-                    <div className="mt-1 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400/50 text-[9px] text-amber-300 uppercase">
-                      Autographed
+                    <div className="mt-2 px-3 py-1 rounded-lg bg-amber-500/25 border border-amber-400/60 text-[10px] text-amber-300 uppercase font-bold shadow-[0_0_20px_rgba(245,158,11,0.4)]">
+                      ✦ Autographed
                     </div>
                   )}
                 </div>
               </div>
+
+              {/* Floating stats on image */}
+              <div className="absolute bottom-4 left-4 right-4 grid grid-cols-4 gap-2">
+                {Object.entries(stats).map(([key, val]) => (
+                  <div key={key} className="bg-slate-950/80 backdrop-blur-md rounded-xl p-3 border border-slate-700/50 text-center">
+                    <div className="text-2xl font-black text-white">{val}</div>
+                    <div className="text-[9px] uppercase tracking-wider text-slate-400 mt-1">{key}</div>
+                    <div className="w-full h-1 bg-slate-800 rounded-full mt-2 overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-fuchsia-500 via-pink-400 to-cyan-400 rounded-full"
+                        style={{ width: `${val}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Stats section */}
-            <div className="p-4 space-y-3">
-              <p className="text-sm text-slate-300">{tagline}</p>
-              
-              <div className="grid grid-cols-2 gap-2">
-                {Object.entries(stats).map(([label, value]) => (
-                  <StatBar key={label} label={label} value={value} />
-                ))}
+            {/* Details section - More content */}
+            <div className="p-6 space-y-4 bg-gradient-to-b from-slate-950 to-slate-900">
+              <div className="border-l-4 border-fuchsia-500 pl-4">
+                <p className="text-base text-slate-200 leading-relaxed">{tagline}</p>
+              </div>
+
+              {/* Covenant Info */}
+              <div className="bg-slate-900/80 border border-cyan-500/30 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Zap className="w-5 h-5 text-cyan-400" />
+                  <span className="text-sm font-bold text-cyan-300 uppercase tracking-wider">Master Covenant Binding</span>
+                </div>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="text-slate-500 text-xs uppercase">Edition</span>
+                    <p className="text-white font-semibold">{edition}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 text-xs uppercase">Series</span>
+                    <p className="text-white font-semibold">{series}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 text-xs uppercase">Team</span>
+                    <p className="text-white font-semibold">{team}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 text-xs uppercase">Status</span>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                      <span className="text-green-400 font-semibold">Bound & Verified</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Footer */}
-              <div className="flex items-center justify-between pt-2 border-t border-slate-800">
-                <div className="flex items-center gap-2">
-                  <div className="h-6 w-6 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center">
-                    <Shield className="w-3 h-3 text-cyan-400" />
+              <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-fuchsia-500 to-cyan-500 flex items-center justify-center shadow-[0_0_15px_rgba(244,114,182,0.5)]">
+                    <span className="text-xs font-black text-white">GL</span>
                   </div>
-                  <span className="text-[10px] uppercase tracking-wider text-slate-400">GlyphLock</span>
+                  <div>
+                    <span className="text-sm font-bold text-white">GlyphLock</span>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wider">Dream Team Collection</p>
+                  </div>
                 </div>
-                <div className="text-[10px] uppercase tracking-wider text-slate-500">{edition}</div>
+                <div className="flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-amber-400" />
+                  <span className="text-[11px] uppercase tracking-wider text-amber-400 font-bold">BPAA Certified</span>
+                </div>
               </div>
             </div>
           </div>
@@ -318,7 +399,7 @@ function CardModal({ card, onClose }) {
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+          className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-600 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 hover:border-cyan-500/50 transition-all shadow-lg"
         >
           ✕
         </button>
