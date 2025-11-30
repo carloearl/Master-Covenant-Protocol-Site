@@ -65,12 +65,13 @@ const PROVIDERS = {
   },
   CLAUDE: {
     id: 'CLAUDE',
-    label: 'Claude',
+    label: 'Claude Sonnet 4.5',
     envHints: ['ANTHROPIC_API_KEY'],
-    priority: 10,
-    jsonMode: false,
-    supportsSchema: false,
-    supportsRegex: false
+    priority: 5,
+    jsonMode: true,
+    supportsSchema: true,
+    supportsRegex: false,
+    supportsFiles: true
   },
   OPENAI: {
     id: 'OPENAI',
@@ -992,22 +993,49 @@ async function callProvider(providerId, prompt, jsonModePayload = null) {
     case 'CLAUDE': {
       const anthropicKey = Deno.env.get('ANTHROPIC_API_KEY');
       if (!anthropicKey) throw new Error('ANTHROPIC_API_KEY not set');
+      
+      const headers = {
+        'x-api-key': anthropicKey,
+        'anthropic-version': '2023-06-01',
+        'Content-Type': 'application/json'
+      };
+      
+      // Build request body
+      const body = {
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 20000,
+        temperature: 1,
+        messages: [{ role: 'user', content: prompt }]
+      };
+      
+      // Add JSON mode if requested (Claude uses prefill technique)
+      if (jsonModePayload) {
+        body.messages.push({
+          role: 'assistant',
+          content: '{'
+        });
+      }
+      
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
-        headers: {
-          'x-api-key': anthropicKey,
-          'anthropic-version': '2023-06-01',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model: 'claude-3-5-sonnet-20241022',
-          max_tokens: 4096,
-          messages: [{ role: 'user', content: prompt }]
-        })
+        headers,
+        body: JSON.stringify(body)
       });
-      if (!response.ok) throw new Error(`Anthropic error: ${response.status}`);
+      
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Anthropic error: ${response.status} - ${errText}`);
+      }
+      
       const data = await response.json();
-      return data.content[0].text;
+      let text = data.content[0].text;
+      
+      // If JSON mode was used, prepend the opening brace
+      if (jsonModePayload) {
+        text = '{' + text;
+      }
+      
+      return text;
     }
     
     case 'OPENAI': {
