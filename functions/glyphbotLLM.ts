@@ -21,32 +21,32 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 // =====================================================
 const PROVIDERS = {
   AUTO: { id: 'AUTO', label: 'Auto (Omega Chain)', priority: 0, jsonMode: false, supportsSchema: false, supportsRegex: false },
-  // PRIMARY MODEL - OpenAI GPT-4
-  OPENAI: {
-    id: 'OPENAI',
-    label: 'OpenAI GPT-4',
-    envHints: ['OPENAI_API_KEY'],
-    priority: 1,
-    jsonMode: true,
-    supportsSchema: true,
-    supportsRegex: false,
-    isPrimary: true
-  },
-  // FALLBACK 1 - Claude via OpenRouter
-  CLAUDE: {
-    id: 'CLAUDE',
-    label: 'Claude Sonnet',
-    envHints: ['OPENROUTER_API_KEY', 'ANTHROPIC_API_KEY'],
-    priority: 2,
-    jsonMode: true,
-    supportsSchema: false,
-    supportsRegex: false
-  },
-  // FALLBACK 2 - Gemini
+  // PRIMARY MODEL - Gemini Flash (FREE)
   GEMINI: {
     id: 'GEMINI',
     label: 'Gemini Flash',
     envHints: ['GEMINI_API_KEY'],
+    priority: 1,
+    jsonMode: true,
+    supportsSchema: false,
+    supportsRegex: false,
+    isPrimary: true
+  },
+  // FALLBACK 1 - OpenAI GPT-4
+  OPENAI: {
+    id: 'OPENAI',
+    label: 'OpenAI GPT-4',
+    envHints: ['OPENAI_API_KEY'],
+    priority: 2,
+    jsonMode: true,
+    supportsSchema: true,
+    supportsRegex: false
+  },
+  // FALLBACK 2 - Claude via OpenRouter or direct
+  CLAUDE: {
+    id: 'CLAUDE',
+    label: 'Claude Sonnet',
+    envHints: ['OPENROUTER_API_KEY', 'ANTHROPIC_API_KEY'],
     priority: 3,
     jsonMode: true,
     supportsSchema: false,
@@ -250,12 +250,22 @@ function chooseProvider({ requestedProvider, autoProvider, auditMode, persona, r
     };
   }
 
-  // AUTO mode selection - FREE TIER ONLY
+  // AUTO mode selection - FREE TIER PRIORITY
   // Exclude LOCAL_OSS from primary selection (use only as last resort)
   const externalProviders = enabled.filter(p => p.id !== 'LOCAL_OSS');
 
   if (autoProvider || !requestedProvider || requestedProvider === 'AUTO') {
-    // OMEGA CHAIN: OpenAI Primary → Claude Fallback → Gemini Secondary
+    // OMEGA CHAIN: Gemini First (FREE) → OpenAI → Claude → OpenRouter
+    // Prioritize Gemini since it's free and always available
+    const geminiProvider = externalProviders.find(p => p.id === 'GEMINI');
+    if (geminiProvider) {
+      return {
+        providerId: 'GEMINI',
+        providerLabel: 'Gemini Flash',
+        error: null
+      };
+    }
+
     const openaiProvider = externalProviders.find(p => p.id === 'OPENAI');
     if (openaiProvider) {
       return {
@@ -274,11 +284,11 @@ function chooseProvider({ requestedProvider, autoProvider, auditMode, persona, r
       };
     }
 
-    const geminiProvider = externalProviders.find(p => p.id === 'GEMINI');
-    if (geminiProvider) {
+    const openrouterProvider = externalProviders.find(p => p.id === 'OPENROUTER');
+    if (openrouterProvider) {
       return {
-        providerId: 'GEMINI',
-        providerLabel: 'Gemini Flash',
+        providerId: 'OPENROUTER',
+        providerLabel: 'OpenRouter',
         error: null
       };
     }

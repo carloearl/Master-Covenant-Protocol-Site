@@ -14,9 +14,9 @@ const PERSONAS = [
 
 const MODEL_OPTIONS = [
   { id: 'AUTO', label: 'Auto (Omega Chain)' },
-  { id: 'OPENAI', label: 'OpenAI GPT-4 (Primary)' },
-  { id: 'CLAUDE', label: 'Claude Sonnet (Fallback)' },
-  { id: 'GEMINI', label: 'Gemini Flash' },
+  { id: 'GEMINI', label: 'Gemini Flash (Primary)' },
+  { id: 'OPENAI', label: 'OpenAI GPT-4' },
+  { id: 'CLAUDE', label: 'Claude Sonnet' },
   { id: 'OPENROUTER', label: 'OpenRouter Gateway' },
   { id: 'LOCAL_OSS', label: 'Local Fallback' },
 ];
