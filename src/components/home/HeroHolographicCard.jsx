@@ -48,10 +48,11 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
   };
 
   const sizeClasses = {
-    small: 'w-44 md:w-52',
-    normal: 'w-56 md:w-64',
-    large: 'w-64 md:w-80',
-    hero: 'w-72 md:w-96'
+    small: 'w-52 md:w-64',
+    normal: 'w-64 md:w-80',
+    large: 'w-80 md:w-96',
+    hero: 'w-96 md:w-[28rem]',
+    xl: 'w-[22rem] md:w-[26rem]'
   };
 
   return (

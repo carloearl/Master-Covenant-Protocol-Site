@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import SEOHead from '@/components/SEOHead';
 import { 
   Activity, Zap, CheckCircle, XCircle, AlertCircle, Clock,
-  ArrowLeft, RefreshCw, Shield, Cpu, TrendingUp
+  ArrowLeft, RefreshCw, Shield, Cpu, TrendingUp, Home
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -76,12 +76,20 @@ export default function ProviderConsole() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
-            <Link to={createPageUrl('GlyphBot')}>
-              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Console
-              </Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link to={createPageUrl('Home')}>
+                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white hover:bg-slate-800">
+                  <Home className="w-4 h-4 mr-2" />
+                  Home
+                </Button>
+              </Link>
+              <Link to={createPageUrl('GlyphBot')}>
+                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white hover:bg-slate-800">
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to GlyphBot
+                </Button>
+              </Link>
+            </div>
             <div className="h-6 w-px bg-slate-700" />
             <h1 className="text-2xl font-bold flex items-center gap-3">
               <Activity className="w-6 h-6 text-cyan-400" />
@@ -92,7 +100,7 @@ export default function ProviderConsole() {
             variant="outline" 
             size="sm"
             onClick={() => window.location.reload()}
-            className="border-slate-700 text-slate-400 hover:text-white"
+            className="border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh

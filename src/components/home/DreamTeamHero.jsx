@@ -151,7 +151,7 @@ const DREAM_TEAM = [
 
 export default function DreamTeamHero() {
   return (
-    <section className="relative py-16 md:py-24 overflow-hidden">
+    <section className="relative py-20 md:py-32 overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-950/50 to-black" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_30%,rgba(244,114,182,0.15),transparent_50%),radial-gradient(ellipse_at_80%_70%,rgba(6,182,212,0.15),transparent_50%)]" />
@@ -176,8 +176,8 @@ export default function DreamTeamHero() {
             GlyphLock Dream Team
           </Badge>
           
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 tracking-tight">
-            <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-cyan-300 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(244,114,182,0.5)]">
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 tracking-tight">
+            <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-cyan-300 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(244,114,182,0.6)]">
               AI Dream Team
             </span>
           </h2>
@@ -198,23 +198,23 @@ export default function DreamTeamHero() {
           </div>
         </div>
 
-        {/* Cards Grid - Premium 2-2-1 Layout */}
-        <div className="max-w-6xl mx-auto mb-12">
+        {/* Cards Grid - Premium 2-2-1 Layout with BIGGER cards */}
+        <div className="max-w-7xl mx-auto mb-12 px-4">
           {/* Top Row */}
-          <div className="flex justify-center gap-6 md:gap-8 mb-6 md:mb-8">
-            <HeroHolographicCard card={DREAM_TEAM[0]} size="normal" />
-            <HeroHolographicCard card={DREAM_TEAM[1]} size="normal" />
+          <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-10 mb-8 md:mb-10">
+            <HeroHolographicCard card={DREAM_TEAM[0]} size="large" />
+            <HeroHolographicCard card={DREAM_TEAM[1]} size="large" />
           </div>
 
           {/* Middle Row */}
-          <div className="flex justify-center gap-6 md:gap-8 mb-6 md:mb-8">
-            <HeroHolographicCard card={DREAM_TEAM[2]} size="normal" />
-            <HeroHolographicCard card={DREAM_TEAM[3]} size="normal" />
+          <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-10 mb-8 md:mb-10">
+            <HeroHolographicCard card={DREAM_TEAM[2]} size="large" />
+            <HeroHolographicCard card={DREAM_TEAM[3]} size="large" />
           </div>
 
-          {/* Bottom - Alfred Anchor */}
+          {/* Bottom - Alfred Anchor - LARGEST */}
           <div className="flex justify-center">
-            <HeroHolographicCard card={DREAM_TEAM[4]} size="large" />
+            <HeroHolographicCard card={DREAM_TEAM[4]} size="hero" />
           </div>
         </div>
 
