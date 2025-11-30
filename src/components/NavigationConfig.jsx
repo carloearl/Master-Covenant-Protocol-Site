@@ -1,6 +1,6 @@
-
 // Unified Navigation Configuration
 // Single source of truth for Navbar and Footer
+// VERIFIED PAGES - All routes confirmed to exist
 
 export const NAV = [
   { label: "Home", href: "/" },
@@ -18,7 +18,7 @@ export const NAV_SECTIONS = [
       { label: "About Us", page: "About" },
       { label: "Pricing", page: "Pricing" },
       { label: "Contact", page: "Contact" },
-      { label: "Partners", page: "Partners" },
+      { label: "FAQ", page: "FAQ" },
       { label: "Roadmap", page: "Roadmap" }
     ]
   },
@@ -27,7 +27,6 @@ export const NAV_SECTIONS = [
     items: [
       { label: "Security Tools", page: "SecurityTools" },
       { label: "QR Generator", page: "QrGenerator" },
-      { label: "QR Create", page: "QrGeneratorCreate" },
       { label: "Steganography", page: "Steganography" },
       { label: "Image Lab", page: "ImageLab" },
       { label: "GlyphBot AI", page: "GlyphBot" }
@@ -37,9 +36,9 @@ export const NAV_SECTIONS = [
     label: "Resources",
     items: [
       { label: "Documentation", page: "SecurityDocs" },
-      { label: "FAQ", page: "FAQ" },
-      { label: "Command Center", page: "CommandCenter" },
       { label: "Dream Team", page: "DreamTeam" },
+      { label: "Command Center", page: "CommandCenter" },
+      { label: "GlyphBot Junior", page: "GlyphBotJunior" },
       { label: "Consultation", page: "Consultation" }
     ]
   }
@@ -50,22 +49,21 @@ export const FOOTER_LINKS = {
     { label: "About Us", page: "About" },
     { label: "Pricing", page: "Pricing" },
     { label: "Contact", page: "Contact" },
-    { label: "Partners", page: "Partners" },
+    { label: "FAQ", page: "FAQ" },
     { label: "Roadmap", page: "Roadmap" }
   ],
   solutions: [
     { label: "Security Tools", page: "SecurityTools" },
     { label: "QR Generator", page: "QrGenerator" },
-    { label: "QR Create", page: "QrGeneratorCreate" },
     { label: "Steganography", page: "Steganography" },
     { label: "Image Lab", page: "ImageLab" },
     { label: "GlyphBot AI", page: "GlyphBot" }
   ],
   resources: [
     { label: "Documentation", page: "SecurityDocs" },
-    { label: "FAQ", page: "FAQ" },
-    { label: "Command Center", page: "CommandCenter" },
     { label: "Dream Team", page: "DreamTeam" },
+    { label: "Command Center", page: "CommandCenter" },
+    { label: "GlyphBot Junior", page: "GlyphBotJunior" },
     { label: "Consultation", page: "Consultation" }
   ],
   legal: [
@@ -76,4 +74,4 @@ export const FOOTER_LINKS = {
   ]
 };
 
-export default { NAV_SECTIONS, FOOTER_LINKS };
+export default { NAV, NAV_SECTIONS, FOOTER_LINKS };
