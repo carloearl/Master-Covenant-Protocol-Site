@@ -148,6 +148,18 @@ export default function GlyphBotPage() {
 
   const handleToggleMode = (key) => {
     setModes(prev => ({ ...prev, [key]: !prev[key] }));
+    // Stop TTS if voice mode is turned off
+    if (key === 'voice' && modes.voice) {
+      stopTTS();
+    }
+  };
+
+  // Manual TTS trigger for individual messages
+  const handlePlayTTS = (messageId) => {
+    const msg = messages.find(m => m.id === messageId);
+    if (msg?.content) {
+      speak(msg.content);
+    }
   };
 
   // Build providers for display
