@@ -77,6 +77,72 @@ const PROVIDERS = {
   }
 };
 
+// =====================================================
+// PROVIDER STATS — In-memory analytics (per process)
+// =====================================================
+const providerStats = {};
+
+function initProviderStats(providerId) {
+  if (!providerStats[providerId]) {
+    providerStats[providerId] = {
+      id: providerId,
+      label: PROVIDERS[providerId]?.label || providerId,
+      totalCalls: 0,
+      successCount: 0,
+      failureCount: 0,
+      lastErrorType: null,
+      lastLatencyMs: 0,
+      lastUsedAt: null
+    };
+  }
+  return providerStats[providerId];
+}
+
+function updateProviderStats(providerId, success, latencyMs, errorType = null) {
+  const stats = initProviderStats(providerId);
+  stats.totalCalls++;
+  if (success) {
+    stats.successCount++;
+    stats.lastErrorType = null;
+  } else {
+    stats.failureCount++;
+    stats.lastErrorType = errorType;
+  }
+  stats.lastLatencyMs = latencyMs;
+  stats.lastUsedAt = new Date().toISOString();
+}
+
+function getProviderStats() {
+  return { ...providerStats };
+}
+
+function getAvailableProvidersWithStatus() {
+  const enabled = getEnabledProviders();
+  const enabledIds = new Set(enabled.map(p => p.id));
+  
+  return Object.keys(PROVIDERS)
+    .filter(k => k !== 'AUTO')
+    .map(k => {
+      const p = PROVIDERS[k];
+      const stats = providerStats[k] || null;
+      return {
+        id: p.id,
+        label: p.label,
+        priority: p.priority,
+        enabled: enabledIds.has(p.id),
+        stats: stats ? {
+          totalCalls: stats.totalCalls,
+          successCount: stats.successCount,
+          failureCount: stats.failureCount,
+          lastLatencyMs: stats.lastLatencyMs,
+          lastErrorType: stats.lastErrorType,
+          lastUsedAt: stats.lastUsedAt
+        } : null
+      };
+    })
+    .sort((a, b) => a.priority - b.priority);
+}
+
 // Get list of enabled providers based on env var presence
 // LOCAL_OSS is ALWAYS included as final fallback (no API key required)
 function getEnabledProviders() {
@@ -171,10 +237,20 @@ function chooseProvider({ requestedProvider, autoProvider, auditMode, persona, r
   };
 }
 
-// Log model choice for diagnostics
+// Log model choice for diagnostics and update stats
 function logModelChoice(event) {
   try {
     console.log('[GlyphBotProvider]', JSON.stringify(event));
+    
+    // Update provider stats
+    if (event.providerId) {
+      updateProviderStats(
+        event.providerId,
+        event.success,
+        event.latencyMs || 0,
+        event.errorType
+      );
+    }
   } catch (e) {
     // ignore logging errors
   }
@@ -449,11 +525,21 @@ ${testPrefix}${conversationText}`;
     let providerUsed = 'none';
     let providerLabel = 'Unknown';
     
+    // Build meta block for response
+    const buildMeta = (usedProvider, usedLabel) => ({
+      providerUsed: usedProvider,
+      providerLabel: usedLabel,
+      availableProviders: getAvailableProvidersWithStatus(),
+      providerStats: getProviderStats()
+    });
+
     // Try providers in order
     for (const providerId of providerCallOrder) {
+      const startTime = Date.now();
       try {
         console.log(`Attempting LLM call with provider: ${providerId}`);
         result = await callProvider(providerId, fullPrompt);
+        const latencyMs = Date.now() - startTime;
         providerUsed = providerId;
         providerLabel = PROVIDERS[providerId]?.label || providerId;
         
@@ -462,6 +548,7 @@ ${testPrefix}${conversationText}`;
           persona,
           auditMode,
           realTime,
+          latencyMs,
           timestamp: new Date().toISOString(),
           success: true,
           errorType: null
@@ -477,7 +564,8 @@ ${testPrefix}${conversationText}`;
             persona, 
             messageCount: messages.length,
             provider: providerUsed,
-            providerLabel
+            providerLabel,
+            latencyMs
           },
           status: 'success'
         }).catch(console.error);
@@ -492,10 +580,12 @@ ${testPrefix}${conversationText}`;
           promptVersion: 'v4.0-multi-provider',
           providerUsed,
           providerLabel,
-          auditEngineActive: isAuditActive
+          auditEngineActive: isAuditActive,
+          meta: buildMeta(providerUsed, providerLabel)
         });
         
       } catch (error) {
+        const latencyMs = Date.now() - startTime;
         console.error(`Provider ${providerId} failed:`, error.message);
         
         logModelChoice({
@@ -503,6 +593,7 @@ ${testPrefix}${conversationText}`;
           persona,
           auditMode,
           realTime,
+          latencyMs,
           timestamp: new Date().toISOString(),
           success: false,
           errorType: error?.message || 'unknown'
@@ -516,7 +607,8 @@ ${testPrefix}${conversationText}`;
           resource_id: 'glyphbot',
           metadata: { 
             provider: providerId,
-            error: error?.message || String(error)
+            error: error?.message || String(error),
+            latencyMs
           },
           status: 'failure'
         }).catch(console.error);
@@ -527,18 +619,21 @@ ${testPrefix}${conversationText}`;
     }
     
     // Final fallback: Base44 broker
+    const brokerStart = Date.now();
     try {
       console.log('Attempting Base44 broker fallback...');
       const brokerResult = await base44.integrations.Core.InvokeLLM({
         prompt: fullPrompt,
         add_context_from_internet: false
       });
+      const brokerLatency = Date.now() - brokerStart;
       
       logModelChoice({
         providerId: 'BASE44_BROKER',
         persona,
         auditMode,
         realTime,
+        latencyMs: brokerLatency,
         timestamp: new Date().toISOString(),
         success: true,
         errorType: null
@@ -549,7 +644,7 @@ ${testPrefix}${conversationText}`;
         description: 'LLM call via Base44 broker fallback',
         actor_email: user.email,
         resource_id: 'glyphbot',
-        metadata: { persona, messageCount: messages.length, provider: 'base44-broker' },
+        metadata: { persona, messageCount: messages.length, provider: 'base44-broker', latencyMs: brokerLatency },
         status: 'success'
       }).catch(console.error);
       
@@ -563,9 +658,11 @@ ${testPrefix}${conversationText}`;
         promptVersion: 'v4.0-multi-provider',
         providerUsed: 'BASE44_BROKER',
         providerLabel: 'Base44 Broker',
-        auditEngineActive: isAuditActive
+        auditEngineActive: isAuditActive,
+        meta: buildMeta('BASE44_BROKER', 'Base44 Broker')
       });
     } catch (brokerError) {
+      const brokerLatency = Date.now() - brokerStart;
       console.error('Base44 broker failed, trying LOCAL_OSS...', brokerError);
       
       logModelChoice({
@@ -573,21 +670,25 @@ ${testPrefix}${conversationText}`;
         persona,
         auditMode,
         realTime,
+        latencyMs: brokerLatency,
         timestamp: new Date().toISOString(),
         success: false,
         errorType: brokerError?.message || 'unknown'
       });
       
       // ABSOLUTE FINAL FALLBACK: LOCAL_OSS (always works, no external dependencies)
+      const localStart = Date.now();
       try {
         console.log('Activating LOCAL_OSS absolute fallback engine...');
         const localResult = await callProvider('LOCAL_OSS', fullPrompt);
+        const localLatency = Date.now() - localStart;
         
         logModelChoice({
           providerId: 'LOCAL_OSS',
           persona,
           auditMode,
           realTime,
+          latencyMs: localLatency,
           timestamp: new Date().toISOString(),
           success: true,
           errorType: null
@@ -598,7 +699,7 @@ ${testPrefix}${conversationText}`;
           description: 'LLM call via LOCAL_OSS fallback (no external providers)',
           actor_email: user.email,
           resource_id: 'glyphbot',
-          metadata: { persona, messageCount: messages.length, provider: 'LOCAL_OSS' },
+          metadata: { persona, messageCount: messages.length, provider: 'LOCAL_OSS', latencyMs: localLatency },
           status: 'success'
         }).catch(console.error);
         
@@ -628,7 +729,8 @@ ${testPrefix}${conversationText}`;
           promptVersion: 'v4.0-multi-provider',
           providerUsed: 'LOCAL_OSS',
           providerLabel: 'Local OSS Engine (No Key)',
-          auditEngineActive: isAuditActive
+          auditEngineActive: isAuditActive,
+          meta: buildMeta('LOCAL_OSS', 'Local OSS Engine (No Key)')
         });
         
       } catch (localError) {
@@ -636,13 +738,14 @@ ${testPrefix}${conversationText}`;
         console.error('LOCAL_OSS also failed (unexpected):', localError);
         
         return Response.json({
-          text: 'GlyphBot local fallback engine encountered an unexpected error. Please contact support.',
+          text: 'GlyphBot could not reach any language model provider. Check system configuration or connectivity.',
           audit: null,
-          model: 'error',
+          model: 'none',
           promptVersion: 'v4.0-multi-provider',
           providerUsed: null,
           providerLabel: 'None',
-          error: localError?.message
+          error: localError?.message,
+          meta: buildMeta(null, 'None')
         });
       }
     }

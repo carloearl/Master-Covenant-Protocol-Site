@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import glyphbotClient from '@/components/glyphbot/glyphbotClient';
 import SEOHead from '@/components/SEOHead';
-import { ChevronDown, ChevronUp, Shield } from 'lucide-react';
+import { ChevronDown, ChevronUp, Shield, Activity } from 'lucide-react';
 import GlyphAuditCard from '@/components/glyphaudit/GlyphAuditCard';
+import GlyphProviderChain from '@/components/provider/GlyphProviderChain';
+import { createPageUrl } from '@/utils';
 
 const PERSONAS = [
   { id: 'GENERAL', label: 'General', desc: 'Default security assistant' },
@@ -46,6 +49,7 @@ const GlyphBotPage = () => {
   const [realTimeOn, setRealTimeOn] = useState(false);
 
   const [lastMeta, setLastMeta] = useState(null);
+  const [providerMeta, setProviderMeta] = useState(null);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -96,6 +100,11 @@ const GlyphBotPage = () => {
         realTimeUsed: response.realTimeUsed,
         shouldSpeak: response.shouldSpeak
       });
+
+      if (response.meta) {
+        setProviderMeta(response.meta);
+        sessionStorage.setItem('glyphbot_provider_meta', JSON.stringify(response.meta));
+      }
 
     } catch (err) {
       console.error('GlyphBot send error:', err);
@@ -167,12 +176,21 @@ const GlyphBotPage = () => {
                 </p>
               </div>
             </div>
-            <a
-              href="/glyphbotjunior"
-              className="px-4 py-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 text-amber-200 rounded-xl text-sm font-medium hover:bg-amber-500/30 transition-all"
-            >
-              Switch to Junior ☀
-            </a>
+            <div className="flex items-center gap-2">
+              <Link
+                to={createPageUrl('ProviderConsole')}
+                className="px-3 py-2 bg-slate-800 border border-slate-700 hover:border-cyan-500/50 text-slate-300 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
+              >
+                <Activity className="w-4 h-4" />
+                <span className="hidden sm:inline">Console</span>
+              </Link>
+              <a
+                href="/glyphbotjunior"
+                className="px-4 py-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 text-amber-200 rounded-xl text-sm font-medium hover:bg-amber-500/30 transition-all"
+              >
+                Switch to Junior ☀
+              </a>
+            </div>
           </div>
         </header>
 
@@ -261,6 +279,17 @@ const GlyphBotPage = () => {
             </button>
           </div>
         </section>
+
+        {/* Provider Signal Chain */}
+        {providerMeta && (
+          <div className="mb-3 bg-slate-900/50 rounded-lg px-3 py-1 border border-slate-800">
+            <GlyphProviderChain
+              availableProviders={providerMeta.availableProviders}
+              providerStats={providerMeta.providerStats}
+              providerUsed={providerMeta.providerUsed}
+            />
+          </div>
+        )}
 
         {/* Meta line */}
         {lastMeta && (

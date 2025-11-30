@@ -59,6 +59,7 @@ import QrGeneratorStego from './pages/QrGeneratorStego';
 import QrGeneratorSecurity from './pages/QrGeneratorSecurity';
 import QrGeneratorAnalytics from './pages/QrGeneratorAnalytics';
 import QrGeneratorBulk from './pages/QrGeneratorBulk';
+import ProviderConsole from './pages/ProviderConsole';
 import __Layout from './Layout.jsx';
 
 
@@ -124,6 +125,7 @@ export const PAGES = {
     "QrGeneratorSecurity": QrGeneratorSecurity,
     "QrGeneratorAnalytics": QrGeneratorAnalytics,
     "QrGeneratorBulk": QrGeneratorBulk,
+    "ProviderConsole": ProviderConsole,
 }
 
 export const pagesConfig = {
