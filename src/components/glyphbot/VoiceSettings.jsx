@@ -267,13 +267,13 @@ export default function VoiceSettings({ ttsHook, onSettingsChange }) {
           </div>
 
           {/* Equalizer Section */}
-          <div className="pt-3 mt-3 border-t border-slate-800">
-            <label className="text-xs text-slate-400 mb-3 block">Equalizer</label>
+          <div className="pt-3 mt-3 border-t border-purple-500/30">
+            <label className="text-xs text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 font-bold mb-3 block">Equalizer</label>
             
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-3 p-3 rounded-xl bg-slate-900/50 border border-purple-500/20">
               {/* Bass */}
               <div className="flex flex-col items-center">
-                <span className="text-[10px] text-slate-500 mb-1">Bass</span>
+                <span className="text-[10px] text-blue-300 mb-1 font-medium">Bass</span>
                 <div className="h-24 flex flex-col items-center justify-center">
                   <Slider
                     orientation="vertical"
@@ -282,17 +282,17 @@ export default function VoiceSettings({ ttsHook, onSettingsChange }) {
                     min={-12}
                     max={12}
                     step={1}
-                    className="h-20"
+                    className="h-20 [&_[role=slider]]:bg-blue-500 [&_[role=slider]]:shadow-[0_0_8px_rgba(59,130,246,0.8)]"
                   />
                 </div>
-                <span className={`text-[10px] mt-1 ${bass > 0 ? 'text-cyan-400' : bass < 0 ? 'text-rose-400' : 'text-slate-500'}`}>
+                <span className={`text-[10px] mt-1 font-mono ${bass > 0 ? 'text-cyan-300 drop-shadow-[0_0_4px_rgba(6,182,212,0.8)]' : bass < 0 ? 'text-rose-300' : 'text-slate-400'}`}>
                   {bass > 0 ? '+' : ''}{bass}dB
                 </span>
               </div>
               
               {/* Mid */}
               <div className="flex flex-col items-center">
-                <span className="text-[10px] text-slate-500 mb-1">Mid</span>
+                <span className="text-[10px] text-purple-300 mb-1 font-medium">Mid</span>
                 <div className="h-24 flex flex-col items-center justify-center">
                   <Slider
                     orientation="vertical"
@@ -301,17 +301,17 @@ export default function VoiceSettings({ ttsHook, onSettingsChange }) {
                     min={-12}
                     max={12}
                     step={1}
-                    className="h-20"
+                    className="h-20 [&_[role=slider]]:bg-purple-500 [&_[role=slider]]:shadow-[0_0_8px_rgba(168,85,247,0.8)]"
                   />
                 </div>
-                <span className={`text-[10px] mt-1 ${mid > 0 ? 'text-cyan-400' : mid < 0 ? 'text-rose-400' : 'text-slate-500'}`}>
+                <span className={`text-[10px] mt-1 font-mono ${mid > 0 ? 'text-purple-300 drop-shadow-[0_0_4px_rgba(168,85,247,0.8)]' : mid < 0 ? 'text-rose-300' : 'text-slate-400'}`}>
                   {mid > 0 ? '+' : ''}{mid}dB
                 </span>
               </div>
               
               {/* Treble */}
               <div className="flex flex-col items-center">
-                <span className="text-[10px] text-slate-500 mb-1">Treble</span>
+                <span className="text-[10px] text-cyan-300 mb-1 font-medium">Treble</span>
                 <div className="h-24 flex flex-col items-center justify-center">
                   <Slider
                     orientation="vertical"
@@ -320,10 +320,10 @@ export default function VoiceSettings({ ttsHook, onSettingsChange }) {
                     min={-12}
                     max={12}
                     step={1}
-                    className="h-20"
+                    className="h-20 [&_[role=slider]]:bg-cyan-500 [&_[role=slider]]:shadow-[0_0_8px_rgba(6,182,212,0.8)]"
                   />
                 </div>
-                <span className={`text-[10px] mt-1 ${treble > 0 ? 'text-cyan-400' : treble < 0 ? 'text-rose-400' : 'text-slate-500'}`}>
+                <span className={`text-[10px] mt-1 font-mono ${treble > 0 ? 'text-cyan-300 drop-shadow-[0_0_4px_rgba(6,182,212,0.8)]' : treble < 0 ? 'text-rose-300' : 'text-slate-400'}`}>
                   {treble > 0 ? '+' : ''}{treble}dB
                 </span>
               </div>
@@ -332,13 +332,13 @@ export default function VoiceSettings({ ttsHook, onSettingsChange }) {
             {/* Reset EQ Button */}
             <button
               onClick={() => { setBass(0); setMid(0); setTreble(0); }}
-              className="w-full mt-2 text-[10px] text-slate-500 hover:text-slate-300 transition-colors"
+              className="w-full mt-3 py-1.5 text-[10px] text-purple-300 hover:text-cyan-300 border border-purple-500/30 hover:border-cyan-400/50 rounded-lg bg-purple-500/10 hover:bg-cyan-500/10 transition-all duration-300 shadow-[0_0_10px_rgba(168,85,247,0.2)] hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]"
             >
               Reset EQ
             </button>
           </div>
 
-          <p className="text-[10px] text-slate-500 text-center pt-2 border-t border-slate-800">
+          <p className="text-[10px] text-purple-300/70 text-center pt-2 border-t border-purple-500/20">
             EQ applies to voice output. Boost bass for deeper voice, treble for clarity.
           </p>
         </div>
