@@ -22,7 +22,7 @@ const PROVIDERS = {
   // PRIMARY MODEL - Gemini Free Tier
   GEMINI: {
     id: 'GEMINI',
-    label: 'Gemini 2.0 Flash (Free)',
+    label: 'Gemini 3 Pro (Free)',
     envHints: ['GEMINI_API_KEY'],
     priority: 1,
     jsonMode: true,
@@ -227,7 +227,7 @@ function chooseProvider({ requestedProvider, autoProvider, auditMode, persona, r
     if (geminiProvider) {
       return {
         providerId: 'GEMINI',
-        providerLabel: 'Gemini 2.0 Flash (Free)',
+        providerLabel: 'Gemini 3 Pro (Free)',
         error: null
       };
     }
@@ -812,7 +812,7 @@ async function callProvider(providerId, prompt, jsonModePayload = null) {
       }
       
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview:generateContent?key=${geminiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
