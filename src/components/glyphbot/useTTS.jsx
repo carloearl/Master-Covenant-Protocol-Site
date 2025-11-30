@@ -133,6 +133,12 @@ export default function useTTS(options = {}) {
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
+    if (sourceNodeRef.current) {
+      try {
+        sourceNodeRef.current.disconnect();
+      } catch (e) {}
+      sourceNodeRef.current = null;
+    }
     setIsSpeaking(false);
     setIsLoading(false);
   }, []);
