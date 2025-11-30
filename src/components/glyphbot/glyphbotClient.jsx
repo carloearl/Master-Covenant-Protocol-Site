@@ -48,7 +48,7 @@ class GlyphBotClient {
   /**
    * Send a message to GlyphBot
    * @param {Array} messages - Array of { role: 'user'|'assistant'|'system', content: string }
-   * @param {Object} options - { persona, auditMode, oneTestMode, realTime, tts }
+   * @param {Object} options - { persona, auditMode, oneTestMode, realTime, tts, usePuter }
    * @returns {Promise<Object>} - { text, model, promptVersion, realTimeUsed, shouldSpeak }
    */
   async sendMessage(messages, options = {}) {
@@ -93,6 +93,35 @@ class GlyphBotClient {
     // Determine provider settings
     const providerValue = options.provider || finalOptions.provider;
     const isAutoMode = !providerValue || providerValue === 'AUTO';
+    const usePuter = options.usePuter || finalOptions.usePuter || false;
+
+    // Try Puter first if enabled (free unlimited Gemini)
+    if (usePuter) {
+      try {
+        const puterPayload = {
+          messages: enhancedMessages,
+          model: options.puterModel || 'gemini-2.5-flash'
+        };
+        const puterResponse = await base44.functions.invoke('puterLLM', puterPayload);
+        
+        return {
+          text: puterResponse.data?.text || puterResponse.data,
+          audit: null,
+          model: puterResponse.data?.model || 'gemini-2.5-flash',
+          promptVersion: 'puter-v1',
+          realTimeUsed: !!realTimeContext,
+          shouldSpeak: finalOptions.tts,
+          providerUsed: puterResponse.data?.providerUsed || 'puter',
+          providerLabel: puterResponse.data?.providerLabel || 'Puter (Free Gemini)',
+          auditEngineActive: false,
+          jsonModeUsed: false,
+          meta: puterResponse.data?.meta || null
+        };
+      } catch (puterError) {
+        console.warn('Puter LLM failed, falling back to main chain:', puterError);
+        // Fall through to main LLM chain
+      }
+    }
 
     const payload = {
       messages: [systemMessage, ...enhancedMessages],
