@@ -37,9 +37,11 @@ class GlyphBotClient {
       oneTestMode: false,
       realTime: false,
       tts: false,
-      enforceGlyphFormat: true, // Always enforce GlyphLock format
-      provider: null, // null = AUTO mode
-      autoProvider: true // Let GlyphBot choose
+      enforceGlyphFormat: true,
+      provider: null,
+      autoProvider: true,
+      jsonModeForced: false,
+      structuredMode: false
     };
   }
 
@@ -102,7 +104,9 @@ class GlyphBotClient {
       formatOverride: true,
       systemFirst: true,
       provider: isAutoMode ? null : providerValue,
-      autoProvider: isAutoMode
+      autoProvider: isAutoMode,
+      jsonModeForced: options.jsonModeForced || finalOptions.jsonModeForced,
+      structuredMode: options.structuredMode || finalOptions.structuredMode
     };
 
     const response = await base44.functions.invoke('glyphbotLLM', payload);
@@ -120,6 +124,7 @@ class GlyphBotClient {
       providerUsed: response.data?.providerUsed || 'base44-broker',
       providerLabel: response.data?.providerLabel || response.data?.providerUsed || 'Unknown',
       auditEngineActive: isAuditActive && !!response.data?.audit,
+      jsonModeUsed: response.data?.jsonModeUsed || false,
       meta: response.data?.meta || null
     };
   }

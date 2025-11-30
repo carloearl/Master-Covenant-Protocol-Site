@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import glyphbotClient from '@/components/glyphbot/glyphbotClient';
 import SEOHead from '@/components/SEOHead';
-import { ChevronDown, ChevronUp, Shield, Activity } from 'lucide-react';
+import { ChevronDown, ChevronUp, Shield, Activity, Braces, Settings2 } from 'lucide-react';
 import GlyphAuditCard from '@/components/glyphaudit/GlyphAuditCard';
 import GlyphProviderChain from '@/components/provider/GlyphProviderChain';
+import ProviderStatusPanel from '@/components/glyphbot/ProviderStatusPanel';
 import { createPageUrl } from '@/utils';
 
 const PERSONAS = [
@@ -47,6 +48,9 @@ const GlyphBotPage = () => {
   const [auditOn, setAuditOn] = useState(false);
   const [testOn, setTestOn] = useState(false);
   const [realTimeOn, setRealTimeOn] = useState(false);
+  const [jsonModeOn, setJsonModeOn] = useState(false);
+  const [structuredOn, setStructuredOn] = useState(false);
+  const [showProviderPanel, setShowProviderPanel] = useState(false);
 
   const [lastMeta, setLastMeta] = useState(null);
   const [providerMeta, setProviderMeta] = useState(null);
@@ -79,7 +83,9 @@ const GlyphBotPage = () => {
         formatOverride: true,
         systemFirst: true,
         provider: provider === 'AUTO' ? null : provider,
-        autoProvider: provider === 'AUTO'
+        autoProvider: provider === 'AUTO',
+        jsonModeForced: jsonModeOn,
+        structuredMode: structuredOn
       });
 
       const botText = response.text || '[No response text]';
@@ -195,7 +201,7 @@ const GlyphBotPage = () => {
         </header>
 
         {/* Active Mode Badges */}
-        {(auditOn || testOn || realTimeOn || voiceOn) && (
+        {(auditOn || testOn || realTimeOn || voiceOn || jsonModeOn || structuredOn) && (
           <div className="mb-3 flex flex-wrap gap-2">
             {auditOn && (
               <span className="px-2 py-1 bg-green-500/20 border border-green-500/40 text-green-300 rounded-lg text-xs">
@@ -215,6 +221,16 @@ const GlyphBotPage = () => {
             {voiceOn && (
               <span className="px-2 py-1 bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 rounded-lg text-xs">
                 🔊 Voice Enabled
+              </span>
+            )}
+            {jsonModeOn && (
+              <span className="px-2 py-1 bg-purple-500/20 border border-purple-500/40 text-purple-300 rounded-lg text-xs flex items-center gap-1">
+                <Braces className="w-3 h-3" /> JSON Mode
+              </span>
+            )}
+            {structuredOn && (
+              <span className="px-2 py-1 bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 rounded-lg text-xs">
+                📋 Structured Output
               </span>
             )}
           </div>
@@ -271,6 +287,18 @@ const GlyphBotPage = () => {
             <ToggleChip label="🌐 Live" active={realTimeOn} onClick={() => setRealTimeOn(v => !v)} />
             <ToggleChip label="🛡️ Audit" active={auditOn} onClick={() => setAuditOn(v => !v)} />
             <ToggleChip label="⚠️ Test" active={testOn} onClick={() => setTestOn(v => !v)} />
+            <ToggleChip label="{ } JSON" active={jsonModeOn} onClick={() => setJsonModeOn(v => !v)} />
+            <ToggleChip label="📋 Struct" active={structuredOn} onClick={() => setStructuredOn(v => !v)} />
+            <button
+              onClick={() => setShowProviderPanel(v => !v)}
+              className={`px-3 py-1.5 rounded-full border text-xs font-medium transition-all min-h-[32px] flex items-center gap-1 ${
+                showProviderPanel
+                  ? 'bg-slate-700 border-slate-500 text-slate-200'
+                  : 'bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-600'
+              }`}
+            >
+              <Settings2 className="w-3 h-3" /> Panel
+            </button>
             <button
               onClick={clearChat}
               className="px-3 py-1 rounded-full border bg-red-900/30 border-red-500/40 text-red-300 text-xs hover:bg-red-900/50 transition-all"
@@ -291,12 +319,27 @@ const GlyphBotPage = () => {
           </div>
         )}
 
+        {/* Expanded Provider Status Panel */}
+        {showProviderPanel && providerMeta && (
+          <div className="mb-3 bg-slate-900/80 rounded-xl p-4 border border-slate-700">
+            <ProviderStatusPanel
+              availableProviders={providerMeta.availableProviders}
+              providerStats={providerMeta.providerStats}
+              providerUsed={providerMeta.providerUsed}
+              jsonModeEnabled={jsonModeOn || structuredOn || auditOn}
+              onProviderSelect={(id) => setProvider(id)}
+            />
+          </div>
+        )}
+
         {/* Meta line */}
         {lastMeta && (
           <div className="mb-2 text-xs text-slate-500 flex flex-wrap gap-3 bg-slate-900/50 rounded-lg px-3 py-2 border border-slate-800">
             <span>Provider: <span className="text-cyan-400">{lastMeta.providerLabel || lastMeta.model || 'unknown'}</span></span>
             {lastMeta.realTimeUsed && <span className="text-emerald-400">✓ real-time web</span>}
             {lastMeta.shouldSpeak && <span className="text-sky-400">✓ voice-ready</span>}
+            {providerMeta?.jsonModeEnabled && <span className="text-purple-400">✓ JSON mode</span>}
+            {providerMeta?.attemptCount > 1 && <span className="text-amber-400">⟳ fallback ({providerMeta.attemptCount} attempts)</span>}
           </div>
         )}
 

@@ -26,56 +26,132 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 // PROVIDER REGISTRY — OSS-first priority order
 // =====================================================
 const PROVIDERS = {
-  AUTO: { id: 'AUTO', label: 'Auto (GlyphBot chooses)', priority: 0 },
+  AUTO: { id: 'AUTO', label: 'Auto (GlyphBot chooses)', priority: 0, jsonMode: false, supportsSchema: false, supportsRegex: false },
+  DEEPSEEK_OSS: {
+    id: 'DEEPSEEK_OSS',
+    label: 'DeepSeek V3',
+    envHints: ['DEEPSEEK_API_KEY', 'OPENROUTER_API_KEY'],
+    priority: 1,
+    jsonMode: true,
+    supportsSchema: true,
+    supportsRegex: false
+  },
   LLAMA_OSS: {
     id: 'LLAMA_OSS',
-    label: 'Llama (Open Source)',
+    label: 'Llama 3.3 70B',
     envHints: ['TOGETHER_API_KEY', 'OPENROUTER_API_KEY'],
-    priority: 1
+    priority: 2,
+    jsonMode: true,
+    supportsSchema: true,
+    supportsRegex: false
   },
   MISTRAL_OSS: {
     id: 'MISTRAL_OSS',
-    label: 'Mistral (Open Source)',
+    label: 'Mistral Large',
     envHints: ['MISTRAL_API_KEY', 'OPENROUTER_API_KEY', 'TOGETHER_API_KEY'],
-    priority: 2
+    priority: 3,
+    jsonMode: true,
+    supportsSchema: true,
+    supportsRegex: false
   },
   GEMMA_OSS: {
     id: 'GEMMA_OSS',
-    label: 'Gemma (Open Source)',
+    label: 'Gemma 3n',
     envHints: ['OPENROUTER_API_KEY', 'TOGETHER_API_KEY'],
-    priority: 3
-  },
-  DEEPSEEK_OSS: {
-    id: 'DEEPSEEK_OSS',
-    label: 'DeepSeek (Open Source)',
-    envHints: ['DEEPSEEK_API_KEY', 'OPENROUTER_API_KEY'],
-    priority: 4
+    priority: 4,
+    jsonMode: true,
+    supportsSchema: true,
+    supportsRegex: false
   },
   CLAUDE: {
     id: 'CLAUDE',
     label: 'Claude',
     envHints: ['ANTHROPIC_API_KEY'],
-    priority: 10
+    priority: 10,
+    jsonMode: false,
+    supportsSchema: false,
+    supportsRegex: false
   },
   OPENAI: {
     id: 'OPENAI',
-    label: 'OpenAI',
+    label: 'OpenAI GPT-4',
     envHints: ['OPENAI_API_KEY'],
-    priority: 11
+    priority: 11,
+    jsonMode: true,
+    supportsSchema: true,
+    supportsRegex: false
   },
   GEMINI: {
     id: 'GEMINI',
     label: 'Gemini',
     envHints: ['GEMINI_API_KEY'],
-    priority: 12
+    priority: 12,
+    jsonMode: true,
+    supportsSchema: false,
+    supportsRegex: false
   },
   LOCAL_OSS: {
     id: 'LOCAL_OSS',
     label: 'Local OSS Engine (No Key)',
-    envHints: [],  // Always available - no API key required
-    priority: 999  // Lowest priority - absolute last fallback
+    envHints: [],
+    priority: 999,
+    jsonMode: false,
+    supportsSchema: false,
+    supportsRegex: false
   }
 };
+
+// JSON Schema for structured audit output
+const AUDIT_JSON_SCHEMA = {
+  type: 'object',
+  properties: {
+    subject: { type: 'string' },
+    type: { type: 'string', enum: ['url', 'domain', 'business', 'code', 'character', 'profile', 'api', 'llm', 'other'] },
+    risk_score: { type: 'number', minimum: 0, maximum: 100 },
+    severity: { type: 'string', enum: ['low', 'moderate', 'high', 'critical'] },
+    issues: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          description: { type: 'string' },
+          impact: { type: 'string' },
+          remediation: { type: 'string' }
+        },
+        required: ['id', 'description']
+      }
+    },
+    overall_risk_reasoning: { type: 'string' }
+  },
+  required: ['subject', 'type', 'risk_score', 'severity']
+};
+
+function shouldUseJsonMode(providerId, auditMode, persona) {
+  const provider = PROVIDERS[providerId];
+  if (!provider || !provider.jsonMode) return false;
+  
+  const isStructuredTask = auditMode || persona === 'AUDIT' || persona === 'AUDITOR' || persona === 'ANALYTICS';
+  return isStructuredTask;
+}
+
+function buildJsonModePayload(providerId) {
+  const provider = PROVIDERS[providerId];
+  if (!provider || !provider.jsonMode) return null;
+  
+  if (provider.supportsSchema) {
+    return {
+      type: 'json_schema',
+      json_schema: {
+        name: 'audit_response',
+        strict: true,
+        schema: AUDIT_JSON_SCHEMA
+      }
+    };
+  }
+  
+  return { type: 'json_object' };
+}
 
 // =====================================================
 // PROVIDER STATS — In-memory analytics (per process)
@@ -130,6 +206,8 @@ function getAvailableProvidersWithStatus() {
         label: p.label,
         priority: p.priority,
         enabled: enabledIds.has(p.id),
+        jsonMode: p.jsonMode || false,
+        supportsSchema: p.supportsSchema || false,
         stats: stats ? {
           totalCalls: stats.totalCalls,
           successCount: stats.successCount,
@@ -208,9 +286,9 @@ function chooseProvider({ requestedProvider, autoProvider, auditMode, persona, r
   if (autoProvider || !requestedProvider || requestedProvider === 'AUTO') {
     let ordered = [];
 
-    // For audit mode, prefer OSS models first, then Claude/OpenAI
+    // For audit mode, prefer JSON-capable providers first for structured output
     if (auditMode || persona === 'AUDIT' || persona === 'AUDITOR') {
-      const preferredOrder = ['LLAMA_OSS', 'MISTRAL_OSS', 'GEMMA_OSS', 'DEEPSEEK_OSS', 'CLAUDE', 'OPENAI', 'GEMINI'];
+      const preferredOrder = ['DEEPSEEK_OSS', 'LLAMA_OSS', 'MISTRAL_OSS', 'GEMMA_OSS', 'OPENAI', 'GEMINI', 'CLAUDE'];
       ordered = preferredOrder
         .map(id => externalProviders.find(p => p.id === id))
         .filter(Boolean);
@@ -442,7 +520,9 @@ Deno.serve(async (req) => {
       enforceGlyphFormat = true,
       provider: requestedProvider = null,
       autoProvider = true,
-      realTime = false
+      realTime = false,
+      jsonModeForced = false,
+      structuredMode = false
     } = await req.json();
     
     // Handle ping/status check
@@ -525,21 +605,36 @@ ${testPrefix}${conversationText}`;
     let providerUsed = 'none';
     let providerLabel = 'Unknown';
     
+    // Determine if JSON mode should be used
+    const useJsonMode = jsonModeForced || structuredMode || isAuditActive;
+    
     // Build meta block for response
-    const buildMeta = (usedProvider, usedLabel) => ({
+    const buildMeta = (usedProvider, usedLabel, attemptCount = 1, fallbackUsed = false) => ({
       providerUsed: usedProvider,
       providerLabel: usedLabel,
       availableProviders: getAvailableProvidersWithStatus(),
-      providerStats: getProviderStats()
+      providerStats: getProviderStats(),
+      jsonModeEnabled: useJsonMode,
+      attemptCount,
+      fallbackUsed,
+      fallbackProvider: fallbackUsed ? usedProvider : null
     });
 
+    let attemptCount = 0;
+    let fallbackUsed = false;
+    
     // Try providers in order
     for (const providerId of providerCallOrder) {
+      attemptCount++;
       const startTime = Date.now();
+      const providerSupportsJson = shouldUseJsonMode(providerId, isAuditActive, persona);
+      const jsonPayload = providerSupportsJson && useJsonMode ? buildJsonModePayload(providerId) : null;
+      
       try {
-        console.log(`Attempting LLM call with provider: ${providerId}`);
-        result = await callProvider(providerId, fullPrompt);
+        console.log(`Attempting LLM call with provider: ${providerId}, jsonMode: ${!!jsonPayload}`);
+        result = await callProvider(providerId, fullPrompt, jsonPayload);
         const latencyMs = Date.now() - startTime;
+        fallbackUsed = attemptCount > 1;
         providerUsed = providerId;
         providerLabel = PROVIDERS[providerId]?.label || providerId;
         
@@ -577,11 +672,12 @@ ${testPrefix}${conversationText}`;
           text: parsedResult.text,
           audit: parsedResult.audit,
           model: providerLabel,
-          promptVersion: 'v4.0-multi-provider',
+          promptVersion: 'v5.0-json-mode',
           providerUsed,
           providerLabel,
           auditEngineActive: isAuditActive,
-          meta: buildMeta(providerUsed, providerLabel)
+          jsonModeUsed: !!jsonPayload,
+          meta: buildMeta(providerUsed, providerLabel, attemptCount, fallbackUsed)
         });
         
       } catch (error) {
@@ -758,26 +854,29 @@ ${testPrefix}${conversationText}`;
 });
 
 /**
- * Call a specific provider by ID
+ * Call a specific provider by ID with optional JSON mode
  */
-async function callProvider(providerId, prompt) {
+async function callProvider(providerId, prompt, jsonModePayload = null) {
   switch (providerId) {
     case 'LLAMA_OSS': {
-      // Try Together first, then OpenRouter
       const togetherKey = Deno.env.get('TOGETHER_API_KEY');
       if (togetherKey) {
+        const body = {
+          model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 4096,
+          temperature: 0.7
+        };
+        if (jsonModePayload) {
+          body.response_format = jsonModePayload;
+        }
         const response = await fetch('https://api.together.xyz/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${togetherKey}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
-            messages: [{ role: 'user', content: prompt }],
-            max_tokens: 4096,
-            temperature: 0.7
-          })
+          body: JSON.stringify(body)
         });
         if (!response.ok) throw new Error(`Together/Llama error: ${response.status}`);
         const data = await response.json();
@@ -785,7 +884,7 @@ async function callProvider(providerId, prompt) {
       }
       const openrouterKey = Deno.env.get('OPENROUTER_API_KEY');
       if (openrouterKey) {
-        return await callOpenRouter(openrouterKey, 'meta-llama/llama-3.3-70b-instruct', prompt);
+        return await callOpenRouter(openrouterKey, 'meta-llama/llama-3.3-70b-instruct', prompt, jsonModePayload);
       }
       throw new Error('No Llama provider available');
     }
@@ -863,17 +962,21 @@ async function callProvider(providerId, prompt) {
     case 'DEEPSEEK_OSS': {
       const deepseekKey = Deno.env.get('DEEPSEEK_API_KEY');
       if (deepseekKey) {
+        const body = {
+          model: 'deepseek-chat',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 4096
+        };
+        if (jsonModePayload) {
+          body.response_format = jsonModePayload;
+        }
         const response = await fetch('https://api.deepseek.com/chat/completions', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${deepseekKey}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            model: 'deepseek-chat',
-            messages: [{ role: 'user', content: prompt }],
-            max_tokens: 4096
-          })
+          body: JSON.stringify(body)
         });
         if (!response.ok) throw new Error(`DeepSeek error: ${response.status}`);
         const data = await response.json();
@@ -881,7 +984,7 @@ async function callProvider(providerId, prompt) {
       }
       const openrouterKey = Deno.env.get('OPENROUTER_API_KEY');
       if (openrouterKey) {
-        return await callOpenRouter(openrouterKey, 'deepseek/deepseek-chat', prompt);
+        return await callOpenRouter(openrouterKey, 'deepseek/deepseek-chat', prompt, jsonModePayload);
       }
       throw new Error('No DeepSeek provider available');
     }
@@ -910,18 +1013,22 @@ async function callProvider(providerId, prompt) {
     case 'OPENAI': {
       const openaiKey = Deno.env.get('OPENAI_API_KEY');
       if (!openaiKey) throw new Error('OPENAI_API_KEY not set');
+      const body = {
+        model: 'gpt-4-turbo-preview',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 4096,
+        temperature: 0.7
+      };
+      if (jsonModePayload) {
+        body.response_format = jsonModePayload;
+      }
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${openaiKey}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          model: 'gpt-4-turbo-preview',
-          messages: [{ role: 'user', content: prompt }],
-          max_tokens: 4096,
-          temperature: 0.7
-        })
+        body: JSON.stringify(body)
       });
       if (!response.ok) throw new Error(`OpenAI error: ${response.status}`);
       const data = await response.json();
@@ -964,8 +1071,16 @@ To enable full GlyphBot capabilities, configure at least one provider API key: T
   }
 }
 
-// OpenRouter helper
-async function callOpenRouter(apiKey, model, prompt) {
+// OpenRouter helper with JSON mode support
+async function callOpenRouter(apiKey, model, prompt, jsonModePayload = null) {
+  const body = {
+    model,
+    messages: [{ role: 'user', content: prompt }],
+    max_tokens: 4096
+  };
+  if (jsonModePayload) {
+    body.response_format = jsonModePayload;
+  }
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -974,11 +1089,7 @@ async function callOpenRouter(apiKey, model, prompt) {
       'HTTP-Referer': 'https://glyphlock.io',
       'X-Title': 'GlyphBot'
     },
-    body: JSON.stringify({
-      model,
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 4096
-    })
+    body: JSON.stringify(body)
   });
   if (!response.ok) throw new Error(`OpenRouter error: ${response.status}`);
   const data = await response.json();
