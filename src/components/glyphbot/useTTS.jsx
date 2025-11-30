@@ -108,39 +108,37 @@ export default function useTTS(options = {}) {
   }, [voices]);
 
   /**
-   * Stop any currently playing audio
+   * Stop any currently playing speech
    */
   const stop = useCallback(() => {
-    // Stop external audio
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.src = '';
-      audioRef.current = null;
-    }
-    
-    // Stop browser speech
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
-    
     setIsSpeaking(false);
     setIsLoading(false);
   }, []);
 
   /**
-   * Speak text using external TTS with browser fallback
+   * Speak text using natural browser voices
    */
   const speak = useCallback(async (text, customSettings = {}) => {
     if (!text || typeof text !== 'string') return false;
+    if (!ttsAvailable) {
+      setLastError('TTS not available');
+      return false;
+    }
     
+    // Clean text for speech
     const cleanText = text
-      .replace(/[#*`🦕💠🦖🌟✨🔒⚡️💡🛡️]/g, '')
+      .replace(/[#*`🦕💠🦖🌟✨🔒⚡️💡🛡️•]/g, '')
       .replace(/```[\s\S]*?```/g, '') // Remove code blocks
-      .replace(/\[.*?\]/g, '') // Remove markdown links
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Convert markdown links to just text
+      .replace(/\*\*([^*]+)\*\*/g, '$1') // Remove bold
+      .replace(/_([^_]+)_/g, '$1') // Remove italic
       .replace(/\n+/g, '. ')
       .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, 500); // StreamElements limit
+      .replace(/\.+/g, '.')
+      .trim();
     
     if (!cleanText || cleanText.length < 2) return false;
 
@@ -150,94 +148,24 @@ export default function useTTS(options = {}) {
 
     const settings = { ...defaultSettings, ...customSettings };
 
-    // PRIMARY: StreamElements (FREE, reliable, no API key)
     try {
-      console.log('[TTS] Using StreamElements...');
-      const voice = settings.voice || 'Brian'; // Brian is clearer than Matthew
-      const seUrl = `https://api.streamelements.com/kappa/v2/speech?voice=${voice}&text=${encodeURIComponent(cleanText)}`;
-      
-      const audio = new Audio();
-      audioRef.current = audio;
-      
-      // Set up event handlers BEFORE setting src
-      audio.oncanplaythrough = async () => {
-        try {
-          setIsLoading(false);
-          setIsSpeaking(true);
-          await audio.play();
-        } catch (playError) {
-          console.warn('[TTS] Autoplay blocked:', playError);
-          setIsLoading(false);
-          setIsSpeaking(false);
-        }
-      };
-
-      audio.onended = () => {
-        setIsSpeaking(false);
-        audioRef.current = null;
-      };
-
-      audio.onerror = (e) => {
-        console.warn('[TTS] StreamElements failed:', e);
-        setIsSpeaking(false);
-        audioRef.current = null;
-        // Fallback to browser TTS
-        if (settings.useBrowserFallback) {
-          speakWithBrowser(cleanText, settings);
-        }
-      };
-
-      audio.src = seUrl;
-      audio.load();
-      return true;
-      
-    } catch (error) {
-      console.warn('[TTS] StreamElements error:', error);
-    }
-
-    // FALLBACK: Browser Speech Synthesis
-    if (settings.useBrowserFallback && 'speechSynthesis' in window) {
-      console.log('[TTS] Falling back to browser TTS...');
-      setIsLoading(false);
-      return speakWithBrowser(cleanText, settings);
-    }
-
-    setIsLoading(false);
-    setLastError('TTS unavailable');
-    return false;
-  }, [stop, defaultSettings]);
-
-  /**
-   * Browser-native speech synthesis fallback
-   */
-  const speakWithBrowser = useCallback((text, settings) => {
-    try {
-      if (!('speechSynthesis' in window)) {
-        setLastError('Browser TTS not supported');
-        return false;
-      }
-
-      const utterance = new SpeechSynthesisUtterance(text);
+      const utterance = new SpeechSynthesisUtterance(cleanText);
       utteranceRef.current = utterance;
       
-      utterance.rate = settings.speed || 1.0;
-      utterance.pitch = settings.pitch || 1.0;
-      utterance.volume = settings.volume || 1.0;
-
-      // Try to find a good voice
-      const voices = window.speechSynthesis.getVoices();
-      const preferredVoice = voices.find(v => 
-        v.name.includes('Google') || 
-        v.name.includes('Microsoft') ||
-        v.lang === 'en-US'
-      );
-      if (preferredVoice) {
-        utterance.voice = preferredVoice;
+      // Get best natural voice
+      const voice = getBestVoice();
+      if (voice) {
+        utterance.voice = voice;
       }
 
+      // Natural speech settings
+      utterance.rate = settings.speed;
+      utterance.pitch = settings.pitch;
+      utterance.volume = settings.volume;
+
       utterance.onstart = () => {
-        setIsSpeaking(true);
         setIsLoading(false);
+        setIsSpeaking(true);
       };
 
       utterance.onend = () => {
@@ -246,21 +174,29 @@ export default function useTTS(options = {}) {
       };
 
       utterance.onerror = (e) => {
-        console.error('Browser TTS error:', e);
+        console.error('[TTS] Error:', e);
         setIsSpeaking(false);
-        setLastError('Browser TTS error');
+        setIsLoading(false);
+        setLastError(e.error || 'Speech error');
         utteranceRef.current = null;
       };
 
+      // Chrome bug workaround: cancel before speaking
+      window.speechSynthesis.cancel();
+      
+      // Small delay to ensure cancel completes
+      await new Promise(r => setTimeout(r, 50));
+      
       window.speechSynthesis.speak(utterance);
       return true;
+
     } catch (error) {
-      console.error('Browser TTS failed:', error);
-      setLastError('Browser TTS failed');
+      console.error('[TTS] Failed:', error);
+      setLastError(error.message);
       setIsLoading(false);
       return false;
     }
-  }, []);
+  }, [stop, defaultSettings, ttsAvailable, getBestVoice]);
 
   /**
    * Test TTS functionality
