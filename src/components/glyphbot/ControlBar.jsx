@@ -68,32 +68,32 @@ export default function ControlBar({
   onVoiceSettingsChange
 }) {
   return (
-    <div className="px-4 py-3 border-b border-slate-800/80 bg-slate-950/60 backdrop-blur-sm">
-      <div className="flex flex-wrap items-center gap-3 justify-between">
+    <div className="px-4 py-4 border-b border-purple-500/30 bg-gradient-to-r from-slate-950/90 via-purple-950/20 to-slate-950/90 backdrop-blur-xl">
+      <div className="flex flex-wrap items-center gap-4 justify-between">
         {/* Dropdowns */}
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col gap-0.5">
-            <label className="text-[9px] uppercase tracking-[0.2em] text-slate-600 font-medium">Persona</label>
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-[9px] uppercase tracking-[0.25em] text-cyan-400/80 font-bold">Persona</label>
             <select
               value={persona}
               onChange={(e) => setPersona(e.target.value)}
-              className="min-w-[130px] text-xs bg-slate-900/80 border border-slate-700/60 rounded-lg px-2.5 py-1.5 text-slate-300 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 focus:border-cyan-500/50"
+              className="min-w-[140px] text-xs bg-slate-900/80 border-2 border-purple-500/40 rounded-xl px-3 py-2 text-cyan-200 font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all shadow-[0_0_15px_rgba(168,85,247,0.2)] hover:shadow-[0_0_20px_rgba(6,182,212,0.3)]"
             >
               {PERSONAS.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
+                <option key={p.id} value={p.id} className="bg-slate-900 text-slate-200">{p.name}</option>
               ))}
             </select>
           </div>
 
-          <div className="flex flex-col gap-0.5">
-            <label className="text-[9px] uppercase tracking-[0.2em] text-slate-600 font-medium">Model</label>
+          <div className="flex flex-col gap-1">
+            <label className="text-[9px] uppercase tracking-[0.25em] text-purple-400/80 font-bold">Model</label>
             <select
               value={provider}
               onChange={(e) => setProvider(e.target.value)}
-              className="min-w-[150px] text-xs bg-slate-900/80 border border-slate-700/60 rounded-lg px-2.5 py-1.5 text-slate-300 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 focus:border-cyan-500/50"
+              className="min-w-[160px] text-xs bg-slate-900/80 border-2 border-cyan-500/40 rounded-xl px-3 py-2 text-purple-200 font-medium focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400 transition-all shadow-[0_0_15px_rgba(6,182,212,0.2)] hover:shadow-[0_0_20px_rgba(168,85,247,0.3)]"
             >
               {MODEL_OPTIONS.map((m) => (
-                <option key={m.id} value={m.id}>{m.label}</option>
+                <option key={m.id} value={m.id} className="bg-slate-900 text-slate-200">{m.label}</option>
               ))}
             </select>
           </div>
