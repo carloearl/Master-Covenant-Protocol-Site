@@ -46,6 +46,9 @@ export default function GlyphBotPage() {
   const [lastMeta, setLastMeta] = useState(null);
   const [providerMeta, setProviderMeta] = useState(null);
   const chatContainerRef = useRef(null);
+  
+  // TTS Hook
+  const { speak, stop: stopTTS, isSpeaking } = useTTS({ voice: 'Brian' });
 
   // Auto-scroll chat
   useEffect(() => {
