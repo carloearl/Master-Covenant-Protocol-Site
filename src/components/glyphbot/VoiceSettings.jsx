@@ -181,25 +181,25 @@ export default function VoiceSettings({ ttsHook, onSettingsChange }) {
 
           {/* Voice Selection */}
           <div className="space-y-2">
-            <label className="text-xs text-slate-400">Voice</label>
+            <label className="text-xs text-cyan-300 font-medium">Voice</label>
             <Select value={selectedVoice} onValueChange={setSelectedVoice}>
-              <SelectTrigger className="bg-slate-800 border-slate-700 text-sm">
+              <SelectTrigger className="bg-slate-900/80 border-purple-500/40 text-sm text-slate-100 hover:border-cyan-400/60 transition-all">
                 <SelectValue placeholder="Select voice..." />
               </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700 max-h-48">
+              <SelectContent className="bg-slate-950 border-purple-500/40 max-h-48">
                 {voices.map((voice) => (
                   <SelectItem 
                     key={voice.name} 
                     value={voice.name}
-                    className="text-sm"
+                    className="text-sm text-slate-200 hover:bg-purple-500/20 focus:bg-cyan-500/20"
                   >
                     <span className="flex items-center gap-2">
                       {voice.name}
                       {voice.name.includes('Google') && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-400">Neural</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/30 text-cyan-300 border border-cyan-500/40">Neural</span>
                       )}
                       {voice.name.includes('Microsoft') && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400">Neural</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/30 text-blue-300 border border-blue-500/40">Neural</span>
                       )}
                     </span>
                   </SelectItem>
