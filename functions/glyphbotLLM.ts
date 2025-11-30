@@ -282,6 +282,8 @@ async function callOpenRouter(prompt) {
   const key = Deno.env.get('OPENROUTER_API_KEY');
   if (!key) throw new Error('OPENROUTER_API_KEY not configured');
   
+  console.log('[OpenRouter] Calling with key:', key.slice(0, 8) + '...');
+  
   const response = await fetchWithTimeout(
     'https://openrouter.ai/api/v1/chat/completions',
     {
@@ -293,7 +295,7 @@ async function callOpenRouter(prompt) {
         'X-Title': 'GlyphBot'
       },
       body: JSON.stringify({
-        model: 'google/gemini-flash-1.5',
+        model: 'google/gemini-2.0-flash-exp:free',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 4096
       })
@@ -302,12 +304,16 @@ async function callOpenRouter(prompt) {
   
   if (!response.ok) {
     const errBody = await response.text();
-    throw new Error(`OpenRouter ${response.status}: ${errBody.slice(0, 200)}`);
+    console.error('[OpenRouter Raw Error]:', errBody);
+    throw new Error(`OpenRouter ${response.status}: ${errBody.slice(0, 300)}`);
   }
   
   const data = await response.json();
+  console.log('[OpenRouter Response]:', JSON.stringify(data).slice(0, 500));
+  
   const text = data.choices?.[0]?.message?.content;
   if (!text) {
+    console.error('[OpenRouter No Text]:', JSON.stringify(data));
     throw new Error('OpenRouter: No content in response');
   }
   
