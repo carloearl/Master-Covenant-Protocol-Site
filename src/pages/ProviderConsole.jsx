@@ -8,14 +8,14 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-// OMEGA CHAIN V2: OpenAI Primary → Claude Fallback → Gemini Secondary
-const PRIORITY_ORDER_AUDIT = ['OPENAI', 'CLAUDE', 'GEMINI', 'OPENROUTER', 'LOCAL_OSS'];
-const PRIORITY_ORDER_GENERAL = ['OPENAI', 'CLAUDE', 'GEMINI', 'OPENROUTER', 'LOCAL_OSS'];
+// OMEGA CHAIN V3: Gemini Primary (FREE) → OpenAI → Claude → OpenRouter → OSS
+const PRIORITY_ORDER_AUDIT = ['GEMINI', 'OPENAI', 'CLAUDE', 'OPENROUTER', 'LOCAL_OSS'];
+const PRIORITY_ORDER_GENERAL = ['GEMINI', 'OPENAI', 'CLAUDE', 'OPENROUTER', 'LOCAL_OSS'];
 
 const PROVIDER_LABELS = {
+  'GEMINI': 'Gemini Flash (Primary)',
   'OPENAI': 'OpenAI GPT-4',
   'CLAUDE': 'Claude Sonnet',
-  'GEMINI': 'Gemini Flash',
   'OPENROUTER': 'OpenRouter',
   'LOCAL_OSS': 'Local Fallback',
   'BASE44_BROKER': 'Base44 Broker'
@@ -270,9 +270,9 @@ export default function ProviderConsole() {
                   <h3 className="text-lg font-semibold text-white mb-2">Omega Chain Auto-Selector</h3>
                   <p className="text-slate-400 text-sm leading-relaxed">
                     The Omega Chain automatically routes requests through the optimal provider path. 
-                    <strong className="text-cyan-300"> OpenAI GPT-4 is the primary provider</strong>, with 
-                    <strong className="text-purple-300"> Claude as the first fallback</strong> and 
-                    <strong className="text-blue-300"> Gemini as the secondary fallback</strong>. 
+                    <strong className="text-cyan-300"> Gemini Flash is the primary provider (FREE)</strong>, with 
+                    <strong className="text-purple-300"> OpenAI as the first fallback</strong> and 
+                    <strong className="text-blue-300"> Claude as the secondary fallback</strong>. 
                     DeepSeek has been permanently disabled from the chain.
                   </p>
                 </div>
