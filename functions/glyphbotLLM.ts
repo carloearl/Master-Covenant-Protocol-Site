@@ -1,46 +1,73 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 /**
- * GlyphBot LLM Engine v4.0 — Multi-Provider with OSS Priority
+ * GlyphBot LLM Engine v5.0 — OMEGA CHAIN PATCH
  * 
- * Provider Priority (OSS-first):
- * 1. Llama (via Together/OpenRouter)
- * 2. Mistral (via Mistral API/OpenRouter/Together)
- * 3. Gemma (via OpenRouter)
- * 4. DeepSeek (via DeepSeek API/OpenRouter)
- * 5. Claude (Anthropic)
- * 6. OpenAI GPT-4
- * 7. Base44 broker (always available fallback)
+ * PRIMARY MODEL: OpenAI GPT-4 (Carlo's key - ALWAYS entry/exit point)
+ * 
+ * CHAIN MODE MODULES (assistants only):
+ * 2. Claude (Anthropic) - chain enhancement
+ * 3. Gemini - chain enhancement
+ * 
+ * FALLBACK ORDER (only if OpenAI DOWN):
+ * 1. Claude
+ * 2. Gemini
+ * 
+ * REMOVED: DeepSeek (PERMANENTLY DISABLED)
  * 
  * Environment Variables:
- * - TOGETHER_API_KEY: Together.ai (Llama, Mistral, Gemma)
- * - OPENROUTER_API_KEY: OpenRouter (all models)
- * - MISTRAL_API_KEY: Mistral native API
- * - DEEPSEEK_API_KEY: DeepSeek native API
- * - ANTHROPIC_API_KEY: Claude
- * - OPENAI_API_KEY: OpenAI GPT-4
- * - GEMINI_API_KEY: Google Gemini
+ * - OPENAI_API_KEY: OpenAI GPT-4 (PRIMARY)
+ * - ANTHROPIC_API_KEY: Claude (chain/fallback)
+ * - GEMINI_API_KEY: Google Gemini (chain/fallback)
+ * - TOGETHER_API_KEY: Together.ai (Llama, Mistral, Gemma - secondary OSS)
+ * - OPENROUTER_API_KEY: OpenRouter (secondary OSS)
+ * - MISTRAL_API_KEY: Mistral native API (secondary OSS)
  */
 
 // =====================================================
 // PROVIDER REGISTRY — OSS-first priority order
 // =====================================================
 const PROVIDERS = {
-  AUTO: { id: 'AUTO', label: 'Auto (GlyphBot chooses)', priority: 0, jsonMode: false, supportsSchema: false, supportsRegex: false },
-  DEEPSEEK_OSS: {
-    id: 'DEEPSEEK_OSS',
-    label: 'DeepSeek V3',
-    envHints: ['DEEPSEEK_API_KEY', 'OPENROUTER_API_KEY'],
+  AUTO: { id: 'AUTO', label: 'Auto (GlyphBot Omega)', priority: 0, jsonMode: false, supportsSchema: false, supportsRegex: false },
+  // PRIMARY MODEL - Always entry/exit point
+  OPENAI: {
+    id: 'OPENAI',
+    label: 'OpenAI GPT-4 (Primary)',
+    envHints: ['OPENAI_API_KEY'],
     priority: 1,
     jsonMode: true,
     supportsSchema: true,
-    supportsRegex: false
+    supportsRegex: false,
+    isPrimary: true
   },
+  // CHAIN MODE MODULES - Assistants only
+  CLAUDE: {
+    id: 'CLAUDE',
+    label: 'Claude Sonnet 4.5 (Chain)',
+    envHints: ['ANTHROPIC_API_KEY'],
+    priority: 2,
+    jsonMode: true,
+    supportsSchema: true,
+    supportsRegex: false,
+    supportsFiles: true,
+    isChainModule: true
+  },
+  GEMINI: {
+    id: 'GEMINI',
+    label: 'Gemini 2.0 Flash (Chain)',
+    envHints: ['GEMINI_API_KEY'],
+    priority: 3,
+    jsonMode: true,
+    supportsSchema: false,
+    supportsRegex: false,
+    isChainModule: true
+  },
+  // SECONDARY OSS MODELS
   LLAMA_OSS: {
     id: 'LLAMA_OSS',
     label: 'Llama 3.3 70B',
     envHints: ['TOGETHER_API_KEY', 'OPENROUTER_API_KEY'],
-    priority: 2,
+    priority: 10,
     jsonMode: true,
     supportsSchema: true,
     supportsRegex: false
@@ -49,7 +76,7 @@ const PROVIDERS = {
     id: 'MISTRAL_OSS',
     label: 'Mistral Large',
     envHints: ['MISTRAL_API_KEY', 'OPENROUTER_API_KEY', 'TOGETHER_API_KEY'],
-    priority: 3,
+    priority: 11,
     jsonMode: true,
     supportsSchema: true,
     supportsRegex: false
@@ -58,39 +85,13 @@ const PROVIDERS = {
     id: 'GEMMA_OSS',
     label: 'Gemma 3n',
     envHints: ['OPENROUTER_API_KEY', 'TOGETHER_API_KEY'],
-    priority: 4,
+    priority: 12,
     jsonMode: true,
     supportsSchema: true,
     supportsRegex: false
   },
-  CLAUDE: {
-    id: 'CLAUDE',
-    label: 'Claude Sonnet 4.5',
-    envHints: ['ANTHROPIC_API_KEY'],
-    priority: 5,
-    jsonMode: true,
-    supportsSchema: true,
-    supportsRegex: false,
-    supportsFiles: true
-  },
-  OPENAI: {
-    id: 'OPENAI',
-    label: 'OpenAI GPT-4',
-    envHints: ['OPENAI_API_KEY'],
-    priority: 11,
-    jsonMode: true,
-    supportsSchema: true,
-    supportsRegex: false
-  },
-  GEMINI: {
-    id: 'GEMINI',
-    label: 'Gemini 2.0 Flash',
-    envHints: ['GEMINI_API_KEY'],
-    priority: 6,
-    jsonMode: true,
-    supportsSchema: false,
-    supportsRegex: false
-  },
+  // DeepSeek PERMANENTLY DISABLED - Do not use
+  // DEEPSEEK_OSS: REMOVED
   LOCAL_OSS: {
     id: 'LOCAL_OSS',
     label: 'Local OSS Engine (No Key)',
@@ -280,26 +281,56 @@ function chooseProvider({ requestedProvider, autoProvider, auditMode, persona, r
   // AUTO mode selection
   // Exclude LOCAL_OSS from primary selection (use only as last resort)
   const externalProviders = enabled.filter(p => p.id !== 'LOCAL_OSS');
+  // DeepSeek PERMANENTLY DISABLED - removed from OSS list
   const ossProviders = externalProviders.filter(p =>
-    ['LLAMA_OSS', 'MISTRAL_OSS', 'GEMMA_OSS', 'DEEPSEEK_OSS'].includes(p.id)
+    ['LLAMA_OSS', 'MISTRAL_OSS', 'GEMMA_OSS'].includes(p.id)
   );
 
   if (autoProvider || !requestedProvider || requestedProvider === 'AUTO') {
-    let ordered = [];
-
-    // For audit mode, prefer JSON-capable providers first for structured output
-    if (auditMode || persona === 'AUDIT' || persona === 'AUDITOR') {
-      const preferredOrder = ['DEEPSEEK_OSS', 'LLAMA_OSS', 'MISTRAL_OSS', 'GEMMA_OSS', 'OPENAI', 'GEMINI', 'CLAUDE'];
-      ordered = preferredOrder
-        .map(id => externalProviders.find(p => p.id === id))
-        .filter(Boolean);
-    } else {
-      // Normal mode: OSS first, then commercial
-      ordered = ossProviders.length ? ossProviders : externalProviders;
+    // OMEGA CHAIN PATCH: OpenAI is ALWAYS primary entry/exit point
+    const openaiProvider = externalProviders.find(p => p.id === 'OPENAI');
+    if (openaiProvider) {
+      return {
+        providerId: 'OPENAI',
+        providerLabel: 'OpenAI GPT-4 (Primary)',
+        error: null
+      };
+    }
+    
+    // FALLBACK ORDER (only if OpenAI DOWN): Claude → Gemini
+    const claudeProvider = externalProviders.find(p => p.id === 'CLAUDE');
+    if (claudeProvider) {
+      return {
+        providerId: 'CLAUDE',
+        providerLabel: 'Claude Sonnet 4.5 (Fallback)',
+        error: null
+      };
+    }
+    
+    const geminiProvider = externalProviders.find(p => p.id === 'GEMINI');
+    if (geminiProvider) {
+      return {
+        providerId: 'GEMINI',
+        providerLabel: 'Gemini 2.0 Flash (Fallback)',
+        error: null
+      };
+    }
+    
+    // Secondary OSS fallbacks
+    const ossOrder = ['LLAMA_OSS', 'MISTRAL_OSS', 'GEMMA_OSS'];
+    for (const id of ossOrder) {
+      const provider = externalProviders.find(p => p.id === id);
+      if (provider) {
+        return {
+          providerId: provider.id,
+          providerLabel: provider.label,
+          error: null
+        };
+      }
     }
 
-    // If we have external providers, use them; otherwise LOCAL_OSS
-    const chosen = ordered[0] || externalProviders[0] || enabled.find(p => p.id === 'LOCAL_OSS');
+    // If we have any external providers, use first available; otherwise LOCAL_OSS
+    const chosen = externalProviders[0] || enabled.find(p => p.id === 'LOCAL_OSS');
     return {
       providerId: chosen.id,
       providerLabel: chosen.label,
@@ -960,35 +991,8 @@ async function callProvider(providerId, prompt, jsonModePayload = null) {
       throw new Error('No Gemma provider available');
     }
     
-    case 'DEEPSEEK_OSS': {
-      const deepseekKey = Deno.env.get('DEEPSEEK_API_KEY');
-      if (deepseekKey) {
-        const body = {
-          model: 'deepseek-chat',
-          messages: [{ role: 'user', content: prompt }],
-          max_tokens: 4096
-        };
-        if (jsonModePayload) {
-          body.response_format = jsonModePayload;
-        }
-        const response = await fetch('https://api.deepseek.com/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${deepseekKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(body)
-        });
-        if (!response.ok) throw new Error(`DeepSeek error: ${response.status}`);
-        const data = await response.json();
-        return data.choices[0].message.content;
-      }
-      const openrouterKey = Deno.env.get('OPENROUTER_API_KEY');
-      if (openrouterKey) {
-        return await callOpenRouter(openrouterKey, 'deepseek/deepseek-chat', prompt, jsonModePayload);
-      }
-      throw new Error('No DeepSeek provider available');
-    }
+    // DeepSeek PERMANENTLY DISABLED per Omega Chain Patch
+    // case 'DEEPSEEK_OSS': REMOVED
     
     case 'CLAUDE': {
       const anthropicKey = Deno.env.get('ANTHROPIC_API_KEY');
