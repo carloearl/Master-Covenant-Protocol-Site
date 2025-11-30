@@ -53,15 +53,65 @@ export default function VoiceSettings({ ttsHook, onSettingsChange }) {
     };
   }, [selectedVoice]);
 
+  // Initialize Audio Context and EQ nodes
+  useEffect(() => {
+    if (!audioContextRef.current && typeof AudioContext !== 'undefined') {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      
+      // Create EQ bands
+      const bassEQ = ctx.createBiquadFilter();
+      bassEQ.type = 'lowshelf';
+      bassEQ.frequency.value = 200;
+      bassEQ.gain.value = bass;
+      
+      const midEQ = ctx.createBiquadFilter();
+      midEQ.type = 'peaking';
+      midEQ.frequency.value = 1000;
+      midEQ.Q.value = 1;
+      midEQ.gain.value = mid;
+      
+      const trebleEQ = ctx.createBiquadFilter();
+      trebleEQ.type = 'highshelf';
+      trebleEQ.frequency.value = 3000;
+      trebleEQ.gain.value = treble;
+      
+      // Chain: bass -> mid -> treble -> destination
+      bassEQ.connect(midEQ);
+      midEQ.connect(trebleEQ);
+      trebleEQ.connect(ctx.destination);
+      
+      audioContextRef.current = ctx;
+      eqNodesRef.current = { bassEQ, midEQ, trebleEQ };
+    }
+    
+    return () => {
+      audioContextRef.current?.close();
+    };
+  }, []);
+
+  // Update EQ in real-time
+  useEffect(() => {
+    if (eqNodesRef.current) {
+      eqNodesRef.current.bassEQ.gain.value = bass;
+      eqNodesRef.current.midEQ.gain.value = mid;
+      eqNodesRef.current.trebleEQ.gain.value = treble;
+    }
+  }, [bass, mid, treble]);
+
   // Notify parent of settings changes
   useEffect(() => {
     onSettingsChange?.({
       voice: selectedVoice,
       speed,
       pitch,
-      volume
+      volume,
+      bass,
+      mid,
+      treble,
+      audioContext: audioContextRef.current,
+      eqNodes: eqNodesRef.current
     });
-  }, [selectedVoice, speed, pitch, volume, onSettingsChange]);
+  }, [selectedVoice, speed, pitch, volume, bass, mid, treble, onSettingsChange]);
 
   const testVoice = () => {
     if (!('speechSynthesis' in window)) return;
