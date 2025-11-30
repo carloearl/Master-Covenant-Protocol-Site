@@ -63,12 +63,15 @@ export default function useTTS(options = {}) {
     if (!text || typeof text !== 'string') return false;
     
     const cleanText = text
-      .replace(/[#*`🦕💠🦖🌟✨]/g, '')
-      .replace(/\n/g, ' ')
+      .replace(/[#*`🦕💠🦖🌟✨🔒⚡️💡🛡️]/g, '')
+      .replace(/```[\s\S]*?```/g, '') // Remove code blocks
+      .replace(/\[.*?\]/g, '') // Remove markdown links
+      .replace(/\n+/g, '. ')
       .replace(/\s+/g, ' ')
-      .trim();
+      .trim()
+      .slice(0, 500); // StreamElements limit
     
-    if (!cleanText) return false;
+    if (!cleanText || cleanText.length < 2) return false;
 
     stop(); // Stop any current playback
     setIsLoading(true);
@@ -76,79 +79,60 @@ export default function useTTS(options = {}) {
 
     const settings = { ...defaultSettings, ...customSettings };
 
-    // Try 1: External TTS API
+    // PRIMARY: StreamElements (FREE, reliable, no API key)
     try {
-      const response = await base44.functions.invoke('textToSpeechAdvanced', {
-        text: cleanText,
-        provider: settings.provider,
-        voice: settings.voice,
-        speed: settings.speed,
-        pitch: settings.pitch,
-        volume: settings.volume
-      });
-
-      const audioUrl = response.data?.audioUrl;
-      if (audioUrl) {
-        const audio = new Audio(audioUrl);
-        audioRef.current = audio;
-        audio.playbackRate = settings.speed;
-        audio.volume = settings.volume;
-
-        audio.onended = () => {
-          setIsSpeaking(false);
-          audioRef.current = null;
-        };
-
-        audio.onerror = () => {
-          setIsSpeaking(false);
-          audioRef.current = null;
-        };
-
-        setIsLoading(false);
-        setIsSpeaking(true);
-        await audio.play();
-        return true;
-      }
-    } catch (error) {
-      console.warn('External TTS failed:', error);
-    }
-
-    // Try 2: StreamElements direct (free fallback)
-    try {
-      const seUrl = `https://api.streamelements.com/kappa/v2/speech?voice=${settings.voice || 'Matthew'}&text=${encodeURIComponent(cleanText.slice(0, 500))}`;
-      const audio = new Audio(seUrl);
+      console.log('[TTS] Using StreamElements...');
+      const voice = settings.voice || 'Brian'; // Brian is clearer than Matthew
+      const seUrl = `https://api.streamelements.com/kappa/v2/speech?voice=${voice}&text=${encodeURIComponent(cleanText)}`;
+      
+      const audio = new Audio();
       audioRef.current = audio;
+      
+      // Set up event handlers BEFORE setting src
+      audio.oncanplaythrough = async () => {
+        try {
+          setIsLoading(false);
+          setIsSpeaking(true);
+          await audio.play();
+        } catch (playError) {
+          console.warn('[TTS] Autoplay blocked:', playError);
+          setIsLoading(false);
+          setIsSpeaking(false);
+        }
+      };
 
       audio.onended = () => {
         setIsSpeaking(false);
         audioRef.current = null;
       };
 
-      audio.onerror = () => {
+      audio.onerror = (e) => {
+        console.warn('[TTS] StreamElements failed:', e);
         setIsSpeaking(false);
         audioRef.current = null;
-        // Fall through to browser TTS
+        // Fallback to browser TTS
         if (settings.useBrowserFallback) {
           speakWithBrowser(cleanText, settings);
         }
       };
 
-      setIsLoading(false);
-      setIsSpeaking(true);
-      await audio.play();
+      audio.src = seUrl;
+      audio.load();
       return true;
+      
     } catch (error) {
-      console.warn('StreamElements TTS failed:', error);
+      console.warn('[TTS] StreamElements error:', error);
     }
 
-    // Try 3: Browser Speech Synthesis (final fallback)
+    // FALLBACK: Browser Speech Synthesis
     if (settings.useBrowserFallback && 'speechSynthesis' in window) {
+      console.log('[TTS] Falling back to browser TTS...');
+      setIsLoading(false);
       return speakWithBrowser(cleanText, settings);
     }
 
     setIsLoading(false);
-    setLastError('All TTS providers failed');
-    setTtsAvailable(false);
+    setLastError('TTS unavailable');
     return false;
   }, [stop, defaultSettings]);
 
