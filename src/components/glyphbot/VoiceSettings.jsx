@@ -142,20 +142,20 @@ export default function VoiceSettings({ ttsHook, onSettingsChange }) {
         <Button
           variant="ghost"
           size="sm"
-          className="gap-1.5 text-xs text-slate-400 hover:text-cyan-400 hover:bg-slate-800/50"
+          className="gap-1.5 text-xs text-purple-300 hover:text-cyan-300 hover:bg-purple-500/10 border border-purple-500/30 hover:border-cyan-400/50 transition-all duration-300 shadow-[0_0_10px_rgba(168,85,247,0.2)] hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]"
         >
           <Settings2 className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">Voice</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent 
-        className="w-80 bg-slate-900 border-slate-700 p-4"
+        className="w-80 bg-slate-950/95 border border-purple-500/40 p-4 shadow-[0_0_30px_rgba(168,85,247,0.3)] backdrop-blur-xl"
         align="end"
       >
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium text-white flex items-center gap-2">
-              <Volume2 className="w-4 h-4 text-cyan-400" />
+            <h4 className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 flex items-center gap-2">
+              <Volume2 className="w-4 h-4 text-cyan-400 drop-shadow-[0_0_6px_rgba(6,182,212,0.8)]" />
               Voice Settings
             </h4>
             <div className="flex gap-1">
@@ -163,7 +163,7 @@ export default function VoiceSettings({ ttsHook, onSettingsChange }) {
                 size="sm"
                 variant="ghost"
                 onClick={testVoice}
-                className="h-7 px-2 text-xs text-cyan-400 hover:bg-cyan-500/10"
+                className="h-7 px-2 text-xs text-cyan-300 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400 transition-all shadow-[0_0_8px_rgba(6,182,212,0.3)]"
               >
                 <Play className="w-3 h-3 mr-1" />
                 Test
@@ -172,7 +172,7 @@ export default function VoiceSettings({ ttsHook, onSettingsChange }) {
                 size="sm"
                 variant="ghost"
                 onClick={stopTest}
-                className="h-7 px-2 text-xs text-slate-400 hover:bg-slate-800"
+                className="h-7 px-2 text-xs text-rose-300 hover:bg-rose-500/20 border border-rose-500/30 hover:border-rose-400 transition-all"
               >
                 <Square className="w-3 h-3" />
               </Button>
