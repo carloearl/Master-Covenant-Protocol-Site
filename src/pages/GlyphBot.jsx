@@ -358,13 +358,13 @@ export default function GlyphBotPage() {
 
           {/* Trim Warning */}
           {showTrimWarning && (
-            <div className="mx-4 mt-2 p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs text-amber-400">
-                <AlertTriangle className="w-3.5 h-3.5" />
+            <div className="mx-4 mt-3 p-3 rounded-xl bg-amber-500/15 border-2 border-amber-400/50 flex items-center justify-between shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+              <div className="flex items-center gap-2 text-xs text-amber-300 font-medium">
+                <AlertTriangle className="w-4 h-4 drop-shadow-[0_0_6px_rgba(245,158,11,0.8)]" />
                 <span>Older messages trimmed to optimize memory (keeping last {MAX_MESSAGES})</span>
               </div>
-              <button onClick={() => setShowTrimWarning(false)} className="text-amber-400 hover:text-amber-300">
-                <X className="w-3.5 h-3.5" />
+              <button onClick={() => setShowTrimWarning(false)} className="text-amber-400 hover:text-amber-200 transition-colors p-1 rounded-lg hover:bg-amber-500/20">
+                <X className="w-4 h-4" />
               </button>
             </div>
           )}
