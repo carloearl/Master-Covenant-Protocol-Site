@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Volume2, Play, Square, Settings2 } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -11,6 +11,15 @@ export default function VoiceSettings({ ttsHook, onSettingsChange }) {
   const [speed, setSpeed] = useState(0.95);
   const [pitch, setPitch] = useState(1.0);
   const [volume, setVolume] = useState(1.0);
+  
+  // Equalizer settings
+  const [bass, setBass] = useState(0);      // -12 to +12 dB
+  const [mid, setMid] = useState(0);        // -12 to +12 dB  
+  const [treble, setTreble] = useState(0);  // -12 to +12 dB
+  
+  // Audio context for EQ
+  const audioContextRef = useRef(null);
+  const eqNodesRef = useRef(null);
 
   // Load available voices
   useEffect(() => {
