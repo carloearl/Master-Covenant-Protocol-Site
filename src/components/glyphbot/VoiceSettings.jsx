@@ -266,8 +266,80 @@ export default function VoiceSettings({ ttsHook, onSettingsChange }) {
             />
           </div>
 
+          {/* Equalizer Section */}
+          <div className="pt-3 mt-3 border-t border-slate-800">
+            <label className="text-xs text-slate-400 mb-3 block">Equalizer</label>
+            
+            <div className="grid grid-cols-3 gap-3">
+              {/* Bass */}
+              <div className="flex flex-col items-center">
+                <span className="text-[10px] text-slate-500 mb-1">Bass</span>
+                <div className="h-24 flex flex-col items-center justify-center">
+                  <Slider
+                    orientation="vertical"
+                    value={[bass]}
+                    onValueChange={([val]) => setBass(val)}
+                    min={-12}
+                    max={12}
+                    step={1}
+                    className="h-20"
+                  />
+                </div>
+                <span className={`text-[10px] mt-1 ${bass > 0 ? 'text-cyan-400' : bass < 0 ? 'text-rose-400' : 'text-slate-500'}`}>
+                  {bass > 0 ? '+' : ''}{bass}dB
+                </span>
+              </div>
+              
+              {/* Mid */}
+              <div className="flex flex-col items-center">
+                <span className="text-[10px] text-slate-500 mb-1">Mid</span>
+                <div className="h-24 flex flex-col items-center justify-center">
+                  <Slider
+                    orientation="vertical"
+                    value={[mid]}
+                    onValueChange={([val]) => setMid(val)}
+                    min={-12}
+                    max={12}
+                    step={1}
+                    className="h-20"
+                  />
+                </div>
+                <span className={`text-[10px] mt-1 ${mid > 0 ? 'text-cyan-400' : mid < 0 ? 'text-rose-400' : 'text-slate-500'}`}>
+                  {mid > 0 ? '+' : ''}{mid}dB
+                </span>
+              </div>
+              
+              {/* Treble */}
+              <div className="flex flex-col items-center">
+                <span className="text-[10px] text-slate-500 mb-1">Treble</span>
+                <div className="h-24 flex flex-col items-center justify-center">
+                  <Slider
+                    orientation="vertical"
+                    value={[treble]}
+                    onValueChange={([val]) => setTreble(val)}
+                    min={-12}
+                    max={12}
+                    step={1}
+                    className="h-20"
+                  />
+                </div>
+                <span className={`text-[10px] mt-1 ${treble > 0 ? 'text-cyan-400' : treble < 0 ? 'text-rose-400' : 'text-slate-500'}`}>
+                  {treble > 0 ? '+' : ''}{treble}dB
+                </span>
+              </div>
+            </div>
+            
+            {/* Reset EQ Button */}
+            <button
+              onClick={() => { setBass(0); setMid(0); setTreble(0); }}
+              className="w-full mt-2 text-[10px] text-slate-500 hover:text-slate-300 transition-colors"
+            >
+              Reset EQ
+            </button>
+          </div>
+
           <p className="text-[10px] text-slate-500 text-center pt-2 border-t border-slate-800">
-            Voices vary by browser & OS. Google/Microsoft Neural voices sound most natural.
+            EQ applies to voice output. Boost bass for deeper voice, treble for clarity.
           </p>
         </div>
       </PopoverContent>
