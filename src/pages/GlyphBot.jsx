@@ -2,21 +2,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import glyphbotClient from '@/components/glyphbot/glyphbotClient';
 import SEOHead from '@/components/SEOHead';
-import { ChevronDown, ChevronUp, Shield, Activity, Braces, Settings2 } from 'lucide-react';
+import { Activity, Settings2 } from 'lucide-react';
 import GlyphAuditCard from '@/components/glyphaudit/GlyphAuditCard';
 import GlyphProviderChain from '@/components/provider/GlyphProviderChain';
 import ProviderStatusPanel from '@/components/glyphbot/ProviderStatusPanel';
 import { createPageUrl } from '@/utils';
 
 const PERSONAS = [
-  { id: 'GENERAL', label: 'General', desc: 'Default security assistant' },
-  { id: 'SECURITY', label: 'Security', desc: 'Threat analysis & safety' },
-  { id: 'BLOCKCHAIN', label: 'Blockchain', desc: 'Smart contracts & DeFi' },
-  { id: 'AUDIT', label: 'Audit', desc: 'Forensic precision, risk-focused' },
-  { id: 'DEBUGGER', label: 'Debugger', desc: 'Bug fixes & stack traces' },
-  { id: 'PERFORMANCE', label: 'Performance', desc: 'Optimization focus' },
-  { id: 'REFACTOR', label: 'Refactor', desc: 'Code cleanup & architecture' },
-  { id: 'ANALYTICS', label: 'Analytics', desc: 'Logs & pattern detection' },
+  { id: 'GENERAL', name: 'General', desc: 'Default security assistant' },
+  { id: 'SECURITY', name: 'Security', desc: 'Threat analysis & safety' },
+  { id: 'BLOCKCHAIN', name: 'Blockchain', desc: 'Smart contracts & DeFi' },
+  { id: 'AUDIT', name: 'Audit', desc: 'Forensic precision, risk-focused' },
+  { id: 'DEBUGGER', name: 'Debugger', desc: 'Bug fixes & stack traces' },
+  { id: 'PERFORMANCE', name: 'Performance', desc: 'Optimization focus' },
+  { id: 'REFACTOR', name: 'Refactor', desc: 'Code cleanup & architecture' },
+  { id: 'ANALYTICS', name: 'Analytics', desc: 'Logs & pattern detection' },
 ];
 
 const MODEL_OPTIONS = [
@@ -31,8 +31,12 @@ const MODEL_OPTIONS = [
 ];
 
 const GlyphBotPage = () => {
+  // =====================================================
+  // ALL EXISTING LOGIC PRESERVED — DO NOT MODIFY
+  // =====================================================
   const [messages, setMessages] = useState([
     {
+      id: 'init-1',
       role: 'assistant',
       content: 'Hi, I am GlyphBot. Ask me anything about security, code, or blockchain.',
       audit: null
@@ -54,19 +58,21 @@ const GlyphBotPage = () => {
 
   const [lastMeta, setLastMeta] = useState(null);
   const [providerMeta, setProviderMeta] = useState(null);
-  const messagesEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
+  // Auto-scroll ONLY the chat container, not the whole page
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    const el = chatContainerRef.current;
+    if (el) {
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
     }
-  }, [messages]);
+  }, [messages, isSending]);
 
   const handleSend = async () => {
     const trimmed = input.trim();
     if (!trimmed || isSending) return;
 
-    const newUserMsg = { role: 'user', content: trimmed };
+    const newUserMsg = { id: `user-${Date.now()}`, role: 'user', content: trimmed };
     const newMessages = [...messages, newUserMsg];
     setMessages(newMessages);
     setInput('');
@@ -93,9 +99,12 @@ const GlyphBotPage = () => {
       setMessages(prev => [
         ...prev,
         { 
+          id: `bot-${Date.now()}`,
           role: 'assistant', 
           content: botText,
-          audit: response.audit || null
+          audit: response.audit || null,
+          providerId: response.providerUsed,
+          latencyMs: response.meta?.providerStats?.[response.providerUsed]?.lastLatencyMs
         }
       ]);
 
@@ -116,7 +125,7 @@ const GlyphBotPage = () => {
       console.error('GlyphBot send error:', err);
       setMessages(prev => [
         ...prev,
-        { role: 'assistant', content: 'Something went wrong talking to GlyphBot. Try again.', audit: null }
+        { id: `err-${Date.now()}`, role: 'assistant', content: 'Something went wrong talking to GlyphBot. Try again.', audit: null }
       ]);
     } finally {
       setIsSending(false);
@@ -136,12 +145,12 @@ const GlyphBotPage = () => {
       const result = await glyphbotClient.systemCheck();
       setMessages(prev => [
         ...prev,
-        { role: 'assistant', content: `**System Integrity Test**\n\`\`\`json\n${JSON.stringify(result, null, 2)}\n\`\`\`` }
+        { id: `test-${Date.now()}`, role: 'assistant', content: `**System Integrity Test**\n\`\`\`json\n${JSON.stringify(result, null, 2)}\n\`\`\`` }
       ]);
     } catch (err) {
       setMessages(prev => [
         ...prev,
-        { role: 'assistant', content: 'System test failed: ' + err.message }
+        { id: `testerr-${Date.now()}`, role: 'assistant', content: 'System test failed: ' + err.message }
       ]);
     } finally {
       setIsSending(false);
@@ -150,293 +159,420 @@ const GlyphBotPage = () => {
 
   const clearChat = () => {
     setMessages([
-      { role: 'assistant', content: 'Chat cleared. How can I help you?', audit: null }
+      { id: 'clear-1', role: 'assistant', content: 'Chat cleared. How can I help you?', audit: null }
     ]);
     setLastMeta(null);
   };
 
-  const currentPersona = PERSONAS.find(p => p.id === persona);
+  const handleRegenerate = async () => {
+    if (messages.length < 2) return;
+    const lastUserIdx = [...messages].reverse().findIndex(m => m.role === 'user');
+    if (lastUserIdx === -1) return;
+    const lastUserMsg = messages[messages.length - 1 - lastUserIdx];
+    setInput(lastUserMsg.content);
+  };
 
+  const modes = {
+    voice: voiceOn,
+    live: realTimeOn,
+    audit: auditOn,
+    test: testOn,
+    json: jsonModeOn,
+    struct: structuredOn,
+    panel: showProviderPanel
+  };
+
+  const handleToggleMode = (key) => {
+    switch(key) {
+      case 'voice': setVoiceOn(v => !v); break;
+      case 'live': setRealTimeOn(v => !v); break;
+      case 'audit': setAuditOn(v => !v); break;
+      case 'test': setTestOn(v => !v); break;
+      case 'json': setJsonModeOn(v => !v); break;
+      case 'struct': setStructuredOn(v => !v); break;
+      case 'panel': setShowProviderPanel(v => !v); break;
+    }
+  };
+
+  // Build providers array for UI
+  const providers = providerMeta?.availableProviders?.map(p => ({
+    id: p.id,
+    label: p.label,
+    active: p.enabled,
+    error: p.stats?.failureCount > 0 && p.stats?.successCount === 0
+  })) || MODEL_OPTIONS.map(m => ({ id: m.id, label: m.label, active: true, error: false }));
+
+  const currentProviderLabel = providers.find(p => p.id === (lastMeta?.providerUsed || provider))?.label || 'Auto (Omega Chain)';
+
+  // =====================================================
+  // V2 CONSOLE UI — REPLACES OLD JSX ONLY
+  // =====================================================
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-50 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-50 flex flex-col pt-20 pb-4 px-4">
       <SEOHead 
-        title="GlyphBot - Elite AI Security Expert | GlyphLock"
+        title="GlyphBot Console V2 - Elite AI Security Expert | GlyphLock"
         description="Chat with GlyphBot, your elite AI security assistant for code auditing, blockchain analysis, threat detection, and debugging."
       />
       
-      <div className="max-w-5xl mx-auto w-full flex-1 flex flex-col px-4 pb-8 pt-24">
-        
-        {/* Header */}
-        <header className="mb-4">
-          <div className="flex items-center justify-between">
+      <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col">
+        {/* V2 CONSOLE CONTAINER */}
+        <div className="flex-1 flex flex-col bg-[#050712] text-slate-100 rounded-2xl border border-slate-800 shadow-[0_0_40px_rgba(0,0,0,0.65)] overflow-hidden">
+          
+          {/* HEADER BAR */}
+          <header className="flex items-center justify-between px-5 py-3 border-b border-slate-800 bg-gradient-to-r from-[#050712] via-[#060b1c] to-[#070b20]">
             <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center shadow-lg">
-                <span className="text-xl font-bold text-white">⚡</span>
+              <div className="relative w-9 h-9 rounded-2xl bg-slate-950 border border-cyan-400/60 shadow-[0_0_18px_rgba(45,212,191,0.8)] flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-[2px] rounded-2xl bg-gradient-to-br from-cyan-500/20 via-sky-500/10 to-fuchsia-500/20" />
+                <div className="relative text-xs font-black tracking-[0.1em] uppercase">GL</div>
               </div>
-              <div>
-                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                  GlyphBot — Elite AI Security Expert
-                </h1>
-                <p className="text-sm text-slate-400">
-                  Ask anything about security, code, blockchain, or debugging.
-                </p>
+              <div className="flex flex-col">
+                <span className="text-xs uppercase tracking-[0.2em] text-cyan-300/80">GlyphBot Console V2</span>
+                <span className="text-sm text-slate-300">Elite AI Security & Chain Orchestration</span>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+
+            <div className="flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-1 text-xs text-slate-400">
+                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
+                <span>Online</span>
+                <span className="text-slate-500 mx-1">|</span>
+                <span className="text-slate-300">
+                  Provider: <span className="text-cyan-300">{currentProviderLabel}</span>
+                </span>
+              </div>
               <Link
                 to={createPageUrl('ProviderConsole')}
-                className="px-3 py-2 bg-slate-800 border border-slate-700 hover:border-cyan-500/50 text-slate-300 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
+                className="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-900/80 border border-slate-600/70 hover:border-cyan-400/80 hover:text-cyan-200 transition-colors flex items-center gap-1"
               >
-                <Activity className="w-4 h-4" />
-                <span className="hidden sm:inline">Console</span>
+                <Activity className="w-3 h-3" />
+                Console
               </Link>
-              <a
-                href="/glyphbotjunior"
-                className="px-4 py-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 text-amber-200 rounded-xl text-sm font-medium hover:bg-amber-500/30 transition-all"
-              >
-                Switch to Junior ☀
-              </a>
             </div>
-          </div>
-        </header>
+          </header>
 
-        {/* Active Mode Badges */}
-        {(auditOn || testOn || realTimeOn || voiceOn || jsonModeOn || structuredOn) && (
-          <div className="mb-3 flex flex-wrap gap-2">
-            {auditOn && (
-              <span className="px-2 py-1 bg-green-500/20 border border-green-500/40 text-green-300 rounded-lg text-xs">
-                🛡️ Audit Mode
-              </span>
-            )}
-            {testOn && (
-              <span className="px-2 py-1 bg-blue-500/20 border border-blue-500/40 text-blue-300 rounded-lg text-xs">
-                ⚠️ Test Mode
-              </span>
-            )}
-            {realTimeOn && (
-              <span className="px-2 py-1 bg-orange-500/20 border border-orange-500/40 text-orange-300 rounded-lg text-xs">
-                🌐 Live Web Search
-              </span>
-            )}
-            {voiceOn && (
-              <span className="px-2 py-1 bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 rounded-lg text-xs">
-                🔊 Voice Enabled
-              </span>
-            )}
-            {jsonModeOn && (
-              <span className="px-2 py-1 bg-purple-500/20 border border-purple-500/40 text-purple-300 rounded-lg text-xs flex items-center gap-1">
-                <Braces className="w-3 h-3" /> JSON Mode
-              </span>
-            )}
-            {structuredOn && (
-              <span className="px-2 py-1 bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 rounded-lg text-xs">
-                📋 Structured Output
-              </span>
-            )}
-          </div>
-        )}
+          {/* TOP CONTROLS STRIP */}
+          <section className="px-4 pt-3 pb-2 border-b border-slate-900 bg-gradient-to-r from-slate-950/90 via-slate-950/40 to-slate-950/90">
+            <div className="flex flex-wrap gap-3 items-center justify-between">
+              <div className="flex flex-wrap gap-3 items-center">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase tracking-[0.18em] text-slate-500">Persona</label>
+                  <select
+                    className="min-w-[140px] text-xs bg-slate-950 border border-slate-700/80 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-400/70"
+                    value={persona}
+                    onChange={(e) => setPersona(e.target.value)}
+                  >
+                    {PERSONAS.map((p) => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
 
-        {/* Controls */}
-        <section className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          {/* Persona and Model selectors */}
-          <div className="flex items-center gap-4 flex-wrap">
-            <div className="flex items-center gap-2">
-              <label className="text-xs uppercase tracking-wide text-slate-400">
-                Persona
-              </label>
-              <select
-                value={persona}
-                onChange={e => setPersona(e.target.value)}
-                className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm min-h-[40px] focus:outline-none focus:ring-1 focus:ring-purple-400"
-              >
-                {PERSONAS.map(p => (
-                  <option key={p.id} value={p.id}>
-                    {p.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <label className="text-xs uppercase tracking-wide text-slate-400">
-                Model
-              </label>
-              <select
-                value={provider}
-                onChange={e => setProvider(e.target.value)}
-                className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm min-h-[40px] focus:outline-none focus:ring-1 focus:ring-cyan-400"
-              >
-                {MODEL_OPTIONS.map(m => (
-                  <option key={m.id} value={m.id}>
-                    {m.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            {currentPersona?.desc && (
-              <span className="text-xs text-slate-500 hidden lg:inline">
-                — {currentPersona.desc}
-              </span>
-            )}
-          </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase tracking-[0.18em] text-slate-500">Model</label>
+                  <select
+                    className="min-w-[180px] text-xs bg-slate-950 border border-slate-700/80 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-400/70"
+                    value={provider}
+                    onChange={(e) => setProvider(e.target.value)}
+                  >
+                    {MODEL_OPTIONS.map((m) => (
+                      <option key={m.id} value={m.id}>{m.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
 
-          {/* Mode toggles */}
-          <div className="flex flex-wrap gap-2 text-xs">
-            <ToggleChip label="🔊 Voice" active={voiceOn} onClick={() => setVoiceOn(v => !v)} />
-            <ToggleChip label="🌐 Live" active={realTimeOn} onClick={() => setRealTimeOn(v => !v)} />
-            <ToggleChip label="🛡️ Audit" active={auditOn} onClick={() => setAuditOn(v => !v)} />
-            <ToggleChip label="⚠️ Test" active={testOn} onClick={() => setTestOn(v => !v)} />
-            <ToggleChip label="{ } JSON" active={jsonModeOn} onClick={() => setJsonModeOn(v => !v)} />
-            <ToggleChip label="📋 Struct" active={structuredOn} onClick={() => setStructuredOn(v => !v)} />
-            <button
-              onClick={() => setShowProviderPanel(v => !v)}
-              className={`px-3 py-1.5 rounded-full border text-xs font-medium transition-all min-h-[32px] flex items-center gap-1 ${
-                showProviderPanel
-                  ? 'bg-slate-700 border-slate-500 text-slate-200'
-                  : 'bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-600'
-              }`}
-            >
-              <Settings2 className="w-3 h-3" /> Panel
-            </button>
-            <button
-              onClick={clearChat}
-              className="px-3 py-1 rounded-full border bg-red-900/30 border-red-500/40 text-red-300 text-xs hover:bg-red-900/50 transition-all"
-            >
-              Clear
-            </button>
-          </div>
-        </section>
-
-        {/* Provider Signal Chain */}
-        {providerMeta && (
-          <div className="mb-3 bg-slate-900/50 rounded-lg px-3 py-1 border border-slate-800">
-            <GlyphProviderChain
-              availableProviders={providerMeta.availableProviders}
-              providerStats={providerMeta.providerStats}
-              providerUsed={providerMeta.providerUsed}
-            />
-          </div>
-        )}
-
-        {/* Expanded Provider Status Panel */}
-        {showProviderPanel && providerMeta && (
-          <div className="mb-3 bg-slate-900/80 rounded-xl p-4 border border-slate-700">
-            <ProviderStatusPanel
-              availableProviders={providerMeta.availableProviders}
-              providerStats={providerMeta.providerStats}
-              providerUsed={providerMeta.providerUsed}
-              jsonModeEnabled={jsonModeOn || structuredOn || auditOn}
-              onProviderSelect={(id) => setProvider(id)}
-            />
-          </div>
-        )}
-
-        {/* Meta line */}
-        {lastMeta && (
-          <div className="mb-2 text-xs text-slate-500 flex flex-wrap gap-3 bg-slate-900/50 rounded-lg px-3 py-2 border border-slate-800">
-            <span>Provider: <span className="text-cyan-400">{lastMeta.providerLabel || lastMeta.model || 'unknown'}</span></span>
-            {lastMeta.realTimeUsed && <span className="text-emerald-400">✓ real-time web</span>}
-            {lastMeta.shouldSpeak && <span className="text-sky-400">✓ voice-ready</span>}
-            {providerMeta?.jsonModeEnabled && <span className="text-purple-400">✓ JSON mode</span>}
-            {providerMeta?.attemptCount > 1 && <span className="text-amber-400">⟳ fallback ({providerMeta.attemptCount} attempts)</span>}
-          </div>
-        )}
-
-        {/* Test Mode Button */}
-        {testOn && (
-          <button
-            onClick={runSystemTest}
-            disabled={isSending}
-            className="mb-3 w-full py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 rounded-xl text-sm font-semibold disabled:opacity-50 transition-all"
-          >
-            ⚠️ Run System Integrity Test
-          </button>
-        )}
-
-        {/* Chat area */}
-        <div className="flex-1 min-h-[320px] max-h-[520px] rounded-2xl bg-slate-950/70 border border-slate-800 overflow-y-auto p-4 space-y-3">
-          {messages.map((m, idx) => (
-            <ChatBubble key={idx} role={m.role} content={m.content} audit={m.audit} />
-          ))}
-          {isSending && (
-            <div className="flex justify-start">
-              <div className="bg-slate-800/80 rounded-2xl rounded-bl-sm px-4 py-3 flex items-center gap-2">
-                <span className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              <div className="flex flex-wrap gap-1.5 justify-end">
+                {renderModeToggle("voice", "Voice", modes, handleToggleMode)}
+                {renderModeToggle("live", "Live", modes, handleToggleMode)}
+                {renderModeToggle("audit", "Audit", modes, handleToggleMode)}
+                {renderModeToggle("test", "Test", modes, handleToggleMode)}
+                {renderModeToggle("json", "{ } JSON", modes, handleToggleMode)}
+                {renderModeToggle("struct", "Struct", modes, handleToggleMode)}
+                {renderModeToggle("panel", "Panel", modes, handleToggleMode)}
+                <button
+                  onClick={clearChat}
+                  className="px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-[0.14em] uppercase border bg-rose-900/30 border-rose-500/50 text-rose-300 hover:bg-rose-900/50 transition-all"
+                >
+                  Clear
+                </button>
               </div>
             </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
+          </section>
 
-        {/* Input */}
-        <div className="mt-4 flex items-end gap-2">
-          <textarea
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            rows={2}
-            placeholder={`Ask ${currentPersona?.label || 'GlyphBot'} anything...`}
-            className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-cyan-400 min-h-[52px]"
-            style={{ fontSize: '16px' }}
-          />
-          <button
-            type="button"
-            onClick={handleSend}
-            disabled={isSending || !input.trim()}
-            className="h-[52px] px-6 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:from-cyan-400 hover:to-blue-400 transition-all"
-          >
-            {isSending ? '...' : 'Send'}
-          </button>
+          {/* MAIN LAYOUT */}
+          <main className="flex-1 flex min-h-0">
+            {/* LEFT: Chat and messages */}
+            <section className="flex-1 flex flex-col border-r border-slate-900 bg-gradient-to-b from-slate-950 via-[#050814] to-slate-950">
+              
+              {/* Provider rail */}
+              <div className="px-4 py-2 border-b border-slate-900 bg-slate-950/80">
+                <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+                  {providers.slice(0, 8).map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => setProvider(p.id)}
+                      className={[
+                        "px-2.5 py-1 rounded-full text-[10px] uppercase tracking-[0.18em] shrink-0 border transition-all",
+                        p.id === provider
+                          ? "bg-cyan-500/15 border-cyan-400/80 text-cyan-200 shadow-[0_0_16px_rgba(34,211,238,0.9)]"
+                          : "bg-slate-950 border-slate-700/80 text-slate-400 hover:border-slate-400/80",
+                        p.error ? "border-rose-500/80 text-rose-300" : "",
+                      ].filter(Boolean).join(" ")}
+                    >
+                      {p.label.split(' ')[0]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Provider Chain Display */}
+              {providerMeta && (
+                <div className="px-4 py-1 border-b border-slate-900/50 bg-slate-950/50">
+                  <GlyphProviderChain
+                    availableProviders={providerMeta.availableProviders}
+                    providerStats={providerMeta.providerStats}
+                    providerUsed={providerMeta.providerUsed}
+                  />
+                </div>
+              )}
+
+              {/* Provider Panel (expandable) */}
+              {showProviderPanel && providerMeta && (
+                <div className="px-4 py-3 border-b border-slate-800 bg-slate-900/60">
+                  <ProviderStatusPanel
+                    availableProviders={providerMeta.availableProviders}
+                    providerStats={providerMeta.providerStats}
+                    providerUsed={providerMeta.providerUsed}
+                    jsonModeEnabled={jsonModeOn || structuredOn || auditOn}
+                    onProviderSelect={(id) => setProvider(id)}
+                  />
+                </div>
+              )}
+
+              {/* Test Mode Button */}
+              {testOn && (
+                <div className="px-4 py-2 border-b border-slate-900">
+                  <button
+                    onClick={runSystemTest}
+                    disabled={isSending}
+                    className="w-full py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 rounded-xl text-xs font-semibold disabled:opacity-50 transition-all"
+                  >
+                    ⚠️ Run System Integrity Test
+                  </button>
+                </div>
+              )}
+
+              {/* CHAT AREA — SCROLLS INDEPENDENTLY */}
+              <div
+                ref={chatContainerRef}
+                className="flex-1 overflow-y-auto px-4 py-3 space-y-3 scroll-smooth"
+              >
+                {messages.length === 0 && (
+                  <div className="mt-10 text-center text-sm text-slate-500">
+                    <div className="text-slate-300 mb-1">Awaiting your query. Keep it security-related.</div>
+                    <div className="text-xs text-slate-500">GlyphBot can chain OpenAI, Claude, and Gemini while keeping DeepSeek exiled.</div>
+                  </div>
+                )}
+
+                {messages.map((msg) => (
+                  <MessageBubble
+                    key={msg.id}
+                    msg={msg}
+                    isAssistant={msg.role === 'assistant'}
+                    providerLabel={msg.providerId ? providers.find((p) => p.id === msg.providerId)?.label : undefined}
+                    ttsAvailable={voiceOn}
+                    onPlayTTS={() => {/* TTS hook placeholder */}}
+                  />
+                ))}
+
+                {isSending && (
+                  <div className="flex items-center gap-2 text-xs text-cyan-300/80 mt-2">
+                    <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
+                    <span>Streaming chain response…</span>
+                  </div>
+                )}
+              </div>
+
+              {/* INPUT BAR */}
+              <div className="border-t border-slate-900 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-950 px-4 py-3">
+                <div className="flex items-end gap-2">
+                  <div className="flex-1">
+                    <textarea
+                      rows={1}
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Ask anything about security, code, blockchain, or chains…"
+                      className="w-full resize-none rounded-xl bg-slate-950 border border-slate-700/80 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-400/80"
+                      style={{ fontSize: '16px' }}
+                    />
+                    <div className="mt-1 flex justify-between text-[10px] text-slate-500">
+                      <span>Enter = send · Shift+Enter = new line</span>
+                      {isSending && <span>Streaming… press Stop to cut chain.</span>}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    {isSending ? (
+                      <button
+                        type="button"
+                        onClick={() => setIsSending(false)}
+                        className="px-3 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white shadow-[0_0_16px_rgba(248,113,113,0.75)]"
+                      >
+                        Stop
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleSend}
+                        className="px-3 py-2 rounded-xl text-xs font-semibold bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-[0_0_18px_rgba(34,211,238,0.85)] disabled:opacity-40 disabled:shadow-none"
+                        disabled={!input.trim()}
+                      >
+                        Send
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={handleRegenerate}
+                      className="px-3 py-1.5 rounded-xl text-[10px] font-semibold bg-slate-900/90 border border-slate-700/80 text-slate-300 hover:border-cyan-400/70 hover:text-cyan-200 transition-colors"
+                    >
+                      Re-run
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* RIGHT: Telemetry panel */}
+            <aside className="hidden lg:flex w-64 flex-col bg-slate-950/95">
+              <div className="px-4 py-3 border-b border-slate-900">
+                <div className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Chain Telemetry</div>
+                <div className="mt-1 text-xs text-slate-300">Last {Math.min(messages.length, 6)} exchanges</div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2 text-[11px] text-slate-400">
+                {messages
+                  .filter((m) => m.role !== "system")
+                  .slice(-6)
+                  .reverse()
+                  .map((m) => (
+                    <div key={m.id} className="rounded-lg border border-slate-800 bg-slate-950/70 px-2.5 py-2">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className={"px-1.5 py-[2px] rounded-full text-[9px] font-semibold tracking-[0.16em] uppercase " +
+                          (m.role === "assistant"
+                            ? "bg-cyan-500/15 text-cyan-200 border border-cyan-400/60"
+                            : "bg-slate-800 text-slate-200 border border-slate-600")}>
+                          {m.role === "assistant" ? "Bot" : "User"}
+                        </span>
+                        {m.providerId && (
+                          <span className="text-[9px] text-slate-500">
+                            {providers.find((p) => p.id === m.providerId)?.label?.split(' ')[0]}
+                          </span>
+                        )}
+                      </div>
+                      <div className="line-clamp-3 text-[11px] text-slate-300">{m.content}</div>
+                      {m.latencyMs && (
+                        <div className="mt-1 text-right text-[9px] text-slate-500">{m.latencyMs}ms</div>
+                      )}
+                    </div>
+                  ))}
+
+                {messages.length === 0 && (
+                  <div className="text-[11px] text-slate-500">
+                    Chains, provider hops, token usage, and latency will show here once you start talking to GlyphBot.
+                  </div>
+                )}
+
+                {/* Meta info */}
+                {lastMeta && (
+                  <div className="mt-4 p-2 rounded-lg border border-slate-800 bg-slate-900/50 text-[10px] space-y-1">
+                    <div className="text-slate-500 uppercase tracking-wider">Last Response</div>
+                    <div className="text-cyan-300">{lastMeta.providerLabel || lastMeta.model}</div>
+                    {lastMeta.realTimeUsed && <div className="text-emerald-400">✓ Real-time web</div>}
+                    {lastMeta.shouldSpeak && <div className="text-sky-400">✓ Voice ready</div>}
+                    {providerMeta?.jsonModeEnabled && <div className="text-purple-400">✓ JSON mode</div>}
+                  </div>
+                )}
+              </div>
+            </aside>
+          </main>
         </div>
       </div>
     </div>
   );
 };
 
-const ChatBubble = ({ role, content, audit }) => {
-  const isUser = role === 'user';
-  const hasAudit = audit && (audit.json || audit.report);
+// =====================================================
+// HELPER COMPONENTS
+// =====================================================
+
+function renderModeToggle(key, label, modes, onToggleMode) {
+  const active = modes?.[key];
+  return (
+    <button
+      type="button"
+      onClick={() => onToggleMode(key)}
+      className={[
+        "px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-[0.14em] uppercase border transition-all",
+        active
+          ? "bg-cyan-500/15 border-cyan-400/80 text-cyan-200 shadow-[0_0_12px_rgba(34,211,238,0.8)]"
+          : "bg-slate-950 border-slate-700/80 text-slate-400 hover:border-slate-400/80",
+      ].join(" ")}
+    >
+      {label}
+    </button>
+  );
+}
+
+function MessageBubble({ msg, isAssistant, providerLabel, ttsAvailable, onPlayTTS }) {
+  const hasAudit = msg.audit && (msg.audit.json || msg.audit.report);
   
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-      <div className={`space-y-3 ${hasAudit ? 'max-w-[95%] w-full' : 'max-w-[80%]'}`}>
-        {content && (
-          <div
-            className={`rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap leading-relaxed ${
-              isUser
-                ? 'bg-gradient-to-br from-cyan-600 to-blue-600 text-white rounded-br-sm shadow-lg'
-                : hasAudit
-                  ? 'bg-slate-800/60 text-slate-200 rounded-bl-sm border border-slate-700/50'
-                  : 'bg-slate-800/80 text-slate-50 rounded-bl-sm border border-slate-700'
-            }`}
-          >
-            {content}
+    <div className={"flex gap-2 " + (isAssistant ? "justify-start" : "justify-end")}>
+      {isAssistant && (
+        <div className="mt-1 h-7 w-7 rounded-2xl bg-slate-900 border border-cyan-500/60 flex items-center justify-center text-[9px] font-semibold text-cyan-200 shrink-0">
+          GB
+        </div>
+      )}
+
+      <div className={`space-y-2 ${hasAudit ? 'max-w-[90%] w-full' : 'max-w-[80%]'}`}>
+        <div className={[
+          "rounded-2xl px-3 py-2 text-sm shadow-sm border",
+          isAssistant
+            ? "bg-slate-900/90 border-slate-700/80 text-slate-100"
+            : "bg-cyan-500/10 border-cyan-400/70 text-cyan-50",
+        ].join(" ")}>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+              {isAssistant ? "GlyphBot" : "You"}
+            </span>
+            <div className="flex items-center gap-2">
+              {providerLabel && <span className="text-[9px] text-slate-500">{providerLabel}</span>}
+              {isAssistant && ttsAvailable && (
+                <button
+                  type="button"
+                  onClick={() => onPlayTTS && onPlayTTS(msg.id)}
+                  className="text-[10px] px-1.5 py-[1px] rounded-full border border-slate-600 text-slate-300 hover:border-cyan-400 hover:text-cyan-200"
+                >
+                  ▷ Voice
+                </button>
+              )}
+            </div>
           </div>
-        )}
+          <div className="whitespace-pre-wrap leading-relaxed">{msg.content}</div>
+        </div>
         
-        {hasAudit && (
-          <GlyphAuditCard audit={audit} />
-        )}
+        {hasAudit && <GlyphAuditCard audit={msg.audit} />}
       </div>
+
+      {!isAssistant && (
+        <div className="mt-1 h-7 w-7 rounded-2xl bg-slate-900 border border-slate-600 flex items-center justify-center text-[9px] font-semibold text-slate-200 shrink-0">
+          U
+        </div>
+      )}
     </div>
   );
-};
-
-const ToggleChip = ({ label, active, onClick }) => (
-  <button
-    type="button"
-    onClick={onClick}
-    className={`px-3 py-1.5 rounded-full border text-xs font-medium transition-all min-h-[32px] ${
-      active
-        ? 'bg-cyan-500/20 border-cyan-400 text-cyan-200 shadow-sm'
-        : 'bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-600'
-    }`}
-  >
-    {label}
-  </button>
-);
+}
 
 export default GlyphBotPage;
