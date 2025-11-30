@@ -2,24 +2,25 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Zap, AlertCircle, CheckCircle, XCircle, Clock } from 'lucide-react';
 
-// OMEGA CHAIN V3: Gemini Primary (FREE) → OpenAI → Claude → OpenRouter → OSS
+// OMEGA CHAIN V11: Puter (FREE) → Gemini → OpenAI → Claude → OpenRouter → Base44 → OSS
 const PRIORITY_ORDER = [
-  'GEMINI',       // PRIMARY (FREE - always loads first)
-  'OPENAI',       // Fallback 1
-  'CLAUDE',       // Fallback 2
+  'PUTER',        // PRIMARY (FREE unlimited Gemini)
+  'GEMINI',       // Fallback 1
+  'OPENAI',       // Fallback 2
+  'CLAUDE',       // Fallback 3
   'OPENROUTER',   // Gateway
-  'LOCAL_OSS',    // Final Fallback
-  'BASE44_BROKER'
-  // DeepSeek PERMANENTLY DISABLED
+  'BASE44_BROKER',// Platform fallback
+  'LOCAL_OSS'     // Final offline fallback
 ];
 
 const PROVIDER_LABELS = {
-  'GEMINI': 'Gemini (Primary)',
-  'OPENAI': 'GPT-4',
+  'PUTER': 'Puter (Free)',
+  'GEMINI': 'Gemini',
+  'OPENAI': 'GPT-4o',
   'CLAUDE': 'Claude',
   'OPENROUTER': 'OpenRouter',
-  'LOCAL_OSS': 'Local OSS',
-  'BASE44_BROKER': 'Base44'
+  'BASE44_BROKER': 'Base44',
+  'LOCAL_OSS': 'Offline'
 };
 
 function getProviderStatus(provider) {
