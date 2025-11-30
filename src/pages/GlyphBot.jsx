@@ -8,6 +8,7 @@ import ProviderStatusPanel from '@/components/glyphbot/ProviderStatusPanel';
 import ChatMessage from '@/components/glyphbot/ChatMessage';
 import ChatInput from '@/components/glyphbot/ChatInput';
 import ControlBar from '@/components/glyphbot/ControlBar';
+import useTTS from '@/components/glyphbot/useTTS';
 import { createPageUrl } from '@/utils';
 
 const WELCOME_MESSAGE = {
