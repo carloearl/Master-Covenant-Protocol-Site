@@ -208,48 +208,114 @@ console.log("Latency:", result.latencyMs, "ms");`}
             {/* AI Chain */}
             <Section id="chain" title="AI Chain Orchestration" icon={Brain}>
               <p className="text-slate-400 mb-6">
-                The chain module provides unified access to multiple AI providers with automatic fallback, load balancing, and response tracing.
+                The chain module provides unified access to multiple AI providers with automatic fallback, health monitoring, and dynamic routing based on real-time performance metrics.
               </p>
 
               <CodeBlock
-                title="Chain Configuration"
-                code={`// Available chain modes
+                title="Chain Configuration with Health Monitoring"
+                code={`import { GlyphLock } from "@glyphlock/sdk";
+
 const gl = new GlyphLock({
   apiKey: process.env.GLYPHLOCK_API_KEY!,
-  chainMode: "openai-first"  // Options: "openai-first" | "balanced" | "claude-first"
+  chainMode: "gemini-first",        // Primary: Gemini (FREE), Fallback: OpenAI → Claude
+  enableHealthRouting: true,        // Enable dynamic routing based on provider health
+  maxRetries: 3,
+  timeoutMs: 30000
 });
 
-// Run with explicit fallback chain
+// Run with health-aware fallback
 const result = await gl.chainRun({
   input: "Analyze this smart contract for vulnerabilities...",
-  model: "openai:gpt-4.1",
-  fallback: ["anthropic:opus", "gemini:pro"],
+  persona: "SECURITY",              // Available: GENERAL, SECURITY, AUDIT, BLOCKCHAIN, DEBUGGER
+  jsonMode: true,                   // Force JSON output (if provider supports it)
   temperature: 0.3,
   maxTokens: 2000,
-  metadata: {
-    requestId: "audit-001",
-    userId: "user_123"
+  chainMode: "audit-optimized"      // Override chain mode for this call
+});
+
+// Response includes health metadata
+console.log(result.output);
+console.log("Provider:", result.provider);
+console.log("Health Score:", result.meta.healthScore);
+console.log("Latency:", result.latencyMs, "ms");
+console.log("Attempts:", result.attemptCount);`}
+              />
+
+              <CodeBlock
+                title="Audit Mode with Structured Output"
+                code={`// Run security audit with structured JSON output
+const audit = await gl.runAudit({
+  target: "https://example.com/api/users",
+  type: "api",
+  context: {
+    method: "POST",
+    headers: { "Content-Type": "application/json" }
   }
 });
 
-// Response structure
-interface ChainRunResult {
-  output: string;           // The AI response
-  modelUsed: string;        // Which model actually responded
-  provider: string;         // Provider name (openai/anthropic/gemini)
-  tokensIn?: number;        // Input tokens used
-  tokensOut?: number;       // Output tokens generated
-  latencyMs?: number;       // Response time in milliseconds
-  traceId?: string;         // Unique trace ID for logging
-}`}
+// Audit returns structured data
+console.log("Risk Score:", audit.audit.risk_score);       // 0-100
+console.log("Severity:", audit.audit.severity);           // low/moderate/high/critical
+console.log("Issues:", audit.audit.issues);               // Array of findings
+console.log("Recommendations:", audit.audit.recommendations);`}
               />
 
-              <div className="mt-6 bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-4">
-                <h4 className="font-semibold text-cyan-300 mb-2">Chain Modes Explained</h4>
-                <ul className="space-y-2 text-sm text-slate-300">
-                  <li><code className="text-cyan-400">openai-first</code> — Primary: GPT-4, Fallback: Claude → Gemini</li>
-                  <li><code className="text-cyan-400">claude-first</code> — Primary: Claude, Fallback: GPT-4 → Gemini</li>
-                  <li><code className="text-cyan-400">balanced</code> — Load-balanced across all providers</li>
+              <CodeBlock
+                title="Provider Health Monitoring"
+                code={`// Get real-time health report
+const health = gl.getHealthReport();
+
+console.log("Providers:", health.providers);
+// Each provider shows: successRate, avgLatencyMs, status, score
+
+// Get recommended chain based on current health
+const chain = gl.getRecommendedChain({
+  requireJsonMode: true,   // Filter to JSON-capable providers
+  requireAudit: true       // Filter to audit-capable providers
+});
+
+// Reset health metrics if needed
+gl.resetHealth();
+
+// Switch chain mode dynamically
+gl.setChainMode("claude-first");`}
+              />
+
+              <div className="mt-6 grid md:grid-cols-2 gap-4">
+                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4">
+                  <h4 className="font-semibold text-white mb-3">Chain Modes</h4>
+                  <ul className="space-y-2 text-sm text-slate-400">
+                    <li><code className="text-green-400">gemini-first</code> — Gemini (FREE) → OpenAI → Claude</li>
+                    <li><code className="text-cyan-400">openai-first</code> — GPT-4o → Gemini → Claude</li>
+                    <li><code className="text-purple-400">claude-first</code> — Claude → OpenAI → Gemini</li>
+                    <li><code className="text-amber-400">audit-optimized</code> — OpenAI → Claude → Gemini</li>
+                    <li><code className="text-blue-400">free-only</code> — Gemini → OpenRouter only</li>
+                    <li><code className="text-slate-400">balanced</code> — Load-balanced by health</li>
+                  </ul>
+                </div>
+                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4">
+                  <h4 className="font-semibold text-white mb-3">Available Personas</h4>
+                  <ul className="space-y-2 text-sm text-slate-400">
+                    <li><code className="text-cyan-400">GENERAL</code> — Default assistant mode</li>
+                    <li><code className="text-red-400">SECURITY</code> — Threat & vulnerability focus</li>
+                    <li><code className="text-amber-400">AUDIT</code> — Structured security analysis</li>
+                    <li><code className="text-purple-400">BLOCKCHAIN</code> — Smart contracts & DeFi</li>
+                    <li><code className="text-green-400">DEBUGGER</code> — Bug identification & fixes</li>
+                    <li><code className="text-blue-400">ANALYTICS</code> — Data pattern analysis</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-6 bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+                <h4 className="font-semibold text-green-300 mb-2">JSON Mode per Provider</h4>
+                <p className="text-sm text-slate-300 mb-3">
+                  JSON mode is automatically enabled based on provider capabilities:
+                </p>
+                <ul className="space-y-1 text-sm text-slate-400">
+                  <li>• <strong className="text-white">OpenAI</strong> — Full JSON schema support with strict mode</li>
+                  <li>• <strong className="text-white">Gemini</strong> — JSON object mode via responseMimeType</li>
+                  <li>• <strong className="text-white">Claude</strong> — JSON mode via system prompt</li>
+                  <li>• <strong className="text-white">OpenRouter</strong> — Depends on underlying model</li>
                 </ul>
               </div>
             </Section>
