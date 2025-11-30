@@ -286,7 +286,7 @@ export default function GlyphBotPage() {
       
       <div className="flex-1 flex flex-col max-w-7xl mx-auto w-full">
         {/* Main Console Container */}
-        <div className="flex-1 flex flex-col bg-[#0a0a12]/90 border-x border-slate-800/50 shadow-2xl overflow-hidden">
+        <div className="flex-1 flex flex-col bg-[#0a0a12]/95 border-x-2 border-purple-500/30 shadow-[0_0_60px_rgba(168,85,247,0.15)] overflow-hidden">
           
           {/* Header */}
           <header className="flex items-center justify-between px-5 py-4 border-b-2 border-purple-500/40 bg-gradient-to-r from-slate-950 via-purple-950/30 to-slate-950 backdrop-blur-xl shadow-[0_4px_30px_rgba(168,85,247,0.2)]">
