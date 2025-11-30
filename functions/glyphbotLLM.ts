@@ -157,8 +157,9 @@ async function callGemini(prompt) {
   const key = Deno.env.get('GEMINI_API_KEY');
   if (!key) throw new Error('GEMINI_API_KEY not configured');
   
+  // Use gemini-2.5-flash for best performance
   const response = await fetchWithTimeout(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${key}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -174,10 +175,12 @@ async function callGemini(prompt) {
   
   if (!response.ok) {
     const errBody = await response.text();
-    throw new Error(`Gemini ${response.status}: ${errBody.slice(0, 200)}`);
+    console.error('[Gemini Raw Error]:', errBody);
+    throw new Error(`Gemini ${response.status}: ${errBody.slice(0, 300)}`);
   }
   
   const data = await response.json();
+  console.log('[Gemini Response Structure]:', JSON.stringify(data).slice(0, 500));
   
   // Handle blocked responses
   if (data.candidates?.[0]?.finishReason === 'SAFETY') {
@@ -186,6 +189,7 @@ async function callGemini(prompt) {
   
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
   if (!text) {
+    console.error('[Gemini No Text]:', JSON.stringify(data));
     throw new Error('Gemini: No text in response');
   }
   
