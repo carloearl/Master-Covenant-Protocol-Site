@@ -104,14 +104,17 @@ function getEnabledProviders() {
 }
 
 // Choose provider based on request settings
+// LOCAL_OSS is always included and acts as the absolute final fallback
 function chooseProvider({ requestedProvider, autoProvider, auditMode, persona, realTime }) {
   const enabled = getEnabledProviders();
 
+  // LOCAL_OSS is always in enabled list, so this should never be empty
+  // But if somehow it is, return LOCAL_OSS explicitly
   if (!enabled.length) {
     return {
-      providerId: null,
-      providerLabel: 'None',
-      error: 'No LLM providers available. Check environment configuration.'
+      providerId: 'LOCAL_OSS',
+      providerLabel: 'Local OSS Engine (No Key)',
+      error: null
     };
   }
 
@@ -121,15 +124,18 @@ function chooseProvider({ requestedProvider, autoProvider, auditMode, persona, r
     if (match) {
       return { providerId: match.id, providerLabel: match.label, error: null };
     }
+    // If requested provider not available, fallback to LOCAL_OSS
     return {
-      providerId: null,
-      providerLabel: 'Unavailable',
-      error: `Requested provider ${requestedProvider} is not enabled`
+      providerId: 'LOCAL_OSS',
+      providerLabel: 'Local OSS Engine (No Key)',
+      error: null
     };
   }
 
   // AUTO mode selection
-  const ossProviders = enabled.filter(p =>
+  // Exclude LOCAL_OSS from primary selection (use only as last resort)
+  const externalProviders = enabled.filter(p => p.id !== 'LOCAL_OSS');
+  const ossProviders = externalProviders.filter(p =>
     ['LLAMA_OSS', 'MISTRAL_OSS', 'GEMMA_OSS', 'DEEPSEEK_OSS'].includes(p.id)
   );
 
@@ -140,14 +146,15 @@ function chooseProvider({ requestedProvider, autoProvider, auditMode, persona, r
     if (auditMode || persona === 'AUDIT' || persona === 'AUDITOR') {
       const preferredOrder = ['LLAMA_OSS', 'MISTRAL_OSS', 'GEMMA_OSS', 'DEEPSEEK_OSS', 'CLAUDE', 'OPENAI', 'GEMINI'];
       ordered = preferredOrder
-        .map(id => enabled.find(p => p.id === id))
+        .map(id => externalProviders.find(p => p.id === id))
         .filter(Boolean);
     } else {
       // Normal mode: OSS first, then commercial
-      ordered = ossProviders.length ? ossProviders : enabled;
+      ordered = ossProviders.length ? ossProviders : externalProviders;
     }
 
-    const chosen = ordered[0] || enabled[0];
+    // If we have external providers, use them; otherwise LOCAL_OSS
+    const chosen = ordered[0] || externalProviders[0] || enabled.find(p => p.id === 'LOCAL_OSS');
     return {
       providerId: chosen.id,
       providerLabel: chosen.label,
@@ -155,7 +162,8 @@ function chooseProvider({ requestedProvider, autoProvider, auditMode, persona, r
     };
   }
 
-  const fallbackDefault = enabled[0];
+  // Final fallback to first available (LOCAL_OSS will be last in sorted list)
+  const fallbackDefault = externalProviders[0] || enabled.find(p => p.id === 'LOCAL_OSS');
   return {
     providerId: fallbackDefault.id,
     providerLabel: fallbackDefault.label,
