@@ -241,6 +241,8 @@ async function callClaude(prompt) {
   const key = Deno.env.get('ANTHROPIC_API_KEY');
   if (!key) throw new Error('ANTHROPIC_API_KEY not configured');
   
+  console.log('[Claude] Calling with key:', key.slice(0, 8) + '...');
+  
   const response = await fetchWithTimeout(
     'https://api.anthropic.com/v1/messages',
     {
@@ -251,7 +253,7 @@ async function callClaude(prompt) {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-haiku-20240307',
         max_tokens: 4096,
         messages: [{ role: 'user', content: prompt }]
       })
@@ -260,12 +262,16 @@ async function callClaude(prompt) {
   
   if (!response.ok) {
     const errBody = await response.text();
-    throw new Error(`Claude ${response.status}: ${errBody.slice(0, 200)}`);
+    console.error('[Claude Raw Error]:', errBody);
+    throw new Error(`Claude ${response.status}: ${errBody.slice(0, 300)}`);
   }
   
   const data = await response.json();
+  console.log('[Claude Response]:', JSON.stringify(data).slice(0, 500));
+  
   const text = data.content?.[0]?.text;
   if (!text) {
+    console.error('[Claude No Text]:', JSON.stringify(data));
     throw new Error('Claude: No text in response');
   }
   
