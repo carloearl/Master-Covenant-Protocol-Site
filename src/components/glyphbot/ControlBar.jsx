@@ -135,12 +135,12 @@ export default function ControlBar({
             icon={Layout} 
             label="Panel" 
             onClick={() => onToggleMode('panel')}
-            color="cyan"
+            color="purple"
           />
           
           <button
             onClick={onClear}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-rose-950/30 border border-rose-500/40 text-rose-400 hover:bg-rose-950/50 transition-all"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-semibold uppercase tracking-wide bg-rose-950/40 border-2 border-rose-500/50 text-rose-300 hover:bg-rose-500/30 hover:border-rose-400 hover:shadow-[0_0_20px_rgba(244,63,94,0.5)] transition-all duration-300"
           >
             <Trash2 className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Clear</span>
