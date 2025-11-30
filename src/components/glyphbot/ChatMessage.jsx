@@ -2,9 +2,19 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Copy, Volume2, Check, Bot, User } from 'lucide-react';
 import GlyphAuditCard from '@/components/glyphaudit/GlyphAuditCard';
+import FeedbackWidget from './FeedbackWidget';
 
-export default function ChatMessage({ msg, isAssistant, providerLabel, ttsAvailable, onPlayTTS }) {
+export default function ChatMessage({ 
+  msg, 
+  isAssistant, 
+  providerLabel, 
+  ttsAvailable, 
+  onPlayTTS,
+  showFeedback = true,
+  persona
+}) {
   const [copied, setCopied] = useState(false);
+  const [feedbackGiven, setFeedbackGiven] = useState(false);
   const hasAudit = msg.audit && (msg.audit.json || msg.audit.report);
 
   const handleCopy = async () => {
@@ -114,6 +124,22 @@ export default function ChatMessage({ msg, isAssistant, providerLabel, ttsAvaila
         </div>
         
         {hasAudit && <GlyphAuditCard audit={msg.audit} />}
+        
+        {/* Feedback Widget for assistant messages */}
+        {isAssistant && showFeedback && !feedbackGiven && (
+          <div className="mt-2">
+            <FeedbackWidget
+              messageId={msg.id}
+              providerId={msg.providerId}
+              model={providerLabel}
+              persona={persona}
+              latencyMs={msg.latencyMs}
+              promptSnippet={msg.promptSnippet}
+              responseSnippet={msg.content}
+              onFeedbackSubmitted={() => setFeedbackGiven(true)}
+            />
+          </div>
+        )}
       </div>
 
       {!isAssistant && (
