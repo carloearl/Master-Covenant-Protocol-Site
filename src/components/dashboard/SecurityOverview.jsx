@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,8 +12,19 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell
 } from 'recharts';
 import GlyphLoader from "@/components/GlyphLoader";
+import LiveSecurityFeed from "./LiveSecurityFeed";
+import SecurityKPIs from "./SecurityKPIs";
+import ThreatSummaryPanel from "./ThreatSummaryPanel";
+import ChainStatusWidget from "./ChainStatusWidget";
+import CustomizableWidgets, { AVAILABLE_WIDGETS } from "./CustomizableWidgets";
 
 export default function SecurityOverview() {
+  const [activeWidgets, setActiveWidgets] = useState(['live_feed', 'kpis', 'threats', 'chain_status']);
+
+  const handleWidgetsChange = useCallback((widgets) => {
+    setActiveWidgets(widgets);
+  }, []);
+
   // 1. Active Threats
   const { data: qrThreats, isLoading: loadingQR } = useQuery({
     queryKey: ['qrThreats'],
@@ -84,44 +95,76 @@ export default function SecurityOverview() {
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
+      {/* Header with Customize Button */}
       <div className="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
         <div>
           <h2 className="text-3xl font-bold text-white flex items-center gap-2">
-            <Shield className="w-8 h-8 text-blue-500" />
-            Security Status Dashboard
+            <Shield className="w-8 h-8 text-[#3B82F6] drop-shadow-[0_0_12px_rgba(59,130,246,0.8)]" />
+            Security Command Center
           </h2>
-          <p className="text-gray-400 mt-1">Real-time threat monitoring and compliance overview</p>
+          <p className="text-gray-400 mt-1">Real-time threat monitoring and security posture</p>
         </div>
         <div className="flex items-center gap-3">
-           <Badge variant={activeThreatsCount > 0 ? "destructive" : "outline"} className="text-lg py-1 px-4">
-             {activeThreatsCount > 0 ? `${activeThreatsCount} Active Threats` : "System Secure"}
-           </Badge>
+          <CustomizableWidgets onWidgetsChange={handleWidgetsChange} />
+          <Badge 
+            variant={activeThreatsCount > 0 ? "destructive" : "outline"} 
+            className={`text-lg py-1 px-4 ${
+              activeThreatsCount > 0 
+                ? 'bg-red-500/20 border-red-500/50 text-red-400 animate-pulse' 
+                : 'bg-green-500/20 border-green-500/50 text-green-400'
+            }`}
+          >
+            {activeThreatsCount > 0 ? `${activeThreatsCount} Active Threats` : "System Secure"}
+          </Badge>
         </div>
       </div>
 
-      {/* Top Stats Row */}
+      {/* Security KPIs - Always visible when enabled */}
+      {activeWidgets.includes('kpis') && <SecurityKPIs />}
+
+      {/* Main Dashboard Grid - Live Feed + Threats + Chain */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Live Security Feed - 2 columns */}
+        {activeWidgets.includes('live_feed') && (
+          <div className="lg:col-span-2">
+            <LiveSecurityFeed maxEvents={12} />
+          </div>
+        )}
+
+        {/* Right Column - Threats + Chain Status */}
+        <div className="space-y-6">
+          {activeWidgets.includes('threats') && <ThreatSummaryPanel />}
+          {activeWidgets.includes('chain_status') && <ChainStatusWidget />}
+        </div>
+      </div>
+
+      {/* Original Stats Row - Redesigned */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="glass-card-dark border-blue-500/30">
+        <Card className="bg-slate-900/80 border-2 border-[#3B82F6]/40 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-400">Active Threats</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{activeThreatsCount}</div>
-            <p className="text-xs text-gray-500 mt-1">Requires immediate attention</p>
+            <div className={`text-3xl font-bold ${activeThreatsCount > 0 ? 'text-red-400' : 'text-green-400'}`}>
+              {activeThreatsCount}
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              {activeThreatsCount > 0 ? 'Requires attention' : 'All clear'}
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="glass-card-dark border-blue-500/30">
+        <Card className="bg-slate-900/80 border-2 border-[#3B82F6]/40 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-400">Compliance Score</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-green-400">{compliance.score}%</div>
-            <p className="text-xs text-gray-500 mt-1">Against industry standards</p>
+            <p className="text-xs text-gray-500 mt-1">Industry standards</p>
           </CardContent>
         </Card>
 
-         <Card className="glass-card-dark border-blue-500/30">
+        <Card className="bg-slate-900/80 border-2 border-[#3B82F6]/40 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-400">Protected Assets</CardTitle>
           </CardHeader>
@@ -131,7 +174,7 @@ export default function SecurityOverview() {
           </CardContent>
         </Card>
 
-        <Card className="glass-card-dark border-blue-500/30">
+        <Card className="bg-slate-900/80 border-2 border-[#3B82F6]/40 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-400">System Status</CardTitle>
           </CardHeader>
@@ -145,9 +188,9 @@ export default function SecurityOverview() {
         </Card>
       </div>
 
+      {/* Threat Landscape Chart + Compliance */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Threat Visualization */}
-        <Card className="glass-card-dark border-blue-500/30 lg:col-span-2">
+        <Card className="bg-slate-900/80 border-2 border-[#3B82F6]/40 shadow-[0_0_20px_rgba(59,130,246,0.15)] lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <AlertOctagon className="w-5 h-5 text-red-400" />
@@ -161,7 +204,7 @@ export default function SecurityOverview() {
                 <XAxis dataKey="name" stroke="#888" />
                 <YAxis stroke="#888" />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#111', borderColor: '#333', color: '#fff' }}
+                  contentStyle={{ backgroundColor: '#111', borderColor: '#3B82F6', color: '#fff' }}
                   itemStyle={{ color: '#fff' }}
                 />
                 <Bar dataKey="count" fill="#3b82f6">
@@ -174,8 +217,7 @@ export default function SecurityOverview() {
           </CardContent>
         </Card>
 
-        {/* Compliance Checklist */}
-        <Card className="glass-card-dark border-blue-500/30">
+        <Card className="bg-slate-900/80 border-2 border-[#3B82F6]/40 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-400" />
@@ -198,10 +240,10 @@ export default function SecurityOverview() {
       </div>
 
       {/* Recent Security Events Log */}
-      <Card className="glass-card-dark border-blue-500/30">
+      <Card className="bg-slate-900/80 border-2 border-[#3B82F6]/40 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
-            <FileText className="w-5 h-5 text-blue-400" />
+            <FileText className="w-5 h-5 text-[#3B82F6] drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
             Recent Security Events
           </CardTitle>
         </CardHeader>
@@ -209,12 +251,12 @@ export default function SecurityOverview() {
           <div className="space-y-2">
             {auditLogs?.length > 0 ? (
               auditLogs.map((log) => (
-                <div key={log.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <div key={log.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-transparent hover:border-[#3B82F6]/30">
                   <div className="flex items-center gap-3">
-                    <Activity className="w-4 h-4 text-blue-400" />
+                    <Activity className="w-4 h-4 text-[#3B82F6]" />
                     <div>
-                      <div className="text-white font-medium text-sm">{log.event_type}</div>
-                      <div className="text-gray-500 text-xs">{log.description}</div>
+                      <div className="text-white font-medium text-sm">{log.event_type?.replace(/_/g, ' ').toUpperCase()}</div>
+                      <div className="text-gray-500 text-xs">{log.description || JSON.stringify(log.details)?.slice(0, 50)}</div>
                     </div>
                   </div>
                   <div className="text-right">
@@ -232,26 +274,26 @@ export default function SecurityOverview() {
 
       {/* Active Threats List Details (if any) */}
       {activeThreatsCount > 0 && (
-        <Card className="glass-card-dark border-red-500/30">
+        <Card className="bg-slate-900/80 border-2 border-red-500/50 shadow-[0_0_25px_rgba(239,68,68,0.2)]">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-red-400" />
+              <AlertTriangle className="w-5 h-5 text-red-400 animate-pulse" />
               Active Threat Details
             </CardTitle>
           </CardHeader>
           <CardContent>
              <div className="space-y-2">
                 {qrThreats?.map(threat => (
-                    <Alert key={threat.id} variant="destructive" className="bg-red-950/20 border-red-900/50 text-white">
+                    <Alert key={threat.id} variant="destructive" className="bg-red-950/30 border-red-900/60 text-white">
                         <AlertTriangle className="h-4 w-4" />
                         <AlertTitle>QR Threat: {threat.attack_type}</AlertTitle>
                         <AlertDescription>
-                            Detected on {new Date(threat.created_date).toLocaleString()}. Payload: {threat.payload}
+                            Detected on {new Date(threat.created_date).toLocaleString()}. Payload: {threat.payload?.slice(0, 100)}
                         </AlertDescription>
                     </Alert>
                 ))}
                  {hotzoneThreats?.map(threat => (
-                    <Alert key={threat.id} variant="destructive" className="bg-orange-950/20 border-orange-900/50 text-white">
+                    <Alert key={threat.id} variant="destructive" className="bg-orange-950/30 border-orange-900/60 text-white">
                         <AlertTriangle className="h-4 w-4" />
                         <AlertTitle>Hotzone Threat: {threat.threat_type}</AlertTitle>
                         <AlertDescription>
