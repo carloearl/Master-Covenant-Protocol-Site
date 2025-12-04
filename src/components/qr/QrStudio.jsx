@@ -660,90 +660,165 @@ export default function QrStudio({ initialTab = 'create' }) {
           </TabsContent>
 
           {/* ========== 02_CUSTOMIZE TAB ========== */}
-          <TabsContent value="customize">
-            <div className="grid lg:grid-cols-2 gap-8 relative z-10">
-              <div>
-                <QrCustomizationPanel
-                  customization={customization}
-                  setCustomization={setCustomization}
-                  errorCorrectionLevel={errorCorrectionLevel}
-                  setErrorCorrectionLevel={setErrorCorrectionLevel}
-                  onApply={applyCustomization}
-                />
-              </div>
+                          <TabsContent value="customize">
+                            <div className="grid lg:grid-cols-2 gap-8 relative z-10">
+                              <div>
+                                <QrCustomizationPanel
+                                  customization={customization}
+                                  setCustomization={setCustomization}
+                                  errorCorrectionLevel={errorCorrectionLevel}
+                                  setErrorCorrectionLevel={setErrorCorrectionLevel}
+                                  onApply={applyCustomization}
+                                />
+                              </div>
 
-              {/* Live Preview */}
-              <div>
-                <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg} sticky top-24`}>
-                  <CardHeader className="border-b border-purple-500/20">
-                    <CardTitle className="text-white flex items-center gap-2">
-                      <Eye className="w-5 h-5 text-cyan-400" />
-                      Live Preview
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="pt-6">
-                    {qrGenerated ? (
-                      <div className="space-y-4">
-                        <div 
-                          className="p-8 rounded-lg flex items-center justify-center relative"
-                          style={{
-                            background: customization.background?.type === 'gradient'
-                              ? `linear-gradient(135deg, ${customization.background?.gradientColor1}, ${customization.background?.gradientColor2})`
-                              : customization.background?.type === 'image' && customization.background?.imageUrl
-                                ? `url(${customization.background.imageUrl}) center/cover`
-                                : customization.background?.color || '#FFFFFF'
-                          }}
-                        >
-                          <img 
-                            src={getQRUrl()} 
-                            alt="QR Code" 
-                            className="max-w-full"
-                            style={{
-                              filter: customization.gradient?.enabled 
-                                ? `hue-rotate(${customization.gradient.angle}deg)` 
-                                : 'none'
-                            }}
-                          />
-                          {(logoPreviewUrl || customization.logo?.url) && (
-                            <div 
-                              className="absolute inset-0 flex items-center justify-center"
-                              style={{ opacity: (customization.logo?.opacity || 100) / 100 }}
-                            >
-                              <img 
-                                src={logoPreviewUrl || customization.logo?.url} 
-                                alt="Logo" 
-                                className={`bg-white p-1 ${
-                                  customization.logo?.shape === 'circle' ? 'rounded-full' :
-                                  customization.logo?.shape === 'rounded' ? 'rounded-xl' : 'rounded-lg'
-                                } ${customization.logo?.border ? 'border-2 border-gray-300' : ''}`}
-                                style={{ 
-                                  width: `${customization.logo?.size || 20}%`,
-                                  height: 'auto',
-                                  transform: `rotate(${customization.logo?.rotation || 0}deg)`
-                                }}
-                              />
+                              {/* Live Preview - Updates in Real-Time */}
+                              <div>
+                                <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg} sticky top-24`}>
+                                  <CardHeader className="border-b border-purple-500/20">
+                                    <CardTitle className="text-white flex items-center gap-2">
+                                      <Eye className="w-5 h-5 text-cyan-400" />
+                                      Live Preview
+                                      <span className="ml-auto text-[10px] px-2 py-0.5 bg-green-500/20 text-green-400 rounded-full border border-green-500/30">
+                                        Real-time
+                                      </span>
+                                    </CardTitle>
+                                  </CardHeader>
+                                  <CardContent className="pt-6">
+                                    {(qrGenerated || buildQRPayload()) ? (
+                                      <div className="space-y-4">
+                                        <div 
+                                          className="p-8 rounded-lg flex items-center justify-center relative overflow-hidden transition-all duration-300"
+                                          style={{
+                                            background: customization.background?.type === 'gradient'
+                                              ? `linear-gradient(135deg, ${customization.background?.gradientColor1}, ${customization.background?.gradientColor2})`
+                                              : customization.background?.type === 'image' && customization.background?.imageUrl
+                                                ? `url(${customization.background.imageUrl}) center/cover`
+                                                : customization.background?.color || '#FFFFFF',
+                                            opacity: (customization.background?.transparency || 100) / 100,
+                                            borderRadius: `${customization.qrShape?.cornerRadius || 0}%`
+                                          }}
+                                        >
+                                          {/* Pattern Overlay */}
+                                          {customization.background?.pattern && customization.background.pattern !== 'none' && (
+                                            <div 
+                                              className="absolute inset-0 pointer-events-none opacity-20"
+                                              style={{
+                                                backgroundImage: customization.background.pattern === 'grid' 
+                                                  ? 'linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)'
+                                                  : customization.background.pattern === 'dots'
+                                                    ? 'radial-gradient(circle, rgba(0,0,0,0.15) 1px, transparent 1px)'
+                                                    : 'none',
+                                                backgroundSize: customization.background.pattern === 'grid' ? '20px 20px' : '10px 10px'
+                                              }}
+                                            />
+                                          )}
+
+                                          <img 
+                                            src={getQRUrl()} 
+                                            alt="QR Code" 
+                                            className="max-w-full relative z-10 transition-all duration-300"
+                                            style={{
+                                              filter: customization.gradient?.enabled 
+                                                ? `hue-rotate(${customization.gradient.angle}deg)` 
+                                                : 'none',
+                                              borderRadius: customization.qrShape?.type === 'circle-qr' ? '50%' 
+                                                : customization.qrShape?.type === 'squircle' ? '20%' 
+                                                : customization.qrShape?.type === 'round-frame' ? '12px' : '0'
+                                            }}
+                                          />
+
+                                          {/* Logo Overlay */}
+                                          {(logoPreviewUrl || customization.logo?.url) && (
+                                            <div 
+                                              className="absolute z-20 transition-all duration-300"
+                                              style={{ 
+                                                opacity: (customization.logo?.opacity || 100) / 100,
+                                                top: customization.logo?.position === 'top' ? '15%' 
+                                                  : customization.logo?.position === 'bottom' ? '75%' : '50%',
+                                                left: customization.logo?.position === 'left' ? '15%' 
+                                                  : customization.logo?.position === 'right' ? '75%' : '50%',
+                                                transform: `translate(-50%, -50%) rotate(${customization.logo?.rotation || 0}deg)`
+                                              }}
+                                            >
+                                              <img 
+                                                src={logoPreviewUrl || customization.logo?.url} 
+                                                alt="Logo" 
+                                                className={`bg-white p-1 transition-all duration-300 ${
+                                                  customization.logo?.shape === 'circle' ? 'rounded-full' :
+                                                  customization.logo?.shape === 'rounded' ? 'rounded-xl' : 'rounded-lg'
+                                                } ${customization.logo?.border ? 'border-2 border-gray-300' : ''} ${
+                                                  customization.logo?.dropShadow ? 'shadow-lg' : ''
+                                                }`}
+                                                style={{ 
+                                                  width: `${customization.logo?.size || 20}%`,
+                                                  height: 'auto'
+                                                }}
+                                              />
+                                            </div>
+                                          )}
+                                        </div>
+
+                                        {/* Live Stats */}
+                                        <div className="grid grid-cols-2 gap-2 text-[10px]">
+                                          <div className="p-2 bg-gray-800/50 rounded border border-gray-700">
+                                            <span className="text-gray-500">Dot:</span> <span className="text-cyan-400">{customization.dotStyle}</span>
+                                          </div>
+                                          <div className="p-2 bg-gray-800/50 rounded border border-gray-700">
+                                            <span className="text-gray-500">Eye:</span> <span className="text-purple-400">{customization.eyeStyle}</span>
+                                          </div>
+                                          <div className="p-2 bg-gray-800/50 rounded border border-gray-700">
+                                            <span className="text-gray-500">ECC:</span> <span className="text-green-400">{errorCorrectionLevel}</span>
+                                          </div>
+                                          <div className="p-2 bg-gray-800/50 rounded border border-gray-700">
+                                            <span className="text-gray-500">Size:</span> <span className="text-blue-400">{size}px</span>
+                                          </div>
+                                        </div>
+
+                                        {/* Color Preview */}
+                                        <div className="flex items-center justify-center gap-3 p-2 bg-gray-800/30 rounded-lg">
+                                          <div className="flex items-center gap-1">
+                                            <div className="w-4 h-4 rounded border border-gray-600" style={{ backgroundColor: customization.foregroundColor }} />
+                                            <span className="text-[10px] text-gray-400">FG</span>
+                                          </div>
+                                          <div className="flex items-center gap-1">
+                                            <div className="w-4 h-4 rounded border border-gray-600" style={{ backgroundColor: customization.background?.color || '#FFFFFF' }} />
+                                            <span className="text-[10px] text-gray-400">BG</span>
+                                          </div>
+                                          {customization.gradient?.enabled && (
+                                            <div className="flex items-center gap-1">
+                                              <div 
+                                                className="w-8 h-4 rounded border border-gray-600"
+                                                style={{ 
+                                                  background: `linear-gradient(90deg, ${customization.gradient.color1}, ${customization.gradient.color2}, ${customization.gradient.color3})`
+                                                }} 
+                                              />
+                                              <span className="text-[10px] text-gray-400">Grad</span>
+                                            </div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <div className="h-80 flex items-center justify-center border-2 border-dashed border-gray-700 rounded-lg">
+                                        <div className="text-center">
+                                          <Wand2 className="w-12 h-12 mx-auto mb-4 text-gray-600" />
+                                          <p className="text-gray-500">Generate a QR code in Create tab first</p>
+                                          <Button
+                                            onClick={() => setActiveTab('create')}
+                                            variant="outline"
+                                            size="sm"
+                                            className="mt-4 border-cyan-500/50 text-cyan-400"
+                                          >
+                                            Go to Create
+                                          </Button>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </CardContent>
+                                </Card>
+                              </div>
                             </div>
-                          )}
-                        </div>
-                        
-                        <div className="text-center text-xs text-gray-400 space-y-1">
-                          <p>Dot: {customization.dotStyle} | Eye: {customization.eyeStyle}</p>
-                          <p>ECC: {errorCorrectionLevel} | Size: {size}px</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="h-80 flex items-center justify-center border-2 border-dashed border-gray-700 rounded-lg">
-                        <div className="text-center">
-                          <Wand2 className="w-12 h-12 mx-auto mb-4 text-gray-600" />
-                          <p className="text-gray-500">Generate a QR code in Create tab first</p>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </TabsContent>
+                          </TabsContent>
 
           {/* ========== 03_PREVIEW TAB ========== */}
           <TabsContent value="preview">
