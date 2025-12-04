@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download, Eye, Shield, Clock, FileImage, FileCode, FileText, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
+import { jsPDF } from 'jspdf';
 import QrSecurityBadge from './QrSecurityBadge';
 import StyledQRRenderer from './StyledQRRenderer';
 
