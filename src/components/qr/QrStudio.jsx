@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
-import { Loader2, Wand2, Layers, Shield, Sparkles, Zap, Lock, Eye, Download, Info, BarChart3, Upload } from 'lucide-react';
+import { Loader2, Wand2, Layers, Shield, Sparkles, Zap, Lock, Eye, Download, Info, BarChart3, Upload, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -467,13 +467,16 @@ export default function QrStudio({ initialTab = 'create' }) {
                       Payload Type ({PAYLOAD_TYPES.length}+ Available)
                     </span>
                     <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowPayloadSelector(!showPayloadSelector)}
-                      className="text-cyan-400"
-                    >
-                      {showPayloadSelector ? 'Collapse' : 'Expand'}
-                    </Button>
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => setShowPayloadSelector(!showPayloadSelector)}
+                                                className="text-cyan-400 flex items-center gap-1"
+                                              >
+                                                {showPayloadSelector ? 'Collapse' : 'Expand'}
+                                                <ChevronDown 
+                                                  className={`w-4 h-4 text-purple-400 transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] ${showPayloadSelector ? 'rotate-180' : ''}`} 
+                                                />
+                                              </Button>
                   </CardTitle>
                 </CardHeader>
                 {showPayloadSelector ? (
