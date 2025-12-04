@@ -127,7 +127,7 @@ export default function QrStudio({ initialTab = 'create' }) {
   const selectedPayloadType = PAYLOAD_TYPES.find(t => t.id === payloadType);
   const currentTypeConfig = qrTypes.find(t => t.id === qrType);
 
-  // Risk evaluation with debounce
+  // Risk evaluation with debounce (for advanced mode)
   useEffect(() => {
     if (!payloadValue) {
       setRiskScore(0);
@@ -151,6 +151,206 @@ export default function QrStudio({ initialTab = 'create' }) {
     return () => clearTimeout(timer);
   }, [payloadType, payloadValue]);
 
+  // ========== OG ENGINE FUNCTIONS ==========
+  const buildQRPayload = () => {
+    switch (qrType) {
+      case "url": return qrData.url;
+      case "text": return qrData.text;
+      case "email": return `mailto:${qrData.email}?subject=${encodeURIComponent(qrData.emailSubject)}&body=${encodeURIComponent(qrData.emailBody)}`;
+      case "phone": return `tel:${qrData.phone}`;
+      case "sms": return `SMSTO:${qrData.smsNumber}:${qrData.smsMessage}`;
+      case "wifi": return `WIFI:T:${qrData.wifiEncryption};S:${qrData.wifiSSID};P:${qrData.wifiPassword};H:${qrData.wifiHidden};`;
+      case "vcard": return `BEGIN:VCARD\nVERSION:3.0\nN:${qrData.vcardLastName};${qrData.vcardFirstName}\nFN:${qrData.vcardFirstName} ${qrData.vcardLastName}\nORG:${qrData.vcardOrganization}\nTEL:${qrData.vcardPhone}\nEMAIL:${qrData.vcardEmail}\nURL:${qrData.vcardWebsite}\nADR:${qrData.vcardAddress}\nEND:VCARD`;
+      case "location": return `geo:${qrData.latitude},${qrData.longitude}`;
+      case "event":
+        const startDateTime = `${qrData.eventStartDate}T${qrData.eventStartTime}:00`;
+        const endDateTime = `${qrData.eventEndDate}T${qrData.eventEndTime}:00`;
+        return `BEGIN:VEVENT\nSUMMARY:${qrData.eventTitle}\nLOCATION:${qrData.eventLocation}\nDTSTART:${startDateTime.replace(/[-:]/g, '')}\nDTEND:${endDateTime.replace(/[-:]/g, '')}\nDESCRIPTION:${qrData.eventDescription}\nEND:VEVENT`;
+      default: return "";
+    }
+  };
+
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !file.type.startsWith('image/') || file.size > 2 * 1024 * 1024) {
+      toast.error('Please upload a valid image under 2MB');
+      return;
+    }
+    setLogoFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setLogoPreviewUrl(reader.result);
+    reader.readAsDataURL(file);
+  };
+
+  const uploadLogoToServer = async () => {
+    if (!logoFile) return null;
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file: logoFile });
+      return file_url;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const performNLPAnalysis = async (payload) => {
+    setScanningStage("Running NLP analysis...");
+    try {
+      return await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyze for security threats: "${payload}". Return domain_trust, sentiment_score, entity_legitimacy, url_features (each 0-100), final_score, risk_level, threat_types, phishing_indicators, analysis_details, ml_version`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            domain_trust: { type: "number" },
+            sentiment_score: { type: "number" },
+            entity_legitimacy: { type: "number" },
+            url_features: { type: "number" },
+            final_score: { type: "number" },
+            risk_level: { type: "string" },
+            threat_types: { type: "array", items: { type: "string" } },
+            phishing_indicators: { type: "array", items: { type: "string" } },
+            analysis_details: { type: "string" },
+            ml_version: { type: "string" }
+          }
+        }
+      });
+    } catch {
+      return {
+        domain_trust: 50, sentiment_score: 50, entity_legitimacy: 50, url_features: 50,
+        final_score: 50, risk_level: "medium", threat_types: ["Analysis Error"],
+        phishing_indicators: ["Analysis incomplete"], ml_version: "1.0.0"
+      };
+    }
+  };
+
+  // OG Engine Generate QR (with full security + stego support)
+  const generateOGQR = async () => {
+    const payload = buildQRPayload();
+    if (!payload) {
+      toast.error("Please fill in required fields");
+      return;
+    }
+    
+    setIsScanning(true);
+    setSecurityResult(null);
+    setQrGenerated(false);
+
+    try {
+      const needsSecurity = currentTypeConfig?.needsSecurity;
+      let combinedResult = null;
+
+      if (needsSecurity) {
+        setScanningStage("Performing checks...");
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const staticResult = performStaticURLChecks(payload);
+        const nlpResult = await performNLPAnalysis(payload);
+        
+        const finalScore = Math.round(
+          (nlpResult.domain_trust * 0.4) +
+          (nlpResult.sentiment_score * 0.25) +
+          (nlpResult.entity_legitimacy * 0.2) +
+          (nlpResult.url_features * 0.15)
+        );
+
+        combinedResult = {
+          ...nlpResult,
+          final_score: Math.min(finalScore, staticResult.score),
+          phishing_indicators: [...staticResult.issues, ...(nlpResult.phishing_indicators || [])],
+          risk_level: finalScore >= 80 ? "safe" : finalScore >= 65 ? "medium" : "high"
+        };
+
+        setSecurityResult(combinedResult);
+
+        if (combinedResult.final_score < 65) {
+          const newCodeId = `qr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+          await base44.entities.QRThreatLog.create({
+            incident_id: `threat_${Date.now()}`,
+            code_id: newCodeId,
+            attack_type: combinedResult.threat_types?.[0] || "High Risk",
+            payload,
+            threat_description: `Blocked: Score ${combinedResult.final_score}/100`,
+            severity: "high"
+          });
+          setIsScanning(false);
+          return;
+        }
+      }
+
+      let uploadedLogoUrl = logoFile ? await uploadLogoToServer() : null;
+      setQrGenerated(true);
+
+      const newCodeId = `qr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      setCodeId(newCodeId);
+      const palette = colorPalettes.find(p => p.id === selectedPalette);
+
+      await base44.entities.QRGenHistory.create({
+        code_id: newCodeId,
+        payload,
+        payload_sha256: await generateSHA256(payload),
+        size,
+        creator_id: "guest",
+        status: combinedResult ? (combinedResult.final_score >= 80 ? "safe" : "suspicious") : "safe",
+        type: qrType,
+        image_format: "png",
+        error_correction: errorCorrectionLevel,
+        foreground_color: palette.fg,
+        background_color: palette.bg,
+        has_logo: !!uploadedLogoUrl,
+        logo_url: uploadedLogoUrl
+      });
+
+      if (combinedResult) {
+        await base44.entities.QRAIScore.create({
+          code_id: newCodeId,
+          final_score: combinedResult.final_score,
+          domain_trust: combinedResult.domain_trust,
+          sentiment_score: combinedResult.sentiment_score,
+          entity_legitimacy: combinedResult.entity_legitimacy,
+          risk_level: combinedResult.risk_level,
+          ml_version: combinedResult.ml_version || "1.0.0",
+          phishing_indicators: combinedResult.phishing_indicators || [],
+          threat_types: combinedResult.threat_types || []
+        });
+      }
+
+      // Sync to qrAssetDraft for other tabs
+      setQrAssetDraft({
+        id: newCodeId,
+        title: qrType,
+        safeQrImageUrl: getQRUrl(),
+        artQrImageUrl: null,
+        immutableHash: await generateSHA256(payload),
+        riskScore: combinedResult?.final_score || 100,
+        riskFlags: combinedResult?.phishing_indicators || [],
+        errorCorrectionLevel,
+        artStyle: null,
+        hotZones: []
+      });
+
+      toast.success("QR Code generated successfully!");
+    } catch (error) {
+      console.error("QR generation error:", error);
+      toast.error("QR generation failed");
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const getQRUrl = () => {
+    const payload = buildQRPayload();
+    const palette = colorPalettes.find(p => p.id === selectedPalette);
+    const fgColor = encodeURIComponent(palette.fg.replace('#', ''));
+    const bgColor = encodeURIComponent(palette.bg.replace('#', ''));
+    return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(payload)}&ecc=${errorCorrectionLevel}&color=${fgColor}&bgcolor=${bgColor}`;
+  };
+
+  const downloadQR = () => {
+    const link = document.createElement('a');
+    link.href = getQRUrl();
+    link.download = `glyphlock-qr-${qrType}-${codeId || Date.now()}.png`;
+    link.click();
+  };
+
+  // ========== ADVANCED MODE GENERATE (for 90+ payload types) ==========
   const handleGenerate = async () => {
     if (!title || !payloadValue) {
       toast.error('Title and payload are required');
