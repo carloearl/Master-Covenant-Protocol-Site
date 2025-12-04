@@ -8,25 +8,37 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { 
-  Palette, Square, Circle, Diamond, Grid3X3, Eye, 
-  Upload, Image as ImageIcon, Sparkles, RotateCcw
+  Palette, Square, Circle, Diamond, Grid3X3, Eye, Hexagon,
+  Upload, Image as ImageIcon, Sparkles, RotateCcw, Star,
+  Move, RotateCw, Sun, Droplets, Layers, Frame
 } from 'lucide-react';
 
-// Dot style options
+// Extended Dot style options
 const DOT_STYLES = [
   { id: 'square', name: 'Square', icon: Square },
   { id: 'rounded', name: 'Rounded', icon: Square },
   { id: 'circle', name: 'Circle', icon: Circle },
   { id: 'diamond', name: 'Diamond', icon: Diamond },
-  { id: 'pixel', name: 'Pixel', icon: Grid3X3 }
+  { id: 'pixel', name: 'Pixel', icon: Grid3X3 },
+  { id: 'mosaic', name: 'Mosaic', icon: Grid3X3 },
+  { id: 'microdots', name: 'Microdots', icon: Circle },
+  { id: 'star', name: 'Star', icon: Star },
+  { id: 'hex', name: 'Hexagon', icon: Hexagon },
+  { id: 'bevel', name: 'Bevel', icon: Layers },
+  { id: 'liquid', name: 'Liquid', icon: Droplets }
 ];
 
-// Eye (finder pattern) styles
+// Extended Eye (finder pattern) styles
 const EYE_STYLES = [
   { id: 'square', name: 'Square' },
   { id: 'circular', name: 'Circular' },
   { id: 'rounded', name: 'Rounded' },
-  { id: 'diamond', name: 'Diamond' }
+  { id: 'diamond', name: 'Diamond' },
+  { id: 'frame-thick', name: 'Frame Thick' },
+  { id: 'frame-thin', name: 'Frame Thin' },
+  { id: 'neon-ring', name: 'Neon Ring' },
+  { id: 'orbital', name: 'Orbital' },
+  { id: 'galaxy', name: 'Galaxy Glow' }
 ];
 
 // Logo shape options
@@ -34,6 +46,39 @@ const LOGO_SHAPES = [
   { id: 'circle', name: 'Circle' },
   { id: 'square', name: 'Square' },
   { id: 'rounded', name: 'Rounded' }
+];
+
+// Logo positions
+const LOGO_POSITIONS = [
+  { id: 'center', name: 'Center' },
+  { id: 'top', name: 'Top' },
+  { id: 'bottom', name: 'Bottom' },
+  { id: 'left', name: 'Left' },
+  { id: 'right', name: 'Right' }
+];
+
+// QR Shape presets
+const QR_SHAPES = [
+  { id: 'standard', name: 'Standard' },
+  { id: 'round-frame', name: 'Round Frame' },
+  { id: 'circle-qr', name: 'Circle QR' },
+  { id: 'squircle', name: 'Squircle' }
+];
+
+// Margin presets
+const MARGIN_PRESETS = [
+  { id: 'none', name: 'None', value: 0 },
+  { id: 'small', name: 'Small', value: 1 },
+  { id: 'medium', name: 'Medium', value: 2 },
+  { id: 'large', name: 'Large', value: 4 }
+];
+
+// Background patterns
+const BG_PATTERNS = [
+  { id: 'none', name: 'None' },
+  { id: 'grid', name: 'Grid' },
+  { id: 'dots', name: 'Dots' },
+  { id: 'grain', name: 'Grain' }
 ];
 
 // Preset color palettes
@@ -45,7 +90,9 @@ const COLOR_PRESETS = [
   { id: 'sunset', name: 'Sunset', fg: '#DC2626', bg: '#FEF2F2' },
   { id: 'grape', name: 'Grape', fg: '#7C3AED', bg: '#FFFFFF' },
   { id: 'gold', name: 'Gold', fg: '#B45309', bg: '#FFFBEB' },
-  { id: 'ocean', name: 'Ocean', fg: '#0369A1', bg: '#E0F2FE' }
+  { id: 'ocean', name: 'Ocean', fg: '#0369A1', bg: '#E0F2FE' },
+  { id: 'midnight', name: 'Midnight', fg: '#FFFFFF', bg: '#0F172A' },
+  { id: 'neon', name: 'Neon', fg: '#22D3EE', bg: '#000000' }
 ];
 
 export default function QrCustomizationPanel({ 
@@ -92,6 +139,13 @@ export default function QrCustomizationPanel({
     }));
   };
 
+  const updateShape = (key, value) => {
+    setCustomization(prev => ({
+      ...prev,
+      qrShape: { ...prev.qrShape, [key]: value }
+    }));
+  };
+
   const resetToDefaults = () => {
     setCustomization({
       dotStyle: 'square',
@@ -104,7 +158,9 @@ export default function QrCustomizationPanel({
         angle: 0,
         color1: '#000000',
         color2: '#3B82F6',
-        color3: null
+        color3: '#8B5CF6',
+        color4: null,
+        color5: null
       },
       eyeColors: {
         topLeft: { inner: '#000000', outer: '#000000' },
@@ -117,14 +173,26 @@ export default function QrCustomizationPanel({
         opacity: 100,
         size: 20,
         border: false,
-        shape: 'square'
+        shape: 'square',
+        position: 'center',
+        rotation: 0,
+        dropShadow: false,
+        autoContrast: true
       },
       background: {
         type: 'solid',
         color: '#FFFFFF',
         gradientColor1: '#FFFFFF',
         gradientColor2: '#E5E7EB',
-        imageUrl: null
+        imageUrl: null,
+        blur: 0,
+        pattern: 'none',
+        transparency: 100
+      },
+      qrShape: {
+        type: 'standard',
+        margin: 'medium',
+        cornerRadius: 0
       }
     });
   };
@@ -133,13 +201,14 @@ export default function QrCustomizationPanel({
     <div className="space-y-6">
       {/* Section Tabs */}
       <Tabs value={activeSection} onValueChange={setActiveSection}>
-        <TabsList className="w-full bg-gray-900/50 border border-cyan-500/20 p-1">
-          <TabsTrigger value="dots" className="flex-1 text-xs">Dots</TabsTrigger>
-          <TabsTrigger value="eyes" className="flex-1 text-xs">Eyes</TabsTrigger>
-          <TabsTrigger value="colors" className="flex-1 text-xs">Colors</TabsTrigger>
-          <TabsTrigger value="gradient" className="flex-1 text-xs">Gradient</TabsTrigger>
-          <TabsTrigger value="background" className="flex-1 text-xs">Background</TabsTrigger>
-          <TabsTrigger value="logo" className="flex-1 text-xs">Logo</TabsTrigger>
+        <TabsList className="w-full bg-gray-900/50 border border-cyan-500/20 p-1 flex-wrap h-auto">
+          <TabsTrigger value="dots" className="flex-1 text-xs min-h-[36px]">Dots</TabsTrigger>
+          <TabsTrigger value="eyes" className="flex-1 text-xs min-h-[36px]">Eyes</TabsTrigger>
+          <TabsTrigger value="colors" className="flex-1 text-xs min-h-[36px]">Colors</TabsTrigger>
+          <TabsTrigger value="gradient" className="flex-1 text-xs min-h-[36px]">Gradient</TabsTrigger>
+          <TabsTrigger value="background" className="flex-1 text-xs min-h-[36px]">BG</TabsTrigger>
+          <TabsTrigger value="logo" className="flex-1 text-xs min-h-[36px]">Logo</TabsTrigger>
+          <TabsTrigger value="shape" className="flex-1 text-xs min-h-[36px]">Shape</TabsTrigger>
         </TabsList>
 
         {/* DOT STYLES */}
@@ -148,25 +217,25 @@ export default function QrCustomizationPanel({
             <CardHeader className="pb-3">
               <CardTitle className="text-white text-sm flex items-center gap-2">
                 <Grid3X3 className="w-4 h-4 text-cyan-400" />
-                Dot Style
+                Dot Style (11 Options)
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-5 gap-2">
+              <div className="grid grid-cols-4 gap-2">
                 {DOT_STYLES.map(style => {
                   const Icon = style.icon;
                   return (
                     <button
                       key={style.id}
                       onClick={() => updateCustomization('dotStyle', style.id)}
-                      className={`flex flex-col items-center p-3 rounded-lg border transition-all ${
+                      className={`flex flex-col items-center p-2 rounded-lg border transition-all ${
                         customization.dotStyle === style.id 
                           ? 'border-cyan-500 bg-cyan-500/20 text-cyan-300' 
                           : 'border-gray-700 hover:border-gray-600 text-gray-400'
                       }`}
                     >
-                      <Icon className="w-6 h-6 mb-1" />
-                      <span className="text-[10px] font-medium">{style.name}</span>
+                      <Icon className="w-5 h-5 mb-1" />
+                      <span className="text-[9px] font-medium">{style.name}</span>
                     </button>
                   );
                 })}
@@ -181,22 +250,22 @@ export default function QrCustomizationPanel({
             <CardHeader className="pb-3">
               <CardTitle className="text-white text-sm flex items-center gap-2">
                 <Eye className="w-4 h-4 text-purple-400" />
-                Finder Pattern Style
+                Finder Pattern Style (9 Options)
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-4 gap-2 mb-6">
+              <div className="grid grid-cols-3 gap-2 mb-6">
                 {EYE_STYLES.map(style => (
                   <button
                     key={style.id}
                     onClick={() => updateCustomization('eyeStyle', style.id)}
-                    className={`p-3 rounded-lg border text-center transition-all ${
+                    className={`p-2 rounded-lg border text-center transition-all ${
                       customization.eyeStyle === style.id 
                         ? 'border-purple-500 bg-purple-500/20 text-purple-300' 
                         : 'border-gray-700 hover:border-gray-600 text-gray-400'
                     }`}
                   >
-                    <span className="text-xs font-medium">{style.name}</span>
+                    <span className="text-[10px] font-medium">{style.name}</span>
                   </button>
                 ))}
               </div>
@@ -204,8 +273,8 @@ export default function QrCustomizationPanel({
               {/* Individual Eye Colors */}
               <div className="space-y-4">
                 <Label className="text-white text-xs">Eye Colors (Inner / Outer)</Label>
-                <div className="grid grid-cols-3 gap-4">
-                  {['topLeft', 'topRight', 'bottomLeft'].map((eye, idx) => (
+                <div className="grid grid-cols-3 gap-3">
+                  {['topLeft', 'topRight', 'bottomLeft'].map((eye) => (
                     <div key={eye} className="space-y-2">
                       <Label className="text-gray-400 text-[10px] uppercase">
                         {eye === 'topLeft' ? 'Top Left' : eye === 'topRight' ? 'Top Right' : 'Bottom Left'}
@@ -216,14 +285,14 @@ export default function QrCustomizationPanel({
                           value={customization.eyeColors?.[eye]?.inner || '#000000'}
                           onChange={(e) => updateEyeColors(eye, 'inner', e.target.value)}
                           className="w-1/2 h-8 p-1 bg-gray-800 border-gray-700"
-                          title="Inner color"
+                          title="Inner"
                         />
                         <Input
                           type="color"
                           value={customization.eyeColors?.[eye]?.outer || '#000000'}
                           onChange={(e) => updateEyeColors(eye, 'outer', e.target.value)}
                           className="w-1/2 h-8 p-1 bg-gray-800 border-gray-700"
-                          title="Outer color"
+                          title="Outer"
                         />
                       </div>
                     </div>
@@ -240,11 +309,11 @@ export default function QrCustomizationPanel({
             <CardHeader className="pb-3">
               <CardTitle className="text-white text-sm flex items-center gap-2">
                 <Palette className="w-4 h-4 text-blue-400" />
-                Color Presets
+                Color Presets (10 Options)
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-5 gap-2">
                 {COLOR_PRESETS.map(preset => (
                   <button
                     key={preset.id}
@@ -259,10 +328,10 @@ export default function QrCustomizationPanel({
                     }`}
                   >
                     <div className="flex items-center justify-center gap-1 mb-1">
-                      <div className="w-4 h-4 rounded border border-gray-600" style={{ backgroundColor: preset.fg }} />
-                      <div className="w-4 h-4 rounded border border-gray-600" style={{ backgroundColor: preset.bg }} />
+                      <div className="w-3 h-3 rounded border border-gray-600" style={{ backgroundColor: preset.fg }} />
+                      <div className="w-3 h-3 rounded border border-gray-600" style={{ backgroundColor: preset.bg }} />
                     </div>
-                    <span className="text-[10px] text-white font-medium">{preset.name}</span>
+                    <span className="text-[8px] text-white font-medium">{preset.name}</span>
                   </button>
                 ))}
               </div>
@@ -307,14 +376,14 @@ export default function QrCustomizationPanel({
           </Card>
         </TabsContent>
 
-        {/* GRADIENT */}
+        {/* GRADIENT - Extended 5 colors */}
         <TabsContent value="gradient" className="mt-4">
           <Card className="bg-gray-900/80 border-green-500/30">
             <CardHeader className="pb-3">
               <CardTitle className="text-white text-sm flex items-center justify-between">
                 <span className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-green-400" />
-                  Gradient
+                  Gradient (5 Colors)
                 </span>
                 <Switch
                   checked={customization.gradient?.enabled || false}
@@ -326,31 +395,24 @@ export default function QrCustomizationPanel({
               <CardContent className="space-y-4">
                 <div>
                   <Label className="text-white text-xs mb-2 block">Type</Label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      onClick={() => updateGradient('type', 'linear')}
-                      className={`p-2 rounded-lg border text-xs ${
-                        customization.gradient?.type === 'linear' 
-                          ? 'border-green-500 bg-green-500/20 text-green-300' 
-                          : 'border-gray-700 text-gray-400'
-                      }`}
-                    >
-                      Linear
-                    </button>
-                    <button
-                      onClick={() => updateGradient('type', 'radial')}
-                      className={`p-2 rounded-lg border text-xs ${
-                        customization.gradient?.type === 'radial' 
-                          ? 'border-green-500 bg-green-500/20 text-green-300' 
-                          : 'border-gray-700 text-gray-400'
-                      }`}
-                    >
-                      Radial
-                    </button>
+                  <div className="grid grid-cols-3 gap-2">
+                    {['linear', 'radial', 'diagonal'].map(type => (
+                      <button
+                        key={type}
+                        onClick={() => updateGradient('type', type)}
+                        className={`p-2 rounded-lg border text-xs capitalize ${
+                          customization.gradient?.type === type 
+                            ? 'border-green-500 bg-green-500/20 text-green-300' 
+                            : 'border-gray-700 text-gray-400'
+                        }`}
+                      >
+                        {type}
+                      </button>
+                    ))}
                   </div>
                 </div>
 
-                {customization.gradient?.type === 'linear' && (
+                {(customization.gradient?.type === 'linear' || customization.gradient?.type === 'diagonal') && (
                   <div>
                     <Label className="text-white text-xs mb-2 block">
                       Angle: {customization.gradient?.angle || 0}°
@@ -361,48 +423,32 @@ export default function QrCustomizationPanel({
                       min={0}
                       max={360}
                       step={15}
-                      className="mt-2"
                     />
                   </div>
                 )}
 
-                <div className="grid grid-cols-3 gap-2">
-                  <div>
-                    <Label className="text-white text-[10px] mb-1 block">Color 1</Label>
-                    <Input
-                      type="color"
-                      value={customization.gradient?.color1 || '#000000'}
-                      onChange={(e) => updateGradient('color1', e.target.value)}
-                      className="w-full h-10 p-1 bg-gray-800 border-gray-700"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-white text-[10px] mb-1 block">Color 2</Label>
-                    <Input
-                      type="color"
-                      value={customization.gradient?.color2 || '#3B82F6'}
-                      onChange={(e) => updateGradient('color2', e.target.value)}
-                      className="w-full h-10 p-1 bg-gray-800 border-gray-700"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-white text-[10px] mb-1 block">Color 3</Label>
-                    <Input
-                      type="color"
-                      value={customization.gradient?.color3 || '#8B5CF6'}
-                      onChange={(e) => updateGradient('color3', e.target.value)}
-                      className="w-full h-10 p-1 bg-gray-800 border-gray-700"
-                    />
-                  </div>
+                {/* 5 Color Gradient */}
+                <div className="grid grid-cols-5 gap-2">
+                  {[1, 2, 3, 4, 5].map(num => (
+                    <div key={num}>
+                      <Label className="text-white text-[9px] mb-1 block">Color {num}</Label>
+                      <Input
+                        type="color"
+                        value={customization.gradient?.[`color${num}`] || (num <= 3 ? '#000000' : '#3B82F6')}
+                        onChange={(e) => updateGradient(`color${num}`, e.target.value)}
+                        className="w-full h-8 p-1 bg-gray-800 border-gray-700"
+                      />
+                    </div>
+                  ))}
                 </div>
 
                 {/* Gradient Preview */}
                 <div 
-                  className="h-8 rounded-lg border border-gray-700"
+                  className="h-10 rounded-lg border border-gray-700"
                   style={{
                     background: customization.gradient?.type === 'radial'
-                      ? `radial-gradient(circle, ${customization.gradient?.color1}, ${customization.gradient?.color2}${customization.gradient?.color3 ? `, ${customization.gradient.color3}` : ''})`
-                      : `linear-gradient(${customization.gradient?.angle || 0}deg, ${customization.gradient?.color1}, ${customization.gradient?.color2}${customization.gradient?.color3 ? `, ${customization.gradient.color3}` : ''})`
+                      ? `radial-gradient(circle, ${customization.gradient?.color1 || '#000'}, ${customization.gradient?.color2 || '#3B82F6'}, ${customization.gradient?.color3 || '#8B5CF6'}${customization.gradient?.color4 ? `, ${customization.gradient.color4}` : ''}${customization.gradient?.color5 ? `, ${customization.gradient.color5}` : ''})`
+                      : `linear-gradient(${customization.gradient?.angle || 0}deg, ${customization.gradient?.color1 || '#000'}, ${customization.gradient?.color2 || '#3B82F6'}, ${customization.gradient?.color3 || '#8B5CF6'}${customization.gradient?.color4 ? `, ${customization.gradient.color4}` : ''}${customization.gradient?.color5 ? `, ${customization.gradient.color5}` : ''})`
                   }}
                 />
               </CardContent>
@@ -410,7 +456,7 @@ export default function QrCustomizationPanel({
           </Card>
         </TabsContent>
 
-        {/* BACKGROUND */}
+        {/* BACKGROUND - Extended */}
         <TabsContent value="background" className="mt-4">
           <Card className="bg-gray-900/80 border-yellow-500/30">
             <CardHeader className="pb-3">
@@ -483,22 +529,70 @@ export default function QrCustomizationPanel({
               )}
 
               {customization.background?.type === 'image' && (
-                <div>
-                  <Label className="text-white text-xs mb-2 block">Image URL</Label>
-                  <Input
-                    type="text"
-                    value={customization.background?.imageUrl || ''}
-                    onChange={(e) => updateBackground('imageUrl', e.target.value)}
-                    placeholder="https://example.com/bg.png"
-                    className="h-10 bg-gray-800 border-gray-700 text-white text-xs"
-                  />
-                </div>
+                <>
+                  <div>
+                    <Label className="text-white text-xs mb-2 block">Image URL</Label>
+                    <Input
+                      type="text"
+                      value={customization.background?.imageUrl || ''}
+                      onChange={(e) => updateBackground('imageUrl', e.target.value)}
+                      placeholder="https://example.com/bg.png"
+                      className="h-10 bg-gray-800 border-gray-700 text-white text-xs"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-white text-xs mb-2 block">
+                      Blur: {customization.background?.blur || 0}px
+                    </Label>
+                    <Slider
+                      value={[customization.background?.blur || 0]}
+                      onValueChange={([val]) => updateBackground('blur', val)}
+                      min={0}
+                      max={20}
+                      step={1}
+                    />
+                  </div>
+                </>
               )}
+
+              {/* Pattern Overlay */}
+              <div>
+                <Label className="text-white text-xs mb-2 block">Pattern Overlay</Label>
+                <div className="grid grid-cols-4 gap-2">
+                  {BG_PATTERNS.map(pattern => (
+                    <button
+                      key={pattern.id}
+                      onClick={() => updateBackground('pattern', pattern.id)}
+                      className={`p-2 rounded-lg border text-xs ${
+                        customization.background?.pattern === pattern.id 
+                          ? 'border-yellow-500 bg-yellow-500/20 text-yellow-300' 
+                          : 'border-gray-700 text-gray-400'
+                      }`}
+                    >
+                      {pattern.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Transparency */}
+              <div>
+                <Label className="text-white text-xs mb-2 block">
+                  Transparency: {customization.background?.transparency || 100}%
+                </Label>
+                <Slider
+                  value={[customization.background?.transparency || 100]}
+                  onValueChange={([val]) => updateBackground('transparency', val)}
+                  min={0}
+                  max={100}
+                  step={5}
+                />
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        {/* LOGO */}
+        {/* LOGO - Extended */}
         <TabsContent value="logo" className="mt-4">
           <Card className="bg-gray-900/80 border-pink-500/30">
             <CardHeader className="pb-3">
@@ -519,40 +613,68 @@ export default function QrCustomizationPanel({
                 />
               </div>
 
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-white text-xs mb-2 block">
+                    Opacity: {customization.logo?.opacity || 100}%
+                  </Label>
+                  <Slider
+                    value={[customization.logo?.opacity || 100]}
+                    onValueChange={([val]) => updateLogo('opacity', val)}
+                    min={10}
+                    max={100}
+                    step={5}
+                  />
+                </div>
+                <div>
+                  <Label className="text-white text-xs mb-2 block">
+                    Size: {customization.logo?.size || 20}%
+                  </Label>
+                  <Slider
+                    value={[customization.logo?.size || 20]}
+                    onValueChange={([val]) => updateLogo('size', val)}
+                    min={10}
+                    max={40}
+                    step={2}
+                  />
+                </div>
+              </div>
+
+              {/* Position */}
+              <div>
+                <Label className="text-white text-xs mb-2 block">Position</Label>
+                <div className="grid grid-cols-5 gap-2">
+                  {LOGO_POSITIONS.map(pos => (
+                    <button
+                      key={pos.id}
+                      onClick={() => updateLogo('position', pos.id)}
+                      className={`p-2 rounded-lg border text-[10px] ${
+                        customization.logo?.position === pos.id 
+                          ? 'border-pink-500 bg-pink-500/20 text-pink-300' 
+                          : 'border-gray-700 text-gray-400'
+                      }`}
+                    >
+                      {pos.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Rotation */}
               <div>
                 <Label className="text-white text-xs mb-2 block">
-                  Opacity: {customization.logo?.opacity || 100}%
+                  Rotation: {customization.logo?.rotation || 0}°
                 </Label>
                 <Slider
-                  value={[customization.logo?.opacity || 100]}
-                  onValueChange={([val]) => updateLogo('opacity', val)}
-                  min={10}
-                  max={100}
-                  step={5}
+                  value={[customization.logo?.rotation || 0]}
+                  onValueChange={([val]) => updateLogo('rotation', val)}
+                  min={0}
+                  max={360}
+                  step={15}
                 />
               </div>
 
-              <div>
-                <Label className="text-white text-xs mb-2 block">
-                  Size: {customization.logo?.size || 20}%
-                </Label>
-                <Slider
-                  value={[customization.logo?.size || 20]}
-                  onValueChange={([val]) => updateLogo('size', val)}
-                  min={10}
-                  max={40}
-                  step={2}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <Label className="text-white text-xs">Border</Label>
-                <Switch
-                  checked={customization.logo?.border || false}
-                  onCheckedChange={(checked) => updateLogo('border', checked)}
-                />
-              </div>
-
+              {/* Shape */}
               <div>
                 <Label className="text-white text-xs mb-2 block">Shape</Label>
                 <div className="grid grid-cols-3 gap-2">
@@ -571,6 +693,98 @@ export default function QrCustomizationPanel({
                   ))}
                 </div>
               </div>
+
+              {/* Switches */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-white text-xs">Border</Label>
+                  <Switch
+                    checked={customization.logo?.border || false}
+                    onCheckedChange={(checked) => updateLogo('border', checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label className="text-white text-xs">Shadow</Label>
+                  <Switch
+                    checked={customization.logo?.dropShadow || false}
+                    onCheckedChange={(checked) => updateLogo('dropShadow', checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label className="text-white text-xs">Auto Contrast</Label>
+                  <Switch
+                    checked={customization.logo?.autoContrast !== false}
+                    onCheckedChange={(checked) => updateLogo('autoContrast', checked)}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* QR SHAPE - New */}
+        <TabsContent value="shape" className="mt-4">
+          <Card className="bg-gray-900/80 border-indigo-500/30">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-white text-sm flex items-center gap-2">
+                <Frame className="w-4 h-4 text-indigo-400" />
+                QR Shape & Frame
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* QR Shape Type */}
+              <div>
+                <Label className="text-white text-xs mb-2 block">Shape</Label>
+                <div className="grid grid-cols-4 gap-2">
+                  {QR_SHAPES.map(shape => (
+                    <button
+                      key={shape.id}
+                      onClick={() => updateShape('type', shape.id)}
+                      className={`p-2 rounded-lg border text-[10px] ${
+                        customization.qrShape?.type === shape.id 
+                          ? 'border-indigo-500 bg-indigo-500/20 text-indigo-300' 
+                          : 'border-gray-700 text-gray-400'
+                      }`}
+                    >
+                      {shape.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Margin Presets */}
+              <div>
+                <Label className="text-white text-xs mb-2 block">Margin</Label>
+                <div className="grid grid-cols-4 gap-2">
+                  {MARGIN_PRESETS.map(margin => (
+                    <button
+                      key={margin.id}
+                      onClick={() => updateShape('margin', margin.id)}
+                      className={`p-2 rounded-lg border text-xs ${
+                        customization.qrShape?.margin === margin.id 
+                          ? 'border-indigo-500 bg-indigo-500/20 text-indigo-300' 
+                          : 'border-gray-700 text-gray-400'
+                      }`}
+                    >
+                      {margin.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Corner Radius */}
+              <div>
+                <Label className="text-white text-xs mb-2 block">
+                  Corner Radius: {customization.qrShape?.cornerRadius || 0}%
+                </Label>
+                <Slider
+                  value={[customization.qrShape?.cornerRadius || 0]}
+                  onValueChange={([val]) => updateShape('cornerRadius', val)}
+                  min={0}
+                  max={50}
+                  step={5}
+                />
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -579,7 +793,7 @@ export default function QrCustomizationPanel({
       {/* Error Correction */}
       <Card className="bg-gray-900/80 border-gray-700">
         <CardHeader className="pb-3">
-          <CardTitle className="text-white text-sm">Error Correction</CardTitle>
+          <CardTitle className="text-white text-sm">Error Correction Level</CardTitle>
         </CardHeader>
         <CardContent>
           <Select value={errorCorrectionLevel} onValueChange={setErrorCorrectionLevel}>
@@ -587,14 +801,14 @@ export default function QrCustomizationPanel({
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-gray-800 border-gray-700">
-              <SelectItem value="L">L - Low (7%)</SelectItem>
-              <SelectItem value="M">M - Medium (15%)</SelectItem>
-              <SelectItem value="Q">Q - Quartile (25%)</SelectItem>
-              <SelectItem value="H">H - High (30%)</SelectItem>
+              <SelectItem value="L">L - Low (7%) - Smallest</SelectItem>
+              <SelectItem value="M">M - Medium (15%) - Balanced</SelectItem>
+              <SelectItem value="Q">Q - Quartile (25%) - Better</SelectItem>
+              <SelectItem value="H">H - High (30%) - Best for logos</SelectItem>
             </SelectContent>
           </Select>
           <p className="text-[10px] text-gray-500 mt-2">
-            Higher = more data recovery, larger QR code
+            Higher level = more error recovery, use H for logo embedding
           </p>
         </CardContent>
       </Card>
@@ -614,7 +828,7 @@ export default function QrCustomizationPanel({
           className="flex-1 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500"
         >
           <Sparkles className="w-4 h-4 mr-2" />
-          Apply Customization
+          Apply Changes
         </Button>
       </div>
     </div>
