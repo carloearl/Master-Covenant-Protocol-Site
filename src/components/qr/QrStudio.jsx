@@ -650,12 +650,30 @@ export default function QrStudio({ initialTab = 'create' }) {
                                             style={{ transform: 'scale(1.15)', transformOrigin: 'top left' }}
                                           />
 
-                                          {/* Local QR Renderer */}
-                                          <div className="absolute top-[40%] left-[76%] w-[22%] -translate-x-1/2 -translate-y-1/2">
+                                          {/* QR inside GL logo - fixed square, no customization affects size/position */}
+                                          <div 
+                                            className="absolute flex items-center justify-center"
+                                            style={{
+                                              top: '50%',
+                                              left: '63%',
+                                              width: '115px',
+                                              height: '115px',
+                                              transform: 'translate(-50%, -50%)',
+                                              background: '#FFFFFF',
+                                              borderRadius: '4px'
+                                            }}
+                                          >
                                             <StyledQRRenderer
                                               text={qrGenerated ? buildQRPayload() : 'https://glyphlock.io'}
-                                              size={150}
-                                              customization={customization}
+                                              size={105}
+                                              customization={{
+                                                dotStyle: 'square',
+                                                eyeStyle: 'square',
+                                                foregroundColor: '#000000',
+                                                backgroundColor: '#FFFFFF',
+                                                gradient: { enabled: false },
+                                                qrShape: { margin: 'none' }
+                                              }}
                                               onDataUrlReady={handleQrDataUrlReady}
                                             />
                                           </div>
