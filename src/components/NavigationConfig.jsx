@@ -1,4 +1,3 @@
-
 /**
  * UNIFIED NAVIGATION CONFIGURATION
  * Single source of truth for Navbar and Footer
@@ -42,6 +41,8 @@ export const NAV_SECTIONS = [
       { label: "SDK Docs", page: "SDKDocs" },
       { label: "Dream Team", page: "DreamTeam" },
       { label: "Pricing", page: "Pricing" },
+      { label: "FAQ", page: "FAQ" },
+      { label: "Roadmap", page: "Roadmap" },
       { label: "Consultation", page: "Consultation" }
     ]
   }
@@ -67,7 +68,8 @@ export const FOOTER_LINKS = {
     { label: "Dream Team", page: "DreamTeam" },
     { label: "Pricing", page: "Pricing" },
     { label: "FAQ", page: "FAQ" },
-    { label: "Roadmap", page: "Roadmap" }
+    { label: "Roadmap", page: "Roadmap" },
+    { label: "Consultation", page: "Consultation" }
   ],
   legal: [
     { label: "Privacy Policy", page: "Privacy" },
