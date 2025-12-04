@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -7,9 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Loader2, Wand2, Layers, Shield, Sparkles, Zap } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
+import { Loader2, Wand2, Layers, Shield, Sparkles, Zap, Lock, Eye, EyeOff, Upload, Download, Image as ImageIcon, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   GlyphCard, 
   GlyphButton, 
@@ -27,6 +29,12 @@ import QrHotZoneEditor from './QrHotZoneEditor';
 import QrStegoArtBuilder from './QrStegoArtBuilder';
 import AnalyticsPanel from './AnalyticsPanel';
 import QrBatchUploader from './QrBatchUploader';
+import SecurityStatus from './SecurityStatus';
+import SteganographicQR from './SteganographicQR';
+import QRTypeSelector from '@/components/crypto/QRTypeSelector';
+import QRTypeForm from '@/components/crypto/QRTypeForm';
+import ColorPaletteSelector from '@/components/crypto/ColorPaletteSelector';
+import { generateSHA256, performStaticURLChecks } from '@/components/utils/securityUtils';
 
 export default function QrStudio({ initialTab = 'create' }) {
   const [activeTab, setActiveTab] = useState(initialTab);
