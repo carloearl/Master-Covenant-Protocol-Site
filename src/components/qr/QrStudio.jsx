@@ -651,12 +651,35 @@ export default function QrStudio({ initialTab = 'create' }) {
                                             style={{ transform: 'scale(1.15)', transformOrigin: 'top left' }}
                                           />
 
-                                          <img
-                                            src={qrDataUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrGenerated ? buildQRPayload() : 'https://glyphlock.io')}&ecc=H&color=000000&bgcolor=FFFFFF&margin=0&format=png`}
-                                            alt={qrGenerated ? "Generated QR" : "Default QR"}
-                                            className="absolute top-[40%] left-[76%] w-[21%] -translate-x-1/2 -translate-y-1/2 object-contain select-none pointer-events-none"
-                                            style={{ imageRendering: 'pixelated' }}
-                                          />
+                                          {/* QR Code rendered locally - no external API */}
+                                          <div 
+                                            className="absolute top-[40%] left-[76%] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                                            style={{ width: '25%' }}
+                                          >
+                                            <CanvasQrRenderer
+                                              text={qrGenerated ? buildQRPayload() : 'https://glyphlock.io'}
+                                              size={120}
+                                              errorCorrectionLevel={errorCorrectionLevel}
+                                              customization={{
+                                                dotStyle: 'square',
+                                                eyeStyle: 'square',
+                                                foregroundColor: '#000000',
+                                                backgroundColor: '#ffffff',
+                                                gradient: { enabled: false },
+                                                eyeColors: {
+                                                  topLeft: { inner: '#000000', outer: '#000000' },
+                                                  topRight: { inner: '#000000', outer: '#000000' },
+                                                  bottomLeft: { inner: '#000000', outer: '#000000' }
+                                                },
+                                                background: { type: 'solid', color: '#ffffff' },
+                                                qrShape: { margin: 'small' }
+                                              }}
+                                              onDataUrlReady={(url) => {
+                                                if (!qrGenerated) return; // Only update if generated
+                                                handleQrDataUrlReady(url);
+                                              }}
+                                            />
+                                          </div>
 
 
                   </div>
