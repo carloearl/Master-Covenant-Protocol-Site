@@ -25,8 +25,8 @@ import { PAYLOAD_TYPES } from './config/PayloadTypesCatalog';
 import PayloadTypeSelector from './PayloadTypeSelector';
 import QrSecurityBadge from './QrSecurityBadge';
 import QrPreviewCanvas from './QrPreviewCanvas';
-import QrHotZoneEditor from './QrHotZoneEditor';
 import QrStegoArtBuilder from './QrStegoArtBuilder';
+import QrCustomizationPanel from './QrCustomizationPanel';
 import AnalyticsPanel from './AnalyticsPanel';
 import QrBatchUploader from './QrBatchUploader';
 import SecurityStatus from './SecurityStatus';
@@ -42,7 +42,7 @@ export default function QrStudio({ initialTab = 'create' }) {
   // Sync activeTab with initialTab prop (for subroute pages)
   React.useEffect(() => {
     if (initialTab && initialTab !== activeTab) {
-      const validTabs = ['create', 'preview', 'customize', 'hotzones', 'stego', 'security', 'analytics', 'bulk'];
+      const validTabs = ['create', 'preview', 'customize', 'stego', 'security', 'analytics', 'bulk'];
       if (validTabs.includes(initialTab)) {
         setActiveTab(initialTab);
       }
@@ -77,6 +77,42 @@ export default function QrStudio({ initialTab = 'create' }) {
   const [qrAssetDraft, setQrAssetDraft] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [showPayloadSelector, setShowPayloadSelector] = useState(false);
+
+  // ========== CUSTOMIZATION STATE ==========
+  const [customization, setCustomization] = useState({
+    dotStyle: 'square',
+    eyeStyle: 'square',
+    foregroundColor: '#000000',
+    backgroundColor: '#FFFFFF',
+    gradient: {
+      enabled: false,
+      type: 'linear',
+      angle: 0,
+      color1: '#000000',
+      color2: '#3B82F6',
+      color3: null
+    },
+    eyeColors: {
+      topLeft: { inner: '#000000', outer: '#000000' },
+      topRight: { inner: '#000000', outer: '#000000' },
+      bottomLeft: { inner: '#000000', outer: '#000000' }
+    },
+    logo: {
+      url: null,
+      file: null,
+      opacity: 100,
+      size: 20,
+      border: false,
+      shape: 'square'
+    },
+    background: {
+      type: 'solid',
+      color: '#FFFFFF',
+      gradientColor1: '#FFFFFF',
+      gradientColor2: '#E5E7EB',
+      imageUrl: null
+    }
+  });
 
   // ========== OG ENGINE STATE (from QRGeneratorTab) ==========
   const [qrType, setQrType] = useState("url");
@@ -337,10 +373,29 @@ export default function QrStudio({ initialTab = 'create' }) {
 
   const getQRUrl = () => {
     const payload = buildQRPayload();
-    const palette = colorPalettes.find(p => p.id === selectedPalette);
-    const fgColor = encodeURIComponent(palette.fg.replace('#', ''));
-    const bgColor = encodeURIComponent(palette.bg.replace('#', ''));
-    return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(payload)}&ecc=${errorCorrectionLevel}&color=${fgColor}&bgcolor=${bgColor}`;
+    // Use customization colors if gradient not enabled, otherwise use foreground
+    const fgColor = customization.gradient?.enabled 
+      ? customization.gradient.color1.replace('#', '')
+      : (customization.foregroundColor || '#000000').replace('#', '');
+    const bgColor = customization.background?.type === 'solid'
+      ? (customization.background?.color || '#FFFFFF').replace('#', '')
+      : 'FFFFFF';
+    return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(payload)}&ecc=${errorCorrectionLevel}&color=${encodeURIComponent(fgColor)}&bgcolor=${encodeURIComponent(bgColor)}`;
+  };
+
+  // Apply customization changes and regenerate QR
+  const applyCustomization = () => {
+    if (qrGenerated) {
+      // Update qrAssetDraft with new customization
+      setQrAssetDraft(prev => ({
+        ...prev,
+        customization: { ...customization },
+        safeQrImageUrl: getQRUrl()
+      }));
+      toast.success('Customization applied!');
+    } else {
+      toast.info('Generate a QR code first, then customize');
+    }
   };
 
   const downloadQR = () => {
