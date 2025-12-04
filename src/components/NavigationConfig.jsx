@@ -1,3 +1,4 @@
+
 // Unified Navigation Configuration
 // Single source of truth for Navbar and Footer
 // VERIFIED PAGES - All routes confirmed to exist
@@ -27,8 +28,7 @@ export const NAV_SECTIONS = [
     label: "Solutions",
     items: [
       { label: "Security Tools", page: "SecurityTools" },
-      { label: "QR Generator", page: "QrGenerator" },
-      { label: "Steganography", page: "Steganography" },
+      { label: "QR Studio", page: "Qr" },
       { label: "Hotzone Mapper", page: "HotzoneMapper" },
       { label: "Image Lab", page: "ImageLab" },
       { label: "GlyphBot AI", page: "GlyphBot" }
@@ -57,8 +57,7 @@ export const FOOTER_LINKS = {
   ],
   solutions: [
     { label: "Security Tools", page: "SecurityTools" },
-    { label: "QR Generator", page: "QrGenerator" },
-    { label: "Steganography", page: "Steganography" },
+    { label: "QR Studio", page: "Qr" },
     { label: "Hotzone Mapper", page: "HotzoneMapper" },
     { label: "Image Lab", page: "ImageLab" },
     { label: "GlyphBot AI", page: "GlyphBot" }

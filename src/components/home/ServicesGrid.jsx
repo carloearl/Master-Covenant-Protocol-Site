@@ -19,9 +19,9 @@ const services = [
     icon: FileCode
   },
   {
-    title: "Visual Cryptography",
-    description: "QR generation and steganography tools",
-    link: "VisualCryptography",
+    title: "QR Studio",
+    description: "Secure QR generation with steganography & anti-quishing",
+    link: "Qr",
     image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/ef8ed5e35_ee8d4930-e046-49b0-8beb-87745181d506.jpg",
     icon: Eye
   },

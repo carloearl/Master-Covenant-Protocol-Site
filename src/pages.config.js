@@ -62,6 +62,7 @@ import QrGeneratorBulk from './pages/QrGeneratorBulk';
 import ProviderConsole from './pages/ProviderConsole';
 import SDKDocs from './pages/SDKDocs';
 import HotzoneMapper from './pages/HotzoneMapper';
+import Qr from './pages/Qr';
 import __Layout from './Layout.jsx';
 
 
@@ -130,6 +131,7 @@ export const PAGES = {
     "ProviderConsole": ProviderConsole,
     "SDKDocs": SDKDocs,
     "HotzoneMapper": HotzoneMapper,
+    "Qr": Qr,
 }
 
 export const pagesConfig = {
