@@ -788,38 +788,31 @@ export default function QrStudio({ initialTab = 'create' }) {
                 </Card>
               </div>
 
-              {/* Right Column - Quick Settings */}
+              {/* Right Column - Actions & Info */}
               <div className="lg:col-span-1 space-y-6">
                 <Card className={`${GlyphCard.glass}`}>
                   <CardHeader>
-                    <CardTitle className="text-white text-sm">Quick Settings</CardTitle>
+                    <CardTitle className="text-white text-sm">Next Steps</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div>
-                      <Label className="text-white text-xs mb-2 block">Foreground</Label>
-                      <Input
-                        type="color"
-                        value={customization.foregroundColor}
-                        onChange={(e) => setCustomization(prev => ({...prev, foregroundColor: e.target.value}))}
-                        className="w-full h-10 p-1 bg-gray-800 border-gray-700"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-white text-xs mb-2 block">Background</Label>
-                      <Input
-                        type="color"
-                        value={customization.backgroundColor}
-                        onChange={(e) => setCustomization(prev => ({...prev, backgroundColor: e.target.value}))}
-                        className="w-full h-10 p-1 bg-gray-800 border-gray-700"
-                      />
-                    </div>
+                    <p className="text-xs text-gray-400">
+                      After generating, customize colors, styles, and add logos in the Customize tab.
+                    </p>
                     <Button
                       onClick={() => setActiveTab('customize')}
                       variant="outline"
                       className="w-full border-cyan-500/50 text-white text-xs"
                     >
                       <Layers className="w-3 h-3 mr-2" />
-                      Full Customization →
+                      Go to Customization →
+                    </Button>
+                    <Button
+                      onClick={() => setActiveTab('stego')}
+                      variant="outline"
+                      className="w-full border-purple-500/50 text-white text-xs"
+                    >
+                      <Lock className="w-3 h-3 mr-2" />
+                      Steganography Tools →
                     </Button>
                   </CardContent>
                 </Card>
@@ -828,12 +821,6 @@ export default function QrStudio({ initialTab = 'create' }) {
 
             {/* Security Status - OG Engine */}
             {securityResult && <SecurityStatus securityResult={securityResult} />}
-
-            {/* Steganographic QR - OG Engine LSB Encode/Decode */}
-            <SteganographicQR 
-              qrPayload={buildQRPayload()} 
-              qrGenerated={qrGenerated && (!securityResult || securityResult.final_score >= 65)}
-            />
           </div>
         </TabsContent>
 

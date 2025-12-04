@@ -323,4 +323,32 @@
 
 ---
 
-**PHASE 3F COMPLETE - FULL OVERHAUL DONE**
+## PHASE 3F PATCH B - REDUNDANCY REMOVAL
+
+### REMOVED FROM CREATE TAB
+- ❌ SteganographicQR component (moved to STEGO tab only)
+- ❌ Quick Settings color pickers (foreground/background)
+- ❌ All color controls (now in CUSTOMIZE only)
+
+### CONSOLIDATED
+- ✅ All color tools → CUSTOMIZE tab only
+- ✅ All stego tools → STEGO tab only
+- ✅ Preview displays final QR with all customizations
+
+### STEGO WORKFLOW (UNIFIED)
+Primary: `QrStegoArtBuilder.jsx` - AI art-based stego for advanced mode
+Secondary: `SteganographicQR.jsx` - LSB encode/decode engine
+Deprecated: `crypto/SteganographyTab.jsx` - legacy, not used in QrStudio
+
+### TAB RESPONSIBILITIES
+- **01_CREATE**: Payload type, form, error correction, generate button, risk badge
+- **02_CUSTOMIZE**: ALL color tools, dot/eye styles, gradients, logos, backgrounds
+- **03_PREVIEW**: Final rendered QR with all customizations applied
+- **04_STEGO**: QrStegoArtBuilder + SteganographicQR (dual engine)
+- **05_SECURITY**: Hash verification, AI scan results, risk assessment
+- **06_ANALYTICS**: Scan metrics via AnalyticsPanel
+- **07_BULK**: Batch upload via QrBatchUploader
+
+---
+
+**PHASE 3F PATCH B COMPLETE - REDUNDANCY ELIMINATED**
