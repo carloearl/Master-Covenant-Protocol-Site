@@ -49,18 +49,19 @@ export default function QrStudio({ initialTab = 'create' }) {
     }
   }, [initialTab]);
 
-  // Update URL when tab changes (use real routes instead of hashes)
+  // Update URL when tab changes
   React.useEffect(() => {
-    // Only update URL if we're on a hash-based route (legacy support)
-    // Subroute pages already have the correct URL
     const currentPath = window.location.pathname;
-    if (currentPath === '/qr-generator' || currentPath === '/QrGenerator') {
-      // Legacy hash support for main page
+    if (currentPath === '/qr' || currentPath === '/Qr') {
       if (activeTab && activeTab !== 'create') {
-        window.history.replaceState(null, '', `/qr-generator/${activeTab}`);
+        window.history.replaceState(null, '', `/qr?tab=${activeTab}`);
+      } else {
+        window.history.replaceState(null, '', '/qr');
       }
     }
   }, [activeTab]);
+
+  // ========== NEW UI STATE (Navbar Studio) ==========
   const [payloadType, setPayloadType] = useState('url');
   const [payloadValue, setPayloadValue] = useState('');
   const [title, setTitle] = useState('');
@@ -77,7 +78,54 @@ export default function QrStudio({ initialTab = 'create' }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showPayloadSelector, setShowPayloadSelector] = useState(false);
 
+  // ========== OG ENGINE STATE (from QRGeneratorTab) ==========
+  const [qrType, setQrType] = useState("url");
+  const [qrData, setQrData] = useState({
+    url: "", text: "", email: "", emailSubject: "", emailBody: "",
+    phone: "", smsNumber: "", smsMessage: "",
+    wifiSSID: "", wifiPassword: "", wifiEncryption: "WPA", wifiHidden: false,
+    vcardFirstName: "", vcardLastName: "", vcardOrganization: "", vcardPhone: "", vcardEmail: "", vcardWebsite: "", vcardAddress: "",
+    latitude: "", longitude: "",
+    eventTitle: "", eventLocation: "", eventStartDate: "", eventStartTime: "", eventEndDate: "", eventEndTime: "", eventDescription: ""
+  });
+  const [size, setSize] = useState(512);
+  const [qrGenerated, setQrGenerated] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const [securityResult, setSecurityResult] = useState(null);
+  const [codeId, setCodeId] = useState(null);
+  const [scanningStage, setScanningStage] = useState("");
+  const [selectedPalette, setSelectedPalette] = useState("classic");
+  const [customColors, setCustomColors] = useState({ fg: "#000000", bg: "#FFFFFF" });
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoPreviewUrl, setLogoPreviewUrl] = useState(null);
+  const fileInputRef = useRef(null);
+
+  // OG Engine Color Palettes
+  const colorPalettes = [
+    { id: "classic", name: "Classic", fg: "#000000", bg: "#FFFFFF" },
+    { id: "royal", name: "Royal Blue", fg: "#1E40AF", bg: "#FFFFFF" },
+    { id: "cyber", name: "Cyber", fg: "#0EA5E9", bg: "#0F172A" },
+    { id: "emerald", name: "Emerald", fg: "#059669", bg: "#FFFFFF" },
+    { id: "sunset", name: "Sunset", fg: "#DC2626", bg: "#FEF2F2" },
+    { id: "grape", name: "Grape", fg: "#7C3AED", bg: "#FFFFFF" },
+    { id: "custom", name: "Custom", fg: customColors.fg, bg: customColors.bg }
+  ];
+
+  // OG Engine QR Types (with security flags)
+  const qrTypes = [
+    { id: "url", name: "URL/Website", needsSecurity: true },
+    { id: "text", name: "Plain Text", needsSecurity: false },
+    { id: "email", name: "Email", needsSecurity: true },
+    { id: "phone", name: "Phone Number", needsSecurity: false },
+    { id: "sms", name: "SMS Message", needsSecurity: false },
+    { id: "wifi", name: "WiFi Network", needsSecurity: false },
+    { id: "vcard", name: "Contact Card", needsSecurity: false },
+    { id: "location", name: "GPS Location", needsSecurity: false },
+    { id: "event", name: "Calendar Event", needsSecurity: false }
+  ];
+
   const selectedPayloadType = PAYLOAD_TYPES.find(t => t.id === payloadType);
+  const currentTypeConfig = qrTypes.find(t => t.id === qrType);
 
   // Risk evaluation with debounce
   useEffect(() => {
