@@ -329,18 +329,20 @@ export default function QrStudio({ initialTab = 'create' }) {
   };
 
   // Apply customization
-  const applyCustomization = () => {
-    if (qrGenerated) {
-      setQrAssetDraft(prev => ({
-        ...prev,
-        customization: { ...customization },
-        safeQrImageUrl: getQRUrl()
-      }));
-      toast.success('Customization applied!');
-    } else {
-      toast.info('Generate a QR code first, then customize');
-    }
-  };
+    const applyCustomization = () => {
+      if (qrGenerated) {
+        setQrAssetDraft(prev => ({
+          ...prev,
+          customization: { ...customization },
+          safeQrImageUrl: getQRUrl()
+        }));
+        toast.success('Customization applied! Switching to preview...');
+        setActiveTab('preview');
+      } else {
+        toast.info('Generate a QR code first, then customize');
+        setActiveTab('create');
+      }
+    };
 
   // Stego handler
   const handleEmbedded = (disguisedImageUrl, mode) => {
