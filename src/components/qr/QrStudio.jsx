@@ -125,7 +125,8 @@ export default function QrStudio({ initialTab = 'create' }) {
   const [size, setSize] = useState(512);
   const [errorCorrectionLevel, setErrorCorrectionLevel] = useState('H');
   const [qrGenerated, setQrGenerated] = useState(false);
-  const defaultQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent('https://glyphlock.io')}&ecc=H&color=000000&bgcolor=FFFFFF`;
+  // Default payload for initial render
+  const defaultPayload = 'https://glyphlock.io';
   const [isScanning, setIsScanning] = useState(false);
   const [securityResult, setSecurityResult] = useState(null);
   const [codeId, setCodeId] = useState(null);
