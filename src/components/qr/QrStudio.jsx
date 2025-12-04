@@ -869,39 +869,69 @@ export default function QrStudio({ initialTab = 'create' }) {
           </div>
         </TabsContent>
 
-        {/* Security Tab */}
+        {/* Security Tab - FULL OG ENGINE SECURITY STATUS */}
         <TabsContent value="security">
-          <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg} relative z-10`}>
-            <CardHeader className="border-b border-purple-500/20">
-              <CardTitle className={`${GlyphTypography.heading.lg} text-white flex items-center gap-2`}>
-                <Shield className="w-5 h-5 text-cyan-400" />
-                Security & Integrity
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {qrAssetDraft ? (
-                <>
-                  <div className="space-y-2">
-                    <Label className="text-gray-300">Immutable Hash</Label>
-                    <Input
-                      value={qrAssetDraft.immutableHash || ''}
-                      readOnly
-                      className="font-mono text-xs min-h-[44px]"
-                    />
+          <div className="space-y-6 relative z-10">
+            <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg}`}>
+              <CardHeader className="border-b border-purple-500/20">
+                <CardTitle className={`${GlyphTypography.heading.lg} text-white flex items-center gap-2`}>
+                  <Shield className="w-5 h-5 text-cyan-400" />
+                  Security & Integrity
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 pt-6">
+                {qrAssetDraft ? (
+                  <>
+                    <div className="space-y-2">
+                      <Label className="text-gray-300">Immutable Hash (SHA-256)</Label>
+                      <Input
+                        value={qrAssetDraft.immutableHash || ''}
+                        readOnly
+                        className="font-mono text-xs min-h-[44px] bg-gray-800 border-gray-700"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-gray-300">Risk Assessment</Label>
+                      <QrSecurityBadge
+                        riskScore={qrAssetDraft.riskScore || 0}
+                        riskFlags={qrAssetDraft.riskFlags || []}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-gray-400 text-center py-8">Generate a QR code to view security details</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* OG Security Status Panel */}
+            {securityResult && (
+              <SecurityStatus securityResult={securityResult} />
+            )}
+
+            {/* Security Info */}
+            <Card className={`${GlyphCard.glass}`}>
+              <CardContent className="pt-6">
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="text-center p-4 bg-gray-800/50 rounded-lg">
+                    <Shield className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                    <h4 className="font-bold text-white text-sm">AI Scanning</h4>
+                    <p className="text-xs text-gray-400">NLP threat detection</p>
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-gray-300">Risk Assessment</Label>
-                    <QrSecurityBadge
-                      riskScore={qrAssetDraft.riskScore || 0}
-                      riskFlags={qrAssetDraft.riskFlags || []}
-                    />
+                  <div className="text-center p-4 bg-gray-800/50 rounded-lg">
+                    <Lock className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+                    <h4 className="font-bold text-white text-sm">Hash Verification</h4>
+                    <p className="text-xs text-gray-400">SHA-256 tamper detection</p>
                   </div>
-                </>
-              ) : (
-                <p className="text-gray-400 text-center py-8">Generate a QR code to view security details</p>
-              )}
-            </CardContent>
-          </Card>
+                  <div className="text-center p-4 bg-gray-800/50 rounded-lg">
+                    <Eye className="w-8 h-8 text-purple-400 mx-auto mb-2" />
+                    <h4 className="font-bold text-white text-sm">Score Threshold</h4>
+                    <p className="text-xs text-gray-400">65/100 minimum</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Analytics Tab */}
