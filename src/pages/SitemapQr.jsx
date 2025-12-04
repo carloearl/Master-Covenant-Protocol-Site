@@ -5,15 +5,15 @@ import { createPageUrl } from '@/utils';
 import { ExternalLink, FileCode } from 'lucide-react';
 
 const QR_ROUTES = [
-  { path: '/qr-generator', title: 'QR Studio - Main', priority: '1.0' },
-  { path: '/qr-generator#create', title: 'QR Studio - Create', priority: '0.9' },
-  { path: '/qr-generator#preview', title: 'QR Studio - Preview', priority: '0.8' },
-  { path: '/qr-generator#customize', title: 'QR Studio - Customize', priority: '0.8' },
-  { path: '/qr-generator#hotzones', title: 'QR Studio - Hot Zones', priority: '0.8' },
-  { path: '/qr-generator#stego', title: 'QR Studio - Steganography', priority: '0.8' },
-  { path: '/qr-generator#security', title: 'QR Studio - Security', priority: '0.9' },
-  { path: '/qr-generator#analytics', title: 'QR Studio - Analytics', priority: '0.7' },
-  { path: '/qr-generator#bulk', title: 'QR Studio - Bulk Upload', priority: '0.7' }
+  { path: '/qr', title: 'QR Studio - Main', priority: '1.0' },
+  { path: '/qr#create', title: 'QR Studio - Create', priority: '0.9' },
+  { path: '/qr#preview', title: 'QR Studio - Preview', priority: '0.8' },
+  { path: '/qr#customize', title: 'QR Studio - Customize', priority: '0.8' },
+  { path: '/qr#hotzones', title: 'QR Studio - Hot Zones', priority: '0.8' },
+  { path: '/qr#stego', title: 'QR Studio - Steganography', priority: '0.8' },
+  { path: '/qr#security', title: 'QR Studio - Security', priority: '0.9' },
+  { path: '/qr#analytics', title: 'QR Studio - Analytics', priority: '0.7' },
+  { path: '/qr#bulk', title: 'QR Studio - Bulk Upload', priority: '0.7' }
 ];
 
 export default function SitemapQr() {
@@ -88,10 +88,10 @@ export default function SitemapQr() {
             View Raw XML
           </a>
           <Link 
-            to={createPageUrl("QrGenerator")}
+            to={createPageUrl("Qr")}
             className="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-sm transition-colors"
           >
-            Open QR Generator
+            Open QR Studio
           </Link>
         </div>
       </div>

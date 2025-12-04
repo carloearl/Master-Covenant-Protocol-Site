@@ -215,7 +215,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
                 <h3 className="text-[#00E4FF] text-xs font-bold uppercase tracking-widest">Featured</h3>
                 <div className="grid grid-cols-1 gap-2 pl-4 border-l border-white/10">
                   <Link
-                    to={createPageUrl("QrGenerator")}
+                    to={createPageUrl("Qr")}
                     onClick={() => setMobileMenuOpen(false)}
                     className="text-gray-400 hover:text-white text-sm py-1 block"
                   >
