@@ -16,6 +16,7 @@ export const NAV_SECTIONS = [
     label: "Company",
     items: [
       { label: "About Us", page: "About" },
+      { label: "Partners", page: "Partners" },
       { label: "Pricing", page: "Pricing" },
       { label: "Contact", page: "Contact" },
       { label: "FAQ", page: "FAQ" },
@@ -28,6 +29,7 @@ export const NAV_SECTIONS = [
       { label: "Security Tools", page: "SecurityTools" },
       { label: "QR Generator", page: "QrGenerator" },
       { label: "Steganography", page: "Steganography" },
+      { label: "Hotzone Mapper", page: "HotzoneMapper" },
       { label: "Image Lab", page: "ImageLab" },
       { label: "GlyphBot AI", page: "GlyphBot" }
     ]
@@ -47,6 +49,7 @@ export const NAV_SECTIONS = [
 export const FOOTER_LINKS = {
   company: [
     { label: "About Us", page: "About" },
+    { label: "Partners", page: "Partners" },
     { label: "Pricing", page: "Pricing" },
     { label: "Contact", page: "Contact" },
     { label: "FAQ", page: "FAQ" },
@@ -56,6 +59,7 @@ export const FOOTER_LINKS = {
     { label: "Security Tools", page: "SecurityTools" },
     { label: "QR Generator", page: "QrGenerator" },
     { label: "Steganography", page: "Steganography" },
+    { label: "Hotzone Mapper", page: "HotzoneMapper" },
     { label: "Image Lab", page: "ImageLab" },
     { label: "GlyphBot AI", page: "GlyphBot" }
   ],
