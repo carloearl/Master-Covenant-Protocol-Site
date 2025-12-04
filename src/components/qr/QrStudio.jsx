@@ -589,7 +589,7 @@ export default function QrStudio({ initialTab = 'create' }) {
                       <img
                         src={getRawQRUrl()}
                         alt="Generated QR"
-                        className="absolute top-[50%] left-[63%] w-[32%] -translate-x-1/2 -translate-y-1/2 object-contain select-none pointer-events-none"
+                        className="absolute top-[54%] left-[60%] w-[32%] -translate-x-1/2 -translate-y-1/2 object-contain select-none pointer-events-none"
                       />
                     )}
                   </div>
