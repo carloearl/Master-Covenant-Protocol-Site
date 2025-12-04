@@ -67,7 +67,7 @@ export default function QrStudio({ initialTab = 'create' }) {
     dotStyle: 'square',
     eyeStyle: 'square',
     foregroundColor: '#000000',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#ffffff',
     gradient: {
       enabled: false,
       type: 'linear',
