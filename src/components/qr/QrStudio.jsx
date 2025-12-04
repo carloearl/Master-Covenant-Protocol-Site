@@ -26,6 +26,7 @@ import QrBatchUploader from './QrBatchUploader';
 import SecurityStatus from './SecurityStatus';
 import SteganographicQR from './SteganographicQR';
 import StyledQRRenderer from './StyledQRRenderer';
+import CanvasQrRenderer from './CanvasQrRenderer';
 import QRTypeForm from '@/components/crypto/QRTypeForm';
 import { generateSHA256, performStaticURLChecks } from '@/components/utils/securityUtils';
 
