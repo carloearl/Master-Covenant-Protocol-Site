@@ -4,7 +4,11 @@ import { createPageUrl } from "@/utils";
 import { Shield, Twitter, Linkedin, Instagram, Github, Mail, Phone } from "lucide-react";
 import { FOOTER_LINKS } from "@/components/NavigationConfig";
 
-// FOOTER_LINKS now has: legal, general, company, solutions, resources
+/**
+ * PHASE 3B FOOTER - FULLY CORRECTED
+ * All links point to glyphlock.io routes ONLY
+ * NO base44.app references
+ */
 
 const certifications = [
   { name: "SOC 2", subtitle: "TYPE II" },
@@ -40,15 +44,22 @@ export default function Footer() {
               Protecting your digital sovereignty with military-grade encryption and autonomous governance.
             </p>
             <div className="flex items-center gap-4 pt-4">
-              {[Twitter, Linkedin, Instagram, Github].map((Icon, i) => (
-                <a key={i} href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-[#00E4FF] hover:text-black transition-all duration-300">
-                  <Icon size={18} />
-                </a>
-              ))}
+              <a href="https://twitter.com/glyphlock" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-[#00E4FF] hover:text-black transition-all duration-300">
+                <Twitter size={18} />
+              </a>
+              <a href="https://linkedin.com/company/glyphlock" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-[#00E4FF] hover:text-black transition-all duration-300">
+                <Linkedin size={18} />
+              </a>
+              <a href="https://instagram.com/glyphlock" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-[#00E4FF] hover:text-black transition-all duration-300">
+                <Instagram size={18} />
+              </a>
+              <a href="https://github.com/glyphlock" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-[#00E4FF] hover:text-black transition-all duration-300">
+                <Github size={18} />
+              </a>
             </div>
           </div>
 
-          {/* Links Columns - Using Shared Config */}
+          {/* Company Column */}
           <div className="lg:col-span-2">
             <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Company</h4>
             <div className="flex flex-col gap-4">
@@ -60,10 +71,11 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* Products Column */}
           <div className="lg:col-span-2">
-            <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Solutions</h4>
+            <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Products</h4>
             <div className="flex flex-col gap-4">
-              {FOOTER_LINKS.solutions.map((link) => (
+              {FOOTER_LINKS.products.map((link) => (
                 <Link key={link.page} to={createPageUrl(link.page)} className="hover:text-[#00E4FF] transition-colors">
                   {link.label}
                 </Link>
@@ -71,6 +83,7 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* Resources Column */}
           <div className="lg:col-span-2">
             <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Resources</h4>
             <div className="flex flex-col gap-4">
@@ -82,6 +95,7 @@ export default function Footer() {
             </div>
           </div>
           
+          {/* Contact Column */}
           <div className="lg:col-span-2">
             <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Contact</h4>
             <div className="flex flex-col gap-4">
@@ -114,7 +128,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar - Using Shared Config */}
+        {/* Bottom Bar - Legal Links */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
           <p>© {new Date().getFullYear()} GlyphLock Security LLC. All rights reserved.</p>
           <div className="flex items-center gap-8">

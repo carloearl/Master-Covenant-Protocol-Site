@@ -1,7 +1,10 @@
 
-// Unified Navigation Configuration
-// Single source of truth for Navbar and Footer
-// VERIFIED PAGES - All routes confirmed to exist
+/**
+ * UNIFIED NAVIGATION CONFIGURATION
+ * Single source of truth for Navbar and Footer
+ * PHASE 3B VERIFIED - All routes confirmed to glyphlock.io ONLY
+ * NO base44.app references permitted
+ */
 
 export const NAV = [
   { label: "Home", href: "/" },
@@ -18,29 +21,27 @@ export const NAV_SECTIONS = [
     items: [
       { label: "About Us", page: "About" },
       { label: "Partners", page: "Partners" },
-      { label: "Pricing", page: "Pricing" },
       { label: "Contact", page: "Contact" },
-      { label: "FAQ", page: "FAQ" },
-      { label: "Roadmap", page: "Roadmap" }
+      { label: "Accessibility", page: "Accessibility" }
     ]
   },
   {
-    label: "Solutions",
+    label: "Products",
     items: [
-      { label: "Security Tools", page: "SecurityTools" },
       { label: "QR Studio", page: "Qr" },
-      { label: "Hotzone Mapper", page: "HotzoneMapper" },
       { label: "Image Lab", page: "ImageLab" },
-      { label: "GlyphBot AI", page: "GlyphBot" }
+      { label: "GlyphBot AI", page: "GlyphBot" },
+      { label: "NUPS POS", page: "NUPSLogin" },
+      { label: "Security Tools", page: "SecurityTools" }
     ]
   },
   {
     label: "Resources",
     items: [
       { label: "Documentation", page: "SecurityDocs" },
+      { label: "SDK Docs", page: "SDKDocs" },
       { label: "Dream Team", page: "DreamTeam" },
-      { label: "Command Center", page: "CommandCenter" },
-      { label: "GlyphBot Junior", page: "GlyphBotJunior" },
+      { label: "Pricing", page: "Pricing" },
       { label: "Consultation", page: "Consultation" }
     ]
   }
@@ -50,31 +51,28 @@ export const FOOTER_LINKS = {
   company: [
     { label: "About Us", page: "About" },
     { label: "Partners", page: "Partners" },
-    { label: "Pricing", page: "Pricing" },
     { label: "Contact", page: "Contact" },
-    { label: "FAQ", page: "FAQ" },
-    { label: "Roadmap", page: "Roadmap" }
+    { label: "Accessibility", page: "Accessibility" }
   ],
-  solutions: [
-    { label: "Security Tools", page: "SecurityTools" },
+  products: [
     { label: "QR Studio", page: "Qr" },
-    { label: "Hotzone Mapper", page: "HotzoneMapper" },
     { label: "Image Lab", page: "ImageLab" },
-    { label: "GlyphBot AI", page: "GlyphBot" }
+    { label: "GlyphBot AI", page: "GlyphBot" },
+    { label: "NUPS POS", page: "NUPSLogin" },
+    { label: "Security Tools", page: "SecurityTools" }
   ],
   resources: [
     { label: "Documentation", page: "SecurityDocs" },
     { label: "SDK Docs", page: "SDKDocs" },
     { label: "Dream Team", page: "DreamTeam" },
-    { label: "Command Center", page: "CommandCenter" },
-    { label: "GlyphBot Junior", page: "GlyphBotJunior" },
-    { label: "Consultation", page: "Consultation" }
+    { label: "Pricing", page: "Pricing" },
+    { label: "FAQ", page: "FAQ" },
+    { label: "Roadmap", page: "Roadmap" }
   ],
   legal: [
     { label: "Privacy Policy", page: "Privacy" },
     { label: "Terms of Service", page: "Terms" },
-    { label: "Cookie Policy", page: "Cookies" },
-    { label: "Accessibility", page: "Accessibility" }
+    { label: "Cookie Policy", page: "Cookies" }
   ]
 };
 
