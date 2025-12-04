@@ -338,21 +338,26 @@ export default function QrStudio({ initialTab = 'create' }) {
     }
   };
 
-  // Apply customization
-    const applyCustomization = () => {
-      if (qrGenerated) {
-        setQrAssetDraft(prev => ({
-          ...prev,
-          customization: { ...customization },
-          safeQrImageUrl: getQRUrl()
-        }));
-        toast.success('Customization applied! Switching to preview...');
-        setActiveTab('preview');
-      } else {
-        toast.info('Generate a QR code first, then customize');
-        setActiveTab('create');
-      }
-    };
+  // Sync customization to qrAssetDraft in real-time
+  useEffect(() => {
+    if (qrGenerated && qrAssetDraft) {
+      setQrAssetDraft(prev => ({
+        ...prev,
+        customization: { ...customization },
+        safeQrImageUrl: getQRUrl()
+      }));
+    }
+  }, [customization, qrGenerated, size, errorCorrectionLevel]);
+
+  // Navigate to preview (no longer needed for applying - changes are real-time)
+  const goToPreview = () => {
+    if (qrGenerated) {
+      setActiveTab('preview');
+    } else {
+      toast.info('Generate a QR code first');
+      setActiveTab('create');
+    }
+  };
 
   // Stego handler
   const handleEmbedded = (disguisedImageUrl, mode) => {
