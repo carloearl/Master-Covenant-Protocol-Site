@@ -650,33 +650,12 @@ export default function QrStudio({ initialTab = 'create' }) {
                                             style={{ transform: 'scale(1.15)', transformOrigin: 'top left' }}
                                           />
 
-                                          {/* QR inside GL logo - fixed square, no customization affects size/position */}
-                                          <div 
-                                            className="absolute flex items-center justify-center"
-                                            style={{
-                                              top: '50%',
-                                              left: '63%',
-                                              width: '115px',
-                                              height: '115px',
-                                              transform: 'translate(-50%, -50%)',
-                                              background: '#FFFFFF',
-                                              borderRadius: '4px'
-                                            }}
-                                          >
-                                            <StyledQRRenderer
-                                              text={qrGenerated ? buildQRPayload() : 'https://glyphlock.io'}
-                                              size={105}
-                                              customization={{
-                                                dotStyle: 'square',
-                                                eyeStyle: 'square',
-                                                foregroundColor: '#000000',
-                                                backgroundColor: '#FFFFFF',
-                                                gradient: { enabled: false },
-                                                qrShape: { margin: 'none' }
-                                              }}
-                                              onDataUrlReady={handleQrDataUrlReady}
-                                            />
-                                          </div>
+                                          <img
+                                            src={qrDataUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrGenerated ? buildQRPayload() : 'https://glyphlock.io')}&ecc=H&color=000000&bgcolor=FFFFFF`}
+                                            alt={qrGenerated ? "Generated QR" : "Default QR"}
+                                            className="absolute top-[40%] left-[76%] w-[22%] -translate-x-1/2 -translate-y-1/2 object-contain select-none pointer-events-none"
+                                            style={{ imageRendering: 'pixelated' }}
+                                          />
 
 
                   </div>
