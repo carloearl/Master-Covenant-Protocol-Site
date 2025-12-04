@@ -119,8 +119,8 @@ export default function StyledQRRenderer({
       },
       backgroundOptions: {
         color: background?.type === 'solid' 
-          ? (background?.color || backgroundColor)
-          : backgroundColor
+          ? (background?.color || '#ffffff')
+          : '#ffffff'
       }
     };
 
@@ -154,8 +154,8 @@ export default function StyledQRRenderer({
           type: 'linear',
           rotation: 0,
           colorStops: [
-            { offset: 0, color: background.gradientColor1 || '#FFFFFF' },
-            { offset: 1, color: background.gradientColor2 || '#E5E7EB' }
+            { offset: 0, color: background.gradientColor1 || '#ffffff' },
+            { offset: 1, color: background.gradientColor2 || '#e5e7eb' }
           ]
         }
       };
@@ -296,7 +296,7 @@ export const createQRDataUrl = async (text, size, customization) => {
           type: 'square'
         },
         backgroundOptions: {
-          color: customization?.backgroundColor || '#FFFFFF'
+          color: customization?.backgroundColor || '#ffffff'
         }
       });
 
