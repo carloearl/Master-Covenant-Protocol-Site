@@ -498,7 +498,7 @@ export default function QrStudio({ initialTab = 'create' }) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 max-w-7xl">
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        {/* Desktop Tabs - Technical Flow (7 tabs - NO HOTZONES) */}
+        {/* Desktop Tabs - 01_Create, 02_Customize, 03_Preview, 04_Stego, 05_Security, 06_Analytics, 07_Bulk */}
         <TabsList className="hidden lg:flex w-full mb-6 bg-black/40 backdrop-blur-md border-t-2 border-b-2 border-cyan-500/20 p-0 h-auto rounded-none">
           <TabsTrigger 
             value="create" 
@@ -510,26 +510,28 @@ export default function QrStudio({ initialTab = 'create' }) {
           </TabsTrigger>
           
           <TabsTrigger 
-            value="preview" 
-            className="flex-1 min-h-[52px] relative group border-r border-cyan-500/10 data-[state=active]:bg-gradient-to-b data-[state=active]:from-purple-500/20 data-[state=active]:to-transparent data-[state=active]:border-t-2 data-[state=active]:border-t-purple-400 data-[state=active]:text-purple-300 text-gray-500 hover:text-gray-300 transition-all font-mono text-xs uppercase tracking-widest rounded-none"
-          >
-            <span>02_Preview</span>
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-0 group-data-[state=active]:opacity-100"></div>
-          </TabsTrigger>
-          
-          <TabsTrigger 
             value="customize" 
             className="flex-1 min-h-[52px] relative group border-r border-cyan-500/10 data-[state=active]:bg-gradient-to-b data-[state=active]:from-blue-500/20 data-[state=active]:to-transparent data-[state=active]:border-t-2 data-[state=active]:border-t-blue-400 data-[state=active]:text-blue-300 text-gray-500 hover:text-gray-300 transition-all font-mono text-xs uppercase tracking-widest rounded-none"
           >
             <Layers className="w-3 h-3 mr-2" />
-            <span>03_Customize</span>
+            <span>02_Customize</span>
             <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-data-[state=active]:opacity-100"></div>
+          </TabsTrigger>
+          
+          <TabsTrigger 
+            value="preview" 
+            className="flex-1 min-h-[52px] relative group border-r border-cyan-500/10 data-[state=active]:bg-gradient-to-b data-[state=active]:from-purple-500/20 data-[state=active]:to-transparent data-[state=active]:border-t-2 data-[state=active]:border-t-purple-400 data-[state=active]:text-purple-300 text-gray-500 hover:text-gray-300 transition-all font-mono text-xs uppercase tracking-widest rounded-none"
+          >
+            <Eye className="w-3 h-3 mr-2" />
+            <span>03_Preview</span>
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-0 group-data-[state=active]:opacity-100"></div>
           </TabsTrigger>
           
           <TabsTrigger 
             value="stego" 
             className="flex-1 min-h-[52px] relative group border-r border-cyan-500/10 data-[state=active]:bg-gradient-to-b data-[state=active]:from-purple-500/20 data-[state=active]:to-transparent data-[state=active]:border-t-2 data-[state=active]:border-t-purple-400 data-[state=active]:text-purple-300 text-gray-500 hover:text-gray-300 transition-all font-mono text-xs uppercase tracking-widest rounded-none"
           >
+            <Lock className="w-3 h-3 mr-2" />
             <span>04_Stego</span>
             <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-0 group-data-[state=active]:opacity-100"></div>
           </TabsTrigger>
@@ -560,14 +562,14 @@ export default function QrStudio({ initialTab = 'create' }) {
           </TabsTrigger>
         </TabsList>
 
-        {/* Mobile Tabs - Technical Segmented (7 tabs - NO HOTZONES) */}
+        {/* Mobile Tabs - 01_Create, 02_Customize, 03_Preview, 04_Stego, 05_Security, 06_Analytics, 07_Bulk */}
         <div className="lg:hidden mb-6 -mx-4 px-4">
           <div className="flex gap-1 overflow-x-auto pb-2 scrollbar-hide bg-black/60 backdrop-blur-sm border border-cyan-500/20 p-1">
             {[
               { value: 'create', icon: Wand2, label: 'Create', num: '01' },
-              { value: 'preview', icon: null, label: 'Preview', num: '02' },
-              { value: 'customize', icon: Layers, label: 'Customize', num: '03' },
-              { value: 'stego', icon: null, label: 'Stego', num: '04' },
+              { value: 'customize', icon: Layers, label: 'Customize', num: '02' },
+              { value: 'preview', icon: Eye, label: 'Preview', num: '03' },
+              { value: 'stego', icon: Lock, label: 'Stego', num: '04' },
               { value: 'security', icon: Shield, label: 'Security', num: '05' },
               { value: 'analytics', icon: null, label: 'Analytics', num: '06' },
               { value: 'bulk', icon: null, label: 'Bulk', num: '07' },
@@ -719,60 +721,39 @@ export default function QrStudio({ initialTab = 'create' }) {
                 </Card>
               </div>
 
-              {/* Right Column - Colors & Logo */}
+              {/* Right Column - Quick Settings */}
               <div className="lg:col-span-1 space-y-6">
-                <ColorPaletteSelector
-                  selectedPalette={selectedPalette}
-                  setSelectedPalette={setSelectedPalette}
-                  customColors={customColors}
-                  setCustomColors={setCustomColors}
-                />
-
                 <Card className={`${GlyphCard.glass}`}>
                   <CardHeader>
-                    <CardTitle className="text-white flex items-center gap-2 text-sm">
-                      <ImageIcon className="w-4 h-4" />
-                      Logo (Optional)
-                    </CardTitle>
+                    <CardTitle className="text-white text-sm">Quick Settings</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleLogoUpload}
-                      className="hidden"
-                    />
-                    
-                    {logoPreviewUrl ? (
-                      <div className="space-y-2">
-                        <div className="bg-gray-800 p-3 rounded-lg border border-gray-700 flex items-center gap-2">
-                          <img src={logoPreviewUrl} alt="Logo" className="w-12 h-12 object-contain rounded" />
-                          <p className="text-xs text-white font-medium">Uploaded</p>
-                        </div>
-                        <Button
-                          onClick={() => {
-                            setLogoFile(null);
-                            setLogoPreviewUrl(null);
-                          }}
-                          variant="outline"
-                          size="sm"
-                          className="w-full border-red-500/50 text-red-400 text-xs"
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    ) : (
-                      <Button
-                        onClick={() => fileInputRef.current?.click()}
-                        variant="outline"
-                        size="sm"
-                        className="w-full border-cyan-500/50 text-white text-xs"
-                      >
-                        <Upload className="w-3 h-3 mr-2" />
-                        Upload
-                      </Button>
-                    )}
+                  <CardContent className="space-y-4">
+                    <div>
+                      <Label className="text-white text-xs mb-2 block">Foreground</Label>
+                      <Input
+                        type="color"
+                        value={customization.foregroundColor}
+                        onChange={(e) => setCustomization(prev => ({...prev, foregroundColor: e.target.value}))}
+                        className="w-full h-10 p-1 bg-gray-800 border-gray-700"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-white text-xs mb-2 block">Background</Label>
+                      <Input
+                        type="color"
+                        value={customization.backgroundColor}
+                        onChange={(e) => setCustomization(prev => ({...prev, backgroundColor: e.target.value}))}
+                        className="w-full h-10 p-1 bg-gray-800 border-gray-700"
+                      />
+                    </div>
+                    <Button
+                      onClick={() => setActiveTab('customize')}
+                      variant="outline"
+                      className="w-full border-cyan-500/50 text-white text-xs"
+                    >
+                      <Layers className="w-3 h-3 mr-2" />
+                      Full Customization →
+                    </Button>
                   </CardContent>
                 </Card>
               </div>
