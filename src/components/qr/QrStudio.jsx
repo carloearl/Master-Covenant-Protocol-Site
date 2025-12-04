@@ -96,9 +96,9 @@ export default function QrStudio({ initialTab = 'create' }) {
       autoContrast: true
     },
     background: {
-      type: 'solid',
-      color: '#FFFFFF',
-      gradientColor1: '#FFFFFF',
+            type: 'solid',
+            color: '#ffffff',
+            gradientColor1: '#ffffff',
       gradientColor2: '#E5E7EB',
       imageUrl: null,
       blur: 0,
