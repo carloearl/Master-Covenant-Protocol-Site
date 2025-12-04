@@ -653,7 +653,7 @@ export default function QrStudio({ initialTab = 'create' }) {
                                           <img
                                             src={qrDataUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrGenerated ? buildQRPayload() : 'https://glyphlock.io')}&ecc=H&color=000000&bgcolor=FFFFFF&margin=0`}
                                             alt={qrGenerated ? "Generated QR" : "Default QR"}
-                                            className="absolute top-[40%] left-[76%] w-[33%] -translate-x-1/2 -translate-y-1/2 object-contain select-none pointer-events-none"
+                                            className="absolute top-[40%] left-[74%] w-[25%] -translate-x-1/2 -translate-y-1/2 object-contain select-none pointer-events-none"
                                             style={{ imageRendering: 'pixelated' }}
                                           />
 
