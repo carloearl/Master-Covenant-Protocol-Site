@@ -514,10 +514,10 @@ export default function QrStudio({ initialTab = 'create' }) {
                 )}
               </Card>
 
-              {/* Form + Controls - Side by Side Layout */}
-              <div className="w-full flex flex-col lg:flex-row justify-center lg:justify-between gap-6 lg:gap-10">
-                {/* Left: Payload Form Card + GL Preview */}
-                <div className="w-full lg:w-[540px] space-y-6">
+              {/* Form + GL Preview - Side by Side Layout */}
+              <div className="w-full flex flex-col lg:flex-row gap-6">
+                {/* Left: Payload Form Card */}
+                <div className="w-full lg:w-[540px]">
                   <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg}`}>
                     <CardHeader className="border-b border-purple-500/20">
                       <CardTitle className="text-white">{currentTypeConfig?.name || 'QR Configuration'}</CardTitle>
@@ -574,8 +574,10 @@ export default function QrStudio({ initialTab = 'create' }) {
                       </Button>
                     </CardContent>
                   </Card>
+                </div>
 
-                  {/* GL Preview Block - INSIDE left container */}
+                {/* Right: GL Preview Block */}
+                <div className="w-full lg:w-[540px]">
                   <div className="relative w-full rounded-xl bg-[#0d0f1a]/70 p-4 overflow-hidden shadow-lg">
                     <img
                       src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/382879216_qrgl.png"
@@ -592,8 +594,10 @@ export default function QrStudio({ initialTab = 'create' }) {
                     )}
                   </div>
                 </div>
+              </div>
 
-                {/* Right: Risk Badge + Status */}
+              {/* Security Results Row */}
+              <div className="w-full flex flex-col lg:flex-row gap-6">
                 <div className="w-full lg:w-[540px] space-y-6">
                   {/* Risk Badge */}
                   {securityResult && (
