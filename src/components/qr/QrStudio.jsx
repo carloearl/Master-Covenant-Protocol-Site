@@ -548,260 +548,198 @@ export default function QrStudio({ initialTab = 'create' }) {
           </div>
         </div>
 
-        {/* Create Tab */}
+        {/* Create Tab - OG ENGINE INTEGRATED */}
         <TabsContent value="create">
-          {/* Desktop: 2-column layout */}
-          <div className="hidden lg:grid lg:grid-cols-2 gap-6 relative z-10">
-            <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg}`}>
-              <CardHeader className="border-b border-purple-500/20">
-                <CardTitle className={`${GlyphTypography.heading.lg} text-white flex items-center gap-2`}>
-                  <Sparkles className="w-5 h-5 text-cyan-400" />
-                  QR Configuration
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 pt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="title" className="text-gray-300 font-semibold">Title</Label>
-                  <Input
-                    id="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="My QR Code"
-                    className={GlyphInput.glow}
-                  />
-                </div>
+          <div className="space-y-8 relative z-10">
+            {/* Security Alert for URL/Email types */}
+            {currentTypeConfig?.needsSecurity && (
+              <Alert className="bg-blue-500/10 border-blue-500/30">
+                <Info className="h-4 w-4 text-blue-400" />
+                <AlertDescription className="text-white">
+                  <strong>Security Active:</strong> URLs/emails scanned by AI. Scores under 65/100 are blocked.
+                </AlertDescription>
+              </Alert>
+            )}
 
-                <div className="space-y-2">
-                  <Label htmlFor="payloadType" className="text-gray-300 flex items-center gap-2">
-                    Payload Type
-                    {selectedPayloadType?.premium && (
-                      <span className="text-xs text-purple-400 flex items-center gap-1">
-                        <Sparkles className="w-3 h-3" />
-                        Premium
-                      </span>
-                    )}
-                  </Label>
-                  <Button
-                    type="button"
-                    onClick={() => setShowPayloadSelector(!showPayloadSelector)}
-                    className={`${GlyphButton.secondary} w-full justify-between`}
-                  >
-                    <span className="flex items-center gap-2">
-                      {selectedPayloadType && <selectedPayloadType.icon className="w-4 h-4" />}
-                      {selectedPayloadType?.label || 'Select Payload Type'}
-                    </span>
-                    <span className="text-xs text-gray-500">90+ types available</span>
-                  </Button>
-                  {showPayloadSelector && (
-                    <div className={`${GlyphCard.glass} p-4 mt-2`}>
-                      <PayloadTypeSelector
-                        value={payloadType}
-                        onChange={(newType) => {
-                          setPayloadType(newType);
-                          setShowPayloadSelector(false);
-                        }}
+            {/* QR Type Selector - OG Engine */}
+            <QRTypeSelector qrType={qrType} setQrType={setQrType} qrTypes={qrTypes} />
+
+            <div className="grid lg:grid-cols-3 gap-8">
+              {/* Left Column - Form */}
+              <div className="lg:col-span-1 space-y-6">
+                <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg}`}>
+                  <CardHeader className="border-b border-purple-500/20">
+                    <CardTitle className="text-white">{currentTypeConfig?.name || 'QR Configuration'}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6 pt-6">
+                    {/* OG Engine Type Form */}
+                    <QRTypeForm qrType={qrType} qrData={qrData} setQrData={setQrData} />
+
+                    {/* Size Slider */}
+                    <div>
+                      <Label className="text-white">Size: {size}px</Label>
+                      <Slider
+                        value={[size]}
+                        onValueChange={(value) => setSize(value[0])}
+                        min={256}
+                        max={1024}
+                        step={64}
+                        className="mt-2"
                       />
                     </div>
-                  )}
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="payloadValue" className="text-gray-300">Payload</Label>
-                  <Textarea
-                    id="payloadValue"
-                    value={payloadValue}
-                    onChange={(e) => setPayloadValue(e.target.value)}
-                    placeholder={selectedPayloadType?.placeholder || 'Enter your payload data here...'}
-                    className={`${GlyphInput.glow} min-h-[80px]`}
-                  />
-                  {selectedPayloadType && (
-                    <p className="text-xs text-gray-500">{selectedPayloadType.description}</p>
-                  )}
-                </div>
+                    {/* Generate Button - OG Engine */}
+                    <Button
+                      onClick={generateOGQR}
+                      disabled={isScanning}
+                      className={`${GlyphButton.primary} w-full ${GlyphShadows.neonCyan}`}
+                    >
+                      {isScanning ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          {scanningStage || 'Processing...'}
+                        </>
+                      ) : (
+                        <>
+                          <Shield className="w-4 h-4 mr-2" />
+                          Generate QR
+                        </>
+                      )}
+                    </Button>
+                  </CardContent>
+                </Card>
 
-                <div className="flex items-center justify-between py-2 border-t border-gray-700">
-                  <Label htmlFor="mode" className="text-gray-300">Dynamic Mode</Label>
-                  <Switch
-                    id="mode"
-                    checked={mode === 'dynamic'}
-                    onCheckedChange={(checked) => setMode(checked ? 'dynamic' : 'static')}
-                    className="min-h-[44px] min-w-[44px]"
-                  />
-                </div>
+                {/* Error Correction */}
+                <Card className={`${GlyphCard.glass}`}>
+                  <CardHeader>
+                    <CardTitle className="text-white text-sm">Error Correction</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Select value={errorCorrectionLevel} onValueChange={setErrorCorrectionLevel}>
+                      <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-800 border-gray-700">
+                        <SelectItem value="L">Low (7%)</SelectItem>
+                        <SelectItem value="M">Medium (15%)</SelectItem>
+                        <SelectItem value="Q">Quartile (25%)</SelectItem>
+                        <SelectItem value="H">High (30%)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </CardContent>
+                </Card>
+              </div>
 
-                {mode === 'dynamic' && (
-                  <div className="space-y-2">
-                    <Label htmlFor="dynamicUrl" className="text-gray-300">Dynamic Redirect URL</Label>
-                    <Input
-                      id="dynamicUrl"
-                      value={dynamicRedirectUrl}
-                      onChange={(e) => setDynamicRedirectUrl(e.target.value)}
-                      placeholder="https://redirect.example.com"
-                      className="min-h-[44px]"
-                    />
-                  </div>
-                )}
-
-                <div className="pt-4">
-                  <QrSecurityBadge riskScore={riskScore} riskFlags={riskFlags} />
-                </div>
-
-                <Button
-                  onClick={handleGenerate}
-                  disabled={isGenerating || !title || !payloadValue}
-                  className={`${GlyphButton.primary} w-full ${GlyphShadows.neonCyan}`}
-                >
-                  {isGenerating ? (
-                    <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Generating QR Asset...
-                    </>
-                  ) : (
-                    <>
-                      <Wand2 className="w-5 h-5 mr-2" />
-                      Generate QR Asset
-                    </>
-                  )}
-                </Button>
-              </CardContent>
-            </Card>
-
-            {qrAssetDraft && (
-              <QrPreviewCanvas
-                safeQrImageUrl={qrAssetDraft.safeQrImageUrl}
-                artQrImageUrl={qrAssetDraft.artQrImageUrl}
-                disguisedImageUrl={qrAssetDraft.disguisedImageUrl}
-                errorCorrectionLevel={qrAssetDraft.errorCorrectionLevel}
-                artStyle={qrAssetDraft.artStyle}
-              />
-            )}
-          </div>
-
-          {/* Mobile: Stacked layout */}
-          <div className="lg:hidden space-y-6 relative z-10">
-            <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.md}`}>
-              <CardHeader className="border-b border-purple-500/20">
-                <CardTitle className={`${GlyphTypography.heading.md} text-white flex items-center gap-2`}>
-                  <Sparkles className="w-5 h-5 text-cyan-400" />
-                  QR Configuration
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 pt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="title-mobile" className="text-gray-300 text-base font-semibold">Title</Label>
-                  <Input
-                    id="title-mobile"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="My QR Code"
-                    className={`${GlyphInput.glow} text-base`}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="payloadType-mobile" className="text-gray-300 text-base font-semibold flex items-center gap-2">
-                    Payload Type
-                    {selectedPayloadType?.premium && (
-                      <span className="text-xs text-purple-400 flex items-center gap-1">
-                        <Sparkles className="w-3 h-3" />
-                        Premium
-                      </span>
+              {/* Center Column - Preview */}
+              <div className="lg:col-span-1">
+                <Card className={`${GlyphCard.premium} h-full`}>
+                  <CardHeader className="border-b border-purple-500/20">
+                    <CardTitle className="text-white">Preview</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    {qrGenerated ? (
+                      <div className="space-y-4">
+                        <div className="bg-white p-8 rounded-lg flex items-center justify-center relative">
+                          <img src={getQRUrl()} alt="QR Code" className="max-w-full" />
+                          {logoPreviewUrl && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <img src={logoPreviewUrl} alt="Logo" className="w-16 h-16 rounded-lg bg-white p-1" />
+                            </div>
+                          )}
+                        </div>
+                        <Button
+                          onClick={downloadQR}
+                          variant="outline"
+                          className="w-full border-cyan-500/50 hover:bg-cyan-500/10 text-white"
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Download QR
+                        </Button>
+                      </div>
+                    ) : securityResult?.final_score < 65 ? (
+                      <div className="h-96 flex items-center justify-center border-2 border-dashed border-red-700 rounded-lg bg-red-500/5">
+                        <div className="text-center p-6">
+                          <div className="text-5xl mb-4">🚫</div>
+                          <p className="text-red-400 font-semibold">Blocked</p>
+                          <p className="text-sm text-white">Score: {securityResult.final_score}/100</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="h-96 flex items-center justify-center border-2 border-dashed border-gray-700 rounded-lg">
+                        <p className="text-gray-500">Generate to preview</p>
+                      </div>
                     )}
-                  </Label>
-                  <Button
-                    type="button"
-                    onClick={() => setShowPayloadSelector(!showPayloadSelector)}
-                    className={`${GlyphButton.secondary} w-full justify-between text-base`}
-                  >
-                    <span className="flex items-center gap-2">
-                      {selectedPayloadType && <selectedPayloadType.icon className="w-5 h-5" />}
-                      {selectedPayloadType?.label || 'Select Payload Type'}
-                    </span>
-                    <span className="text-xs text-gray-500">90+</span>
-                  </Button>
-                  {showPayloadSelector && (
-                    <div className={`${GlyphCard.glass} p-4 mt-2`}>
-                      <PayloadTypeSelector
-                        value={payloadType}
-                        onChange={(newType) => {
-                          setPayloadType(newType);
-                          setShowPayloadSelector(false);
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
+                  </CardContent>
+                </Card>
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="payloadValue-mobile" className="text-gray-300 text-base font-semibold">Payload</Label>
-                  <Textarea
-                    id="payloadValue-mobile"
-                    value={payloadValue}
-                    onChange={(e) => setPayloadValue(e.target.value)}
-                    placeholder={selectedPayloadType?.placeholder || 'Enter your payload data here...'}
-                    className={`${GlyphInput.glow} min-h-[100px] text-base`}
-                  />
-                  {selectedPayloadType && (
-                    <p className="text-xs text-gray-500">{selectedPayloadType.description}</p>
-                  )}
-                </div>
+              {/* Right Column - Colors & Logo */}
+              <div className="lg:col-span-1 space-y-6">
+                <ColorPaletteSelector
+                  selectedPalette={selectedPalette}
+                  setSelectedPalette={setSelectedPalette}
+                  customColors={customColors}
+                  setCustomColors={setCustomColors}
+                />
 
-                <div className="flex items-center justify-between py-3 border-t border-gray-800">
-                  <Label htmlFor="mode-mobile" className="text-gray-300 text-base">Dynamic Mode</Label>
-                  <Switch
-                    id="mode-mobile"
-                    checked={mode === 'dynamic'}
-                    onCheckedChange={(checked) => setMode(checked ? 'dynamic' : 'static')}
-                    className="min-h-[48px] min-w-[48px]"
-                  />
-                </div>
-
-                {mode === 'dynamic' && (
-                  <div className="space-y-2">
-                    <Label htmlFor="dynamicUrl-mobile" className="text-gray-300 text-base">Dynamic Redirect URL</Label>
-                    <Input
-                      id="dynamicUrl-mobile"
-                      value={dynamicRedirectUrl}
-                      onChange={(e) => setDynamicRedirectUrl(e.target.value)}
-                      placeholder="https://redirect.example.com"
-                      className="min-h-[48px] text-base bg-gray-800 border-gray-700"
+                <Card className={`${GlyphCard.glass}`}>
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center gap-2 text-sm">
+                      <ImageIcon className="w-4 h-4" />
+                      Logo (Optional)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleLogoUpload}
+                      className="hidden"
                     />
-                  </div>
-                )}
+                    
+                    {logoPreviewUrl ? (
+                      <div className="space-y-2">
+                        <div className="bg-gray-800 p-3 rounded-lg border border-gray-700 flex items-center gap-2">
+                          <img src={logoPreviewUrl} alt="Logo" className="w-12 h-12 object-contain rounded" />
+                          <p className="text-xs text-white font-medium">Uploaded</p>
+                        </div>
+                        <Button
+                          onClick={() => {
+                            setLogoFile(null);
+                            setLogoPreviewUrl(null);
+                          }}
+                          variant="outline"
+                          size="sm"
+                          className="w-full border-red-500/50 text-red-400 text-xs"
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        onClick={() => fileInputRef.current?.click()}
+                        variant="outline"
+                        size="sm"
+                        className="w-full border-cyan-500/50 text-white text-xs"
+                      >
+                        <Upload className="w-3 h-3 mr-2" />
+                        Upload
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
 
-                <div className="pt-4">
-                  <QrSecurityBadge riskScore={riskScore} riskFlags={riskFlags} />
-                </div>
+            {/* Security Status - OG Engine */}
+            {securityResult && <SecurityStatus securityResult={securityResult} />}
 
-                <Button
-                  onClick={handleGenerate}
-                  disabled={isGenerating || !title || !payloadValue}
-                  className={`${GlyphButton.primary} w-full min-h-[52px] text-base ${GlyphShadows.neonCyan}`}
-                >
-                  {isGenerating ? (
-                    <>
-                      <Loader2 className="w-6 h-6 mr-2 animate-spin" />
-                      Generating QR Asset...
-                    </>
-                  ) : (
-                    <>
-                      <Wand2 className="w-6 h-6 mr-2" />
-                      Generate QR Asset
-                    </>
-                  )}
-                </Button>
-              </CardContent>
-            </Card>
-
-            {qrAssetDraft && (
-              <QrPreviewCanvas
-                safeQrImageUrl={qrAssetDraft.safeQrImageUrl}
-                artQrImageUrl={qrAssetDraft.artQrImageUrl}
-                disguisedImageUrl={qrAssetDraft.disguisedImageUrl}
-                errorCorrectionLevel={qrAssetDraft.errorCorrectionLevel}
-                artStyle={qrAssetDraft.artStyle}
-              />
-            )}
+            {/* Steganographic QR - OG Engine LSB Encode/Decode */}
+            <SteganographicQR 
+              qrPayload={buildQRPayload()} 
+              qrGenerated={qrGenerated && (!securityResult || securityResult.final_score >= 65)}
+            />
           </div>
         </TabsContent>
 
