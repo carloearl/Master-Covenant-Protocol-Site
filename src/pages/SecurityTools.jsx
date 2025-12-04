@@ -8,10 +8,10 @@ import { ChevronRight, Shield, Lock, Eye, Zap, Server, Activity } from "lucide-r
 export default function SecurityTools() {
   const tools = [
     {
-      title: "Visual Cryptography Suite",
+      title: "QR Studio & Visual Cryptography",
       description: "Generate secure, threat-aware QR codes and hide encrypted data within images using LSB encoding.",
       price: "$179.99",
-      link: "VisualCryptography",
+      link: "Qr",
       icon: Eye,
       image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg"
     },
@@ -162,9 +162,9 @@ export default function SecurityTools() {
               Start using our professional security suites today
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to={createPageUrl("VisualCryptography")}>
+              <Link to={createPageUrl("Qr")}>
                 <Button size="lg" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white">
-                  Try Visual Cryptography
+                  Try QR Studio
                 </Button>
               </Link>
               <Link to={createPageUrl("Consultation")}>

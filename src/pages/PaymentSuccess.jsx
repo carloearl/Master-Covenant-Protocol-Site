@@ -131,9 +131,9 @@ export default function PaymentSuccess() {
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Link to={createPageUrl("DeveloperConsole")} className="block">
+              <Link to={createPageUrl("CommandCenter")} className="block">
                 <Button variant="outline" className="w-full border-[#8C4BFF]/50 text-[#8C4BFF] hover:bg-[#8C4BFF]/10 hover:border-[#8C4BFF] py-6 text-lg">
-                  Developer Console
+                  Command Center
                 </Button>
               </Link>
               <Link to={createPageUrl("Home")} className="block">

@@ -93,7 +93,7 @@ export default function Services() {
         "Custom security policies and rules",
         "Enterprise-grade encryption and access control"
       ],
-      page: "SecurityOperations",
+      page: "SecurityOperationsCenter",
       color: "red"
     },
     {
