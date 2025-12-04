@@ -32,7 +32,8 @@ export default function StyledQRRenderer({
       'star': 'classy-rounded',
       'hex': 'classy',
       'bevel': 'extra-rounded',
-      'liquid': 'extra-rounded'
+      'liquid': 'extra-rounded',
+      'heart': 'classy-rounded'
     };
     return mapping[style] || 'square';
   };
