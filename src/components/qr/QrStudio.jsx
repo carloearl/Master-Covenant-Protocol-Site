@@ -1,47 +1,40 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
-import { Loader2, Wand2, Layers, Shield, Sparkles, Zap, Lock, Eye, EyeOff, Upload, Download, Image as ImageIcon, Info, BarChart3 } from 'lucide-react';
+import { Loader2, Wand2, Layers, Shield, Sparkles, Zap, Lock, Eye, Download, Info, BarChart3, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   GlyphCard, 
   GlyphButton, 
-  GlyphPanel, 
-  GlyphInput, 
   GlyphTypography, 
-  GlyphShadows,
-  GlyphGradients 
+  GlyphShadows 
 } from './design/GlyphQrDesignSystem';
-import { PAYLOAD_TYPES, PAYLOAD_CATEGORIES } from './config/PayloadTypesCatalog';
+import { PAYLOAD_TYPES } from './config/PayloadTypesCatalog';
 import PayloadTypeSelector from './PayloadTypeSelector';
 import QrSecurityBadge from './QrSecurityBadge';
-import QrPreviewCanvas from './QrPreviewCanvas';
-import QrStegoArtBuilder from './QrStegoArtBuilder';
+import QrPreviewPanel from './QrPreviewPanel';
 import QrCustomizationPanel from './QrCustomizationPanel';
 import AnalyticsPanel from './AnalyticsPanel';
 import QrBatchUploader from './QrBatchUploader';
 import SecurityStatus from './SecurityStatus';
 import SteganographicQR from './SteganographicQR';
-import QRTypeSelector from '@/components/crypto/QRTypeSelector';
 import QRTypeForm from '@/components/crypto/QRTypeForm';
 import { generateSHA256, performStaticURLChecks } from '@/components/utils/securityUtils';
 
 export default function QrStudio({ initialTab = 'create' }) {
   const [activeTab, setActiveTab] = useState(initialTab);
 
-  // Sync activeTab with initialTab prop (for subroute pages)
-  React.useEffect(() => {
+  // Sync activeTab with initialTab prop
+  useEffect(() => {
     if (initialTab && initialTab !== activeTab) {
-      const validTabs = ['create', 'preview', 'customize', 'stego', 'security', 'analytics', 'bulk'];
+      const validTabs = ['create', 'customize', 'preview', 'stego', 'security', 'analytics', 'bulk'];
       if (validTabs.includes(initialTab)) {
         setActiveTab(initialTab);
       }
@@ -49,7 +42,7 @@ export default function QrStudio({ initialTab = 'create' }) {
   }, [initialTab]);
 
   // Update URL when tab changes
-  React.useEffect(() => {
+  useEffect(() => {
     const currentPath = window.location.pathname;
     if (currentPath === '/qr' || currentPath === '/Qr') {
       if (activeTab && activeTab !== 'create') {
@@ -60,24 +53,12 @@ export default function QrStudio({ initialTab = 'create' }) {
     }
   }, [activeTab]);
 
-  // ========== NEW UI STATE (Navbar Studio) ==========
+  // ========== PAYLOAD STATE ==========
   const [payloadType, setPayloadType] = useState('url');
-  const [payloadValue, setPayloadValue] = useState('');
-  const [title, setTitle] = useState('');
-  const [mode, setMode] = useState('static');
-  const [dynamicRedirectUrl, setDynamicRedirectUrl] = useState('');
-  const [artStyle, setArtStyle] = useState('');
-  const [colorTheme, setColorTheme] = useState('#000000');
-  const [logoUrl, setLogoUrl] = useState('');
-  const [errorCorrectionLevel, setErrorCorrectionLevel] = useState('H');
-  const [hotZones, setHotZones] = useState([]);
-  const [riskScore, setRiskScore] = useState(0);
-  const [riskFlags, setRiskFlags] = useState([]);
-  const [qrAssetDraft, setQrAssetDraft] = useState(null);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [showPayloadSelector, setShowPayloadSelector] = useState(false);
+  const [qrAssetDraft, setQrAssetDraft] = useState(null);
 
-  // ========== CUSTOMIZATION STATE (Extended) ==========
+  // ========== CUSTOMIZATION STATE ==========
   const [customization, setCustomization] = useState({
     dotStyle: 'square',
     eyeStyle: 'square',
@@ -127,7 +108,7 @@ export default function QrStudio({ initialTab = 'create' }) {
     }
   });
 
-  // ========== OG ENGINE STATE (from QRGeneratorTab) ==========
+  // ========== QR GENERATION STATE ==========
   const [qrType, setQrType] = useState("url");
   const [qrData, setQrData] = useState({
     url: "", text: "", email: "", emailSubject: "", emailBody: "",
@@ -138,29 +119,16 @@ export default function QrStudio({ initialTab = 'create' }) {
     eventTitle: "", eventLocation: "", eventStartDate: "", eventStartTime: "", eventEndDate: "", eventEndTime: "", eventDescription: ""
   });
   const [size, setSize] = useState(512);
+  const [errorCorrectionLevel, setErrorCorrectionLevel] = useState('H');
   const [qrGenerated, setQrGenerated] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [securityResult, setSecurityResult] = useState(null);
   const [codeId, setCodeId] = useState(null);
   const [scanningStage, setScanningStage] = useState("");
-  const [selectedPalette, setSelectedPalette] = useState("classic");
-  const [customColors, setCustomColors] = useState({ fg: "#000000", bg: "#FFFFFF" });
-  const [logoFile, setLogoFile] = useState(null);
   const [logoPreviewUrl, setLogoPreviewUrl] = useState(null);
-  const fileInputRef = useRef(null);
+  const [logoFile, setLogoFile] = useState(null);
 
-  // OG Engine Color Palettes
-  const colorPalettes = [
-    { id: "classic", name: "Classic", fg: "#000000", bg: "#FFFFFF" },
-    { id: "royal", name: "Royal Blue", fg: "#1E40AF", bg: "#FFFFFF" },
-    { id: "cyber", name: "Cyber", fg: "#0EA5E9", bg: "#0F172A" },
-    { id: "emerald", name: "Emerald", fg: "#059669", bg: "#FFFFFF" },
-    { id: "sunset", name: "Sunset", fg: "#DC2626", bg: "#FEF2F2" },
-    { id: "grape", name: "Grape", fg: "#7C3AED", bg: "#FFFFFF" },
-    { id: "custom", name: "Custom", fg: customColors.fg, bg: customColors.bg }
-  ];
-
-  // OG Engine QR Types (with security flags)
+  // QR Types with security flags
   const qrTypes = [
     { id: "url", name: "URL/Website", needsSecurity: true },
     { id: "text", name: "Plain Text", needsSecurity: false },
@@ -176,31 +144,7 @@ export default function QrStudio({ initialTab = 'create' }) {
   const selectedPayloadType = PAYLOAD_TYPES.find(t => t.id === payloadType);
   const currentTypeConfig = qrTypes.find(t => t.id === qrType);
 
-  // Risk evaluation with debounce (for advanced mode)
-  useEffect(() => {
-    if (!payloadValue) {
-      setRiskScore(0);
-      setRiskFlags([]);
-      return;
-    }
-
-    const timer = setTimeout(async () => {
-      try {
-        const result = await base44.functions.invoke('evaluateQrRisk', {
-          payloadType,
-          payloadValue
-        });
-        setRiskScore(result.data.riskScore || 0);
-        setRiskFlags(result.data.riskFlags || []);
-      } catch (error) {
-        console.error('Risk evaluation failed:', error);
-      }
-    }, 600);
-
-    return () => clearTimeout(timer);
-  }, [payloadType, payloadValue]);
-
-  // ========== OG ENGINE FUNCTIONS ==========
+  // ========== BUILD PAYLOAD ==========
   const buildQRPayload = () => {
     switch (qrType) {
       case "url": return qrData.url;
@@ -219,28 +163,7 @@ export default function QrStudio({ initialTab = 'create' }) {
     }
   };
 
-  const handleLogoUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file || !file.type.startsWith('image/') || file.size > 2 * 1024 * 1024) {
-      toast.error('Please upload a valid image under 2MB');
-      return;
-    }
-    setLogoFile(file);
-    const reader = new FileReader();
-    reader.onloadend = () => setLogoPreviewUrl(reader.result);
-    reader.readAsDataURL(file);
-  };
-
-  const uploadLogoToServer = async () => {
-    if (!logoFile) return null;
-    try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file: logoFile });
-      return file_url;
-    } catch (error) {
-      return null;
-    }
-  };
-
+  // ========== NLP ANALYSIS ==========
   const performNLPAnalysis = async (payload) => {
     setScanningStage("Running NLP analysis...");
     try {
@@ -271,8 +194,20 @@ export default function QrStudio({ initialTab = 'create' }) {
     }
   };
 
-  // OG Engine Generate QR (with full security + stego support)
-  const generateOGQR = async () => {
+  // ========== GET QR URL ==========
+  const getQRUrl = () => {
+    const payload = buildQRPayload();
+    const fgColor = customization.gradient?.enabled 
+      ? customization.gradient.color1.replace('#', '')
+      : (customization.foregroundColor || '#000000').replace('#', '');
+    const bgColor = customization.background?.type === 'solid'
+      ? (customization.background?.color || '#FFFFFF').replace('#', '')
+      : 'FFFFFF';
+    return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(payload)}&ecc=${errorCorrectionLevel}&color=${encodeURIComponent(fgColor)}&bgcolor=${encodeURIComponent(bgColor)}`;
+  };
+
+  // ========== GENERATE QR ==========
+  const generateQR = async () => {
     const payload = buildQRPayload();
     if (!payload) {
       toast.error("Please fill in required fields");
@@ -288,7 +223,7 @@ export default function QrStudio({ initialTab = 'create' }) {
       let combinedResult = null;
 
       if (needsSecurity) {
-        setScanningStage("Performing checks...");
+        setScanningStage("Performing security checks...");
         await new Promise(resolve => setTimeout(resolve, 500));
         const staticResult = performStaticURLChecks(payload);
         const nlpResult = await performNLPAnalysis(payload);
@@ -320,16 +255,14 @@ export default function QrStudio({ initialTab = 'create' }) {
             severity: "high"
           });
           setIsScanning(false);
+          toast.error("QR blocked due to security concerns");
           return;
         }
       }
 
-      let uploadedLogoUrl = logoFile ? await uploadLogoToServer() : null;
       setQrGenerated(true);
-
       const newCodeId = `qr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       setCodeId(newCodeId);
-      const palette = colorPalettes.find(p => p.id === selectedPalette);
 
       await base44.entities.QRGenHistory.create({
         code_id: newCodeId,
@@ -341,10 +274,10 @@ export default function QrStudio({ initialTab = 'create' }) {
         type: qrType,
         image_format: "png",
         error_correction: errorCorrectionLevel,
-        foreground_color: palette.fg,
-        background_color: palette.bg,
-        has_logo: !!uploadedLogoUrl,
-        logo_url: uploadedLogoUrl
+        foreground_color: customization.foregroundColor,
+        background_color: customization.backgroundColor,
+        has_logo: !!logoPreviewUrl,
+        logo_url: logoPreviewUrl
       });
 
       if (combinedResult) {
@@ -361,7 +294,7 @@ export default function QrStudio({ initialTab = 'create' }) {
         });
       }
 
-      // Sync to qrAssetDraft for other tabs
+      // Set asset draft for other tabs
       setQrAssetDraft({
         id: newCodeId,
         title: qrType,
@@ -371,8 +304,7 @@ export default function QrStudio({ initialTab = 'create' }) {
         riskScore: combinedResult?.final_score || 100,
         riskFlags: combinedResult?.phishing_indicators || [],
         errorCorrectionLevel,
-        artStyle: null,
-        hotZones: []
+        artStyle: null
       });
 
       toast.success("QR Code generated successfully!");
@@ -381,25 +313,13 @@ export default function QrStudio({ initialTab = 'create' }) {
       toast.error("QR generation failed");
     } finally {
       setIsScanning(false);
+      setScanningStage("");
     }
   };
 
-  const getQRUrl = () => {
-    const payload = buildQRPayload();
-    // Use customization colors if gradient not enabled, otherwise use foreground
-    const fgColor = customization.gradient?.enabled 
-      ? customization.gradient.color1.replace('#', '')
-      : (customization.foregroundColor || '#000000').replace('#', '');
-    const bgColor = customization.background?.type === 'solid'
-      ? (customization.background?.color || '#FFFFFF').replace('#', '')
-      : 'FFFFFF';
-    return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(payload)}&ecc=${errorCorrectionLevel}&color=${encodeURIComponent(fgColor)}&bgcolor=${encodeURIComponent(bgColor)}`;
-  };
-
-  // Apply customization changes and regenerate QR
+  // Apply customization
   const applyCustomization = () => {
     if (qrGenerated) {
-      // Update qrAssetDraft with new customization
       setQrAssetDraft(prev => ({
         ...prev,
         customization: { ...customization },
@@ -411,58 +331,7 @@ export default function QrStudio({ initialTab = 'create' }) {
     }
   };
 
-  const downloadQR = () => {
-    const link = document.createElement('a');
-    link.href = getQRUrl();
-    link.download = `glyphlock-qr-${qrType}-${codeId || Date.now()}.png`;
-    link.click();
-  };
-
-  // ========== ADVANCED MODE GENERATE (for 90+ payload types) ==========
-  const handleGenerate = async () => {
-    if (!title || !payloadValue) {
-      toast.error('Title and payload are required');
-      return;
-    }
-
-    setIsGenerating(true);
-    try {
-      const result = await base44.functions.invoke('generateQrAsset', {
-        title,
-        mode,
-        payloadType,
-        payloadValue,
-        dynamicRedirectUrl: mode === 'dynamic' ? dynamicRedirectUrl : null,
-        artStyle: artStyle || null,
-        logoUrl: logoUrl || null,
-        colorTheme,
-        errorCorrectionLevel,
-        hotZones,
-        stegoConfig: { enabled: false }
-      });
-
-      setQrAssetDraft({
-        id: result.data.qrAssetId,
-        title,
-        safeQrImageUrl: result.data.safeQrImageUrl,
-        artQrImageUrl: result.data.artQrImageUrl,
-        immutableHash: result.data.immutableHash,
-        riskScore: result.data.riskScore,
-        riskFlags: result.data.riskFlags,
-        errorCorrectionLevel,
-        artStyle,
-        hotZones
-      });
-
-      toast.success('QR code generated successfully!');
-      setActiveTab('preview');
-    } catch (error) {
-      toast.error(error.message || 'Generation failed');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
+  // Stego handler
   const handleEmbedded = (disguisedImageUrl, mode) => {
     setQrAssetDraft(prev => ({
       ...prev,
@@ -473,7 +342,7 @@ export default function QrStudio({ initialTab = 'create' }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-purple-950/20 to-black">
-      {/* Animated Background Grid */}
+      {/* Background */}
       <div className="fixed inset-0 z-0 opacity-20 pointer-events-none">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-30"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-purple-500/5 to-blue-500/5 animate-pulse"></div>
@@ -490,7 +359,7 @@ export default function QrStudio({ initialTab = 'create' }) {
               </h1>
               <p className="text-sm sm:text-base text-gray-400 flex items-center gap-2">
                 <Shield className="w-4 h-4 text-purple-400" />
-                Military-grade QR generation with steganography, hot zones & anti-quishing
+                Military-grade QR generation with steganography & anti-quishing
               </p>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
@@ -509,188 +378,143 @@ export default function QrStudio({ initialTab = 'create' }) {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 max-w-7xl">
-
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        {/* Desktop Tabs - 01_Create, 02_Customize, 03_Preview, 04_Stego, 05_Security, 06_Analytics, 07_Bulk */}
-        <TabsList className="hidden lg:flex w-full mb-6 bg-black/40 backdrop-blur-md border-t-2 border-b-2 border-cyan-500/20 p-0 h-auto rounded-none">
-          <TabsTrigger 
-            value="create" 
-            className="flex-1 min-h-[52px] relative group border-r border-cyan-500/10 data-[state=active]:bg-gradient-to-b data-[state=active]:from-cyan-500/20 data-[state=active]:to-transparent data-[state=active]:border-t-2 data-[state=active]:border-t-cyan-400 data-[state=active]:text-cyan-300 text-gray-500 hover:text-gray-300 transition-all font-mono text-xs uppercase tracking-widest rounded-none"
-          >
-            <Wand2 className="w-4 h-4 mr-2" />
-            <span>01_Create</span>
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-0 group-data-[state=active]:opacity-100 glyph-glow"></div>
-          </TabsTrigger>
-          
-          <TabsTrigger 
-            value="customize" 
-            className="flex-1 min-h-[52px] relative group border-r border-cyan-500/10 data-[state=active]:bg-gradient-to-b data-[state=active]:from-blue-500/20 data-[state=active]:to-transparent data-[state=active]:border-t-2 data-[state=active]:border-t-blue-400 data-[state=active]:text-blue-300 text-gray-500 hover:text-gray-300 transition-all font-mono text-xs uppercase tracking-widest rounded-none"
-          >
-            <Layers className="w-3 h-3 mr-2" />
-            <span>02_Customize</span>
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-data-[state=active]:opacity-100"></div>
-          </TabsTrigger>
-          
-          <TabsTrigger 
-            value="preview" 
-            className="flex-1 min-h-[52px] relative group border-r border-cyan-500/10 data-[state=active]:bg-gradient-to-b data-[state=active]:from-purple-500/20 data-[state=active]:to-transparent data-[state=active]:border-t-2 data-[state=active]:border-t-purple-400 data-[state=active]:text-purple-300 text-gray-500 hover:text-gray-300 transition-all font-mono text-xs uppercase tracking-widest rounded-none"
-          >
-            <Eye className="w-3 h-3 mr-2" />
-            <span>03_Preview</span>
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-0 group-data-[state=active]:opacity-100"></div>
-          </TabsTrigger>
-          
-          <TabsTrigger 
-            value="stego" 
-            className="flex-1 min-h-[52px] relative group border-r border-cyan-500/10 data-[state=active]:bg-gradient-to-b data-[state=active]:from-purple-500/20 data-[state=active]:to-transparent data-[state=active]:border-t-2 data-[state=active]:border-t-purple-400 data-[state=active]:text-purple-300 text-gray-500 hover:text-gray-300 transition-all font-mono text-xs uppercase tracking-widest rounded-none"
-          >
-            <Lock className="w-3 h-3 mr-2" />
-            <span>04_Stego</span>
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-0 group-data-[state=active]:opacity-100"></div>
-          </TabsTrigger>
-          
-          <TabsTrigger 
-            value="security" 
-            className="flex-1 min-h-[52px] relative group border-r border-cyan-500/10 data-[state=active]:bg-gradient-to-b data-[state=active]:from-green-500/20 data-[state=active]:to-transparent data-[state=active]:border-t-2 data-[state=active]:border-t-green-400 data-[state=active]:text-green-300 text-gray-500 hover:text-gray-300 transition-all font-mono text-xs uppercase tracking-widest rounded-none"
-          >
-            <Shield className="w-3 h-3 mr-2" />
-            <span>05_Security</span>
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-green-400 to-transparent opacity-0 group-data-[state=active]:opacity-100"></div>
-          </TabsTrigger>
-          
-          <TabsTrigger 
-            value="analytics" 
-            className="flex-1 min-h-[52px] relative group border-r border-cyan-500/10 data-[state=active]:bg-gradient-to-b data-[state=active]:from-blue-500/20 data-[state=active]:to-transparent data-[state=active]:border-t-2 data-[state=active]:border-t-blue-400 data-[state=active]:text-blue-300 text-gray-500 hover:text-gray-300 transition-all font-mono text-xs uppercase tracking-widest rounded-none"
-          >
-            <span>06_Analytics</span>
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-data-[state=active]:opacity-100"></div>
-          </TabsTrigger>
-          
-          <TabsTrigger 
-            value="bulk" 
-            className="flex-1 min-h-[52px] relative group data-[state=active]:bg-gradient-to-b data-[state=active]:from-purple-500/20 data-[state=active]:to-transparent data-[state=active]:border-t-2 data-[state=active]:border-t-purple-400 data-[state=active]:text-purple-300 text-gray-500 hover:text-gray-300 transition-all font-mono text-xs uppercase tracking-widest rounded-none"
-          >
-            <span>07_Bulk</span>
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-0 group-data-[state=active]:opacity-100"></div>
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Mobile Tabs - 01_Create, 02_Customize, 03_Preview, 04_Stego, 05_Security, 06_Analytics, 07_Bulk */}
-        <div className="lg:hidden mb-6 -mx-4 px-4">
-          <div className="flex gap-1 overflow-x-auto pb-2 scrollbar-hide bg-black/60 backdrop-blur-sm border border-cyan-500/20 p-1">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          {/* Desktop Tabs */}
+          <TabsList className="hidden lg:flex w-full mb-6 bg-black/40 backdrop-blur-md border-t-2 border-b-2 border-cyan-500/20 p-0 h-auto rounded-none">
             {[
-              { value: 'create', icon: Wand2, label: 'Create', num: '01' },
-              { value: 'customize', icon: Layers, label: 'Customize', num: '02' },
-              { value: 'preview', icon: Eye, label: 'Preview', num: '03' },
-              { value: 'stego', icon: Lock, label: 'Stego', num: '04' },
-              { value: 'security', icon: Shield, label: 'Security', num: '05' },
-              { value: 'analytics', icon: null, label: 'Analytics', num: '06' },
-              { value: 'bulk', icon: null, label: 'Bulk', num: '07' },
-            ].map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.value}
-                  onClick={() => setActiveTab(tab.value)}
-                  className={`flex flex-col items-center justify-center px-3 py-2 whitespace-nowrap text-xs font-mono uppercase tracking-wider transition-all min-h-[48px] min-w-[72px] border-r border-cyan-500/10 last:border-r-0 ${
-                    activeTab === tab.value
-                      ? 'bg-gradient-to-b from-cyan-500/30 to-transparent text-cyan-300 border-t-2 border-t-cyan-400 shadow-lg'
-                      : 'text-gray-500 hover:text-gray-300'
-                  }`}
-                >
-                  <div className="flex items-center gap-1 mb-0.5">
-                    {Icon && <Icon className="w-3 h-3" />}
-                    <span className="text-[10px] opacity-60">{tab.num}</span>
-                  </div>
-                  <span className="text-[9px]">{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+              { value: 'create', icon: Wand2, label: '01_Create' },
+              { value: 'customize', icon: Layers, label: '02_Customize' },
+              { value: 'preview', icon: Eye, label: '03_Preview' },
+              { value: 'stego', icon: Lock, label: '04_Stego' },
+              { value: 'security', icon: Shield, label: '05_Security' },
+              { value: 'analytics', icon: BarChart3, label: '06_Analytics' },
+              { value: 'bulk', icon: Upload, label: '07_Bulk' },
+            ].map((tab) => (
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className="flex-1 min-h-[52px] relative group border-r border-cyan-500/10 last:border-r-0 data-[state=active]:bg-gradient-to-b data-[state=active]:from-cyan-500/20 data-[state=active]:to-transparent data-[state=active]:border-t-2 data-[state=active]:border-t-cyan-400 data-[state=active]:text-cyan-300 text-gray-500 hover:text-gray-300 transition-all font-mono text-xs uppercase tracking-widest rounded-none"
+              >
+                <tab.icon className="w-4 h-4 mr-2" />
+                <span>{tab.label}</span>
+              </TabsTrigger>
+            ))}
+          </TabsList>
 
-        {/* Create Tab - OG ENGINE INTEGRATED */}
-        <TabsContent value="create">
-          <div className="space-y-8 relative z-10">
-            {/* Security Alert for URL/Email types */}
-            {currentTypeConfig?.needsSecurity && (
-              <Alert className="bg-blue-500/10 border-blue-500/30">
-                <Info className="h-4 w-4 text-blue-400" />
-                <AlertDescription className="text-white">
-                  <strong>Security Active:</strong> URLs/emails scanned by AI. Scores under 65/100 are blocked.
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {/* 90+ Payload Type Selector */}
-            <Card className={`${GlyphCard.premium}`}>
-              <CardHeader className="border-b border-purple-500/20 pb-4">
-                <CardTitle className="text-white flex items-center justify-between">
-                  <span className="flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-cyan-400" />
-                    Payload Type ({PAYLOAD_TYPES.length}+ Available)
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowPayloadSelector(!showPayloadSelector)}
-                    className="text-cyan-400"
+          {/* Mobile Tabs */}
+          <div className="lg:hidden mb-6 -mx-4 px-4">
+            <div className="flex gap-1 overflow-x-auto pb-2 scrollbar-hide bg-black/60 backdrop-blur-sm border border-cyan-500/20 p-1">
+              {[
+                { value: 'create', icon: Wand2, label: 'Create', num: '01' },
+                { value: 'customize', icon: Layers, label: 'Customize', num: '02' },
+                { value: 'preview', icon: Eye, label: 'Preview', num: '03' },
+                { value: 'stego', icon: Lock, label: 'Stego', num: '04' },
+                { value: 'security', icon: Shield, label: 'Security', num: '05' },
+                { value: 'analytics', icon: BarChart3, label: 'Analytics', num: '06' },
+                { value: 'bulk', icon: Upload, label: 'Bulk', num: '07' },
+              ].map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.value}
+                    onClick={() => setActiveTab(tab.value)}
+                    className={`flex flex-col items-center justify-center px-3 py-2 whitespace-nowrap text-xs font-mono uppercase tracking-wider transition-all min-h-[48px] min-w-[72px] ${
+                      activeTab === tab.value
+                        ? 'bg-gradient-to-b from-cyan-500/30 to-transparent text-cyan-300 border-t-2 border-t-cyan-400 shadow-lg'
+                        : 'text-gray-500 hover:text-gray-300'
+                    }`}
                   >
-                    {showPayloadSelector ? 'Collapse' : 'Expand'}
-                  </Button>
-                </CardTitle>
-              </CardHeader>
-              {showPayloadSelector ? (
-                <CardContent className="pt-4">
-                  <PayloadTypeSelector
-                    value={payloadType}
-                    onChange={(newType) => {
-                      setPayloadType(newType);
-                      // Map advanced type to OG type for compatibility
-                      const typeMapping = {
-                        'url': 'url', 'url_dynamic': 'url', 'url_timelock': 'url', 'url_geolock': 'url',
-                        'vcard': 'vcard', 'mecard': 'vcard', 'digital_card': 'vcard',
-                        'tap_call': 'phone', 'tap_text': 'sms', 'email_template': 'email',
-                        'wifi_config': 'wifi', 'data_json': 'text', 'data_base64': 'text'
-                      };
-                      if (typeMapping[newType]) setQrType(typeMapping[newType]);
-                    }}
-                  />
-                </CardContent>
-              ) : (
-                <CardContent className="pt-4">
-                  <div className="flex items-center gap-4 p-4 bg-gray-800/50 rounded-lg border border-gray-700">
-                    {selectedPayloadType && (
-                      <>
-                        <div className="p-2 bg-cyan-500/20 rounded-lg">
-                          <selectedPayloadType.icon className="w-6 h-6 text-cyan-400" />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-white">{selectedPayloadType.label}</h4>
-                          <p className="text-xs text-gray-400">{selectedPayloadType.description}</p>
-                        </div>
-                        {selectedPayloadType.premium && (
-                          <span className="ml-auto px-2 py-1 text-xs bg-purple-500/20 text-purple-400 rounded border border-purple-500/50">Premium</span>
-                        )}
-                      </>
-                    )}
-                  </div>
-                </CardContent>
-              )}
-            </Card>
+                    <div className="flex items-center gap-1 mb-0.5">
+                      <Icon className="w-3 h-3" />
+                      <span className="text-[10px] opacity-60">{tab.num}</span>
+                    </div>
+                    <span className="text-[9px]">{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
-            <div className="grid lg:grid-cols-3 gap-8">
-              {/* Left Column - Form */}
-              <div className="lg:col-span-1 space-y-6">
+          {/* ========== 01_CREATE TAB ========== */}
+          <TabsContent value="create">
+            <div className="space-y-6 relative z-10">
+              {/* Security Alert */}
+              {currentTypeConfig?.needsSecurity && (
+                <Alert className="bg-blue-500/10 border-blue-500/30">
+                  <Info className="h-4 w-4 text-blue-400" />
+                  <AlertDescription className="text-white">
+                    <strong>Security Active:</strong> URLs/emails are scanned by AI. Scores under 65/100 are blocked.
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {/* Payload Type Selector */}
+              <Card className={GlyphCard.premium}>
+                <CardHeader className="border-b border-purple-500/20 pb-4">
+                  <CardTitle className="text-white flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-cyan-400" />
+                      Payload Type ({PAYLOAD_TYPES.length}+ Available)
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowPayloadSelector(!showPayloadSelector)}
+                      className="text-cyan-400"
+                    >
+                      {showPayloadSelector ? 'Collapse' : 'Expand'}
+                    </Button>
+                  </CardTitle>
+                </CardHeader>
+                {showPayloadSelector ? (
+                  <CardContent className="pt-4">
+                    <PayloadTypeSelector
+                      value={payloadType}
+                      onChange={(newType) => {
+                        setPayloadType(newType);
+                        const typeMapping = {
+                          'url': 'url', 'url_dynamic': 'url', 'url_timelock': 'url', 'url_geolock': 'url',
+                          'vcard': 'vcard', 'mecard': 'vcard', 'digital_card': 'vcard',
+                          'tap_call': 'phone', 'tap_text': 'sms', 'email_template': 'email',
+                          'wifi_config': 'wifi', 'data_json': 'text', 'data_base64': 'text'
+                        };
+                        if (typeMapping[newType]) setQrType(typeMapping[newType]);
+                      }}
+                    />
+                  </CardContent>
+                ) : (
+                  <CardContent className="pt-4">
+                    <div className="flex items-center gap-4 p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+                      {selectedPayloadType && (
+                        <>
+                          <div className="p-2 bg-cyan-500/20 rounded-lg">
+                            <selectedPayloadType.icon className="w-6 h-6 text-cyan-400" />
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-white">{selectedPayloadType.label}</h4>
+                            <p className="text-xs text-gray-400">{selectedPayloadType.description}</p>
+                          </div>
+                          {selectedPayloadType.premium && (
+                            <span className="ml-auto px-2 py-1 text-xs bg-purple-500/20 text-purple-400 rounded border border-purple-500/50">Premium</span>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+
+              {/* Form + Controls */}
+              <div className="grid lg:grid-cols-2 gap-6">
+                {/* Left: Payload Form */}
                 <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg}`}>
                   <CardHeader className="border-b border-purple-500/20">
                     <CardTitle className="text-white">{currentTypeConfig?.name || 'QR Configuration'}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6 pt-6">
-                    {/* OG Engine Type Form */}
                     <QRTypeForm qrType={qrType} qrData={qrData} setQrData={setQrData} />
 
-                    {/* Size Slider */}
+                    {/* Size */}
                     <div>
                       <Label className="text-white">Size: {size}px</Label>
                       <Slider
@@ -703,9 +527,25 @@ export default function QrStudio({ initialTab = 'create' }) {
                       />
                     </div>
 
-                    {/* Generate Button - OG Engine */}
+                    {/* Error Correction */}
+                    <div>
+                      <Label className="text-white">Error Correction</Label>
+                      <Select value={errorCorrectionLevel} onValueChange={setErrorCorrectionLevel}>
+                        <SelectTrigger className="bg-gray-800 border-gray-700 text-white mt-2">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-gray-800 border-gray-700">
+                          <SelectItem value="L">Low (7%)</SelectItem>
+                          <SelectItem value="M">Medium (15%)</SelectItem>
+                          <SelectItem value="Q">Quartile (25%)</SelectItem>
+                          <SelectItem value="H">High (30%)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Generate Button */}
                     <Button
-                      onClick={generateOGQR}
+                      onClick={generateQR}
                       disabled={isScanning}
                       className={`${GlyphButton.primary} w-full ${GlyphShadows.neonCyan}`}
                     >
@@ -717,342 +557,287 @@ export default function QrStudio({ initialTab = 'create' }) {
                       ) : (
                         <>
                           <Shield className="w-4 h-4 mr-2" />
-                          Generate QR
+                          Generate Secure QR
                         </>
                       )}
                     </Button>
                   </CardContent>
                 </Card>
 
-                {/* Error Correction */}
-                <Card className={`${GlyphCard.glass}`}>
-                  <CardHeader>
-                    <CardTitle className="text-white text-sm">Error Correction</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <Select value={errorCorrectionLevel} onValueChange={setErrorCorrectionLevel}>
-                      <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-800 border-gray-700">
-                        <SelectItem value="L">Low (7%)</SelectItem>
-                        <SelectItem value="M">Medium (15%)</SelectItem>
-                        <SelectItem value="Q">Quartile (25%)</SelectItem>
-                        <SelectItem value="H">High (30%)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </CardContent>
-                </Card>
+                {/* Right: Risk Badge + Status */}
+                <div className="space-y-6">
+                  {/* Risk Badge */}
+                  {securityResult && (
+                    <Card className={GlyphCard.glass}>
+                      <CardHeader>
+                        <CardTitle className="text-white text-sm flex items-center gap-2">
+                          <Shield className="w-4 h-4 text-cyan-400" />
+                          Security Scan Result
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <QrSecurityBadge
+                          riskScore={securityResult.final_score}
+                          riskFlags={securityResult.phishing_indicators || []}
+                        />
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Generation Status */}
+                  {qrGenerated && (
+                    <Card className={GlyphCard.glass}>
+                      <CardContent className="pt-6">
+                        <div className="text-center">
+                          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/20 flex items-center justify-center">
+                            <Shield className="w-8 h-8 text-green-400" />
+                          </div>
+                          <h4 className="text-white font-bold mb-2">QR Generated Successfully</h4>
+                          <p className="text-sm text-gray-400 mb-4">
+                            Go to Customize tab to style your QR, then Preview to download.
+                          </p>
+                          <div className="flex gap-2">
+                            <Button
+                              onClick={() => setActiveTab('customize')}
+                              variant="outline"
+                              className="flex-1 border-cyan-500/50 text-white"
+                            >
+                              <Layers className="w-4 h-4 mr-2" />
+                              Customize
+                            </Button>
+                            <Button
+                              onClick={() => setActiveTab('preview')}
+                              variant="outline"
+                              className="flex-1 border-purple-500/50 text-white"
+                            >
+                              <Eye className="w-4 h-4 mr-2" />
+                              Preview
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Blocked Notice */}
+                  {securityResult?.final_score < 65 && (
+                    <Card className="bg-red-500/10 border-red-500/30">
+                      <CardContent className="pt-6 text-center">
+                        <div className="text-5xl mb-4">🚫</div>
+                        <h4 className="text-red-400 font-bold">Generation Blocked</h4>
+                        <p className="text-sm text-white">Security score: {securityResult.final_score}/100</p>
+                        <p className="text-xs text-gray-400 mt-2">This URL/payload failed security checks.</p>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* ========== 02_CUSTOMIZE TAB ========== */}
+          <TabsContent value="customize">
+            <div className="grid lg:grid-cols-2 gap-8 relative z-10">
+              <div>
+                <QrCustomizationPanel
+                  customization={customization}
+                  setCustomization={setCustomization}
+                  errorCorrectionLevel={errorCorrectionLevel}
+                  setErrorCorrectionLevel={setErrorCorrectionLevel}
+                  onApply={applyCustomization}
+                />
               </div>
 
-              {/* Center Column - Preview */}
-              <div className="lg:col-span-1">
-                <Card className={`${GlyphCard.premium} h-full`}>
+              {/* Live Preview */}
+              <div>
+                <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg} sticky top-24`}>
                   <CardHeader className="border-b border-purple-500/20">
-                    <CardTitle className="text-white">Preview</CardTitle>
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <Eye className="w-5 h-5 text-cyan-400" />
+                      Live Preview
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="pt-6">
                     {qrGenerated ? (
                       <div className="space-y-4">
-                        <div className="bg-white p-8 rounded-lg flex items-center justify-center relative">
-                          <img src={getQRUrl()} alt="QR Code" className="max-w-full" />
-                          {logoPreviewUrl && (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <img src={logoPreviewUrl} alt="Logo" className="w-16 h-16 rounded-lg bg-white p-1" />
+                        <div 
+                          className="p-8 rounded-lg flex items-center justify-center relative"
+                          style={{
+                            background: customization.background?.type === 'gradient'
+                              ? `linear-gradient(135deg, ${customization.background?.gradientColor1}, ${customization.background?.gradientColor2})`
+                              : customization.background?.type === 'image' && customization.background?.imageUrl
+                                ? `url(${customization.background.imageUrl}) center/cover`
+                                : customization.background?.color || '#FFFFFF'
+                          }}
+                        >
+                          <img 
+                            src={getQRUrl()} 
+                            alt="QR Code" 
+                            className="max-w-full"
+                            style={{
+                              filter: customization.gradient?.enabled 
+                                ? `hue-rotate(${customization.gradient.angle}deg)` 
+                                : 'none'
+                            }}
+                          />
+                          {(logoPreviewUrl || customization.logo?.url) && (
+                            <div 
+                              className="absolute inset-0 flex items-center justify-center"
+                              style={{ opacity: (customization.logo?.opacity || 100) / 100 }}
+                            >
+                              <img 
+                                src={logoPreviewUrl || customization.logo?.url} 
+                                alt="Logo" 
+                                className={`bg-white p-1 ${
+                                  customization.logo?.shape === 'circle' ? 'rounded-full' :
+                                  customization.logo?.shape === 'rounded' ? 'rounded-xl' : 'rounded-lg'
+                                } ${customization.logo?.border ? 'border-2 border-gray-300' : ''}`}
+                                style={{ 
+                                  width: `${customization.logo?.size || 20}%`,
+                                  height: 'auto',
+                                  transform: `rotate(${customization.logo?.rotation || 0}deg)`
+                                }}
+                              />
                             </div>
                           )}
                         </div>
-                        <Button
-                          onClick={downloadQR}
-                          variant="outline"
-                          className="w-full border-cyan-500/50 hover:bg-cyan-500/10 text-white"
-                        >
-                          <Download className="w-4 h-4 mr-2" />
-                          Download QR
-                        </Button>
-                      </div>
-                    ) : securityResult?.final_score < 65 ? (
-                      <div className="h-96 flex items-center justify-center border-2 border-dashed border-red-700 rounded-lg bg-red-500/5">
-                        <div className="text-center p-6">
-                          <div className="text-5xl mb-4">🚫</div>
-                          <p className="text-red-400 font-semibold">Blocked</p>
-                          <p className="text-sm text-white">Score: {securityResult.final_score}/100</p>
+                        
+                        <div className="text-center text-xs text-gray-400 space-y-1">
+                          <p>Dot: {customization.dotStyle} | Eye: {customization.eyeStyle}</p>
+                          <p>ECC: {errorCorrectionLevel} | Size: {size}px</p>
                         </div>
                       </div>
                     ) : (
-                      <div className="h-96 flex items-center justify-center border-2 border-dashed border-gray-700 rounded-lg">
-                        <p className="text-gray-500">Generate to preview</p>
+                      <div className="h-80 flex items-center justify-center border-2 border-dashed border-gray-700 rounded-lg">
+                        <div className="text-center">
+                          <Wand2 className="w-12 h-12 mx-auto mb-4 text-gray-600" />
+                          <p className="text-gray-500">Generate a QR code in Create tab first</p>
+                        </div>
                       </div>
                     )}
                   </CardContent>
                 </Card>
               </div>
-
-              {/* Right Column - Actions & Info */}
-              <div className="lg:col-span-1 space-y-6">
-                <Card className={`${GlyphCard.glass}`}>
-                  <CardHeader>
-                    <CardTitle className="text-white text-sm">Next Steps</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-xs text-gray-400">
-                      After generating, customize colors, styles, and add logos in the Customize tab.
-                    </p>
-                    <Button
-                      onClick={() => setActiveTab('customize')}
-                      variant="outline"
-                      className="w-full border-cyan-500/50 text-white text-xs"
-                    >
-                      <Layers className="w-3 h-3 mr-2" />
-                      Go to Customization →
-                    </Button>
-                    <Button
-                      onClick={() => setActiveTab('stego')}
-                      variant="outline"
-                      className="w-full border-purple-500/50 text-white text-xs"
-                    >
-                      <Lock className="w-3 h-3 mr-2" />
-                      Steganography Tools →
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
             </div>
+          </TabsContent>
 
-            {/* Security Status - OG Engine */}
-            {securityResult && <SecurityStatus securityResult={securityResult} />}
-          </div>
-        </TabsContent>
-
-        {/* Preview Tab */}
-        <TabsContent value="preview">
-          {qrAssetDraft ? (
-            <QrPreviewCanvas
-              safeQrImageUrl={qrAssetDraft.safeQrImageUrl}
-              artQrImageUrl={qrAssetDraft.artQrImageUrl}
-              disguisedImageUrl={qrAssetDraft.disguisedImageUrl}
-              errorCorrectionLevel={qrAssetDraft.errorCorrectionLevel}
-              artStyle={qrAssetDraft.artStyle}
-              title="QR Preview"
+          {/* ========== 03_PREVIEW TAB ========== */}
+          <TabsContent value="preview">
+            <QrPreviewPanel
+              qrAssetDraft={qrAssetDraft}
+              customization={customization}
+              qrImageUrl={qrGenerated ? getQRUrl() : null}
+              securityResult={securityResult}
+              size={size}
+              errorCorrectionLevel={errorCorrectionLevel}
+              qrType={qrType}
+              codeId={codeId}
+              logoPreviewUrl={logoPreviewUrl}
+              onRegenerate={generateQR}
             />
-          ) : (
-            <Card className={`${GlyphCard.glass} p-12 text-center relative z-10`}>
-              <Wand2 className="w-16 h-16 mx-auto mb-4 text-gray-600" />
-              <p className="text-gray-400 text-lg">Generate a QR code first to see preview</p>
-            </Card>
-          )}
-        </TabsContent>
+          </TabsContent>
 
-        {/* Customize Tab - FULL CUSTOMIZATION PANEL */}
-        <TabsContent value="customize">
-          <div className="grid lg:grid-cols-2 gap-8 relative z-10">
-            {/* Left: Customization Controls */}
-            <div>
-              <QrCustomizationPanel
-                customization={customization}
-                setCustomization={setCustomization}
-                errorCorrectionLevel={errorCorrectionLevel}
-                setErrorCorrectionLevel={setErrorCorrectionLevel}
-                onApply={applyCustomization}
-              />
-            </div>
-
-            {/* Right: Live Preview */}
-            <div>
-              <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg} sticky top-24`}>
+          {/* ========== 04_STEGO TAB ========== */}
+          <TabsContent value="stego">
+            <div className="space-y-8 relative z-10">
+              <Card className={GlyphCard.premium}>
                 <CardHeader className="border-b border-purple-500/20">
                   <CardTitle className="text-white flex items-center gap-2">
-                    <Eye className="w-5 h-5 text-cyan-400" />
-                    Live Preview
+                    <Lock className="w-5 h-5 text-purple-400" />
+                    Steganography Engine
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-6">
-                  {qrGenerated ? (
-                    <div className="space-y-4">
-                      <div 
-                        className="p-8 rounded-lg flex items-center justify-center relative"
-                        style={{
-                          background: customization.background?.type === 'gradient'
-                            ? `linear-gradient(135deg, ${customization.background?.gradientColor1}, ${customization.background?.gradientColor2})`
-                            : customization.background?.type === 'image' && customization.background?.imageUrl
-                              ? `url(${customization.background.imageUrl}) center/cover`
-                              : customization.background?.color || '#FFFFFF'
-                        }}
-                      >
-                        <img 
-                          src={getQRUrl()} 
-                          alt="QR Code" 
-                          className="max-w-full"
-                          style={{
-                            filter: customization.gradient?.enabled 
-                              ? `hue-rotate(${customization.gradient.angle}deg)` 
-                              : 'none'
-                          }}
-                        />
-                        {(logoPreviewUrl || customization.logo?.url) && (
-                          <div 
-                            className="absolute inset-0 flex items-center justify-center"
-                            style={{ opacity: (customization.logo?.opacity || 100) / 100 }}
-                          >
-                            <img 
-                              src={logoPreviewUrl || customization.logo?.url} 
-                              alt="Logo" 
-                              className={`bg-white p-1 ${
-                                customization.logo?.shape === 'circle' ? 'rounded-full' :
-                                customization.logo?.shape === 'rounded' ? 'rounded-xl' : 'rounded-lg'
-                              } ${customization.logo?.border ? 'border-2 border-gray-300' : ''}`}
-                              style={{ 
-                                width: `${customization.logo?.size || 20}%`,
-                                height: 'auto'
-                              }}
-                            />
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div className="text-center text-xs text-gray-400 space-y-1">
-                        <p>Dot: {customization.dotStyle} | Eye: {customization.eyeStyle}</p>
-                        <p>ECC: {errorCorrectionLevel} | Size: {size}px</p>
-                        {customization.gradient?.enabled && (
-                          <p className="text-cyan-400">Gradient: {customization.gradient.type} @ {customization.gradient.angle}°</p>
-                        )}
-                      </div>
-
-                      <Button
-                        onClick={downloadQR}
-                        variant="outline"
-                        className="w-full border-cyan-500/50 hover:bg-cyan-500/10 text-white"
-                      >
-                        <Download className="w-4 h-4 mr-2" />
-                        Download Customized QR
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="h-80 flex items-center justify-center border-2 border-dashed border-gray-700 rounded-lg">
-                      <div className="text-center">
-                        <Wand2 className="w-12 h-12 mx-auto mb-4 text-gray-600" />
-                        <p className="text-gray-500">Generate a QR code in the Create tab first</p>
-                      </div>
-                    </div>
-                  )}
+                  <p className="text-gray-400 mb-6">
+                    Hide QR data within images or extract hidden data. Uses LSB (Least Significant Bit) encoding.
+                  </p>
+                  <SteganographicQR 
+                    qrPayload={buildQRPayload() || "https://glyphlock.io"} 
+                    qrGenerated={true}
+                  />
                 </CardContent>
               </Card>
             </div>
-          </div>
-        </TabsContent>
+          </TabsContent>
 
-        {/* Stego Art Tab - DUAL ENGINE: QrStegoArtBuilder + SteganographicQR */}
-        <TabsContent value="stego">
-          <div className="space-y-8 relative z-10">
-            {/* Advanced Stego Builder (for QrAsset mode) */}
+          {/* ========== 05_SECURITY TAB ========== */}
+          <TabsContent value="security">
+            <div className="space-y-6 relative z-10">
+              <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg}`}>
+                <CardHeader className="border-b border-purple-500/20">
+                  <CardTitle className={`${GlyphTypography.heading.lg} text-white flex items-center gap-2`}>
+                    <Shield className="w-5 h-5 text-cyan-400" />
+                    Security & Integrity
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 pt-6">
+                  {qrAssetDraft ? (
+                    <>
+                      <div className="space-y-2">
+                        <Label className="text-gray-300">Immutable Hash (SHA-256)</Label>
+                        <Input
+                          value={qrAssetDraft.immutableHash || ''}
+                          readOnly
+                          className="font-mono text-xs min-h-[44px] bg-gray-800 border-gray-700"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-gray-300">Risk Assessment</Label>
+                        <QrSecurityBadge
+                          riskScore={qrAssetDraft.riskScore || 0}
+                          riskFlags={qrAssetDraft.riskFlags || []}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-gray-400 text-center py-8">Generate a QR code to view security details</p>
+                  )}
+                </CardContent>
+              </Card>
+
+              {securityResult && <SecurityStatus securityResult={securityResult} />}
+
+              <Card className={GlyphCard.glass}>
+                <CardContent className="pt-6">
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div className="text-center p-4 bg-gray-800/50 rounded-lg">
+                      <Shield className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                      <h4 className="font-bold text-white text-sm">AI Scanning</h4>
+                      <p className="text-xs text-gray-400">NLP threat detection</p>
+                    </div>
+                    <div className="text-center p-4 bg-gray-800/50 rounded-lg">
+                      <Lock className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+                      <h4 className="font-bold text-white text-sm">Hash Verification</h4>
+                      <p className="text-xs text-gray-400">SHA-256 tamper detection</p>
+                    </div>
+                    <div className="text-center p-4 bg-gray-800/50 rounded-lg">
+                      <Eye className="w-8 h-8 text-purple-400 mx-auto mb-2" />
+                      <h4 className="font-bold text-white text-sm">Score Threshold</h4>
+                      <p className="text-xs text-gray-400">65/100 minimum</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* ========== 06_ANALYTICS TAB ========== */}
+          <TabsContent value="analytics">
             {qrAssetDraft ? (
-              <QrStegoArtBuilder
-                qrAssetDraft={qrAssetDraft}
-                onEmbedded={handleEmbedded}
-              />
+              <AnalyticsPanel qrAssetId={qrAssetDraft.id} />
             ) : (
-              <Card className={`${GlyphCard.glass} p-8 text-center`}>
-                <Sparkles className="w-12 h-12 mx-auto mb-4 text-cyan-500" />
-                <p className="text-gray-400">Generate a QR from Create tab first to use Advanced Stego Builder</p>
+              <Card className={`${GlyphCard.glass} p-12 text-center relative z-10`}>
+                <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-600" />
+                <p className="text-gray-400 text-lg">Generate a QR code first to view analytics</p>
               </Card>
             )}
+          </TabsContent>
 
-            {/* OG LSB Steganography Engine - Always Available */}
-            <div className="border-t border-gray-700 pt-8">
-              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <Lock className="w-5 h-5 text-purple-400" />
-                LSB Steganography Engine (Hide/Extract)
-              </h3>
-              <SteganographicQR 
-                qrPayload={buildQRPayload() || "https://glyphlock.io"} 
-                qrGenerated={true}
-              />
-            </div>
-          </div>
-        </TabsContent>
-
-        {/* Security Tab - FULL OG ENGINE SECURITY STATUS */}
-        <TabsContent value="security">
-          <div className="space-y-6 relative z-10">
-            <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg}`}>
-              <CardHeader className="border-b border-purple-500/20">
-                <CardTitle className={`${GlyphTypography.heading.lg} text-white flex items-center gap-2`}>
-                  <Shield className="w-5 h-5 text-cyan-400" />
-                  Security & Integrity
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 pt-6">
-                {qrAssetDraft ? (
-                  <>
-                    <div className="space-y-2">
-                      <Label className="text-gray-300">Immutable Hash (SHA-256)</Label>
-                      <Input
-                        value={qrAssetDraft.immutableHash || ''}
-                        readOnly
-                        className="font-mono text-xs min-h-[44px] bg-gray-800 border-gray-700"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-gray-300">Risk Assessment</Label>
-                      <QrSecurityBadge
-                        riskScore={qrAssetDraft.riskScore || 0}
-                        riskFlags={qrAssetDraft.riskFlags || []}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <p className="text-gray-400 text-center py-8">Generate a QR code to view security details</p>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* OG Security Status Panel */}
-            {securityResult && (
-              <SecurityStatus securityResult={securityResult} />
-            )}
-
-            {/* Security Info */}
-            <Card className={`${GlyphCard.glass}`}>
-              <CardContent className="pt-6">
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div className="text-center p-4 bg-gray-800/50 rounded-lg">
-                    <Shield className="w-8 h-8 text-green-400 mx-auto mb-2" />
-                    <h4 className="font-bold text-white text-sm">AI Scanning</h4>
-                    <p className="text-xs text-gray-400">NLP threat detection</p>
-                  </div>
-                  <div className="text-center p-4 bg-gray-800/50 rounded-lg">
-                    <Lock className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-                    <h4 className="font-bold text-white text-sm">Hash Verification</h4>
-                    <p className="text-xs text-gray-400">SHA-256 tamper detection</p>
-                  </div>
-                  <div className="text-center p-4 bg-gray-800/50 rounded-lg">
-                    <Eye className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-                    <h4 className="font-bold text-white text-sm">Score Threshold</h4>
-                    <p className="text-xs text-gray-400">65/100 minimum</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Analytics Tab */}
-        <TabsContent value="analytics">
-          {qrAssetDraft ? (
-            <AnalyticsPanel qrAssetId={qrAssetDraft.id} />
-          ) : (
-            <Card className={`${GlyphCard.glass} p-12 text-center relative z-10`}>
-              <Shield className="w-16 h-16 mx-auto mb-4 text-gray-600" />
-              <p className="text-gray-400 text-lg">Generate a QR code first to view analytics</p>
-            </Card>
-          )}
-        </TabsContent>
-
-        {/* Bulk Tab */}
-        <TabsContent value="bulk">
-          <QrBatchUploader />
-        </TabsContent>
-      </Tabs>
+          {/* ========== 07_BULK TAB ========== */}
+          <TabsContent value="bulk">
+            <QrBatchUploader />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
