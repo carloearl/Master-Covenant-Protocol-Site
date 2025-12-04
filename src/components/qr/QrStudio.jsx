@@ -577,19 +577,20 @@ export default function QrStudio({ initialTab = 'create' }) {
                 </div>
 
                 {/* Right: GL Preview Block */}
-                <div className="w-full lg:w-[540px]">
-                  <div className="relative w-full rounded-xl bg-[#0d0f1a]/70 p-4 overflow-hidden shadow-lg">
+                <div className="w-full lg:w-[620px]">
+                  <div className="relative w-full rounded-xl bg-[#0d0f1a]/70 p-5 overflow-hidden shadow-lg" style={{ minHeight: '480px' }}>
                     <img
                       src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/382879216_qrgl.png"
                       alt="GL Frame"
                       className="w-full h-auto object-contain select-none pointer-events-none"
+                      style={{ transform: 'scale(1.15)', transformOrigin: 'top left' }}
                     />
 
                     {qrGenerated && getRawQRUrl() && (
                       <img
                         src={getRawQRUrl()}
                         alt="Generated QR"
-                        className="absolute top-[50%] left-[63%] w-[32%] -translate-x-1/2 -translate-y-1/2 object-contain select-none pointer-events-none"
+                        className="absolute top-[58%] left-[65%] w-[36%] -translate-x-1/2 -translate-y-1/2 object-contain select-none pointer-events-none"
                       />
                     )}
                   </div>
