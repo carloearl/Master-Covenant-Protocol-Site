@@ -590,7 +590,7 @@ export default function QrStudio({ initialTab = 'create' }) {
                       <img
                         src={getRawQRUrl()}
                         alt="Generated QR"
-                        className="absolute top-[42%] left-[72%] w-[24%] -translate-x-1/2 -translate-y-1/2 object-contain select-none pointer-events-none"
+                        className="absolute top-[40%] left-[74%] w-[22%] -translate-x-1/2 -translate-y-1/2 object-contain select-none pointer-events-none"
                         style={{ imageRendering: 'pixelated' }}
                       />
                     )}
