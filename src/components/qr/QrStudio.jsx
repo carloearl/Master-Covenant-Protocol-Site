@@ -578,21 +578,86 @@ export default function QrStudio({ initialTab = 'create' }) {
                 </div>
 
                 {/* Right: GL Preview Block */}
-                <div className="w-full lg:w-[620px]">
-                  <div className="relative w-full rounded-xl bg-[#0d0f1a]/70 p-5 overflow-hidden shadow-lg" style={{ minHeight: '480px' }}>
-                    <img
-                      src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/382879216_qrgl.png"
-                      alt="GL Frame"
-                      className="w-full h-auto object-contain select-none pointer-events-none"
-                      style={{ transform: 'scale(1.15)', transformOrigin: 'top left' }}
-                    />
+                                      <div className="w-full lg:w-[620px]">
+                                        <div className="relative w-full rounded-xl bg-[#0d0f1a]/70 p-5 overflow-hidden shadow-lg" style={{ minHeight: '480px' }}>
 
-                    <img
-                      src={qrGenerated && getRawQRUrl() ? getRawQRUrl() : defaultQrUrl}
-                      alt={qrGenerated ? "Generated QR" : "Default QR"}
-                      className="absolute top-[40%] left-[76%] w-[22%] -translate-x-1/2 -translate-y-1/2 object-contain select-none pointer-events-none"
-                      style={{ imageRendering: 'pixelated' }}
-                    />
+                                          {/* Top Left: Customize Dropdown */}
+                                          <div className="absolute top-3 left-3 z-20 group">
+                                            <button 
+                                              onClick={() => setActiveTab('customize')}
+                                              className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-purple-600/80 to-blue-600/80 backdrop-blur-sm rounded-lg border border-purple-500/50 hover:border-purple-400 transition-all group-hover:shadow-lg group-hover:shadow-purple-500/30"
+                                            >
+                                              <Layers className="w-3 h-3 text-purple-300" />
+                                              <span className="text-xs font-semibold text-purple-200">Cus</span>
+                                              <svg className="w-3 h-3 text-purple-300 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                              </svg>
+                                            </button>
+                                            <div className="absolute top-full left-0 mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all bg-slate-900/95 backdrop-blur-sm rounded-lg border border-purple-500/30 p-2 min-w-[120px] shadow-xl">
+                                              <p className="text-xs text-gray-300 px-2 py-1">Preview Image</p>
+                                              <button 
+                                                onClick={() => setActiveTab('customize')}
+                                                className="w-full text-left text-xs text-purple-300 hover:text-purple-200 hover:bg-purple-500/20 px-2 py-1 rounded transition-colors"
+                                              >
+                                                Customize
+                                              </button>
+                                              <button 
+                                                onClick={() => setActiveTab('preview')}
+                                                className="w-full text-left text-xs text-blue-300 hover:text-blue-200 hover:bg-blue-500/20 px-2 py-1 rounded transition-colors"
+                                              >
+                                                Preview
+                                              </button>
+                                            </div>
+                                          </div>
+
+                                          {/* Top Right: Risk Indicator */}
+                                          <div className="absolute top-3 right-3 z-20">
+                                            {securityResult ? (
+                                              <div className={`flex items-center gap-1.5 px-3 py-1.5 backdrop-blur-sm rounded-lg border transition-all ${
+                                                securityResult.final_score >= 80 
+                                                  ? 'bg-green-600/30 border-green-500/50 shadow-green-500/20' 
+                                                  : securityResult.final_score >= 65 
+                                                    ? 'bg-yellow-600/30 border-yellow-500/50 shadow-yellow-500/20' 
+                                                    : 'bg-red-600/30 border-red-500/50 shadow-red-500/20'
+                                              } shadow-lg`}>
+                                                <div className={`w-2 h-2 rounded-full animate-pulse ${
+                                                  securityResult.final_score >= 80 
+                                                    ? 'bg-green-400' 
+                                                    : securityResult.final_score >= 65 
+                                                      ? 'bg-yellow-400' 
+                                                      : 'bg-red-400'
+                                                }`} />
+                                                <span className={`text-xs font-bold ${
+                                                  securityResult.final_score >= 80 
+                                                    ? 'text-green-300' 
+                                                    : securityResult.final_score >= 65 
+                                                      ? 'text-yellow-300' 
+                                                      : 'text-red-300'
+                                                }`}>
+                                                  {securityResult.final_score >= 80 ? 'Safe' : securityResult.final_score >= 65 ? 'Caution' : 'Risk'}
+                                                </span>
+                                              </div>
+                                            ) : (
+                                              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-700/50 backdrop-blur-sm rounded-lg border border-slate-600/50">
+                                                <div className="w-2 h-2 rounded-full bg-slate-400" />
+                                                <span className="text-xs font-medium text-slate-400">Ready</span>
+                                              </div>
+                                            )}
+                                          </div>
+
+                                          <img
+                                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/382879216_qrgl.png"
+                                            alt="GL Frame"
+                                            className="w-full h-auto object-contain select-none pointer-events-none"
+                                            style={{ transform: 'scale(1.15)', transformOrigin: 'top left' }}
+                                          />
+
+                                          <img
+                                            src={qrGenerated && getRawQRUrl() ? getRawQRUrl() : defaultQrUrl}
+                                            alt={qrGenerated ? "Generated QR" : "Default QR"}
+                                            className="absolute top-[40%] left-[76%] w-[22%] -translate-x-1/2 -translate-y-1/2 object-contain select-none pointer-events-none"
+                                            style={{ imageRendering: 'pixelated' }}
+                                          />
 
                     {/* Security & Status Info - Inside GL Preview */}
                     <div className="absolute bottom-4 left-4 right-4 space-y-3">
