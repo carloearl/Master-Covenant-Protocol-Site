@@ -144,6 +144,13 @@ export default function QrStudio({ initialTab = 'create' }) {
   const selectedPayloadType = PAYLOAD_TYPES.find(t => t.id === payloadType);
   const currentTypeConfig = qrTypes.find(t => t.id === qrType);
 
+  // ========== RAW QR URL (unmodified, no customization) ==========
+  const getRawQRUrl = () => {
+    const payload = buildQRPayload();
+    if (!payload) return null;
+    return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(payload)}&ecc=${errorCorrectionLevel}&color=000000&bgcolor=FFFFFF`;
+  };
+
   // ========== BUILD PAYLOAD ==========
   const buildQRPayload = () => {
     switch (qrType) {
@@ -631,6 +638,41 @@ export default function QrStudio({ initialTab = 'create' }) {
                     </Card>
                   )}
                 </div>
+              </div>
+            </div>
+
+            {/* GL Logo with Raw QR Preview - Bottom Right */}
+            <div className="fixed bottom-6 right-6 z-40 pointer-events-none hidden lg:block">
+              <div className="relative w-48 h-32">
+                {/* GL Logo Image */}
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/382879216_qrgl.png"
+                  alt="GlyphLock"
+                  className="w-full h-full object-contain"
+                />
+                {/* Raw QR Preview inside hollow square */}
+                {qrGenerated && (
+                  <div 
+                    className="absolute transition-opacity duration-500"
+                    style={{
+                      top: '12%',
+                      right: '8%',
+                      width: '38%',
+                      height: '62%',
+                      opacity: qrGenerated ? 1 : 0
+                    }}
+                  >
+                    <img 
+                      src={getRawQRUrl()}
+                      alt="Raw QR"
+                      className="w-full h-full object-contain"
+                      style={{ 
+                        imageRendering: 'pixelated',
+                        pointerEvents: 'none'
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </TabsContent>
