@@ -355,11 +355,11 @@ export default function QrStudio({ initialTab = 'create' }) {
             <div className="flex flex-col space-y-2">
               <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center gap-3">
                 <Zap className="w-10 h-10 text-cyan-400 glyph-pulse" />
-                GlyphLock QR Studio
+                GlyphLock QR Intelligence Platform
               </h1>
               <p className="text-sm sm:text-base text-gray-400 flex items-center gap-2">
                 <Shield className="w-4 h-4 text-purple-400" />
-                Military-grade QR generation with steganography & anti-quishing
+                Advanced QR creation with embedded security, steganography, and real-time threat scoring.
               </p>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
