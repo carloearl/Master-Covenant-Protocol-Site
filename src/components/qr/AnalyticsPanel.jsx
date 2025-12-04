@@ -92,6 +92,33 @@ export default function AnalyticsPanel({ qrAssetId }) {
     );
   }
 
+  // Empty state when no scans yet
+  if (scanEvents.length === 0) {
+    return (
+      <Card className="bg-gray-900/50 border-gray-700 p-12 text-center">
+        <Activity className="w-16 h-16 mx-auto mb-4 text-gray-600" />
+        <h3 className="text-xl font-bold text-white mb-2">No Scans Yet</h3>
+        <p className="text-gray-400 mb-4">
+          When someone scans your QR code, analytics will appear here.
+        </p>
+        <div className="text-xs text-gray-500 space-y-1">
+          <p>• Scan tracking is automatic</p>
+          <p>• Data updates in real-time</p>
+          <p>• Geographic and device insights included</p>
+        </div>
+        <Button
+          onClick={() => refetch()}
+          variant="outline"
+          size="sm"
+          className="mt-6 border-cyan-500/50 text-cyan-400"
+        >
+          <TrendingUp className="w-4 h-4 mr-2" />
+          Refresh Data
+        </Button>
+      </Card>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Metrics */}
