@@ -839,19 +839,34 @@ export default function QrStudio({ initialTab = 'create' }) {
           )}
         </TabsContent>
 
-        {/* Stego Art Tab */}
+        {/* Stego Art Tab - DUAL ENGINE: QrStegoArtBuilder + SteganographicQR */}
         <TabsContent value="stego">
-          {qrAssetDraft ? (
-            <QrStegoArtBuilder
-              qrAssetDraft={qrAssetDraft}
-              onEmbedded={handleEmbedded}
-            />
-          ) : (
-            <Card className={`${GlyphCard.glass} p-12 text-center relative z-10`}>
-              <Sparkles className="w-16 h-16 mx-auto mb-4 text-gray-600" />
-              <p className="text-gray-400 text-lg">Generate a QR code first to create stego art</p>
-            </Card>
-          )}
+          <div className="space-y-8 relative z-10">
+            {/* Advanced Stego Builder (for QrAsset mode) */}
+            {qrAssetDraft ? (
+              <QrStegoArtBuilder
+                qrAssetDraft={qrAssetDraft}
+                onEmbedded={handleEmbedded}
+              />
+            ) : (
+              <Card className={`${GlyphCard.glass} p-8 text-center`}>
+                <Sparkles className="w-12 h-12 mx-auto mb-4 text-cyan-500" />
+                <p className="text-gray-400">Generate a QR from Create tab first to use Advanced Stego Builder</p>
+              </Card>
+            )}
+
+            {/* OG LSB Steganography Engine - Always Available */}
+            <div className="border-t border-gray-700 pt-8">
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <Lock className="w-5 h-5 text-purple-400" />
+                LSB Steganography Engine (Hide/Extract)
+              </h3>
+              <SteganographicQR 
+                qrPayload={buildQRPayload() || "https://glyphlock.io"} 
+                qrGenerated={true}
+              />
+            </div>
+          </div>
         </TabsContent>
 
         {/* Security Tab */}
