@@ -813,22 +813,19 @@ export default function QrCustomizationPanel({
         </CardContent>
       </Card>
 
-      {/* Action Buttons */}
-      <div className="flex gap-2">
+      {/* Action Button - Reset Only (changes apply in real-time) */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-center gap-2 p-2 bg-green-500/10 border border-green-500/30 rounded-lg">
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+          <span className="text-xs text-green-400 font-medium">Changes apply in real-time</span>
+        </div>
         <Button
           onClick={resetToDefaults}
           variant="outline"
-          className="flex-1 border-gray-700 text-gray-400 hover:bg-gray-800"
+          className="w-full border-gray-700 text-gray-400 hover:bg-gray-800"
         >
           <RotateCcw className="w-4 h-4 mr-2" />
-          Reset
-        </Button>
-        <Button
-          onClick={onApply}
-          className="flex-1 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500"
-        >
-          <Sparkles className="w-4 h-4 mr-2" />
-          Apply Changes
+          Reset to Defaults
         </Button>
       </div>
     </div>
