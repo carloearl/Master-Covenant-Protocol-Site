@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Download, Eye, Shield, Clock, FileImage, FileCode, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import QrSecurityBadge from './QrSecurityBadge';
-import StyledQRRenderer from './StyledQRRenderer';
+import CanvasQrRenderer from './CanvasQrRenderer';
 
 /**
  * QrPreviewPanel - Final Preview Tab Component
