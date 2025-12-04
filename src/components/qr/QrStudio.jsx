@@ -514,10 +514,10 @@ export default function QrStudio({ initialTab = 'create' }) {
                 )}
               </Card>
 
-              {/* Form + Controls */}
-              <div className="grid lg:grid-cols-2 gap-6">
-                {/* Left: Payload Form */}
-                <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg}`}>
+              {/* Form + Controls - Side by Side Layout */}
+              <div className="w-full flex flex-col lg:flex-row justify-center lg:justify-between gap-6 lg:gap-10">
+                {/* Left: Payload Form Card */}
+                <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg} w-full lg:w-[540px] lg:min-h-[340px]`}>
                   <CardHeader className="border-b border-purple-500/20">
                     <CardTitle className="text-white">{currentTypeConfig?.name || 'QR Configuration'}</CardTitle>
                   </CardHeader>
@@ -575,7 +575,7 @@ export default function QrStudio({ initialTab = 'create' }) {
                 </Card>
 
                 {/* Right: Risk Badge + Status */}
-                <div className="space-y-6">
+                <div className="w-full lg:w-[540px] space-y-6">
                   {/* Risk Badge */}
                   {securityResult && (
                     <Card className={GlyphCard.glass}>
@@ -642,13 +642,12 @@ export default function QrStudio({ initialTab = 'create' }) {
                   )}
                 </div>
               </div>
-            </div>
-
-            {/* GL Preview Block - Right Side */}
-            <div className="hidden lg:block mt-6">
+            {/* GL Preview Block - Inside Right Column */}
+            <div className="hidden lg:block">
               <GlPreviewBlock previewSrc={qrGenerated ? getRawQRUrl() : null} />
             </div>
-          </TabsContent>
+            </div>
+            </TabsContent>
 
           {/* ========== 02_CUSTOMIZE TAB ========== */}
           <TabsContent value="customize">
