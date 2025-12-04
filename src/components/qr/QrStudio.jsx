@@ -585,9 +585,9 @@ export default function QrStudio({ initialTab = 'create' }) {
                   </Card>
                 </div>
 
-                {/* Right: GL Preview Block */}
-                                      <div className="w-full lg:w-[620px]">
-                                        <div className="relative w-full rounded-xl bg-[#0d0f1a]/70 p-5 overflow-hidden shadow-lg" style={{ minHeight: '480px' }}>
+                {/* Right: GL Preview Block - Matches URL Card Width */}
+                <div className="w-full lg:w-[540px]">
+                  <div className="relative w-full rounded-xl bg-[#0d0f1a]/70 p-5 overflow-hidden shadow-lg border border-purple-500/20" style={{ minHeight: '400px' }}>
 
                                           {/* Top Left: Arrow Dropdown for Customize/Preview */}
                                                                     <div className="absolute top-6 left-6 z-20 group">
