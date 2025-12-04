@@ -67,7 +67,6 @@ export default function QrPreviewPanel({
         toast.success(`QR code downloaded as ${format.toUpperCase()}`);
       } else if (format === 'pdf') {
         // For PDF, we create a simple PDF with the image
-        const { jsPDF } = await import('jspdf');
         const pdf = new jsPDF();
         const imgData = dataUrl;
         pdf.addImage(imgData, 'PNG', 20, 20, 170, 170);
