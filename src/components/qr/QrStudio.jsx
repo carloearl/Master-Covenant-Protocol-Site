@@ -833,6 +833,30 @@ export default function QrStudio({ initialTab = 'create' }) {
                   </div>
                 </div>
                 </div>
+              </div>
+
+              {/* Preview Sidebar - Right Side */}
+              {currentUser && (
+                <div className="w-full xl:w-72 space-y-4">
+                  <QrPreviewSidebar
+                    previews={previews}
+                    loading={previewsLoading}
+                    onSelectPreview={handleSelectPreview}
+                    onSaveToVault={handleSaveToVault}
+                    onDeletePreview={deletePreview}
+                    selectedId={qrAssetDraft?.id}
+                    previewCount={previewCount}
+                    maxPreviews={maxPreviews}
+                  />
+                  <QrVaultPanel
+                    vaultedItems={vaultedItems}
+                    loading={vaultLoading}
+                    onSelectItem={handleSelectPreview}
+                    onDeleteItem={handleDeleteVaultItem}
+                    selectedId={qrAssetDraft?.id}
+                  />
+                </div>
+              )}
             </div>
           </TabsContent>
 
