@@ -159,24 +159,33 @@ export default function ChatHistoryPanel({
             <div className="text-xs text-slate-500 text-center py-4">No saved chats</div>
           ) : (
             <div className="space-y-1">
-              {savedChats.map(chat => (
-                <button
-                  key={chat.id}
-                  onClick={() => onLoadChat?.(chat.id)}
-                  className={`w-full text-left p-2 rounded-lg transition-all text-xs ${
-                    chat.id === currentChatId
-                      ? 'bg-cyan-500/20 border border-cyan-400/50 text-cyan-200'
-                      : 'bg-slate-900/40 border border-slate-700/50 text-slate-300 hover:bg-slate-800/60 hover:border-slate-600'
-                  }`}
-                >
-                  <div className="font-medium truncate">{chat.title || 'Untitled'}</div>
-                  <div className="flex items-center gap-2 mt-1 text-[10px] text-slate-500">
-                    <Clock className="w-3 h-3" />
-                    {new Date(chat.updated_date || chat.created_date).toLocaleDateString()}
-                    <span className="ml-auto">{chat.messageCount || 0} msgs</span>
-                  </div>
-                </button>
-              ))}
+              {savedChats.map(chat => {
+                // Defensive ID handling for Base44 variations
+                const chatId = chat.id || chat._id || chat.entity_id;
+                if (!chatId) {
+                  console.warn('[ChatHistoryPanel] Chat missing ID:', chat);
+                  return null;
+                }
+                
+                return (
+                  <button
+                    key={chatId}
+                    onClick={() => onLoadChat?.(chatId)}
+                    className={`w-full text-left p-2 rounded-lg transition-all text-xs ${
+                      chatId === currentChatId
+                        ? 'bg-cyan-500/20 border border-cyan-400/50 text-cyan-200'
+                        : 'bg-slate-900/40 border border-slate-700/50 text-slate-300 hover:bg-slate-800/60 hover:border-slate-600'
+                    }`}
+                  >
+                    <div className="font-medium truncate">{chat.title || 'Untitled'}</div>
+                    <div className="flex items-center gap-2 mt-1 text-[10px] text-slate-500">
+                      <Clock className="w-3 h-3" />
+                      {new Date(chat.updated_date || chat.created_date).toLocaleDateString()}
+                      <span className="ml-auto">{chat.messageCount || 0} msgs</span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>
@@ -201,30 +210,35 @@ export default function ChatHistoryPanel({
               ) : archivedChats.length === 0 ? (
                 <div className="text-xs text-slate-500 text-center py-2">No archived chats</div>
               ) : (
-                archivedChats.map(chat => (
-                  <div
-                    key={chat.id}
-                    className="p-2 rounded-lg bg-slate-900/40 border border-slate-700/50 text-xs"
-                  >
-                    <div className="font-medium truncate text-slate-400">{chat.title || 'Untitled'}</div>
-                    <div className="flex items-center gap-1 mt-2">
-                      <button
-                        onClick={() => handleUnarchive(chat.id)}
-                        className="flex items-center gap-1 px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 text-[10px]"
-                      >
-                        <ArchiveRestore className="w-3 h-3" />
-                        Restore
-                      </button>
-                      <button
-                        onClick={() => handleDelete(chat.id)}
-                        className="flex items-center gap-1 px-2 py-1 rounded bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px]"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                        Delete
-                      </button>
+                archivedChats.map(chat => {
+                  const chatId = chat.id || chat._id || chat.entity_id;
+                  if (!chatId) return null;
+                  
+                  return (
+                    <div
+                      key={chatId}
+                      className="p-2 rounded-lg bg-slate-900/40 border border-slate-700/50 text-xs"
+                    >
+                      <div className="font-medium truncate text-slate-400">{chat.title || 'Untitled'}</div>
+                      <div className="flex items-center gap-1 mt-2">
+                        <button
+                          onClick={() => handleUnarchive(chatId)}
+                          className="flex items-center gap-1 px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 text-[10px]"
+                        >
+                          <ArchiveRestore className="w-3 h-3" />
+                          Restore
+                        </button>
+                        <button
+                          onClick={() => handleDelete(chatId)}
+                          className="flex items-center gap-1 px-2 py-1 rounded bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px]"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                          Delete
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           )}

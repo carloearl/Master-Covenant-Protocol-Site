@@ -40,7 +40,10 @@ export function useGlyphBotPersistence(currentUser) {
 
   // Load saved chats from Base44 entity
   const loadSavedChats = useCallback(async () => {
-    if (!currentUser?.email) return;
+    if (!currentUser?.email) {
+      console.warn('[GlyphBot Persistence] loadSavedChats: no user email');
+      return;
+    }
     
     setIsLoading(true);
     try {
@@ -50,9 +53,10 @@ export function useGlyphBotPersistence(currentUser) {
         '-updated_date',
         50
       );
+      console.log('[GlyphBot Persistence] Loaded chats:', chats?.length || 0);
       setSavedChats(chats || []);
     } catch (e) {
-      console.warn('[GlyphBot Persistence] Failed to load chats:', e);
+      console.error('[GlyphBot Persistence] Failed to load chats:', e);
       setSavedChats([]);
     } finally {
       setIsLoading(false);
@@ -94,7 +98,7 @@ export function useGlyphBotPersistence(currentUser) {
   // Save current chat to Base44 entity
   const saveChat = useCallback(async (messages, options = {}) => {
     if (!currentUser?.email) {
-      console.warn('[GlyphBot Persistence] Cannot save: no authenticated user');
+      console.error('[GlyphBot Persistence] Cannot save: no authenticated user. currentUser:', currentUser);
       return null;
     }
 
@@ -102,6 +106,13 @@ export function useGlyphBotPersistence(currentUser) {
     
     // Use full history if available, otherwise use provided messages
     const historyToSave = fullHistory.length > messages.length ? fullHistory : messages;
+    
+    console.log('[GlyphBot Persistence] Saving chat:', {
+      userId: currentUser.email,
+      messageCount: historyToSave.length,
+      currentChatId,
+      isUpdate: !!currentChatId
+    });
     
     // Generate title from first user message if not provided
     const chatTitle = title || generateChatTitle(historyToSave);

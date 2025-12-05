@@ -104,10 +104,13 @@ export default function GlyphBotPage() {
         const isAuth = await base44.auth.isAuthenticated();
         if (isAuth) {
           const user = await base44.auth.me();
+          console.log('[GlyphBot] Current user loaded:', user?.email || 'no email');
           setCurrentUser(user);
+        } else {
+          console.warn('[GlyphBot] User not authenticated');
         }
       } catch (e) {
-        console.warn('[GlyphBot] Auth check failed:', e);
+        console.error('[GlyphBot] Auth check failed:', e);
       }
     })();
   }, []);
