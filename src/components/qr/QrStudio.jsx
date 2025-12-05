@@ -799,13 +799,13 @@ export default function QrStudio({ initialTab = 'create' }) {
                       style={{ maxHeight: '280px' }}
                     />
 
-                    {/* QR Code - Positioned in the lock square on RIGHT side of GL logo */}
+                    {/* QR Code - Positioned inside the padlock square area */}
                     <div 
                       className="absolute pointer-events-none"
                       style={{ 
-                        top: '18%', 
-                        left: '56%', 
-                        width: '16%',
+                        top: '32%', 
+                        left: '52%', 
+                        width: '13%',
                         aspectRatio: '1'
                       }}
                     >
