@@ -45,7 +45,7 @@ export default function QrPreviewPanel({
     );
   }
 
-  const riskScore = qrAssetDraft?.riskScore || securityResult?.final_score || 100;
+  const riskScore = qrAssetDraft?.riskScore ?? securityResult?.final_score ?? 0;
   const riskFlags = qrAssetDraft?.riskFlags || securityResult?.phishing_indicators || [];
   const displayPayload = qrPayload || qrAssetDraft?.payload || 'https://glyphlock.io';
 
