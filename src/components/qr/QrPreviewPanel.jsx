@@ -241,16 +241,33 @@ export default function QrPreviewPanel({
                 </div>
               )}
 
-              {/* Download Button */}
+              {/* Download & Vault Buttons */}
               <div>
-                <h4 className="text-sm font-semibold text-gray-400 mb-3">Download</h4>
-                <Button
-                  onClick={handleDownload}
-                  className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white"
-                >
-                  <FileImage className="w-4 h-4 mr-2" />
-                  Download PNG
-                </Button>
+                <h4 className="text-sm font-semibold text-gray-400 mb-3">Actions</h4>
+                <div className="space-y-2">
+                  <Button
+                    onClick={handleDownload}
+                    className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white"
+                  >
+                    <FileImage className="w-4 h-4 mr-2" />
+                    Download PNG
+                  </Button>
+                  {currentUser && (
+                    <Button
+                      onClick={handleSaveToVault}
+                      disabled={savingToVault}
+                      variant="outline"
+                      className="w-full border-green-500/50 text-green-400 hover:bg-green-500/10"
+                    >
+                      {savingToVault ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      ) : (
+                        <Archive className="w-4 h-4 mr-2" />
+                      )}
+                      Save to My Vault
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
