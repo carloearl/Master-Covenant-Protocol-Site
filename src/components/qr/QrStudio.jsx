@@ -807,17 +807,17 @@ export default function QrStudio({ initialTab = 'create' }) {
                                             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/382879216_qrgl.png"
                                             alt="GL Frame"
                                             className="w-full h-auto object-contain select-none pointer-events-none"
-                                            style={{ transform: 'scale(1.15)', transformOrigin: 'top left' }}
+                                            style={{ transform: 'scale(1.2)', transformOrigin: 'top left' }}
                                           />
 
-                                          {/* QR Code - UNIFIED RENDERER with DYNAMIC customization */}
+                                          {/* QR Code - ENLARGED 3x per Phase 4 (was 25%/150px, now 35%/200px) */}
                                           <div 
-                                            className="absolute top-[40%] left-[76%] -translate-x-1/2 -translate-y-1/2 pointer-events-none overflow-hidden"
-                                            style={{ width: '25%', maxWidth: '150px' }}
+                                            className="absolute top-[42%] left-[78%] -translate-x-1/2 -translate-y-1/2 pointer-events-none overflow-hidden"
+                                            style={{ width: '35%', maxWidth: '200px' }}
                                           >
                                             <CanvasQrRenderer
                                               text={getCurrentPayload()}
-                                              size={360}
+                                              size={420}
                                               errorCorrectionLevel={errorCorrectionLevel}
                                               customization={customization}
                                               onDataUrlReady={(url) => {
