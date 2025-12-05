@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -26,20 +26,15 @@ const DOT_STYLES = [
   { id: 'hex', name: 'Hexagon', icon: Hexagon },
   { id: 'bevel', name: 'Bevel', icon: Layers },
   { id: 'liquid', name: 'Liquid', icon: Droplets },
-  { id: 'heart', name: 'Heart', icon: Sparkles }
+  { id: 'heart', name: 'Heart ❤️', icon: Sparkles }
 ];
 
-// Extended Eye (finder pattern) styles
+// Eye (finder pattern) styles - ONLY SUPPORTED ONES
 const EYE_STYLES = [
   { id: 'square', name: 'Square' },
   { id: 'circular', name: 'Circular' },
   { id: 'rounded', name: 'Rounded' },
-  { id: 'diamond', name: 'Diamond' },
-  { id: 'frame-thick', name: 'Frame Thick' },
-  { id: 'frame-thin', name: 'Frame Thin' },
-  { id: 'neon-ring', name: 'Neon Ring' },
-  { id: 'orbital', name: 'Orbital' },
-  { id: 'galaxy', name: 'Galaxy Glow' }
+  { id: 'diamond', name: 'Diamond' }
 ];
 
 // Logo shape options
@@ -101,9 +96,12 @@ export default function QrCustomizationPanel({
   setCustomization,
   errorCorrectionLevel,
   setErrorCorrectionLevel,
-  onApply
+  onApply,
+  logoFile,
+  onLogoUpload
 }) {
   const [activeSection, setActiveSection] = useState('dots');
+  const fileInputRef = useRef(null);
 
   const updateCustomization = (key, value) => {
     setCustomization(prev => ({ ...prev, [key]: value }));
@@ -198,6 +196,13 @@ export default function QrCustomizationPanel({
     });
   };
 
+  const handleFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (file && onLogoUpload) {
+      onLogoUpload(file);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Section Tabs */}
@@ -251,11 +256,11 @@ export default function QrCustomizationPanel({
             <CardHeader className="pb-3">
               <CardTitle className="text-white text-sm flex items-center gap-2">
                 <Eye className="w-4 h-4 text-purple-400" />
-                Finder Pattern Style (9 Options)
+                Finder Pattern Style (4 Options)
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-3 gap-2 mb-6">
+              <div className="grid grid-cols-2 gap-2 mb-6">
                 {EYE_STYLES.map(style => (
                   <button
                     key={style.id}
@@ -320,10 +325,10 @@ export default function QrCustomizationPanel({
                     key={preset.id}
                     onClick={() => {
                       updateCustomization('foregroundColor', preset.fg);
-                      updateCustomization('backgroundColor', preset.bg);
+                      updateBackground('color', preset.bg);
                     }}
                     className={`p-2 rounded-lg border transition-all ${
-                      customization.foregroundColor === preset.fg && customization.backgroundColor === preset.bg
+                      customization.foregroundColor === preset.fg && customization.background?.color === preset.bg
                         ? 'border-blue-500 bg-blue-500/20' 
                         : 'border-gray-700 hover:border-gray-600'
                     }`}
@@ -360,14 +365,14 @@ export default function QrCustomizationPanel({
                   <div className="flex gap-2">
                     <Input
                       type="color"
-                      value={customization.backgroundColor || '#ffffff'}
-                      onChange={(e) => updateCustomization('backgroundColor', e.target.value)}
+                      value={customization.background?.color || '#ffffff'}
+                      onChange={(e) => updateBackground('color', e.target.value)}
                       className="w-12 h-10 p-1 bg-gray-800 border-gray-700"
                     />
                     <Input
                       type="text"
-                      value={customization.backgroundColor || '#ffffff'}
-                      onChange={(e) => updateCustomization('backgroundColor', e.target.value)}
+                      value={customization.background?.color || '#ffffff'}
+                      onChange={(e) => updateBackground('color', e.target.value)}
                       className="flex-1 h-10 bg-gray-800 border-gray-700 text-white font-mono text-xs"
                     />
                   </div>
@@ -432,7 +437,7 @@ export default function QrCustomizationPanel({
                 <div className="grid grid-cols-5 gap-2">
                   {[1, 2, 3, 4, 5].map(num => (
                     <div key={num}>
-                      <Label className="text-white text-[9px] mb-1 block">Color {num}</Label>
+                      <Label className="text-white text-[9px] mb-1 block">C{num}</Label>
                       <Input
                         type="color"
                         value={customization.gradient?.[`color${num}`] || (num <= 3 ? '#000000' : '#3B82F6')}
@@ -604,121 +609,126 @@ export default function QrCustomizationPanel({
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label className="text-white text-xs mb-2 block">Logo URL</Label>
-                <Input
-                  type="text"
-                  value={customization.logo?.url || ''}
-                  onChange={(e) => updateLogo('url', e.target.value)}
-                  placeholder="https://example.com/logo.png"
-                  className="h-10 bg-gray-800 border-gray-700 text-white text-xs"
+                <Label className="text-white text-xs mb-2 block">Logo Upload</Label>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  className="hidden"
                 />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-white text-xs mb-2 block">
-                    Opacity: {customization.logo?.opacity || 100}%
-                  </Label>
-                  <Slider
-                    value={[customization.logo?.opacity || 100]}
-                    onValueChange={([val]) => updateLogo('opacity', val)}
-                    min={10}
-                    max={100}
-                    step={5}
-                  />
-                </div>
-                <div>
-                  <Label className="text-white text-xs mb-2 block">
-                    Size: {customization.logo?.size || 20}%
-                  </Label>
-                  <Slider
-                    value={[customization.logo?.size || 20]}
-                    onValueChange={([val]) => updateLogo('size', val)}
-                    min={10}
-                    max={40}
-                    step={2}
-                  />
-                </div>
-              </div>
-
-              {/* Position */}
-              <div>
-                <Label className="text-white text-xs mb-2 block">Position</Label>
-                <div className="grid grid-cols-5 gap-2">
-                  {LOGO_POSITIONS.map(pos => (
-                    <button
-                      key={pos.id}
-                      onClick={() => updateLogo('position', pos.id)}
-                      className={`p-2 rounded-lg border text-[10px] ${
-                        customization.logo?.position === pos.id 
-                          ? 'border-pink-500 bg-pink-500/20 text-pink-300' 
-                          : 'border-gray-700 text-gray-400'
-                      }`}
+                {customization.logo?.url ? (
+                  <div className="space-y-2">
+                    <div className="bg-gray-800 p-3 rounded-lg border border-gray-700 flex items-center gap-3">
+                      <img src={customization.logo.url} alt="Logo" className="w-12 h-12 object-contain rounded" />
+                      <span className="text-xs text-white">Logo uploaded</span>
+                    </div>
+                    <Button
+                      onClick={() => {
+                        updateLogo('url', null);
+                        if (fileInputRef.current) fileInputRef.current.value = '';
+                      }}
+                      variant="outline"
+                      size="sm"
+                      className="w-full border-red-500/50 text-red-400"
                     >
-                      {pos.name}
-                    </button>
-                  ))}
-                </div>
+                      Remove Logo
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={() => fileInputRef.current?.click()}
+                    variant="outline"
+                    className="w-full border-pink-500/50 text-pink-400"
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    Upload Logo
+                  </Button>
+                )}
               </div>
 
-              {/* Rotation */}
-              <div>
-                <Label className="text-white text-xs mb-2 block">
-                  Rotation: {customization.logo?.rotation || 0}°
-                </Label>
-                <Slider
-                  value={[customization.logo?.rotation || 0]}
-                  onValueChange={([val]) => updateLogo('rotation', val)}
-                  min={0}
-                  max={360}
-                  step={15}
-                />
-              </div>
+              {customization.logo?.url && (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-white text-xs mb-2 block">
+                        Opacity: {customization.logo?.opacity || 100}%
+                      </Label>
+                      <Slider
+                        value={[customization.logo?.opacity || 100]}
+                        onValueChange={([val]) => updateLogo('opacity', val)}
+                        min={10}
+                        max={100}
+                        step={5}
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-white text-xs mb-2 block">
+                        Size: {customization.logo?.size || 20}%
+                      </Label>
+                      <Slider
+                        value={[customization.logo?.size || 20]}
+                        onValueChange={([val]) => updateLogo('size', val)}
+                        min={10}
+                        max={40}
+                        step={2}
+                      />
+                    </div>
+                  </div>
 
-              {/* Shape */}
-              <div>
-                <Label className="text-white text-xs mb-2 block">Shape</Label>
-                <div className="grid grid-cols-3 gap-2">
-                  {LOGO_SHAPES.map(shape => (
-                    <button
-                      key={shape.id}
-                      onClick={() => updateLogo('shape', shape.id)}
-                      className={`p-2 rounded-lg border text-xs ${
-                        customization.logo?.shape === shape.id 
-                          ? 'border-pink-500 bg-pink-500/20 text-pink-300' 
-                          : 'border-gray-700 text-gray-400'
-                      }`}
-                    >
-                      {shape.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                  {/* Rotation */}
+                  <div>
+                    <Label className="text-white text-xs mb-2 block">
+                      Rotation: {customization.logo?.rotation || 0}°
+                    </Label>
+                    <Slider
+                      value={[customization.logo?.rotation || 0]}
+                      onValueChange={([val]) => updateLogo('rotation', val)}
+                      min={0}
+                      max={360}
+                      step={15}
+                    />
+                  </div>
 
-              {/* Switches */}
-              <div className="grid grid-cols-3 gap-4">
-                <div className="flex items-center justify-between">
-                  <Label className="text-white text-xs">Border</Label>
-                  <Switch
-                    checked={customization.logo?.border || false}
-                    onCheckedChange={(checked) => updateLogo('border', checked)}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label className="text-white text-xs">Shadow</Label>
-                  <Switch
-                    checked={customization.logo?.dropShadow || false}
-                    onCheckedChange={(checked) => updateLogo('dropShadow', checked)}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label className="text-white text-xs">Auto Contrast</Label>
-                  <Switch
-                    checked={customization.logo?.autoContrast !== false}
-                    onCheckedChange={(checked) => updateLogo('autoContrast', checked)}
-                  />
-                </div>
-              </div>
+                  {/* Shape */}
+                  <div>
+                    <Label className="text-white text-xs mb-2 block">Shape</Label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {LOGO_SHAPES.map(shape => (
+                        <button
+                          key={shape.id}
+                          onClick={() => updateLogo('shape', shape.id)}
+                          className={`p-2 rounded-lg border text-xs ${
+                            customization.logo?.shape === shape.id 
+                              ? 'border-pink-500 bg-pink-500/20 text-pink-300' 
+                              : 'border-gray-700 text-gray-400'
+                          }`}
+                        >
+                          {shape.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Switches */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-white text-xs">Border</Label>
+                      <Switch
+                        checked={customization.logo?.border || false}
+                        onCheckedChange={(checked) => updateLogo('border', checked)}
+                      />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <Label className="text-white text-xs">Shadow</Label>
+                      <Switch
+                        checked={customization.logo?.dropShadow || false}
+                        onCheckedChange={(checked) => updateLogo('dropShadow', checked)}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -814,7 +824,7 @@ export default function QrCustomizationPanel({
         </CardContent>
       </Card>
 
-      {/* Action Button - Reset Only (changes apply in real-time) */}
+      {/* Action Button - Reset Only */}
       <div className="space-y-3">
         <div className="flex items-center justify-center gap-2 p-2 bg-green-500/10 border border-green-500/30 rounded-lg">
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />

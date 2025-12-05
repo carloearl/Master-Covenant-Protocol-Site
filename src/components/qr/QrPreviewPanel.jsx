@@ -2,14 +2,14 @@ import React, { useRef, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Download, Eye, Shield, Clock, FileImage, FileCode, RefreshCw } from 'lucide-react';
+import { Download, Eye, Shield, Clock, FileImage, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import QrSecurityBadge from './QrSecurityBadge';
 import CanvasQrRenderer from './CanvasQrRenderer';
 
 /**
  * QrPreviewPanel - Final Preview Tab Component
- * Uses StyledQRRenderer for local QR generation with full styling support
+ * Uses CanvasQrRenderer for unified rendering pipeline
  */
 export default function QrPreviewPanel({
   qrAssetDraft,
@@ -21,7 +21,6 @@ export default function QrPreviewPanel({
   errorCorrectionLevel,
   qrType,
   codeId,
-  logoPreviewUrl,
   onRegenerate,
   onDataUrlReady
 }) {
@@ -50,7 +49,7 @@ export default function QrPreviewPanel({
   const riskFlags = qrAssetDraft?.riskFlags || securityResult?.phishing_indicators || [];
   const displayPayload = qrPayload || qrAssetDraft?.payload || 'https://glyphlock.io';
 
-  const handleDownload = async (format) => {
+  const handleDownload = async () => {
     const dataUrl = qrDataUrlRef.current || qrDataUrl;
     if (!dataUrl) {
       toast.error('No QR code to download');
@@ -60,9 +59,9 @@ export default function QrPreviewPanel({
     try {
       const link = document.createElement('a');
       link.href = dataUrl;
-      link.download = `glyphlock-qr-${qrType || 'code'}-${codeId || Date.now()}.${format}`;
+      link.download = `glyphlock-qr-${qrType || 'code'}-${codeId || Date.now()}.png`;
       link.click();
-      toast.success(`QR code downloaded as ${format.toUpperCase()}`);
+      toast.success(`QR code downloaded as PNG`);
     } catch (err) {
       console.error('Download error:', err);
       toast.error('Download failed');
@@ -94,7 +93,7 @@ export default function QrPreviewPanel({
         </CardHeader>
         <CardContent className="pt-6">
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* Left: QR Display using StyledQRRenderer */}
+            {/* Left: QR Display using CanvasQrRenderer */}
             <div className="space-y-4">
               <div 
                 className="p-8 rounded-xl flex items-center justify-center relative shadow-inner"
@@ -110,13 +109,7 @@ export default function QrPreviewPanel({
                   text={displayPayload}
                   size={size || 300}
                   errorCorrectionLevel={errorCorrectionLevel || 'H'}
-                  customization={{
-                    ...customization,
-                    logo: {
-                      ...customization?.logo,
-                      url: logoPreviewUrl || customization?.logo?.url
-                    }
-                  }}
+                  customization={customization}
                   onDataUrlReady={handleDataUrlReady}
                   className="relative"
                 />
@@ -177,7 +170,7 @@ export default function QrPreviewPanel({
                         Gradient
                       </Badge>
                     )}
-                    {(logoPreviewUrl || customization.logo?.url) && (
+                    {customization.logo?.url && (
                       <Badge variant="outline" className="border-purple-500/50 text-purple-400">
                         Logo
                       </Badge>
@@ -186,26 +179,16 @@ export default function QrPreviewPanel({
                 </div>
               )}
 
-              {/* Download Buttons */}
+              {/* Download Button */}
               <div>
                 <h4 className="text-sm font-semibold text-gray-400 mb-3">Download</h4>
-                <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    onClick={() => handleDownload('png')}
-                    className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white"
-                  >
-                    <FileImage className="w-4 h-4 mr-1" />
-                    PNG
-                  </Button>
-                  <Button
-                    onClick={() => handleDownload('svg')}
-                    variant="outline"
-                    className="border-gray-600 text-gray-300 hover:bg-gray-800"
-                  >
-                    <FileCode className="w-4 h-4 mr-1" />
-                    SVG
-                  </Button>
-                </div>
+                <Button
+                  onClick={handleDownload}
+                  className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white"
+                >
+                  <FileImage className="w-4 h-4 mr-2" />
+                  Download PNG
+                </Button>
               </div>
             </div>
           </div>

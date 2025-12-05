@@ -25,7 +25,6 @@ import AnalyticsPanel from './AnalyticsPanel';
 import QrBatchUploader from './QrBatchUploader';
 import SecurityStatus from './SecurityStatus';
 import SteganographicQR from './SteganographicQR';
-import StyledQRRenderer from './StyledQRRenderer';
 import CanvasQrRenderer from './CanvasQrRenderer';
 import QRTypeForm from '@/components/crypto/QRTypeForm';
 import { generateSHA256, performStaticURLChecks } from '@/components/utils/securityUtils';
@@ -126,13 +125,11 @@ export default function QrStudio({ initialTab = 'create' }) {
   const [size, setSize] = useState(512);
   const [errorCorrectionLevel, setErrorCorrectionLevel] = useState('H');
   const [qrGenerated, setQrGenerated] = useState(false);
-  // Default payload for initial render
   const defaultPayload = 'https://glyphlock.io';
   const [isScanning, setIsScanning] = useState(false);
   const [securityResult, setSecurityResult] = useState(null);
   const [codeId, setCodeId] = useState(null);
   const [scanningStage, setScanningStage] = useState("");
-  const [logoPreviewUrl, setLogoPreviewUrl] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
   const [qrDataUrl, setQrDataUrl] = useState(null);
 
@@ -152,15 +149,6 @@ export default function QrStudio({ initialTab = 'create' }) {
   const selectedPayloadType = PAYLOAD_TYPES.find(t => t.id === payloadType);
   const currentTypeConfig = qrTypes.find(t => t.id === qrType);
 
-  // ========== QR DATA URL HANDLER ==========
-  const handleQrDataUrlReady = useCallback((dataUrl) => {
-    setQrDataUrl(dataUrl);
-    // Update qrAssetDraft with new dataUrl
-    if (qrGenerated) {
-      setQrAssetDraft(prev => prev ? { ...prev, safeQrImageUrl: dataUrl } : prev);
-    }
-  }, [qrGenerated]);
-
   // ========== BUILD PAYLOAD ==========
   const buildQRPayload = () => {
     switch (qrType) {
@@ -179,6 +167,19 @@ export default function QrStudio({ initialTab = 'create' }) {
       default: return "";
     }
   };
+
+  // ========== GET CURRENT PAYLOAD (UNIFIED) ==========
+  const getCurrentPayload = useCallback(() => {
+    return buildQRPayload() || 'https://glyphlock.io';
+  }, [qrData, qrType]);
+
+  // ========== QR DATA URL HANDLER ==========
+  const handleQrDataUrlReady = useCallback((dataUrl) => {
+    setQrDataUrl(dataUrl);
+    if (qrGenerated) {
+      setQrAssetDraft(prev => prev ? { ...prev, safeQrImageUrl: dataUrl } : prev);
+    }
+  }, [qrGenerated]);
 
   // ========== NLP ANALYSIS ==========
   const performNLPAnalysis = async (payload) => {
@@ -211,10 +212,40 @@ export default function QrStudio({ initialTab = 'create' }) {
     }
   };
 
-  // ========== GET CURRENT PAYLOAD ==========
-  const getCurrentPayload = useCallback(() => {
-    return buildQRPayload() || 'https://glyphlock.io';
-  }, [qrData, qrType]);
+  // ========== LOGO UPLOAD HANDLER ==========
+  const handleLogoUpload = (file) => {
+    if (!file) return;
+    setLogoFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCustomization(prev => ({
+        ...prev,
+        logo: { ...prev.logo, url: reader.result }
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // ========== UPLOAD LOGO TO SERVER ==========
+  const uploadLogoToServer = async () => {
+    if (logoFile) {
+      try {
+        setScanningStage("Uploading logo...");
+        const { file_url } = await base44.integrations.Core.UploadFile({ file: logoFile });
+        setCustomization(prev => ({
+          ...prev,
+          logo: { ...prev.logo, url: file_url }
+        }));
+        setLogoFile(null);
+        return file_url;
+      } catch (error) {
+        console.error("Logo upload error:", error);
+        toast.error("Failed to upload logo");
+        return null;
+      }
+    }
+    return customization.logo?.url;
+  };
 
   // ========== GENERATE QR ==========
   const generateQR = async () => {
@@ -249,7 +280,7 @@ export default function QrStudio({ initialTab = 'create' }) {
           ...nlpResult,
           final_score: Math.min(finalScore, staticResult.score),
           phishing_indicators: [...staticResult.issues, ...(nlpResult.phishing_indicators || [])],
-          risk_level: finalScore >= 80 ? "safe" : finalScore >= 65 ? "medium" : "high"
+          risk_level: finalScore >= 80 ? "safe" : (finalScore >= 65 ? "medium" : "high")
         };
 
         setSecurityResult(combinedResult);
@@ -274,6 +305,8 @@ export default function QrStudio({ initialTab = 'create' }) {
       const newCodeId = `qr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       setCodeId(newCodeId);
 
+      const finalLogoUrl = await uploadLogoToServer();
+
       await base44.entities.QRGenHistory.create({
         code_id: newCodeId,
         payload,
@@ -286,8 +319,8 @@ export default function QrStudio({ initialTab = 'create' }) {
         error_correction: errorCorrectionLevel,
         foreground_color: customization.foregroundColor,
         background_color: customization.backgroundColor,
-        has_logo: !!logoPreviewUrl,
-        logo_url: logoPreviewUrl
+        has_logo: !!finalLogoUrl,
+        logo_url: finalLogoUrl
       });
 
       if (combinedResult) {
@@ -304,7 +337,6 @@ export default function QrStudio({ initialTab = 'create' }) {
         });
       }
 
-      // Set asset draft for other tabs
       setQrAssetDraft({
         id: newCodeId,
         title: qrType,
@@ -316,7 +348,8 @@ export default function QrStudio({ initialTab = 'create' }) {
         riskFlags: combinedResult?.phishing_indicators || [],
         errorCorrectionLevel,
         customization: { ...customization },
-        artStyle: null
+        artStyle: null,
+        stegoConfig: { enabled: false }
       });
 
       toast.success("QR Code generated successfully!");
@@ -350,13 +383,14 @@ export default function QrStudio({ initialTab = 'create' }) {
     }
   };
 
-  // Stego handler
-  const handleEmbedded = (disguisedImageUrl, mode) => {
+  // Stego embedded handler
+  const handleStegoEmbedded = (disguisedImageUrl, mode) => {
     setQrAssetDraft(prev => ({
       ...prev,
       disguisedImageUrl,
-      stegoConfig: { enabled: true, mode }
+      stegoConfig: { enabled: true, mode, disguisedImageUrl }
     }));
+    toast.success("Steganographic image created!");
   };
 
   return (
@@ -585,11 +619,11 @@ export default function QrStudio({ initialTab = 'create' }) {
                   </Card>
                 </div>
 
-                {/* Right: GL Preview Block - Matches URL Card Width */}
+                {/* Right: GL Preview Block */}
                 <div className="w-full lg:w-[540px]">
                   <div className="relative w-full rounded-xl bg-[#0d0f1a]/70 p-5 overflow-hidden shadow-lg border border-purple-500/20" style={{ minHeight: '400px' }}>
 
-                                          {/* Top Left: Arrow Dropdown for Customize/Preview */}
+                                          {/* Top Left: Quick Nav Dropdown */}
                                                                     <div className="absolute top-6 left-6 z-20 group">
                                                                       <button className="p-2 bg-slate-800/80 backdrop-blur-sm rounded-full border border-purple-500/50 hover:border-cyan-400 transition-all group-hover:shadow-lg group-hover:shadow-purple-500/30">
                                                                         <svg className="w-4 h-4 text-cyan-400 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -651,32 +685,20 @@ export default function QrStudio({ initialTab = 'create' }) {
                                             style={{ transform: 'scale(1.15)', transformOrigin: 'top left' }}
                                           />
 
-                                          {/* QR Code rendered locally - no external API */}
+                                          {/* QR Code - UNIFIED RENDERER with DYNAMIC customization */}
                                           <div 
                                             className="absolute top-[40%] left-[76%] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
                                             style={{ width: '25%' }}
                                           >
                                             <CanvasQrRenderer
-                                              text={qrGenerated ? buildQRPayload() : 'https://glyphlock.io'}
+                                              text={getCurrentPayload()}
                                               size={120}
                                               errorCorrectionLevel={errorCorrectionLevel}
-                                              customization={{
-                                                dotStyle: 'square',
-                                                eyeStyle: 'square',
-                                                foregroundColor: '#000000',
-                                                backgroundColor: '#ffffff',
-                                                gradient: { enabled: false },
-                                                eyeColors: {
-                                                  topLeft: { inner: '#000000', outer: '#000000' },
-                                                  topRight: { inner: '#000000', outer: '#000000' },
-                                                  bottomLeft: { inner: '#000000', outer: '#000000' }
-                                                },
-                                                background: { type: 'solid', color: '#ffffff' },
-                                                qrShape: { margin: 'small' }
-                                              }}
+                                              customization={customization}
                                               onDataUrlReady={(url) => {
-                                                if (!qrGenerated) return; // Only update if generated
-                                                handleQrDataUrlReady(url);
+                                                if (qrGenerated) {
+                                                  handleQrDataUrlReady(url);
+                                                }
                                               }}
                                             />
                                           </div>
@@ -698,6 +720,8 @@ export default function QrStudio({ initialTab = 'create' }) {
                   errorCorrectionLevel={errorCorrectionLevel}
                   setErrorCorrectionLevel={setErrorCorrectionLevel}
                   onApply={goToPreview}
+                  logoFile={logoFile}
+                  onLogoUpload={handleLogoUpload}
                 />
               </div>
 
@@ -714,7 +738,7 @@ export default function QrStudio({ initialTab = 'create' }) {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="pt-6">
-                    {(qrGenerated || buildQRPayload()) ? (
+                    {(qrGenerated || getCurrentPayload()) ? (
                       <div className="space-y-4">
                         <div 
                           className="p-8 rounded-lg flex items-center justify-center relative overflow-hidden transition-all duration-300"
@@ -745,16 +769,10 @@ export default function QrStudio({ initialTab = 'create' }) {
 
                           {/* CanvasQRRenderer - Real-time updates with full styling */}
                           <CanvasQrRenderer
-                            text={(qrGenerated || buildQRPayload()) ? buildQRPayload() : 'https://glyphlock.io'}
+                            text={getCurrentPayload()}
                             size={280}
                             errorCorrectionLevel={errorCorrectionLevel}
-                            customization={{
-                              ...customization,
-                              logo: {
-                                ...customization.logo,
-                                url: logoPreviewUrl || customization.logo?.url
-                              }
-                            }}
+                            customization={customization}
                             onDataUrlReady={handleQrDataUrlReady}
                             className="relative z-10"
                           />
@@ -827,13 +845,12 @@ export default function QrStudio({ initialTab = 'create' }) {
               qrAssetDraft={qrAssetDraft}
               customization={customization}
               qrDataUrl={qrDataUrl}
-              qrPayload={buildQRPayload()}
+              qrPayload={getCurrentPayload()}
               securityResult={securityResult}
               size={size}
               errorCorrectionLevel={errorCorrectionLevel}
               qrType={qrType}
               codeId={codeId}
-              logoPreviewUrl={logoPreviewUrl}
               onRegenerate={generateQR}
               onDataUrlReady={handleQrDataUrlReady}
             />
@@ -854,8 +871,9 @@ export default function QrStudio({ initialTab = 'create' }) {
                     Hide QR data within images or extract hidden data. Uses LSB (Least Significant Bit) encoding.
                   </p>
                   <SteganographicQR 
-                    qrPayload={buildQRPayload() || "https://glyphlock.io"} 
-                    qrGenerated={true}
+                    qrPayload={getCurrentPayload()} 
+                    qrGenerated={qrGenerated && (!securityResult || securityResult.final_score >= 65)}
+                    onEmbedded={handleStegoEmbedded}
                   />
                 </CardContent>
               </Card>
@@ -880,7 +898,7 @@ export default function QrStudio({ initialTab = 'create' }) {
                         <Input
                           value={qrAssetDraft.immutableHash || ''}
                           readOnly
-                          className="font-mono text-xs min-h-[44px] bg-gray-800 border-gray-700"
+                          className="font-mono text-xs min-h-[44px] bg-gray-800 border-gray-700 text-white"
                         />
                       </div>
                       <div className="space-y-2">
@@ -892,45 +910,42 @@ export default function QrStudio({ initialTab = 'create' }) {
                       </div>
                     </>
                   ) : (
-                    <p className="text-gray-400 text-center py-8">Generate a QR code to view security details</p>
+                    <div className="text-center py-12 border-2 border-dashed border-gray-700 rounded-lg">
+                      <Shield className="w-16 h-16 mx-auto mb-4 text-gray-600" />
+                      <p className="text-gray-400 text-lg">Generate a QR code to view security details</p>
+                      <Button
+                        onClick={() => setActiveTab('create')}
+                        variant="outline"
+                        size="sm"
+                        className="mt-4 border-cyan-500/50 text-cyan-400"
+                      >
+                        Go to Create
+                      </Button>
+                    </div>
                   )}
                 </CardContent>
               </Card>
 
               {securityResult && <SecurityStatus securityResult={securityResult} />}
-
-              <Card className={GlyphCard.glass}>
-                <CardContent className="pt-6">
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <div className="text-center p-4 bg-gray-800/50 rounded-lg">
-                      <Shield className="w-8 h-8 text-green-400 mx-auto mb-2" />
-                      <h4 className="font-bold text-white text-sm">AI Scanning</h4>
-                      <p className="text-xs text-gray-400">NLP threat detection</p>
-                    </div>
-                    <div className="text-center p-4 bg-gray-800/50 rounded-lg">
-                      <Lock className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-                      <h4 className="font-bold text-white text-sm">Hash Verification</h4>
-                      <p className="text-xs text-gray-400">SHA-256 tamper detection</p>
-                    </div>
-                    <div className="text-center p-4 bg-gray-800/50 rounded-lg">
-                      <Eye className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-                      <h4 className="font-bold text-white text-sm">Score Threshold</h4>
-                      <p className="text-xs text-gray-400">65/100 minimum</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </TabsContent>
 
           {/* ========== 06_ANALYTICS TAB ========== */}
           <TabsContent value="analytics">
             {qrAssetDraft ? (
-              <AnalyticsPanel qrAssetId={qrAssetDraft.id} />
+              <AnalyticsPanel qrAssetId={qrAssetDraft.id} codeId={codeId} />
             ) : (
               <Card className={`${GlyphCard.glass} p-12 text-center relative z-10`}>
                 <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-600" />
-                <p className="text-gray-400 text-lg">Generate a QR code first to view analytics</p>
+                <p className="text-gray-400 text-lg mb-2">Generate a QR code first to view analytics</p>
+                <Button
+                  onClick={() => setActiveTab('create')}
+                  variant="outline"
+                  size="sm"
+                  className="mt-4 border-cyan-500/50 text-cyan-400"
+                >
+                  Go to Create
+                </Button>
               </Card>
             )}
           </TabsContent>
