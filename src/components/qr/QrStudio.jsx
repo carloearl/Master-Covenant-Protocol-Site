@@ -687,12 +687,12 @@ export default function QrStudio({ initialTab = 'create' }) {
 
                                           {/* QR Code - UNIFIED RENDERER with DYNAMIC customization */}
                                           <div 
-                                            className="absolute top-[40%] left-[76%] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                                            style={{ width: '25%' }}
+                                            className="absolute top-[40%] left-[76%] -translate-x-1/2 -translate-y-1/2 pointer-events-none overflow-hidden"
+                                            style={{ width: '25%', maxWidth: '150px' }}
                                           >
                                             <CanvasQrRenderer
                                               text={getCurrentPayload()}
-                                              size={120}
+                                              size={360}
                                               errorCorrectionLevel={errorCorrectionLevel}
                                               customization={customization}
                                               onDataUrlReady={(url) => {
@@ -700,6 +700,7 @@ export default function QrStudio({ initialTab = 'create' }) {
                                                   handleQrDataUrlReady(url);
                                                 }
                                               }}
+                                              className="w-full h-auto"
                                             />
                                           </div>
 
