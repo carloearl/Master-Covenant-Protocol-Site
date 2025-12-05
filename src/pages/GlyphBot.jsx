@@ -136,9 +136,20 @@ export default function GlyphBotPage() {
           console.log('[GlyphBot] Auto-resuming chat:', currentChatId);
           const result = await loadChat(currentChatId);
           if (result?.messages) {
-            setMessages([WELCOME_MESSAGE, ...result.messages.filter(m => m.id !== 'welcome-1')]);
+            // Use visibleMessages if available, else full messages
+            const messagesToDisplay = result.visibleMessages || result.messages.slice(-10);
+            setMessages([WELCOME_MESSAGE, ...messagesToDisplay.filter(m => m.id !== 'welcome-1')]);
+            
+            // Restore state
             if (result.persona) setPersona(result.persona);
             if (result.provider) setProvider(result.provider);
+            
+            console.log('[GlyphBot] Auto-resume complete:', {
+              chatId: currentChatId,
+              messageCount: result.messages.length,
+              visibleCount: messagesToDisplay.length
+            });
+            
             return; // Skip session storage load if we loaded from entity
           }
         }
