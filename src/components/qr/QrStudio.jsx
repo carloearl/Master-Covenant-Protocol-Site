@@ -613,7 +613,9 @@ export default function QrStudio({ initialTab = 'create' }) {
 
           {/* ========== 01_CREATE TAB ========== */}
           <TabsContent value="create">
-            <div className="space-y-6 relative z-10">
+            <div className="flex flex-col xl:flex-row gap-6 relative z-10">
+              {/* Main Content */}
+              <div className="flex-1 space-y-6">
               {/* Security Alert */}
               {currentTypeConfig?.needsSecurity && (
                 <Alert className="bg-blue-500/10 border-blue-500/30">
