@@ -44,8 +44,9 @@ export function useGlyphBotPersistence(currentUser) {
     
     setIsLoading(true);
     try {
+      // Filter by userId to ensure user-scoped data
       const chats = await base44.entities.GlyphBotChat.filter(
-        { isArchived: false },
+        { userId: currentUser.email, isArchived: false },
         '-updated_date',
         50
       );
@@ -171,10 +172,15 @@ export function useGlyphBotPersistence(currentUser) {
 
   // Load a specific chat from Base44
   const loadChat = useCallback(async (chatId) => {
-    if (!chatId) return null;
+    if (!chatId || !currentUser?.email) return null;
 
     try {
-      const chats = await base44.entities.GlyphBotChat.filter({ id: chatId });
+      // Filter by both id and userId for security
+      const chats = await base44.entities.GlyphBotChat.filter(
+        { id: chatId, userId: currentUser.email },
+        undefined,
+        1
+      );
       const chat = chats?.[0];
       
       if (chat) {
@@ -195,7 +201,7 @@ export function useGlyphBotPersistence(currentUser) {
       console.error('[GlyphBot Persistence] Failed to load chat:', e);
       return null;
     }
-  }, []);
+  }, [currentUser?.email]);
 
   // Start a new chat (clear current session)
   const startNewChat = useCallback(() => {
@@ -213,8 +219,9 @@ export function useGlyphBotPersistence(currentUser) {
     if (!currentUser?.email) return [];
 
     try {
+      // Filter by userId for user-scoped archived chats
       const chats = await base44.entities.GlyphBotChat.filter(
-        { isArchived: true },
+        { userId: currentUser.email, isArchived: true },
         '-updated_date',
         50
       );
