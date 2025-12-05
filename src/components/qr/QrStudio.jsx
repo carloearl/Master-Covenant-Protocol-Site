@@ -745,8 +745,8 @@ export default function QrStudio({ initialTab = 'create' }) {
                 </div>
 
                 {/* Right: GL Preview Block */}
-                <div className="w-full lg:w-[480px] hidden lg:block">
-                  <div className="relative w-full rounded-xl bg-[#0d0f1a]/70 p-4 overflow-hidden shadow-lg border border-purple-500/20" style={{ maxHeight: '320px' }}>
+                <div className="w-full lg:flex-1 lg:max-w-[500px] hidden lg:block">
+                  <div className="relative w-full rounded-xl bg-[#0d0f1a]/70 p-4 overflow-hidden shadow-lg border border-purple-500/20">
 
                     {/* Top Left: Quick Nav Dropdown */}
                     <div className="absolute top-3 left-3 z-20 group">
@@ -796,32 +796,31 @@ export default function QrStudio({ initialTab = 'create' }) {
                       src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/382879216_qrgl.png"
                       alt="GL Frame"
                       className="w-full h-auto object-contain select-none pointer-events-none"
-                      style={{ maxHeight: '280px' }}
                     />
 
-                    {/* QR Code - Positioned inside the padlock square area */}
+                    {/* QR Code - Positioned in the lock mechanism square on the RIGHT side */}
                     <div 
                       className="absolute pointer-events-none"
                       style={{ 
-                        top: '32%', 
-                        left: '52%', 
-                        width: '13%',
+                        top: '17.5%', 
+                        left: '56.5%', 
+                        width: '17%',
                         aspectRatio: '1'
                       }}
                     >
-                                            <CanvasQrRenderer
-                                              text={getCurrentPayload()}
-                                              size={420}
-                                              errorCorrectionLevel={errorCorrectionLevel}
-                                              customization={customization}
-                                              onDataUrlReady={(url) => {
-                                                if (qrGenerated) {
-                                                  handleQrDataUrlReady(url);
-                                                }
-                                              }}
-                                              className="w-full h-auto"
-                                            />
-                                          </div>
+                      <CanvasQrRenderer
+                        text={getCurrentPayload()}
+                        size={420}
+                        errorCorrectionLevel={errorCorrectionLevel}
+                        customization={customization}
+                        onDataUrlReady={(url) => {
+                          if (qrGenerated) {
+                            handleQrDataUrlReady(url);
+                          }
+                        }}
+                        className="w-full h-auto"
+                      />
+                    </div>
 
 
                   </div>
