@@ -26,6 +26,67 @@ export default function QrPreviewPanel({
   onDataUrlReady
 }) {
   const qrDataUrlRef = useRef(null);
+  const [savingToVault, setSavingToVault] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (isAuth) {
+          const user = await base44.auth.me();
+          setCurrentUser(user);
+        }
+      } catch (err) {}
+    })();
+  }, []);
+
+  const handleSaveToVault = async () => {
+    if (!currentUser?.email || !qrAssetDraft) {
+      toast.error('Please log in to save to vault');
+      return;
+    }
+
+    setSavingToVault(true);
+    try {
+      // Check if already in vault
+      const existing = await base44.entities.QrPreview.filter({
+        user_id: currentUser.email,
+        code_id: qrAssetDraft.id,
+        vaulted: true
+      });
+
+      if (existing.length > 0) {
+        toast.info('Already in your vault');
+        setSavingToVault(false);
+        return;
+      }
+
+      // Create vault entry
+      await base44.entities.QrPreview.create({
+        user_id: currentUser.email,
+        code_id: qrAssetDraft.id,
+        payload: qrAssetDraft.payload || qrPayload,
+        payload_type: qrType || 'url',
+        image_data_url: qrDataUrlRef.current || qrDataUrl,
+        customization: customization,
+        size: size || 512,
+        error_correction: errorCorrectionLevel || 'H',
+        risk_score: qrAssetDraft.riskScore || 0,
+        risk_flags: qrAssetDraft.riskFlags || [],
+        immutable_hash: qrAssetDraft.immutableHash,
+        vaulted: true,
+        vault_date: new Date().toISOString()
+      });
+
+      toast.success('Saved to your Vault!');
+    } catch (err) {
+      console.error('Vault save error:', err);
+      toast.error('Failed to save to vault');
+    } finally {
+      setSavingToVault(false);
+    }
+  };
 
   const handleDataUrlReady = useCallback((dataUrl) => {
     qrDataUrlRef.current = dataUrl;
