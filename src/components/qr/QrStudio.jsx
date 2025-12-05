@@ -384,13 +384,15 @@ export default function QrStudio({ initialTab = 'create' }) {
         });
       }
 
+      const immutableHash = await generateSHA256(payload);
+      
       setQrAssetDraft({
         id: newCodeId,
         title: qrType,
         payload: payload,
         safeQrImageUrl: qrDataUrl,
         artQrImageUrl: null,
-        immutableHash: await generateSHA256(payload),
+        immutableHash,
         riskScore: combinedResult?.final_score ?? 0,
         riskFlags: combinedResult?.phishing_indicators || [],
         errorCorrectionLevel,
@@ -398,6 +400,22 @@ export default function QrStudio({ initialTab = 'create' }) {
         artStyle: null,
         stegoConfig: { enabled: false }
       });
+
+      // AUTO-SAVE to preview storage (Phase 4 requirement)
+      if (currentUser?.email) {
+        await savePreview({
+          code_id: newCodeId,
+          payload: payload,
+          payload_type: qrType,
+          image_data_url: qrDataUrl,
+          customization: { ...customization },
+          size,
+          error_correction: errorCorrectionLevel,
+          risk_score: combinedResult?.final_score ?? 0,
+          risk_flags: combinedResult?.phishing_indicators || [],
+          immutable_hash: immutableHash
+        });
+      }
 
       toast.success("QR Code generated successfully!");
     } catch (error) {
