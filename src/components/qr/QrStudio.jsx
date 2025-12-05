@@ -832,7 +832,7 @@ export default function QrStudio({ initialTab = 'create' }) {
 
                   </div>
                 </div>
-                </div>
+              </div>
               </div>
 
               {/* Preview Sidebar - Right Side */}
