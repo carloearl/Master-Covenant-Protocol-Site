@@ -745,11 +745,11 @@ export default function QrStudio({ initialTab = 'create' }) {
                 </div>
 
                 {/* Right: GL Preview Block */}
-                <div className="w-full lg:w-[520px] hidden lg:block">
-                  <div className="relative w-full rounded-xl bg-[#0d0f1a]/70 p-4 overflow-hidden shadow-lg border border-purple-500/20">
+                <div className="w-full lg:w-[600px] hidden lg:block">
+                  <div className="relative w-full rounded-xl bg-[#0d0f1a]/70 p-6 overflow-hidden shadow-lg border border-purple-500/20">
 
                     {/* Top Left: Quick Nav Dropdown */}
-                    <div className="absolute top-3 left-3 z-20 group">
+                    <div className="absolute top-4 left-4 z-20 group">
                       <button className="p-1.5 bg-slate-800/80 backdrop-blur-sm rounded-full border border-purple-500/50 hover:border-cyan-400 transition-all">
                         <svg className="w-3 h-3 text-cyan-400 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -775,7 +775,7 @@ export default function QrStudio({ initialTab = 'create' }) {
 
                     {/* Risk Indicator - Top Right */}
                     {qrGenerated && (
-                      <div className="absolute top-3 right-3 z-20">
+                      <div className="absolute top-4 right-4 z-20">
                         <div className={`flex items-center gap-1 px-2 py-0.5 backdrop-blur-sm rounded-md border text-[10px] ${
                           !securityResult || securityResult.final_score <= 20 
                             ? 'bg-green-600/30 border-green-500/50 text-green-300' 
@@ -798,13 +798,13 @@ export default function QrStudio({ initialTab = 'create' }) {
                       className="w-full h-auto object-contain select-none pointer-events-none"
                     />
 
-                    {/* QR Code - Positioned exactly in the LEFT GL logo square */}
+                    {/* QR Code - Positioned in the RIGHT side lock square area */}
                     <div 
                       className="absolute pointer-events-none"
                       style={{ 
-                        top: '24%', 
-                        left: '18.5%', 
-                        width: '19%',
+                        top: '28%', 
+                        left: '62%', 
+                        width: '18%',
                         aspectRatio: '1'
                       }}
                     >
