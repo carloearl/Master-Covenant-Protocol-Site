@@ -362,7 +362,7 @@ export default function GlyphBotPage() {
     } finally {
       setIsSending(false);
     }
-  }, [input, isSending, messages, persona, provider, modes]);
+  }, [input, isSending, messages, persona, provider, modes, playText, trackMessage]);
 
   const handleStop = () => setIsSending(false);
 
@@ -521,7 +521,7 @@ export default function GlyphBotPage() {
     } finally {
       setIsProcessingAudit(false);
     }
-  }, [createAudit, updateAudit, messages, trackMessage, glyphbotClient, provider, modes.voice, speak, loadAudits]);
+  }, [createAudit, updateAudit, messages, trackMessage, glyphbotClient, provider, modes.voice, playText, loadAudits]);
 
   // Phase 6: View audit from history
   const handleViewAudit = useCallback((audit) => {
