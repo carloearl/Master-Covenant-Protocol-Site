@@ -5,7 +5,6 @@ import HeroSection from '@/components/home/HeroSection';
 import HeroContent from '@/components/home/HeroContent';
 import ServicesGrid from '@/components/home/ServicesGrid';
 import DreamTeamHero from '@/components/home/DreamTeamHero';
-import NebulaBackground from '@/components/home/NebulaBackground';
 import CTASection from '@/components/home/CTASection';
 import TechnologyMarquee from '@/components/TechnologyMarquee';
 import SEOHead from '@/components/SEOHead';
@@ -92,9 +91,6 @@ export default function Home() {
       </div>
 
       <div className="w-full relative">
-        {/* Nebula Background */}
-        <NebulaBackground className="opacity-60" />
-
         {/* Hero Video */}
         <ScrollSection>
           <HeroSection />
