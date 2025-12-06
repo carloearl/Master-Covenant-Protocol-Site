@@ -35,7 +35,7 @@ export function useGlyphBotPersistence(currentUser) {
     setIsLoading(true);
     try {
       const chats = await base44.entities.GlyphBotChat.filter(
-        { userId: currentUser.email },
+        { userId: currentUser.email, isArchived: false },
         '-updated_date',
         50
       );
@@ -219,6 +219,29 @@ export function useGlyphBotPersistence(currentUser) {
     }
   }, [currentChatId, loadSavedChats, startNewChat]);
 
+  // Get archived chats
+  const getArchivedChats = useCallback(async () => {
+    if (!currentUser?.email) return [];
+
+    try {
+      const chats = await base44.entities.GlyphBotChat.filter(
+        { userId: currentUser.email, isArchived: true },
+        '-updated_date',
+        50
+      );
+
+      const normalized = (chats || []).map(c => ({
+        ...c,
+        id: c.id || c._id || c.entity_id
+      }));
+
+      return normalized;
+    } catch (e) {
+      console.error('[Persistence] Failed to load archived chats:', e);
+      return [];
+    }
+  }, [currentUser?.email]);
+
   return {
     currentChatId,
     savedChats,
@@ -231,6 +254,7 @@ export function useGlyphBotPersistence(currentUser) {
     loadChat,
     startNewChat,
     loadSavedChats,
+    getArchivedChats,
     unarchiveChat,
     deleteChat,
     STORAGE_KEYS
