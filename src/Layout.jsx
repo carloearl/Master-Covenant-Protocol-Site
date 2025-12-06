@@ -62,7 +62,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <div className="min-h-screen text-white flex flex-col relative overflow-x-hidden selection:bg-[#00E4FF] selection:text-black" style={{ transform: 'translateZ(0)', willChange: 'auto' }}>
+    <div className="min-h-screen bg-black text-white flex flex-col relative overflow-x-hidden selection:bg-[#00E4FF] selection:text-black" style={{ transform: 'translateZ(0)', willChange: 'auto' }}>
       <SecurityMonitor />
 
       {/* SITE-WIDE COSMIC SYSTEM */}
