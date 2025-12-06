@@ -74,12 +74,14 @@ export default function GlyphBotPage() {
   const [providerMeta, setProviderMeta] = useState(null);
   const chatContainerRef = useRef(null);
   
-  // Phase 7C: TTS settings state (refined ranges)
+  // Phase 7: TTS settings state with ENHANCED CONTROLS
   const [voiceSettings, setVoiceSettings] = useState({
     voiceProfile: 'neutral_female',
     speed: 1.0,
     pitch: 1.0,
     volume: 1.0,
+    bass: 0,
+    clarity: 0,
     emotion: 'neutral',
     provider: 'auto'
   });
@@ -245,12 +247,11 @@ export default function GlyphBotPage() {
           provider,
           modes: { voice: modes.voice, live: modes.live, audit: modes.audit },
           voiceSettings: {
-            speed: voiceSettings.speed,
-            pitch: voiceSettings.pitch,
-            volume: voiceSettings.volume,
-            bass: voiceSettings.bass,
-            mid: voiceSettings.mid,
-            treble: voiceSettings.treble
+          speed: voiceSettings.speed,
+          pitch: voiceSettings.pitch,
+          volume: voiceSettings.volume,
+          bass: voiceSettings.bass,
+          clarity: voiceSettings.clarity
           }
         };
         localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settingsToSave));
@@ -323,6 +324,9 @@ export default function GlyphBotPage() {
           voiceProfile: voiceSettings.voiceProfile,
           pitch: voiceSettings.pitch,
           speed: voiceSettings.speed,
+          bass: voiceSettings.bass,
+          clarity: voiceSettings.clarity,
+          volume: voiceSettings.volume,
           emotion: voiceSettings.emotion,
           provider: voiceSettings.provider
         } : null

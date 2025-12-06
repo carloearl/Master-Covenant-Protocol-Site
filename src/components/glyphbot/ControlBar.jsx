@@ -177,43 +177,83 @@ export default function ControlBar({
                     </Select>
                   </div>
 
-                  {/* Pitch Slider (0.5-2.0, noticeable range) */}
+                  {/* Pitch Slider - EXPANDED (0.5-2.0) */}
                   <div className="space-y-2">
                     <Label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Pitch</span>
-                      <span className="text-cyan-400 font-mono">{voiceSettings?.pitch?.toFixed(1) || '1.0'}</span>
+                      <span className="text-cyan-400 font-mono">{voiceSettings?.pitch?.toFixed(2) || '1.00'}x</span>
                     </Label>
                     <Slider
                       value={[voiceSettings?.pitch || 1.0]}
                       onValueChange={([val]) => handleVoiceChange('pitch', val)}
-                      min={0.7}
-                      max={1.3}
+                      min={0.5}
+                      max={2.0}
                       step={0.05}
                       className="w-full"
                     />
                     <div className="flex justify-between text-[9px] text-slate-600">
-                      <span>Deeper</span>
-                      <span>Brighter</span>
+                      <span>Much Deeper</span>
+                      <span>Much Higher</span>
                     </div>
                   </div>
 
-                  {/* Speed Slider (0.7-1.3, noticeable range) */}
+                  {/* Speed Slider - EXPANDED (0.5-2.0) */}
                   <div className="space-y-2">
                     <Label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Speed</span>
-                      <span className="text-cyan-400 font-mono">{voiceSettings?.speed?.toFixed(2) || '1.00'}</span>
+                      <span className="text-cyan-400 font-mono">{voiceSettings?.speed?.toFixed(2) || '1.00'}x</span>
                     </Label>
                     <Slider
                       value={[voiceSettings?.speed || 1.0]}
                       onValueChange={([val]) => handleVoiceChange('speed', val)}
-                      min={0.7}
-                      max={1.3}
+                      min={0.5}
+                      max={2.0}
                       step={0.05}
                       className="w-full"
                     />
                     <div className="flex justify-between text-[9px] text-slate-600">
-                      <span>Slower</span>
-                      <span>Faster</span>
+                      <span>Much Slower</span>
+                      <span>Much Faster</span>
+                    </div>
+                  </div>
+
+                  {/* Bass Enhancement */}
+                  <div className="space-y-2">
+                    <Label className="text-xs text-slate-400 flex items-center justify-between">
+                      <span>Bass</span>
+                      <span className="text-purple-400 font-mono">{((voiceSettings?.bass || 0) * 100).toFixed(0)}%</span>
+                    </Label>
+                    <Slider
+                      value={[voiceSettings?.bass || 0]}
+                      onValueChange={([val]) => handleVoiceChange('bass', val)}
+                      min={-1.0}
+                      max={1.0}
+                      step={0.1}
+                      className="w-full"
+                    />
+                    <div className="flex justify-between text-[9px] text-slate-600">
+                      <span>Thin</span>
+                      <span>Deep</span>
+                    </div>
+                  </div>
+
+                  {/* Clarity Enhancement */}
+                  <div className="space-y-2">
+                    <Label className="text-xs text-slate-400 flex items-center justify-between">
+                      <span>Clarity</span>
+                      <span className="text-purple-400 font-mono">{((voiceSettings?.clarity || 0) * 100).toFixed(0)}%</span>
+                    </Label>
+                    <Slider
+                      value={[voiceSettings?.clarity || 0]}
+                      onValueChange={([val]) => handleVoiceChange('clarity', val)}
+                      min={-1.0}
+                      max={1.0}
+                      step={0.1}
+                      className="w-full"
+                    />
+                    <div className="flex justify-between text-[9px] text-slate-600">
+                      <span>Muffled</span>
+                      <span>Crisp</span>
                     </div>
                   </div>
                 </div>

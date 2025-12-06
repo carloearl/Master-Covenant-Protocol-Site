@@ -39,23 +39,30 @@ export default function useTTS(options = {}) {
   const audioRef = useRef(null);
   const audioContextRef = useRef(null);
 
-  // Default settings (Phase 7C)
-  const defaultSettings = useRef({
+  // Default settings (Phase 7 - REACTIVE)
+  const [currentSettings, setCurrentSettings] = useState({
     speed: options.speed || 1.0,
     pitch: options.pitch || 1.0,
     volume: options.volume || 1.0,
+    bass: options.bass || 0,
+    clarity: options.clarity || 0,
     voiceProfile: options.voiceProfile || 'neutral_female',
     emotion: options.emotion || 'neutral'
   });
 
-  // Update settings when options change
+  // Update settings when options change (REACTIVE)
   useEffect(() => {
-    if (options.speed !== undefined) defaultSettings.current.speed = options.speed;
-    if (options.pitch !== undefined) defaultSettings.current.pitch = options.pitch;
-    if (options.volume !== undefined) defaultSettings.current.volume = options.volume;
-    if (options.voiceProfile !== undefined) defaultSettings.current.voiceProfile = options.voiceProfile;
-    if (options.emotion !== undefined) defaultSettings.current.emotion = options.emotion;
-  }, [options.speed, options.pitch, options.volume, options.voiceProfile, options.emotion]);
+    setCurrentSettings(prev => ({
+      ...prev,
+      ...(options.speed !== undefined && { speed: options.speed }),
+      ...(options.pitch !== undefined && { pitch: options.pitch }),
+      ...(options.volume !== undefined && { volume: options.volume }),
+      ...(options.bass !== undefined && { bass: options.bass }),
+      ...(options.clarity !== undefined && { clarity: options.clarity }),
+      ...(options.voiceProfile !== undefined && { voiceProfile: options.voiceProfile }),
+      ...(options.emotion !== undefined && { emotion: options.emotion })
+    }));
+  }, [options.speed, options.pitch, options.volume, options.bass, options.clarity, options.voiceProfile, options.emotion]);
 
   // Load voices (they load async in some browsers)
   useEffect(() => {
@@ -181,8 +188,8 @@ export default function useTTS(options = {}) {
   }, []);
 
   /**
-   * Phase 7.1: OpenAI TTS playback via AudioContext
-   * Uses backend proxy for API calls
+   * Phase 7: OpenAI TTS playback via AudioContext with AUDIO ENHANCEMENT
+   * Applies bass/clarity EQ, pitch shifting, and dynamic processing
    */
   const playWithOpenAI = useCallback(async (text, settings, voiceId) => {
     try {
@@ -209,7 +216,14 @@ export default function useTTS(options = {}) {
         enhancedText = (emotionInstructions[settings.emotion] || '') + text;
       }
 
-      console.log('[GlyphBot TTS] OpenAI synthesis starting:', { voiceId, speed: settings.speed, emotion: settings.emotion });
+      console.log('[GlyphBot TTS Phase7] Synthesis with enhanced audio:', { 
+        voiceId, 
+        speed: settings.speed, 
+        pitch: settings.pitch,
+        bass: settings.bass,
+        clarity: settings.clarity,
+        emotion: settings.emotion 
+      });
 
       const audioData = await synthesizeTTS(enhancedText, {
         voice: voiceId,
@@ -218,7 +232,10 @@ export default function useTTS(options = {}) {
       });
 
       // Decode audio data
-      const audioBuffer = await audioContext.decodeAudioData(audioData);
+      let audioBuffer = await audioContext.decodeAudioData(audioData);
+
+      // Apply audio enhancement filters
+      audioBuffer = await applyAudioFilters(audioContext, audioBuffer, settings);
 
       // Create source and connect to destination
       const source = audioContext.createBufferSource();
@@ -238,7 +255,7 @@ export default function useTTS(options = {}) {
       source.onended = () => {
         setIsSpeaking(false);
         audioRef.current = null;
-        console.log('[GlyphBot TTS] Playback complete');
+        console.log('[GlyphBot TTS Phase7] Playback complete');
       };
 
       // Update state before playing
@@ -249,18 +266,21 @@ export default function useTTS(options = {}) {
         voiceId,
         pitch: settings.pitch,
         speed: settings.speed,
+        bass: settings.bass,
+        clarity: settings.clarity,
         emotion: settings.emotion,
+        enhanced: true,
         timestamp: Date.now()
       });
 
       // Start playback
       source.start(0);
-      console.log('[GlyphBot TTS] OpenAI playback started');
+      console.log('[GlyphBot TTS Phase7] Enhanced playback started');
       
       return true;
 
     } catch (error) {
-      console.error('[GlyphBot TTS] OpenAI synthesis error:', error);
+      console.error('[GlyphBot TTS Phase7] OpenAI synthesis error:', error);
       setIsSpeaking(false);
       setIsLoading(false);
       throw error;
@@ -357,8 +377,8 @@ export default function useTTS(options = {}) {
     setIsLoading(true);
     setLastError(null);
 
-    // Merge settings (custom overrides defaults + emotion presets)
-    let settings = { ...defaultSettings.current, ...customSettings };
+    // Merge settings (custom overrides current + emotion presets)
+    let settings = { ...currentSettings, ...customSettings };
     if (settings.emotion && EMOTION_PRESETS[settings.emotion]) {
       const emotionPreset = EMOTION_PRESETS[settings.emotion];
       settings = {
@@ -453,6 +473,79 @@ export default function useTTS(options = {}) {
     lastError,
     metadata,
     provider,
-    currentSettings: defaultSettings.current
+    currentSettings
   };
+}
+
+/**
+ * Phase 7: Apply Audio Filters (Software EQ + Processing)
+ * Simulates bass/clarity/pitch adjustments using Web Audio API
+ */
+async function applyAudioFilters(audioContext, audioBuffer, settings) {
+  try {
+    const { bass = 0, clarity = 0, pitch = 1.0 } = settings;
+    
+    // If no filters needed, return original
+    if (bass === 0 && clarity === 0 && pitch === 1.0) {
+      return audioBuffer;
+    }
+
+    // Create offline context for processing
+    const offlineContext = new OfflineAudioContext(
+      audioBuffer.numberOfChannels,
+      audioBuffer.length,
+      audioBuffer.sampleRate
+    );
+
+    // Create source
+    const source = offlineContext.createBufferSource();
+    source.buffer = audioBuffer;
+
+    // Apply pitch shift via playback rate (approximation)
+    source.playbackRate.value = pitch;
+
+    // Bass filter (low-shelf)
+    let lastNode = source;
+    if (bass !== 0) {
+      const bassFilter = offlineContext.createBiquadFilter();
+      bassFilter.type = 'lowshelf';
+      bassFilter.frequency.value = 200; // Bass frequencies
+      bassFilter.gain.value = bass * 12; // Convert -1/+1 to dB (-12 to +12)
+      lastNode.connect(bassFilter);
+      lastNode = bassFilter;
+    }
+
+    // Clarity filter (high-shelf)
+    if (clarity !== 0) {
+      const clarityFilter = offlineContext.createBiquadFilter();
+      clarityFilter.type = 'highshelf';
+      clarityFilter.frequency.value = 3000; // High frequencies
+      clarityFilter.gain.value = clarity * 10; // Convert -1/+1 to dB (-10 to +10)
+      lastNode.connect(clarityFilter);
+      lastNode = clarityFilter;
+    }
+
+    // Light dynamic compression for enhancement
+    const compressor = offlineContext.createDynamicsCompressor();
+    compressor.threshold.value = -30;
+    compressor.knee.value = 20;
+    compressor.ratio.value = 3;
+    compressor.attack.value = 0.003;
+    compressor.release.value = 0.1;
+    lastNode.connect(compressor);
+
+    // Connect to destination
+    compressor.connect(offlineContext.destination);
+
+    // Start and render
+    source.start(0);
+    const renderedBuffer = await offlineContext.startRendering();
+
+    console.log('[GlyphBot TTS Phase7] Audio filters applied:', { bass, clarity, pitch });
+    return renderedBuffer;
+
+  } catch (error) {
+    console.error('[GlyphBot TTS Phase7] Filter error:', error);
+    return audioBuffer; // Return original on error
+  }
 }
