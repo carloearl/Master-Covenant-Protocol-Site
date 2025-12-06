@@ -1,3 +1,4 @@
+
 /**
  * UNIFIED NAVIGATION CONFIGURATION
  * Single source of truth for Navbar and Footer
@@ -8,8 +9,7 @@
 export const NAV = [
   { label: "Home", href: "/" },
   { label: "Dream Team", href: "/DreamTeam" },
-  { label: "Chat Studio", href: "/ChatStudio" },
-  { label: "GlyphBot Jr", href: "/GlyphBotJunior" },
+  { label: "GlyphBot", href: "/GlyphBot" },
   { label: "Command Center", href: "/CommandCenter" },
   { label: "Pricing", href: "/Pricing" },
   { label: "Consultation", href: "/Consultation" }
@@ -30,7 +30,6 @@ export const NAV_SECTIONS = [
     items: [
       { label: "QR Studio", page: "Qr" },
       { label: "Image Lab", page: "ImageLab" },
-      { label: "Chat Studio", page: "ChatStudio" },
       { label: "GlyphBot AI", page: "GlyphBot" },
       { label: "NUPS POS", page: "NUPSLogin" },
       { label: "Security Tools", page: "SecurityTools" },
