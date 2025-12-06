@@ -9,16 +9,15 @@ export default function HeroContent() {
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-16">
       <div className="text-center mb-16">
-        <Badge className="mb-6 bg-[#1E3A8A]/30 border-2 border-[#3B82F6]/60 text-white px-6 py-2 shadow-[0_0_20px_rgba(59,130,246,0.4)] animate-pulse">
-          <Shield className="w-4 h-4 mr-2 drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-          <span className="font-black tracking-wider">POST-QUANTUM READY</span>
-        </Badge>
-        <h2 className="text-4xl md:text-6xl font-black mb-6 text-white tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
-          ENTERPRISE-GRADE <span className="bg-gradient-to-r from-[#1E40AF] via-[#3B82F6] to-[#60A5FA] bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(59,130,246,0.8)] animate-pulse">CYBERSECURITY</span>
-        </h2>
-        <p className="text-xl text-white/80 max-w-3xl mx-auto mb-8 font-medium">
-          Military-grade encryption, AI-powered threat detection, and quantum-resistant security protocols designed for the next generation of digital warfare.
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 text-white tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] leading-tight">
+          THE FUTURE OF SECURITY ISN'T COMING — <span className="bg-gradient-to-r from-[#1E40AF] via-[#3B82F6] to-[#60A5FA] bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(59,130,246,0.8)] animate-pulse">IT'S ALREADY HERE.</span>
+        </h1>
+        <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto mb-6 font-medium leading-relaxed">
+          Quantum-immune authentication, autonomous threat suppression, and AI-driven audit intelligence designed for infrastructures that cannot afford to fail.
         </p>
+        <Badge className="mb-10 bg-[#1E3A8A]/30 border-2 border-[#3B82F6]/60 text-white px-6 py-2 shadow-[0_0_20px_rgba(59,130,246,0.4)]">
+          <span className="font-black tracking-[0.2em] text-sm">PQC-HARDENED | ZERO-TRUST AI | SUB-MILLISECOND RESPONSE</span>
+        </Badge>
         
         <div className="flex items-center justify-center gap-6 mb-12">
           <div className="bg-slate-900/80 border-2 border-[#3B82F6]/50 px-6 py-4 rounded-xl shadow-[0_0_25px_rgba(59,130,246,0.3)] hover:shadow-[0_0_40px_rgba(30,64,175,0.5)] transition-all duration-300">
