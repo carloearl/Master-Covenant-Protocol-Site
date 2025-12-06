@@ -93,8 +93,8 @@ export default function useTTS(options = {}) {
     if (voices.length === 0) return null;
 
     // If user selected a specific voice, use that
-    if (defaultSettings.current.voiceProfile) {
-      const userVoice = voices.find(v => v.name === defaultSettings.current.voiceProfile);
+    if (currentSettings.voiceProfile) {
+      const userVoice = voices.find(v => v.name === currentSettings.voiceProfile);
       if (userVoice) {
         return userVoice;
       }

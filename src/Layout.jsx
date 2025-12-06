@@ -71,7 +71,7 @@ export default function Layout({ children, currentPageName }) {
 
       <Navbar user={user} onLogin={handleLogin} onLogout={handleLogout} />
 
-      <main className="flex-1 relative z-20 pt-4" style={{ background: 'transparent' }}>
+      <main className="flex-1 relative pt-4" style={{ background: 'transparent' }}>
         {children}
       </main>
 

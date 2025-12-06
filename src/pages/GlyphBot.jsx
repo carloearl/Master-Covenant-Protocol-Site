@@ -626,7 +626,7 @@ export default function GlyphBotPage() {
   const currentProviderLabel = providers.find(p => p.id === (lastMeta?.providerUsed || provider))?.label || 'Gemini (Primary)';
 
   return (
-    <div className="min-h-screen text-slate-50 flex flex-col pt-16 pb-0 relative z-[50] bg-black/80 backdrop-blur-sm">
+    <div className="min-h-screen text-slate-50 flex flex-col pt-16 pb-0 relative z-30">
       <SEOHead 
         title="GlyphBot - Elite AI Security Assistant | GlyphLock"
         description="Chat with GlyphBot, your elite AI security assistant for code auditing, blockchain analysis, threat detection, and debugging."
@@ -634,7 +634,7 @@ export default function GlyphBotPage() {
       
       <div className="flex-1 flex flex-col max-w-7xl mx-auto w-full">
         {/* Main Console Container */}
-        <div className="flex-1 flex flex-col bg-[#0a0a12]/95 border-x-2 border-purple-500/30 shadow-[0_0_60px_rgba(168,85,247,0.15)] overflow-hidden relative z-10">
+        <div className="flex-1 flex flex-col bg-[#0a0a12]/95 border-x-2 border-purple-500/30 shadow-[0_0_60px_rgba(168,85,247,0.15)] overflow-hidden">
           
           {/* Header */}
           <header className="flex items-center justify-between px-5 py-4 border-b-2 border-purple-500/40 bg-gradient-to-r from-slate-950 via-purple-950/30 to-slate-950 backdrop-blur-xl shadow-[0_4px_30px_rgba(168,85,247,0.2)]">
