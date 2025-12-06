@@ -117,6 +117,8 @@ export default function GlyphBotPage() {
 
   // Load saved settings and messages on mount + auto-resume last session
   useEffect(() => {
+    if (!currentUser?.email) return;
+
     (async () => {
       try {
         const savedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);

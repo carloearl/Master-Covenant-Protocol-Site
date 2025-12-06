@@ -160,19 +160,16 @@ export default function ChatHistoryPanel({
           ) : (
             <div className="space-y-1">
               {savedChats.map(chat => {
-                // Defensive ID handling for Base44 variations
-                const chatId = chat.id || chat._id || chat.entity_id;
-                if (!chatId) {
-                  console.warn('[ChatHistoryPanel] Chat missing ID:', chat);
-                  return null;
-                }
+                // OMEGA ID normalization
+                const realId = chat.id || chat._id || chat.entity_id;
+                if (!realId) return null;
                 
                 return (
                   <button
-                    key={chatId}
-                    onClick={() => onLoadChat?.(chatId)}
+                    key={realId}
+                    onClick={() => onLoadChat?.(realId)}
                     className={`w-full text-left p-2 rounded-lg transition-all text-xs ${
-                      chatId === currentChatId
+                      realId === currentChatId
                         ? 'bg-cyan-500/20 border border-cyan-400/50 text-cyan-200'
                         : 'bg-slate-900/40 border border-slate-700/50 text-slate-300 hover:bg-slate-800/60 hover:border-slate-600'
                     }`}
@@ -211,25 +208,25 @@ export default function ChatHistoryPanel({
                 <div className="text-xs text-slate-500 text-center py-2">No archived chats</div>
               ) : (
                 archivedChats.map(chat => {
-                  const chatId = chat.id || chat._id || chat.entity_id;
-                  if (!chatId) return null;
+                  const realId = chat.id || chat._id || chat.entity_id;
+                  if (!realId) return null;
                   
                   return (
                     <div
-                      key={chatId}
+                      key={realId}
                       className="p-2 rounded-lg bg-slate-900/40 border border-slate-700/50 text-xs"
                     >
                       <div className="font-medium truncate text-slate-400">{chat.title || 'Untitled'}</div>
                       <div className="flex items-center gap-1 mt-2">
                         <button
-                          onClick={() => handleUnarchive(chatId)}
+                          onClick={() => handleUnarchive(realId)}
                           className="flex items-center gap-1 px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 text-[10px]"
                         >
                           <ArchiveRestore className="w-3 h-3" />
                           Restore
                         </button>
                         <button
-                          onClick={() => handleDelete(chatId)}
+                          onClick={() => handleDelete(realId)}
                           className="flex items-center gap-1 px-2 py-1 rounded bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px]"
                         >
                           <Trash2 className="w-3 h-3" />
