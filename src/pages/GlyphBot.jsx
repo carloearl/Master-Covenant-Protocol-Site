@@ -11,6 +11,10 @@ import ChatInput from '@/components/glyphbot/ChatInput';
 import ControlBar from '@/components/glyphbot/ControlBar';
 import ChatHistoryPanel from '@/components/glyphbot/ChatHistoryPanel';
 import { useGlyphBotPersistence } from '@/components/glyphbot/useGlyphBotPersistence';
+import { useGlyphBotAudit } from '@/components/glyphbot/useGlyphBotAudit';
+import AuditPanel from '@/components/glyphbot/AuditPanel';
+import AuditHistoryPanel from '@/components/glyphbot/AuditHistoryPanel';
+import AuditReportView from '@/components/glyphbot/AuditReportView';
 import useTTS from '@/components/glyphbot/useTTS';
 import { createPageUrl } from '@/utils';
 
@@ -49,7 +53,11 @@ export default function GlyphBotPage() {
   const [chatCount, setChatCount] = useState(0);
   const [showTrimWarning, setShowTrimWarning] = useState(false);
   const [showHistoryPanel, setShowHistoryPanel] = useState(false);
+  const [showAuditPanel, setShowAuditPanel] = useState(false);
+  const [showAuditHistory, setShowAuditHistory] = useState(false);
+  const [selectedAuditView, setSelectedAuditView] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [isProcessingAudit, setIsProcessingAudit] = useState(false);
 
   const [modes, setModes] = useState({
     voice: false,
@@ -96,6 +104,17 @@ export default function GlyphBotPage() {
     unarchiveChat,
     deleteChat
   } = useGlyphBotPersistence(currentUser);
+
+  // Phase 6: Audit hook
+  const {
+    audits,
+    isLoading: auditsLoading,
+    createAudit,
+    updateAudit,
+    getAudit,
+    deleteAudit,
+    loadAudits
+  } = useGlyphBotAudit(currentUser);
 
   // Load current user
   useEffect(() => {
@@ -350,6 +369,173 @@ export default function GlyphBotPage() {
   const handleNewChat = useCallback(() => {
     handleClear();
   }, []);
+
+  // Phase 6: Handle audit start
+  const handleStartAudit = useCallback(async (auditData) => {
+    setIsProcessingAudit(true);
+
+    try {
+      // Create audit record
+      const audit = await createAudit(auditData);
+      if (!audit) {
+        toast.error('Failed to create audit');
+        setIsProcessingAudit(false);
+        return;
+      }
+
+      const auditId = audit.id || audit._id || audit.entity_id;
+
+      // Add initial message to chat
+      const startMsg = {
+        id: `audit-start-${Date.now()}`,
+        role: 'assistant',
+        content: `🔍 Starting ${auditData.auditType} security audit for **${auditData.targetUrl}**...\n\nAudit ID: ${auditId}\n\nAnalyzing security posture, please wait...`,
+        audit: null
+      };
+      setMessages(prev => [...prev, startMsg]);
+      trackMessage(startMsg);
+
+      // Update audit status
+      await updateAudit(auditId, { status: 'IN_PROGRESS' });
+
+      // Build audit prompt
+      const auditPrompt = `Conduct a comprehensive ${auditData.auditType} security audit for: ${auditData.targetUrl}
+
+${auditData.notes ? `Focus areas: ${auditData.notes}` : ''}
+
+Provide a structured security assessment with:
+1. Overall security grade (A-F)
+2. Severity score (0-100, where 100 is most severe)
+3. Technical findings (specific vulnerabilities)
+4. Business risks (real-world impact)
+5. Prioritized fix plan
+
+Return ONLY valid JSON in this exact format:
+{
+  "target": "${auditData.targetUrl}",
+  "auditType": "${auditData.auditType}",
+  "overallGrade": "B-",
+  "severityScore": 68,
+  "summary": "Brief executive summary of key findings and overall security posture.",
+  "technicalFindings": [
+    {
+      "id": "F1",
+      "title": "Finding title",
+      "severity": "HIGH",
+      "area": "Headers/Auth/Sessions/etc",
+      "description": "Detailed description",
+      "businessImpact": "What this means for business",
+      "recommendation": "How to fix",
+      "sampleFix": "Code/config example if applicable"
+    }
+  ],
+  "businessRisks": [
+    {
+      "id": "R1",
+      "title": "Risk title",
+      "likelihood": "HIGH/MEDIUM/LOW",
+      "impact": "HIGH/MEDIUM/LOW",
+      "notes": "Additional context"
+    }
+  ],
+  "fixPlan": [
+    {
+      "order": 1,
+      "title": "Action item",
+      "effort": "HIGH/MEDIUM/LOW",
+      "owner": "Team/role responsible"
+    }
+  ]
+}`;
+
+      // Send to LLM
+      const response = await glyphbotClient.sendMessage([...messages, startMsg, {
+        id: `audit-req-${Date.now()}`,
+        role: 'user',
+        content: auditPrompt
+      }], {
+        persona: 'SECURITY',
+        auditMode: true,
+        jsonModeForced: true,
+        structuredMode: true,
+        provider: provider === 'AUTO' ? null : provider
+      });
+
+      let auditResults = {};
+      try {
+        auditResults = typeof response.text === 'string' 
+          ? JSON.parse(response.text)
+          : response.text;
+      } catch {
+        auditResults = {
+          target: auditData.targetUrl,
+          auditType: auditData.auditType,
+          overallGrade: 'N/A',
+          severityScore: 0,
+          summary: response.text || 'Audit completed but results format was unexpected.',
+          technicalFindings: [],
+          businessRisks: [],
+          fixPlan: []
+        };
+      }
+
+      // Update audit with results
+      await updateAudit(auditId, {
+        status: 'COMPLETE',
+        findings: JSON.stringify(auditResults),
+        summary: auditResults.summary || 'Audit completed',
+        severityScore: auditResults.severityScore || 0,
+        overallGrade: auditResults.overallGrade || 'N/A'
+      });
+
+      // Add completion message
+      const completeMsg = {
+        id: `audit-complete-${Date.now()}`,
+        role: 'assistant',
+        content: `✅ **Security Audit Complete**\n\n**Target:** ${auditData.targetUrl}\n**Grade:** ${auditResults.overallGrade}\n**Severity Score:** ${auditResults.severityScore}/100\n\n**Summary:** ${auditResults.summary}\n\n**Findings:** ${auditResults.technicalFindings?.length || 0} technical issues identified\n**Business Risks:** ${auditResults.businessRisks?.length || 0} risks flagged\n**Fix Plan:** ${auditResults.fixPlan?.length || 0} action items\n\n_View full report in Audit History panel._`,
+        audit: null
+      };
+      setMessages(prev => [...prev, completeMsg]);
+      trackMessage(completeMsg);
+
+      // Auto-speak if voice mode is on
+      if (modes.voice) {
+        const voiceSummary = `Audit complete for ${auditData.targetUrl}. Overall grade ${auditResults.overallGrade}. Severity score ${auditResults.severityScore} out of 100. ${auditResults.summary}`;
+        speak(voiceSummary);
+      }
+
+      // Refresh audit list
+      await loadAudits();
+
+      console.log('[GlyphBot Phase6] Audit completed:', auditId);
+    } catch (err) {
+      console.error('[GlyphBot Phase6] Audit failed:', err);
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `audit-err-${Date.now()}`,
+          role: 'assistant',
+          content: '❌ Audit failed due to an error. Please try again.',
+          audit: null
+        }
+      ]);
+    } finally {
+      setIsProcessingAudit(false);
+    }
+  }, [createAudit, updateAudit, messages, trackMessage, glyphbotClient, provider, modes.voice, speak, loadAudits]);
+
+  // Phase 6: View audit from history
+  const handleViewAudit = useCallback((audit) => {
+    setSelectedAuditView(audit);
+  }, []);
+
+  // Phase 6: Play audit summary via TTS
+  const handlePlayAuditSummary = useCallback(() => {
+    if (selectedAuditView?.summary) {
+      const voiceText = `Security audit for ${selectedAuditView.targetUrl}. Overall grade ${selectedAuditView.overallGrade}. ${selectedAuditView.summary}`;
+      speak(voiceText);
+    }
+  }, [selectedAuditView, speak]);
 
   const handleToggleMode = (key) => {
     setModes(prev => ({ ...prev, [key]: !prev[key] }));
