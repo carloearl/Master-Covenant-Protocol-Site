@@ -114,7 +114,7 @@ export default function SecurityTools() {
         </div>
       </section>
 
-      <section className="py-20 bg-black">
+      <section className="py-20" style={{ background: 'transparent' }}>
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl font-bold mb-4 text-white">
@@ -151,7 +151,7 @@ export default function SecurityTools() {
         </div>
       </section>
 
-      <section className="py-20 bg-black">
+      <section className="py-20" style={{ background: 'transparent' }}>
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-4xl font-bold mb-6 text-white">
