@@ -751,7 +751,7 @@ export default function GlyphBotPage() {
 
                 {showAuditHistory ? (
                   <div className="flex-1 overflow-hidden flex flex-col">
-                    <AuditHistoryPanel
+                    <UI.AuditHistoryPanel
                       audits={audits}
                       isLoading={auditsLoading}
                       onViewAudit={handleViewAudit}
@@ -777,24 +777,11 @@ export default function GlyphBotPage() {
               className="flex-1 min-h-0 overflow-y-auto px-4 py-6 space-y-4"
             >
               {messages.map((msg) => (
-                <div
+                <UI.ChatMessage 
                   key={msg.id}
-                  className={`max-w-[80%] p-5 rounded-2xl mb-4 font-semibold shadow-lg ${
-                    msg.role === 'assistant' ? 'mr-auto text-left' : 'ml-auto text-right'
-                  }`}
-                  style={{
-                    background: 'linear-gradient(270deg, #4a00e0, #8e2de2, #4a00e0)',
-                    backgroundSize: '600% 600%',
-                    animation: 'shimmer 6s ease infinite',
-                    color: '#39ff14',
-                    fontSize: '16px',
-                    lineHeight: '1.6',
-                    whiteSpace: 'pre-wrap',
-                    wordBreak: 'break-word'
-                  }}
-                >
-                  {msg.content}
-                </div>
+                  msg={msg}
+                  isAssistant={msg.role === 'assistant'}
+                />
               ))}
 
               {isSending && (
