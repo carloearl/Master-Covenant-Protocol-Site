@@ -278,7 +278,8 @@ export default function GlyphBotPage() {
     if (!trimmed || isSending) return;
 
     const newUserMsg = { id: `user-${Date.now()}`, role: 'user', content: trimmed };
-    setMessages(prev => [...prev, newUserMsg]);
+    const updatedMessages = [...messages, newUserMsg];
+    setMessages(updatedMessages);
     setInput('');
     setIsSending(true);
     
@@ -286,7 +287,7 @@ export default function GlyphBotPage() {
     trackMessage(newUserMsg);
 
     try {
-      const response = await glyphbotClient.sendMessage([...messages, newUserMsg], {
+      const response = await glyphbotClient.sendMessage(updatedMessages, {
         persona,
         auditMode: modes.audit,
         oneTestMode: modes.test,
@@ -302,24 +303,31 @@ export default function GlyphBotPage() {
       });
 
       // Extract text from response (handle both data object and direct string)
-      let botText = '[No response received]';
-      if (response.data?.text) {
-        botText = response.data.text;
-      } else if (response.text) {
+      let botText = '';
+      if (response.text) {
         botText = response.text;
+      } else if (response.data?.text) {
+        botText = response.data.text;
       } else if (typeof response.data === 'string') {
         botText = response.data;
+      } else if (typeof response === 'string') {
+        botText = response;
       }
       
-      console.log('[GlyphBot] Response received:', { botText, response });
+      if (!botText) {
+        botText = '[No response received - check console for details]';
+        console.error('[GlyphBot] Empty response:', response);
+      }
+      
+      console.log('[GlyphBot] Response received:', { botText, fullResponse: response });
 
       const botMsg = { 
         id: `bot-${Date.now()}`,
         role: 'assistant', 
         content: botText,
-        audit: response.audit || null,
-        providerId: response.providerUsed,
-        latencyMs: response.meta?.providerStats?.[response.providerUsed]?.lastLatencyMs,
+        audit: response.audit || response.data?.audit || null,
+        providerId: response.providerUsed || response.data?.providerUsed || 'unknown',
+        latencyMs: response.meta?.providerStats?.[response.providerUsed]?.lastLatencyMs || response.data?.latencyMs,
         ttsMetadata: modes.voice ? {
           voiceProfile: voiceSettings.voiceProfile,
           pitch: voiceSettings.pitch,
@@ -790,7 +798,7 @@ export default function GlyphBotPage() {
               ref={chatContainerRef}
               className="flex-1 chat-scroll-container px-4 py-6 space-y-4"
             >
-              {messages.filter(m => m.content).map((msg) => (
+              {messages.map((msg) => (
                 <ChatMessage
                   key={msg.id}
                   msg={msg}
