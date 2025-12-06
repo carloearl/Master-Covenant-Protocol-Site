@@ -106,8 +106,8 @@ export default function ChatMessage({
 
           {/* Content */}
           {isAssistant ? (
-            <div className="prose prose-sm prose-invert max-w-none prose-p:my-2 prose-headings:text-cyan-300 prose-code:text-fuchsia-300 prose-code:bg-slate-800/80 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-slate-950 prose-pre:border prose-pre:border-slate-700/50 prose-a:text-cyan-400 prose-strong:text-white">
-              <ReactMarkdown
+          <div className="prose prose-sm prose-invert max-w-none prose-p:my-2 prose-headings:text-cyan-300 prose-code:text-fuchsia-300 prose-code:bg-slate-800/80 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-slate-950 prose-pre:border prose-pre:border-slate-700/50 prose-a:text-cyan-400 prose-strong:text-white" style={{ color: '#ffffff !important' }}>
+            <ReactMarkdown
                 components={{
                   code: ({ inline, className, children, ...props }) => {
                     const match = /language-(\w+)/.exec(className || '');
@@ -131,10 +131,10 @@ export default function ChatMessage({
                     }
                     return <code className={className} {...props}>{children}</code>;
                   },
-                  p: ({ children }) => <p className="leading-relaxed">{children}</p>,
+                  p: ({ children }) => <p className="leading-relaxed text-white" style={{ color: '#ffffff !important' }}>{children}</p>,
                   ul: ({ children }) => <ul className="my-2 space-y-1">{children}</ul>,
                   ol: ({ children }) => <ol className="my-2 space-y-1">{children}</ol>,
-                  li: ({ children }) => <li className="text-slate-300">{children}</li>,
+                  li: ({ children }) => <li className="text-white" style={{ color: '#ffffff !important' }}>{children}</li>,
                   a: ({ children, href }) => (
                     <a href={href} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2">
                       {children}

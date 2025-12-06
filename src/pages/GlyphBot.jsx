@@ -798,18 +798,19 @@ export default function GlyphBotPage() {
               className="flex-1 chat-scroll-container px-4 py-6 space-y-4"
             >
               {messages.map((msg) => (
-                <ChatMessage
-                  key={msg.id}
-                  msg={msg}
-                  isAssistant={msg.role === 'assistant'}
-                  providerLabel={msg.providerId ? providers.find(p => p.id === msg.providerId)?.label : undefined}
-                  ttsAvailable={true}
-                  isSpeaking={isSpeaking}
-                  onPlayTTS={handlePlayTTS}
-                  onReplayWithSettings={handleReplayWithSettings}
-                  showFeedback={msg.role === 'assistant' && msg.id !== 'welcome-1'}
-                  persona={persona}
-                />
+                <div key={msg.id} style={{ color: '#ffffff !important' }}>
+                  <ChatMessage
+                    msg={msg}
+                    isAssistant={msg.role === 'assistant'}
+                    providerLabel={msg.providerId ? providers.find(p => p.id === msg.providerId)?.label : undefined}
+                    ttsAvailable={true}
+                    isSpeaking={isSpeaking}
+                    onPlayTTS={handlePlayTTS}
+                    onReplayWithSettings={handleReplayWithSettings}
+                    showFeedback={msg.role === 'assistant' && msg.id !== 'welcome-1'}
+                    persona={persona}
+                  />
+                </div>
               ))}
 
               {isSending && (
