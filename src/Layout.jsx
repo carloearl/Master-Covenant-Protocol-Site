@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import SecurityMonitor from "@/components/SecurityMonitor";
-import { UI } from "@/glyphlock/bot";
+import { UI } from "@/components/glyphlock/bot";
 import NebulaLayer from "@/components/global/NebulaLayer";
 import CursorOrb from "@/components/global/CursorOrb";
 import Navbar from "@/components/Navbar";

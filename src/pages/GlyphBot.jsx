@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { UI, Logic, Config } from '@/glyphlock/bot';
+import { UI, Logic, Config } from '@/components/glyphlock/bot';
 import SEOHead from '@/components/SEOHead';
 import { base44 } from '@/api/base44Client';
 import { Activity, Zap, Shield, Bot, AlertTriangle, X, PanelRightOpen, PanelRightClose } from 'lucide-react';
