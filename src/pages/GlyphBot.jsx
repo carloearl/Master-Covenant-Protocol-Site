@@ -626,7 +626,7 @@ export default function GlyphBotPage() {
   const currentProviderLabel = providers.find(p => p.id === (lastMeta?.providerUsed || provider))?.label || 'Gemini (Primary)';
 
   return (
-    <div className="min-h-screen text-slate-50 flex flex-col pt-16 pb-0" style={{ background: 'transparent' }}>
+    <div className="min-h-screen text-slate-50 flex flex-col pt-16 pb-0 relative z-[20]" style={{ background: 'transparent' }}>
       <SEOHead 
         title="GlyphBot - Elite AI Security Assistant | GlyphLock"
         description="Chat with GlyphBot, your elite AI security assistant for code auditing, blockchain analysis, threat detection, and debugging."

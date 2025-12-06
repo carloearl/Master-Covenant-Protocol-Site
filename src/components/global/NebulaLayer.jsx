@@ -273,6 +273,7 @@ export default function NebulaLayer({ intensity = 0.5 }) {
     <>
       <canvas
         ref={starsCanvasRef}
+        id="nebula-layer-stars"
         className="fixed inset-0 pointer-events-none"
         style={{ 
           zIndex: 0,
@@ -283,6 +284,7 @@ export default function NebulaLayer({ intensity = 0.5 }) {
       
       <canvas
         ref={canvasRef}
+        id="nebula-layer"
         className="fixed inset-0 pointer-events-none"
         style={{ 
           zIndex: 1,
