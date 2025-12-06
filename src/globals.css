@@ -13,6 +13,9 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
@@ -21,6 +24,10 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
   touch-action: manipulation;
+  will-change: auto;
+  contain: layout style;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Minimum Touch Target Sizes (44x44px) */
@@ -139,6 +146,8 @@ p {
 /* Smooth page transitions */
 .page-transition {
   @apply transition-all duration-300 ease-out;
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 /* Unified spacing system */
@@ -150,6 +159,8 @@ p {
 .card-elevated {
   @apply bg-slate-900/80 border-2 border-[#3B82F6]/30 shadow-xl backdrop-blur-sm;
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .card-elevated-hover {
@@ -230,6 +241,8 @@ p {
 /* Card Enhancements */
 .card-hover {
   @apply transition-all duration-300 hover:scale-105 hover:shadow-2xl;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* Mobile Menu Improvements */

@@ -61,17 +61,17 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col relative overflow-x-hidden selection:bg-[#00E4FF] selection:text-black">
+    <div className="min-h-screen bg-black text-white flex flex-col relative overflow-x-hidden selection:bg-[#00E4FF] selection:text-black" style={{ transform: 'translateZ(0)', willChange: 'auto' }}>
       <SecurityMonitor />
       
       {/* Global Background Elements */}
-      <InteractiveNebula className="pointer-events-none fixed inset-0 z-0 opacity-40" />
-      <div className="fixed inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none mix-blend-overlay"></div>
-      <div className="fixed top-0 left-0 w-full h-32 bg-gradient-to-b from-black to-transparent z-10 pointer-events-none"></div>
+      <InteractiveNebula className="pointer-events-none fixed inset-0 z-0 opacity-40" style={{ transform: 'translateZ(0)' }} />
+      <div className="fixed inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none mix-blend-overlay" style={{ transform: 'translateZ(0)' }}></div>
+      <div className="fixed top-0 left-0 w-full h-32 bg-gradient-to-b from-black to-transparent z-10 pointer-events-none" style={{ transform: 'translateZ(0)' }}></div>
 
       <Navbar user={user} onLogin={handleLogin} onLogout={handleLogout} />
 
-      <main className="flex-1 relative z-20 pt-4">
+      <main className="flex-1 relative z-20 pt-4" style={{ contain: 'layout style', transform: 'translateZ(0)' }}>
         {children}
       </main>
 
