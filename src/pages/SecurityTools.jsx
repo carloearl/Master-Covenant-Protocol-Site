@@ -50,9 +50,8 @@ export default function SecurityTools() {
   ];
 
   return (
-    <div className="bg-black text-white min-h-screen">
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-black" />
+    <div className="text-white min-h-screen" style={{ background: 'transparent' }}>
+      <section className="relative py-20 overflow-hidden" style={{ background: 'transparent' }}>
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: "linear-gradient(cyan 1px, transparent 1px), linear-gradient(90deg, cyan 1px, transparent 1px)",
           backgroundSize: "50px 50px"
@@ -73,7 +72,7 @@ export default function SecurityTools() {
         </div>
       </section>
 
-      <section className="py-20 bg-gray-900">
+      <section className="py-20" style={{ background: 'transparent' }}>
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {tools.map((tool, index) => (

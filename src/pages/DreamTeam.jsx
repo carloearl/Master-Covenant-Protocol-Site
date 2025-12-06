@@ -186,17 +186,13 @@ export default function DreamTeamPage() {
   };
 
   return (
-    <div className="h-screen bg-slate-950 text-slate-100 overflow-hidden">
+    <div className="h-screen text-slate-100 overflow-hidden" style={{ background: 'transparent' }}>
       <SEOHead
         title="GlyphLock Dream Team - AI Player Cards | Master Covenant Series"
         description="Meet the GlyphLock Dream Team. Collectible AI player cards featuring Alfred, Claude, Copilot, Perplexity, and Cursor. Master Covenant Series."
       />
 
-      {/* Background */}
-      <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,#0f172a_0,#020617_55%),radial-gradient(circle_at_80%_100%,#020617_0,#020617_65%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(244,114,182,0.4),transparent_55%),radial-gradient(circle_at_85%_80%,rgba(34,211,238,0.35),transparent_55%)] opacity-70 mix-blend-screen" />
-      </div>
+
 
       {/* Navigation dots */}
       <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3">
