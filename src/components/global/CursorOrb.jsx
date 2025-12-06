@@ -39,9 +39,9 @@ export default function CursorOrb() {
     function animate() {
       timeRef.current += 0.005;
       
-      // Smooth easing (interpolation factor 0.15)
-      mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.15;
-      mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.15;
+      // INSTANT tracking - no lag
+      mouseRef.current.x = mouseRef.current.targetX;
+      mouseRef.current.y = mouseRef.current.targetY;
 
       const x = mouseRef.current.x;
       const y = mouseRef.current.y;
@@ -51,38 +51,38 @@ export default function CursorOrb() {
       // Animate color (cyan → blue spectrum)
       const hue = 190 + Math.sin(timeRef.current * 2) * 40;
 
-      // Outer glow (200px diameter)
-      const outerGlow = ctx.createRadialGradient(x, y, 0, x, y, 150);
-      outerGlow.addColorStop(0, `hsla(${hue}, 100%, 70%, 0.6)`);
-      outerGlow.addColorStop(0.3, `hsla(${hue}, 95%, 65%, 0.4)`);
-      outerGlow.addColorStop(0.6, `hsla(${hue + 15}, 90%, 60%, 0.2)`);
+      // Outer glow (smaller - 60px diameter)
+      const outerGlow = ctx.createRadialGradient(x, y, 0, x, y, 60);
+      outerGlow.addColorStop(0, `hsla(${hue}, 100%, 70%, 0.7)`);
+      outerGlow.addColorStop(0.4, `hsla(${hue}, 95%, 65%, 0.45)`);
+      outerGlow.addColorStop(0.7, `hsla(${hue + 15}, 90%, 60%, 0.2)`);
       outerGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       
       ctx.fillStyle = outerGlow;
       ctx.beginPath();
-      ctx.arc(x, y, 150, 0, Math.PI * 2);
+      ctx.arc(x, y, 60, 0, Math.PI * 2);
       ctx.fill();
 
-      // Mid glow (100px diameter)
-      const midGlow = ctx.createRadialGradient(x, y, 0, x, y, 80);
-      midGlow.addColorStop(0, `hsla(${hue}, 100%, 75%, 0.8)`);
-      midGlow.addColorStop(0.5, `hsla(${hue}, 95%, 70%, 0.5)`);
+      // Mid glow (35px diameter)
+      const midGlow = ctx.createRadialGradient(x, y, 0, x, y, 35);
+      midGlow.addColorStop(0, `hsla(${hue}, 100%, 75%, 0.85)`);
+      midGlow.addColorStop(0.5, `hsla(${hue}, 95%, 70%, 0.55)`);
       midGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       
       ctx.fillStyle = midGlow;
       ctx.beginPath();
-      ctx.arc(x, y, 80, 0, Math.PI * 2);
+      ctx.arc(x, y, 35, 0, Math.PI * 2);
       ctx.fill();
 
-      // Bright center core
-      const centerGlow = ctx.createRadialGradient(x, y, 0, x, y, 30);
+      // Bright center core (smaller - 12px)
+      const centerGlow = ctx.createRadialGradient(x, y, 0, x, y, 12);
       centerGlow.addColorStop(0, `hsla(${hue}, 100%, 85%, 1)`);
-      centerGlow.addColorStop(0.5, `hsla(${hue}, 100%, 75%, 0.7)`);
+      centerGlow.addColorStop(0.6, `hsla(${hue}, 100%, 75%, 0.75)`);
       centerGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       
       ctx.fillStyle = centerGlow;
       ctx.beginPath();
-      ctx.arc(x, y, 30, 0, Math.PI * 2);
+      ctx.arc(x, y, 12, 0, Math.PI * 2);
       ctx.fill();
 
       animationRef.current = requestAnimationFrame(animate);
