@@ -797,6 +797,9 @@ p {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  position: relative;
+  z-index: 50;
+  isolation: isolate;
 }
 
 .dino-bubble {
