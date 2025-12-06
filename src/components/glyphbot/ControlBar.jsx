@@ -157,28 +157,25 @@ export default function ControlBar({
                     </Select>
                   </div>
 
-                  {/* Voice Selection */}
-                  {availableVoices.length > 0 && (
-                    <div className="space-y-2">
-                      <Label className="text-xs text-slate-400">Voice</Label>
-                      <Select 
-                        value={voiceSettings?.voice || ''} 
-                        onValueChange={(val) => handleVoiceChange('voice', val)}
-                      >
-                        <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
-                          <SelectValue placeholder="Auto (Best Quality)" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-slate-800 border-slate-700 max-h-[200px]">
-                          <SelectItem value={null} className="text-white">Auto (Best Quality)</SelectItem>
-                          {availableVoices.map(v => (
-                            <SelectItem key={v.name} value={v.name} className="text-white">
-                              {v.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
+                  {/* Voice Selection - OpenAI Voices */}
+                  <div className="space-y-2">
+                    <Label className="text-xs text-slate-400">Voice Profile</Label>
+                    <Select 
+                      value={voiceSettings?.voiceProfile || 'neutral_female'} 
+                      onValueChange={(val) => handleVoiceChange('voiceProfile', val)}
+                    >
+                      <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-700">
+                        {voiceProfiles.map(v => (
+                          <SelectItem key={v.id} value={v.id} className="text-white">
+                            {v.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
                   {/* Pitch Slider (0.5-2.0, noticeable range) */}
                   <div className="space-y-2">

@@ -1,6 +1,6 @@
 /**
- * GlyphBot TTS Hook - Phase 7C Production Voice Engine
- * Hybrid TTS: OpenAI TTS (primary) + Web Speech (fallback)
+ * GlyphBot TTS Hook - Phase 7.1 OpenAI TTS Engine A
+ * Hybrid TTS: OpenAI TTS (primary via backend) + Web Speech (fallback)
  * 
  * Usage:
  * const { playText, stop, isSpeaking } = useTTS({ provider: 'auto' });
@@ -8,6 +8,7 @@
  */
 
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { synthesizeTTS } from './ttsClient';
 
 // Phase 7C: Voice Profiles (OpenAI TTS voices)
 const VOICE_PROFILES = {
@@ -147,14 +148,28 @@ export default function useTTS(options = {}) {
    */
   const stop = useCallback(() => {
     try {
+      // Stop Web Speech
       if (window.speechSynthesis) {
         window.speechSynthesis.cancel();
       }
-      if (audioRef.current) {
+
+      // Stop AudioContext source (OpenAI)
+      if (audioRef.current?.source) {
+        try {
+          audioRef.current.source.stop();
+        } catch (e) {
+          console.warn('[GlyphBot TTS] Source already stopped:', e);
+        }
+        audioRef.current = null;
+      }
+
+      // Stop old Audio element (legacy fallback)
+      if (audioRef.current instanceof Audio) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
         audioRef.current = null;
       }
+
       if (utteranceRef.current) {
         utteranceRef.current = null;
       }
@@ -166,68 +181,88 @@ export default function useTTS(options = {}) {
   }, []);
 
   /**
-   * Phase 7C: OpenAI TTS playback
+   * Phase 7.1: OpenAI TTS playback via AudioContext
+   * Uses backend proxy for API calls
    */
   const playWithOpenAI = useCallback(async (text, settings, voiceId) => {
     try {
-      const response = await fetch('https://api.openai.com/v1/audio/speech', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY || ''}`
-        },
-        body: JSON.stringify({
-          model: 'tts-1',
-          voice: voiceId,
-          input: text,
-          speed: Math.max(0.25, Math.min(4.0, settings.speed)) // OpenAI accepts 0.25-4.0
-        })
-      });
+      // Initialize AudioContext if needed
+      if (!audioContextRef.current) {
+        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const audioContext = audioContextRef.current;
 
-      if (!response.ok) {
-        throw new Error(`OpenAI TTS failed: ${response.status}`);
+      // Resume if suspended (browser autoplay policy)
+      if (audioContext.state === 'suspended') {
+        await audioContext.resume();
       }
 
-      const audioBlob = await response.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      audioRef.current = audio;
+      // Call backend TTS proxy with emotion-enhanced text
+      let enhancedText = text;
+      if (settings.emotion && settings.emotion !== 'neutral') {
+        const emotionInstructions = {
+          confident: '[Speak with authority and conviction] ',
+          calm: '[Speak in a soothing, reassuring tone] ',
+          urgent: '[Speak with energy and urgency] ',
+          storyteller: '[Speak as if narrating an engaging story] '
+        };
+        enhancedText = (emotionInstructions[settings.emotion] || '') + text;
+      }
 
-      audio.volume = settings.volume;
+      console.log('[GlyphBot TTS] OpenAI synthesis starting:', { voiceId, speed: settings.speed, emotion: settings.emotion });
 
-      audio.onplay = () => {
-        setIsLoading(false);
-        setIsSpeaking(true);
-        setMetadata({
-          provider: 'openai',
-          voiceId,
-          pitch: settings.pitch,
-          speed: settings.speed,
-          emotion: settings.emotion,
-          timestamp: Date.now()
-        });
-      };
+      const audioData = await synthesizeTTS(enhancedText, {
+        voice: voiceId,
+        speed: settings.speed,
+        emotion: settings.emotion
+      });
 
-      audio.onended = () => {
+      // Decode audio data
+      const audioBuffer = await audioContext.decodeAudioData(audioData);
+
+      // Create source and connect to destination
+      const source = audioContext.createBufferSource();
+      source.buffer = audioBuffer;
+
+      // Apply volume via Gain Node
+      const gainNode = audioContext.createGain();
+      gainNode.gain.value = settings.volume || 1.0;
+      
+      source.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      // Store source for stopping
+      audioRef.current = { source, audioContext };
+
+      // Set up event handlers
+      source.onended = () => {
         setIsSpeaking(false);
-        URL.revokeObjectURL(audioUrl);
         audioRef.current = null;
+        console.log('[GlyphBot TTS] Playback complete');
       };
 
-      audio.onerror = (e) => {
-        console.error('[GlyphBot TTS] Audio playback error:', e);
-        setIsSpeaking(false);
-        setIsLoading(false);
-        setLastError('Audio playback failed');
-        URL.revokeObjectURL(audioUrl);
-        audioRef.current = null;
-      };
+      // Update state before playing
+      setIsLoading(false);
+      setIsSpeaking(true);
+      setMetadata({
+        provider: 'openai',
+        voiceId,
+        pitch: settings.pitch,
+        speed: settings.speed,
+        emotion: settings.emotion,
+        timestamp: Date.now()
+      });
 
-      await audio.play();
+      // Start playback
+      source.start(0);
+      console.log('[GlyphBot TTS] OpenAI playback started');
+      
       return true;
 
     } catch (error) {
-      console.error('[GlyphBot TTS] OpenAI error:', error);
+      console.error('[GlyphBot TTS] OpenAI synthesis error:', error);
+      setIsSpeaking(false);
+      setIsLoading(false);
       throw error;
     }
   }, []);
