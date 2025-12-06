@@ -31,7 +31,8 @@ export const NAV_SECTIONS = [
       { label: "Image Lab", page: "ImageLab" },
       { label: "GlyphBot AI", page: "GlyphBot" },
       { label: "NUPS POS", page: "NUPSLogin" },
-      { label: "Security Tools", page: "SecurityTools" }
+      { label: "Security Tools", page: "SecurityTools" },
+      { label: "Video Upload", page: "VideoUpload" }
     ]
   },
   {
