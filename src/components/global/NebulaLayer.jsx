@@ -251,14 +251,14 @@ export default function NebulaLayer({ intensity = 0.5 }) {
         className="fixed inset-0 pointer-events-none"
         style={{ 
           zIndex: 0,
-          background: 'radial-gradient(ellipse at center, rgba(8, 12, 30, 1) 0%, rgba(0, 0, 0, 1) 100%)'
+          background: 'radial-gradient(ellipse at center, rgba(5, 8, 20, 1) 0%, rgba(0, 0, 0, 1) 100%)'
         }}
       />
       
       <canvas
         ref={canvasRef}
         className="fixed inset-0 pointer-events-none"
-        style={{ zIndex: 1 }}
+        style={{ zIndex: 15 }}
       />
     </>
   );

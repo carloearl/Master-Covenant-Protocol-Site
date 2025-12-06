@@ -111,7 +111,8 @@ export default function CursorOrb() {
       className="fixed inset-0 pointer-events-none"
       style={{ 
         zIndex: 9999999,
-        mixBlendMode: 'screen'
+        mixBlendMode: 'screen',
+        cursor: 'none'
       }}
     />
   );
