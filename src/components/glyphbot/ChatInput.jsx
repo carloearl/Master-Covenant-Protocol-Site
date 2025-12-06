@@ -87,9 +87,9 @@ export default function ChatInput({
   };
 
   return (
-    <div className="border-t-2 border-purple-500/30 bg-gradient-to-t from-slate-950 via-purple-950/10 to-transparent px-4 py-5">
-      <div className="max-w-4xl mx-auto">
-        <div className="relative flex items-end gap-3 bg-slate-900/90 border-2 border-purple-500/40 rounded-2xl p-3 focus-within:border-cyan-400 focus-within:shadow-[0_0_30px_rgba(6,182,212,0.4),inset_0_0_20px_rgba(168,85,247,0.1)] transition-all duration-300 backdrop-blur-xl shadow-[0_0_20px_rgba(168,85,247,0.2)]">
+    <div className="border-t-2 border-purple-500/30 bg-gradient-to-t from-slate-950 via-purple-950/10 to-transparent px-4 py-5" style={{ position: 'relative', zIndex: 300 }}>
+      <div className="max-w-4xl mx-auto" style={{ position: 'relative', zIndex: 301 }}>
+        <div className="relative flex items-end gap-3 bg-slate-900/90 border-2 border-purple-500/40 rounded-2xl p-3 focus-within:border-cyan-400 focus-within:shadow-[0_0_30px_rgba(6,182,212,0.4),inset_0_0_20px_rgba(168,85,247,0.1)] transition-all duration-300 backdrop-blur-xl shadow-[0_0_20px_rgba(168,85,247,0.2)]" style={{ position: 'relative', zIndex: 302 }}>
           {/* Left actions */}
           <div className="flex items-center gap-1 pb-1">
             <button
@@ -123,7 +123,7 @@ export default function ChatInput({
             placeholder="Ask GlyphBot about security, code, blockchain..."
             disabled={disabled}
             className="flex-1 resize-none bg-transparent text-white placeholder:text-purple-400/60 focus:outline-none text-sm leading-relaxed max-h-[150px] py-2"
-            style={{ fontSize: '16px', color: '#ffffff' }}
+            style={{ fontSize: '16px', color: '#ffffff', position: 'relative', zIndex: 303, fontWeight: '500' }}
           />
 
           {/* Right actions */}
