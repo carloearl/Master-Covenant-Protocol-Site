@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default function HeroContent() {
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-16 relative">
+    <div className="w-full max-w-7xl mx-auto px-4 py-16 relative" style={{ background: 'transparent' }}>
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 text-white tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] leading-tight">
           THE FUTURE OF SECURITY ISN'T COMING — <span className="bg-gradient-to-r from-[#1E40AF] via-[#3B82F6] to-[#60A5FA] bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(59,130,246,0.8)] animate-pulse">IT'S ALREADY HERE.</span>
@@ -54,7 +54,7 @@ export default function HeroContent() {
         ].map((stat, idx) => {
           const Icon = stat.icon;
           return (
-            <div key={idx} className="bg-slate-900/80 border-2 border-[#3B82F6]/40 p-6 rounded-xl text-center shadow-[0_0_25px_rgba(59,130,246,0.2)] hover:shadow-[0_0_40px_rgba(30,64,175,0.4)] hover:border-[#3B82F6]/60 transition-all duration-300 group">
+            <div key={idx} className="bg-black/60 border-2 border-[#3B82F6]/40 p-6 rounded-xl text-center shadow-[0_0_25px_rgba(59,130,246,0.2)] hover:shadow-[0_0_40px_rgba(30,64,175,0.4)] hover:border-[#3B82F6]/60 transition-all duration-300 group backdrop-blur-sm">
               <Icon className="w-8 h-8 text-[#3B82F6] mx-auto mb-3 drop-shadow-[0_0_12px_rgba(59,130,246,0.8)] group-hover:animate-pulse" />
               <div className="text-3xl font-black text-white mb-2 tracking-tight drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">{stat.value}</div>
               <div className="text-sm text-white/80 font-bold tracking-wider">{stat.label}</div>

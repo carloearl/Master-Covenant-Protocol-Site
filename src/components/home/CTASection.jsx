@@ -23,7 +23,7 @@ export default function CTASection() {
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-16 relative" style={{ background: 'transparent' }}>
-      <div className="relative bg-slate-900/90 border-2 border-[#3B82F6]/50 rounded-2xl p-8 md:p-12 text-center shadow-[0_0_60px_rgba(59,130,246,0.3)] hover:shadow-[0_0_80px_rgba(30,64,175,0.4)] transition-all duration-500">
+      <div className="relative bg-black/70 border-2 border-[#3B82F6]/50 rounded-2xl p-8 md:p-12 text-center shadow-[0_0_60px_rgba(59,130,246,0.3)] hover:shadow-[0_0_80px_rgba(30,64,175,0.4)] transition-all duration-500 backdrop-blur-xl">
         {/* Pulsing glow overlay */}
         <div className="absolute -inset-1 bg-gradient-to-r from-[#1E3A8A] via-[#3B82F6] to-[#1E40AF] rounded-2xl blur-xl opacity-20 animate-pulse pointer-events-none"></div>
         
