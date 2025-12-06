@@ -33,56 +33,61 @@ export default function CursorOrb() {
       if (x !== undefined && y !== undefined) {
         mouseRef.current.targetX = x;
         mouseRef.current.targetY = y;
+        mouseRef.current.x = x; // INSTANT - no delay
+        mouseRef.current.y = y;
+      }
+    };
+    
+    const handleScroll = () => {
+      // Force update on scroll to maintain position
+      if (animationRef.current) {
+        // Position already updated in animate loop
       }
     };
 
     function animate() {
       timeRef.current += 0.005;
       
-      // INSTANT tracking - no lag
-      mouseRef.current.x = mouseRef.current.targetX;
-      mouseRef.current.y = mouseRef.current.targetY;
-
       const x = mouseRef.current.x;
       const y = mouseRef.current.y;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Animate color (cyan → blue spectrum)
-      const hue = 190 + Math.sin(timeRef.current * 2) * 40;
+      // Purple/Blue gradient (270-240 hue = purple to blue)
+      const hue = 270 + Math.sin(timeRef.current * 2) * 30;
 
-      // Outer glow (smaller - 60px diameter)
-      const outerGlow = ctx.createRadialGradient(x, y, 0, x, y, 60);
-      outerGlow.addColorStop(0, `hsla(${hue}, 100%, 70%, 0.7)`);
-      outerGlow.addColorStop(0.4, `hsla(${hue}, 95%, 65%, 0.45)`);
-      outerGlow.addColorStop(0.7, `hsla(${hue + 15}, 90%, 60%, 0.2)`);
+      // Outer glow (100px diameter)
+      const outerGlow = ctx.createRadialGradient(x, y, 0, x, y, 100);
+      outerGlow.addColorStop(0, `hsla(${hue}, 100%, 70%, 0.6)`);
+      outerGlow.addColorStop(0.3, `hsla(${hue}, 95%, 65%, 0.4)`);
+      outerGlow.addColorStop(0.6, `hsla(${hue + 20}, 90%, 60%, 0.2)`);
       outerGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       
       ctx.fillStyle = outerGlow;
       ctx.beginPath();
-      ctx.arc(x, y, 60, 0, Math.PI * 2);
+      ctx.arc(x, y, 100, 0, Math.PI * 2);
       ctx.fill();
 
-      // Mid glow (35px diameter)
-      const midGlow = ctx.createRadialGradient(x, y, 0, x, y, 35);
-      midGlow.addColorStop(0, `hsla(${hue}, 100%, 75%, 0.85)`);
-      midGlow.addColorStop(0.5, `hsla(${hue}, 95%, 70%, 0.55)`);
+      // Mid glow (50px diameter)
+      const midGlow = ctx.createRadialGradient(x, y, 0, x, y, 50);
+      midGlow.addColorStop(0, `hsla(${hue}, 100%, 75%, 0.8)`);
+      midGlow.addColorStop(0.5, `hsla(${hue}, 95%, 70%, 0.5)`);
       midGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       
       ctx.fillStyle = midGlow;
       ctx.beginPath();
-      ctx.arc(x, y, 35, 0, Math.PI * 2);
+      ctx.arc(x, y, 50, 0, Math.PI * 2);
       ctx.fill();
 
-      // Bright center core (smaller - 12px)
-      const centerGlow = ctx.createRadialGradient(x, y, 0, x, y, 12);
+      // Bright center core (20px)
+      const centerGlow = ctx.createRadialGradient(x, y, 0, x, y, 20);
       centerGlow.addColorStop(0, `hsla(${hue}, 100%, 85%, 1)`);
-      centerGlow.addColorStop(0.6, `hsla(${hue}, 100%, 75%, 0.75)`);
+      centerGlow.addColorStop(0.6, `hsla(${hue}, 100%, 75%, 0.7)`);
       centerGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       
       ctx.fillStyle = centerGlow;
       ctx.beginPath();
-      ctx.arc(x, y, 12, 0, Math.PI * 2);
+      ctx.arc(x, y, 20, 0, Math.PI * 2);
       ctx.fill();
 
       animationRef.current = requestAnimationFrame(animate);
@@ -92,6 +97,7 @@ export default function CursorOrb() {
     window.addEventListener('resize', resize);
     window.addEventListener('mousemove', handlePointerMove, { passive: true });
     window.addEventListener('touchmove', handlePointerMove, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     animate();
 
@@ -99,6 +105,7 @@ export default function CursorOrb() {
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', handlePointerMove);
       window.removeEventListener('touchmove', handlePointerMove);
+      window.removeEventListener('scroll', handleScroll);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
