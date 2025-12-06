@@ -30,9 +30,9 @@ export default function NebulaLayer({ intensity = 0.5 }) {
 
     const resize = () => {
       canvas.width = window.innerWidth;
-      canvas.height = document.documentElement.scrollHeight;
+      canvas.height = window.innerHeight;
       starsCanvas.width = window.innerWidth;
-      starsCanvas.height = document.documentElement.scrollHeight;
+      starsCanvas.height = window.innerHeight;
 
       initNodes();
       renderStarfield();
@@ -153,7 +153,7 @@ export default function NebulaLayer({ intensity = 0.5 }) {
       const y = e.clientY || (e.touches && e.touches[0]?.clientY);
       if (x !== undefined && y !== undefined) {
         mouseX = x;
-        mouseY = y;
+        mouseY = y + window.scrollY;
       }
     };
 
@@ -197,7 +197,7 @@ export default function NebulaLayer({ intensity = 0.5 }) {
         node.draw();
       });
 
-      // Neural connections
+      // Neural connections between nodes
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const dx = nodes[i].x - nodes[j].x;
@@ -206,7 +206,7 @@ export default function NebulaLayer({ intensity = 0.5 }) {
 
           if (distance < (isLowPower ? 120 : 160)) {
             const opacity = (1 - distance / (isLowPower ? 120 : 160)) * 0.4 * intensity;
-            
+
             const gradient = ctx.createLinearGradient(
               nodes[i].x, nodes[i].y,
               nodes[j].x, nodes[j].y
@@ -222,6 +222,30 @@ export default function NebulaLayer({ intensity = 0.5 }) {
             ctx.lineTo(nodes[j].x, nodes[j].y);
             ctx.stroke();
           }
+        }
+
+        // Connect nodes to cursor orb
+        const dxOrb = nodes[i].x - mouseX;
+        const dyOrb = nodes[i].y - mouseY;
+        const distanceToOrb = Math.sqrt(dxOrb * dxOrb + dyOrb * dyOrb);
+
+        if (distanceToOrb < 300) {
+          const orbOpacity = (1 - distanceToOrb / 300) * 0.6 * intensity;
+
+          const orbGradient = ctx.createLinearGradient(
+            nodes[i].x, nodes[i].y,
+            mouseX, mouseY
+          );
+          orbGradient.addColorStop(0, `rgba(139, 0, 255, ${orbOpacity * 0.4})`);
+          orbGradient.addColorStop(0.5, `rgba(168, 85, 247, ${orbOpacity * 0.7})`);
+          orbGradient.addColorStop(1, `rgba(56, 189, 248, ${orbOpacity})`);
+
+          ctx.strokeStyle = orbGradient;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(mouseX, mouseY);
+          ctx.stroke();
         }
       }
 
@@ -249,25 +273,21 @@ export default function NebulaLayer({ intensity = 0.5 }) {
     <>
       <canvas
         ref={starsCanvasRef}
-        className="absolute top-0 left-0 pointer-events-none"
+        className="fixed inset-0 pointer-events-none"
         style={{ 
           zIndex: 0,
           mixBlendMode: 'screen',
-          opacity: 1,
-          width: '100vw',
-          height: '100%'
+          opacity: 1
         }}
       />
       
       <canvas
         ref={canvasRef}
-        className="absolute top-0 left-0 pointer-events-none"
+        className="fixed inset-0 pointer-events-none"
         style={{ 
           zIndex: 1,
           mixBlendMode: 'screen',
-          opacity: 1,
-          width: '100vw',
-          height: '100%'
+          opacity: 1
         }}
       />
     </>
