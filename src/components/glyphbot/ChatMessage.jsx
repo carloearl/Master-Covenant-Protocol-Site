@@ -12,7 +12,8 @@ export default function ChatMessage({
   isSpeaking = false,
   onPlayTTS,
   showFeedback = true,
-  persona
+  persona,
+  onReplayWithSettings
 }) {
   const [copied, setCopied] = useState(false);
   const [feedbackGiven, setFeedbackGiven] = useState(false);
@@ -21,6 +22,12 @@ export default function ChatMessage({
   const handleTTS = () => {
     if (onPlayTTS) {
       onPlayTTS(msg.id);
+    }
+  };
+
+  const handleReplayWithSettings = () => {
+    if (onReplayWithSettings && msg.ttsMetadata) {
+      onReplayWithSettings(msg.id, msg.ttsMetadata);
     }
   };
 
@@ -73,15 +80,26 @@ export default function ChatMessage({
                 </button>
               )}
               {isAssistant && (
-                <button
-                  onClick={handleTTS}
-                  className={`p-1 rounded-md hover:bg-slate-700/50 transition-colors ${
-                    isSpeaking ? 'text-cyan-400 animate-pulse' : 'text-slate-500 hover:text-cyan-400'
-                  }`}
-                  title={isSpeaking ? "Speaking..." : "Play voice"}
-                >
-                  <Volume2 className="w-3.5 h-3.5" />
-                </button>
+                <>
+                  <button
+                    onClick={handleTTS}
+                    className={`p-1 rounded-md hover:bg-slate-700/50 transition-colors ${
+                      isSpeaking ? 'text-cyan-400 animate-pulse' : 'text-slate-500 hover:text-cyan-400'
+                    }`}
+                    title={isSpeaking ? "Speaking..." : "Play voice"}
+                  >
+                    <Volume2 className="w-3.5 h-3.5" />
+                  </button>
+                  {msg.ttsMetadata && onReplayWithSettings && (
+                    <button
+                      onClick={handleReplayWithSettings}
+                      className="p-1 rounded-md hover:bg-slate-700/50 text-slate-500 hover:text-purple-400 transition-colors"
+                      title={`Replay with ${msg.ttsMetadata.emotion || 'custom'} voice`}
+                    >
+                      <Volume2 className="w-3.5 h-3.5" strokeWidth={3} />
+                    </button>
+                  )}
+                </>
               )}
             </div>
           </div>

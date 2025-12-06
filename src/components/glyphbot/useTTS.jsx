@@ -1,13 +1,22 @@
 /**
- * GlyphBot TTS Hook - Natural Voice Edition
- * Uses high-quality browser voices (Google, Microsoft, Apple)
+ * GlyphBot TTS Hook - Phase 7 Enhanced Voice Edition
+ * Advanced TTS with emotion presets, voice selection, pitch/speed control
  * 
  * Usage:
- * const { speak, stop, isSpeaking, ttsAvailable } = useTTS();
- * await speak("Hello world");
+ * const { speak, stop, isSpeaking, ttsAvailable, metadata } = useTTS();
+ * await speak("Hello world", { emotion: 'excited', pitch: 1.2, speed: 1.0 });
  */
 
 import { useState, useRef, useCallback, useEffect } from 'react';
+
+// Phase 7: Emotion Presets
+const EMOTION_PRESETS = {
+  neutral: { pitch: 1.0, speed: 0.95, volume: 1.0 },
+  soft: { pitch: 1.1, speed: 0.85, volume: 0.9 },
+  firm: { pitch: 0.9, speed: 1.0, volume: 1.0 },
+  excited: { pitch: 1.3, speed: 1.15, volume: 1.0 },
+  calm: { pitch: 1.0, speed: 0.75, volume: 0.85 }
+};
 
 export default function useTTS(options = {}) {
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -15,18 +24,20 @@ export default function useTTS(options = {}) {
   const [ttsAvailable, setTtsAvailable] = useState(false);
   const [lastError, setLastError] = useState(null);
   const [voices, setVoices] = useState([]);
+  const [metadata, setMetadata] = useState({});
   
   const utteranceRef = useRef(null);
   const audioContextRef = useRef(null);
   const eqNodesRef = useRef(null);
   const sourceNodeRef = useRef(null);
 
-  // Default settings
+  // Default settings with Phase 7 enhancements
   const defaultSettings = {
-    speed: options.speed || 0.95,  // Slightly slower = more natural
+    speed: options.speed || 0.95,
     pitch: options.pitch || 1.0,
     volume: options.volume || 1.0,
     preferredVoice: options.voice || null,
+    emotion: options.emotion || 'neutral',
     bass: options.bass || 0,
     mid: options.mid || 0,
     treble: options.treble || 0
@@ -144,7 +155,7 @@ export default function useTTS(options = {}) {
   }, []);
 
   /**
-   * Speak text using natural browser voices
+   * Speak text using natural browser voices with Phase 7 enhancements
    */
   const speak = useCallback(async (text, customSettings = {}) => {
     if (!text || typeof text !== 'string') return false;
@@ -171,7 +182,17 @@ export default function useTTS(options = {}) {
     setIsLoading(true);
     setLastError(null);
 
-    const settings = { ...defaultSettings, ...customSettings };
+    // Phase 7: Apply emotion presets
+    let settings = { ...defaultSettings, ...customSettings };
+    if (settings.emotion && EMOTION_PRESETS[settings.emotion]) {
+      const emotionPreset = EMOTION_PRESETS[settings.emotion];
+      settings = {
+        ...settings,
+        pitch: customSettings.pitch !== undefined ? customSettings.pitch : emotionPreset.pitch,
+        speed: customSettings.speed !== undefined ? customSettings.speed : emotionPreset.speed,
+        volume: customSettings.volume !== undefined ? customSettings.volume : emotionPreset.volume
+      };
+    }
 
     try {
       const utterance = new SpeechSynthesisUtterance(cleanText);
@@ -193,6 +214,14 @@ export default function useTTS(options = {}) {
       utterance.onstart = () => {
         setIsLoading(false);
         setIsSpeaking(true);
+        // Phase 7: Store playback metadata
+        setMetadata({
+          voice: voice?.name || 'Default',
+          pitch: settings.pitch,
+          speed: settings.speed,
+          emotion: settings.emotion,
+          timestamp: Date.now()
+        });
       };
 
       utterance.onend = () => {
@@ -243,15 +272,29 @@ export default function useTTS(options = {}) {
     }));
   }, [voices]);
 
+  /**
+   * Phase 7: Get emotion presets
+   */
+  const getEmotionPresets = useCallback(() => {
+    return Object.keys(EMOTION_PRESETS).map(key => ({
+      id: key,
+      label: key.charAt(0).toUpperCase() + key.slice(1),
+      ...EMOTION_PRESETS[key]
+    }));
+  }, []);
+
   return {
     speak,
     stop,
     testTTS,
     getVoices,
+    getEmotionPresets,
     isSpeaking,
     isLoading,
     ttsAvailable,
     lastError,
-    currentVoice: getBestVoice()?.name || 'Default'
+    metadata,
+    currentVoice: getBestVoice()?.name || 'Default',
+    currentSettings: defaultSettings
   };
 }

@@ -85,8 +85,29 @@ export default function GlyphBotPage() {
     treble: 0
   });
 
-  // TTS Hook with dynamic settings
-  const { speak, stop: stopTTS, isSpeaking } = useTTS(voiceSettings);
+  // TTS Hook with dynamic settings (Phase 7 enhanced)
+  const { 
+    speak, 
+    stop: stopTTS, 
+    isSpeaking, 
+    getVoices, 
+    getEmotionPresets,
+    metadata: ttsMetadata,
+    currentSettings: ttsCurrentSettings
+  } = useTTS(voiceSettings);
+
+  // Phase 7: Available voices and emotions
+  const [availableVoices, setAvailableVoices] = useState([]);
+  const [emotionPresets, setEmotionPresets] = useState([]);
+
+  useEffect(() => {
+    if (getVoices) {
+      setAvailableVoices(getVoices());
+    }
+    if (getEmotionPresets) {
+      setEmotionPresets(getEmotionPresets());
+    }
+  }, [getVoices, getEmotionPresets]);
 
   // Persistence hook - Phase 5
   const {
@@ -289,7 +310,13 @@ export default function GlyphBotPage() {
         content: botText,
         audit: response.audit || null,
         providerId: response.providerUsed,
-        latencyMs: response.meta?.providerStats?.[response.providerUsed]?.lastLatencyMs
+        latencyMs: response.meta?.providerStats?.[response.providerUsed]?.lastLatencyMs,
+        ttsMetadata: modes.voice ? {
+          voice: voiceSettings.voice,
+          pitch: voiceSettings.pitch,
+          speed: voiceSettings.speed,
+          emotion: voiceSettings.emotion
+        } : null
       };
       
       setMessages(prev => [...prev, botMsg]);
@@ -555,6 +582,19 @@ export default function GlyphBotPage() {
     }
   };
 
+  // Phase 7: Replay with stored TTS settings
+  const handleReplayWithSettings = useCallback((messageId, ttsSettings) => {
+    const msg = messages.find(m => m.id === messageId);
+    if (msg?.content && ttsSettings) {
+      speak(msg.content, {
+        voice: ttsSettings.voice,
+        pitch: ttsSettings.pitch,
+        speed: ttsSettings.speed,
+        emotion: ttsSettings.emotion
+      });
+    }
+  }, [messages, speak]);
+
   // Build providers for display
   const providers = providerMeta?.availableProviders?.map(p => ({
     id: p.id,
@@ -642,6 +682,9 @@ export default function GlyphBotPage() {
             onToggleMode={handleToggleMode}
             onClear={handleClear}
             onVoiceSettingsChange={setVoiceSettings}
+            voiceSettings={voiceSettings}
+            availableVoices={availableVoices}
+            emotionPresets={emotionPresets}
           />
 
           {/* Provider Chain */}
@@ -743,6 +786,7 @@ export default function GlyphBotPage() {
                   ttsAvailable={true}
                   isSpeaking={isSpeaking}
                   onPlayTTS={handlePlayTTS}
+                  onReplayWithSettings={handleReplayWithSettings}
                   showFeedback={msg.role === 'assistant' && msg.id !== 'welcome-1'}
                   persona={persona}
                 />

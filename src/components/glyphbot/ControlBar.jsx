@@ -1,6 +1,10 @@
-import React from 'react';
-import { Volume2, Wifi, FileSearch, FlaskConical, Braces, Layout, Trash2, Settings2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Volume2, Wifi, FileSearch, FlaskConical, Braces, Layout, Trash2, Settings2, ChevronDown } from 'lucide-react';
 import VoiceSettings from './VoiceSettings';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const PERSONAS = [
   { id: 'GENERAL', name: 'General', desc: 'Default assistant' },
@@ -65,8 +69,19 @@ export default function ControlBar({
   modes,
   onToggleMode,
   onClear,
-  onVoiceSettingsChange
+  onVoiceSettingsChange,
+  voiceSettings,
+  availableVoices = [],
+  emotionPresets = []
 }) {
+  const [showVoiceControls, setShowVoiceControls] = useState(false);
+
+  const handleVoiceChange = (key, value) => {
+    if (onVoiceSettingsChange) {
+      onVoiceSettingsChange(prev => ({ ...prev, [key]: value }));
+    }
+  };
+
   return (
     <div className="px-4 py-4 border-b border-purple-500/30 bg-gradient-to-r from-slate-950/90 via-purple-950/20 to-slate-950/90 backdrop-blur-xl">
       <div className="flex flex-wrap items-center gap-4 justify-between">
@@ -108,6 +123,99 @@ export default function ControlBar({
             onClick={() => onToggleMode('voice')}
             color="purple"
           />
+          
+          {/* Phase 7: Enhanced Voice Controls */}
+          {modes.voice && (
+            <Popover open={showVoiceControls} onOpenChange={setShowVoiceControls}>
+              <PopoverTrigger asChild>
+                <button className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] bg-purple-500/20 border border-purple-500/40 text-purple-300 hover:bg-purple-500/30 transition-all">
+                  <Settings2 className="w-3 h-3" />
+                  <ChevronDown className="w-3 h-3" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 bg-slate-900 border-purple-500/50 p-4 space-y-4">
+                <div className="space-y-3">
+                  <div className="text-xs font-bold text-cyan-300 uppercase tracking-wider">Voice Controls</div>
+                  
+                  {/* Emotion Preset */}
+                  <div className="space-y-2">
+                    <Label className="text-xs text-slate-400">Emotion Preset</Label>
+                    <Select 
+                      value={voiceSettings?.emotion || 'neutral'} 
+                      onValueChange={(val) => handleVoiceChange('emotion', val)}
+                    >
+                      <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-700">
+                        {emotionPresets.map(e => (
+                          <SelectItem key={e.id} value={e.id} className="text-white">
+                            {e.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Voice Selection */}
+                  {availableVoices.length > 0 && (
+                    <div className="space-y-2">
+                      <Label className="text-xs text-slate-400">Voice</Label>
+                      <Select 
+                        value={voiceSettings?.voice || ''} 
+                        onValueChange={(val) => handleVoiceChange('voice', val)}
+                      >
+                        <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+                          <SelectValue placeholder="Auto (Best Quality)" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-slate-800 border-slate-700 max-h-[200px]">
+                          <SelectItem value={null} className="text-white">Auto (Best Quality)</SelectItem>
+                          {availableVoices.map(v => (
+                            <SelectItem key={v.name} value={v.name} className="text-white">
+                              {v.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+
+                  {/* Pitch Slider */}
+                  <div className="space-y-2">
+                    <Label className="text-xs text-slate-400 flex items-center justify-between">
+                      <span>Pitch</span>
+                      <span className="text-cyan-400 font-mono">{voiceSettings?.pitch?.toFixed(1) || '1.0'}</span>
+                    </Label>
+                    <Slider
+                      value={[voiceSettings?.pitch || 1.0]}
+                      onValueChange={([val]) => handleVoiceChange('pitch', val)}
+                      min={0.5}
+                      max={2.0}
+                      step={0.1}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Speed Slider */}
+                  <div className="space-y-2">
+                    <Label className="text-xs text-slate-400 flex items-center justify-between">
+                      <span>Speed</span>
+                      <span className="text-cyan-400 font-mono">{voiceSettings?.speed?.toFixed(2) || '0.95'}</span>
+                    </Label>
+                    <Slider
+                      value={[voiceSettings?.speed || 0.95]}
+                      onValueChange={([val]) => handleVoiceChange('speed', val)}
+                      min={0.5}
+                      max={2.0}
+                      step={0.05}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
+          
           <VoiceSettings onSettingsChange={onVoiceSettingsChange} />
           <ModeToggle 
             active={modes.live} 

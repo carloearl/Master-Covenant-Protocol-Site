@@ -37,11 +37,13 @@ export const AUDIT_MODES = {
 
 // System Status Helper
 export const WYT = () => ({
-  glyphbot_version: 'phase_6',
+  glyphbot_version: 'phase_7',
   audit_engine: 'active',
+  voice_engine: 'phase_7_active',
+  tts_controls: true,
   persistence: 'active',
   status: 'stable',
-  message: 'GlyphBot Universal Audit Engine Online',
+  message: 'GlyphBot Universal Audit Engine + Enhanced Voice Online',
   features: {
     save: true,
     load: true,
@@ -61,10 +63,17 @@ export const WYT = () => ({
     agency_audits: true,
     six_audit_modes: true,
     file_upload_analysis: true,
-    foia_generation: true
+    foia_generation: true,
+    enhanced_tts: true,
+    emotion_presets: true,
+    voice_selection: true,
+    pitch_control: true,
+    speed_control: true,
+    per_message_tts_metadata: true
   },
   audit_channels: ['business', 'person', 'agency'],
   audit_modes: ['SURFACE', 'CONCISE', 'MEDIUM', 'DEEP', 'ENTERPRISE_A', 'ENTERPRISE_B'],
+  emotion_presets: ['neutral', 'soft', 'firm', 'excited', 'calm'],
   entities: ['GlyphBotChat', 'GlyphBotAudit'],
   timestamp: new Date().toISOString()
 });
@@ -72,10 +81,11 @@ export const WYT = () => ({
 // Module Status Registry
 export const SYSTEM_STATUS = {
   glyphbot: {
-    version: '6.0',
+    version: '7.0',
     status: 'active',
     persistence: true,
     audit_engine: 'active',
+    voice_engine: 'phase_7_active',
     entities: ['GlyphBotChat', 'GlyphBotAudit'],
     features: [
       'chat', 
@@ -87,7 +97,12 @@ export const SYSTEM_STATUS = {
       'agency_channel',
       'six_audit_modes',
       'voice_summaries',
-      'archive_system'
+      'archive_system',
+      'enhanced_tts',
+      'emotion_presets',
+      'voice_selection',
+      'pitch_speed_control',
+      'per_message_replay'
     ]
   },
   qr_studio: {
