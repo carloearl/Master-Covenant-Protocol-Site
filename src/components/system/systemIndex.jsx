@@ -37,13 +37,14 @@ export const AUDIT_MODES = {
 
 // System Status Helper
 export const WYT = () => ({
-  glyphbot_version: 'phase_7',
+  glyphbot_version: 'phase_7c',
   audit_engine: 'active',
-  voice_engine: 'phase_7_active',
+  voice_engine: 'phase_7c_production',
+  tts_provider: 'openai_hybrid',
   tts_controls: true,
   persistence: 'active',
   status: 'stable',
-  message: 'GlyphBot Universal Audit Engine + Enhanced Voice Online',
+  message: 'GlyphBot Universal Audit Engine + Production Voice Engine Online',
   features: {
     save: true,
     load: true,
@@ -81,11 +82,12 @@ export const WYT = () => ({
 // Module Status Registry
 export const SYSTEM_STATUS = {
   glyphbot: {
-    version: '7.0',
+    version: '7.1',
     status: 'active',
     persistence: true,
     audit_engine: 'active',
-    voice_engine: 'phase_7_active',
+    voice_engine: 'phase_7c_production',
+    tts_provider: 'openai_hybrid',
     entities: ['GlyphBotChat', 'GlyphBotAudit'],
     features: [
       'chat', 

@@ -1,47 +1,60 @@
 /**
- * GlyphBot TTS Hook - Phase 7 Enhanced Voice Edition
- * Advanced TTS with emotion presets, voice selection, pitch/speed control
+ * GlyphBot TTS Hook - Phase 7C Production Voice Engine
+ * Hybrid TTS: OpenAI TTS (primary) + Web Speech (fallback)
  * 
  * Usage:
- * const { speak, stop, isSpeaking, ttsAvailable, metadata } = useTTS();
- * await speak("Hello world", { emotion: 'excited', pitch: 1.2, speed: 1.0 });
+ * const { playText, stop, isSpeaking } = useTTS({ provider: 'auto' });
+ * await playText("Hello world", { voice: 'alloy', speed: 1.0 });
  */
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 
-// Phase 7: Emotion Presets
+// Phase 7C: Voice Profiles (OpenAI TTS voices)
+const VOICE_PROFILES = {
+  neutral_female: { id: 'nova', label: 'Nova (Neutral Female)', pitch: 1.0 },
+  neutral_male: { id: 'onyx', label: 'Onyx (Neutral Male)', pitch: 1.0 },
+  warm_storyteller: { id: 'shimmer', label: 'Shimmer (Warm)', pitch: 1.05 },
+  precise_technical: { id: 'echo', label: 'Echo (Precise)', pitch: 0.95 }
+};
+
+// Phase 7C: Emotion Presets (refined for noticeable differences)
 const EMOTION_PRESETS = {
-  neutral: { pitch: 1.0, speed: 0.95, volume: 1.0 },
-  soft: { pitch: 1.1, speed: 0.85, volume: 0.9 },
-  firm: { pitch: 0.9, speed: 1.0, volume: 1.0 },
-  excited: { pitch: 1.3, speed: 1.15, volume: 1.0 },
-  calm: { pitch: 1.0, speed: 0.75, volume: 0.85 }
+  neutral: { pitch: 1.0, speed: 1.0, volume: 1.0 },
+  confident: { pitch: 1.05, speed: 1.05, volume: 1.0 },
+  calm: { pitch: 0.95, speed: 0.9, volume: 0.9 },
+  urgent: { pitch: 1.05, speed: 1.1, volume: 1.0 }
 };
 
 export default function useTTS(options = {}) {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [ttsAvailable, setTtsAvailable] = useState(false);
+  const [ttsAvailable, setTtsAvailable] = useState(true); // Always available (fallback exists)
   const [lastError, setLastError] = useState(null);
   const [voices, setVoices] = useState([]);
   const [metadata, setMetadata] = useState({});
+  const [provider, setProvider] = useState(options.provider || 'auto');
   
   const utteranceRef = useRef(null);
+  const audioRef = useRef(null);
   const audioContextRef = useRef(null);
-  const eqNodesRef = useRef(null);
-  const sourceNodeRef = useRef(null);
 
-  // Default settings with Phase 7 enhancements
-  const defaultSettings = {
-    speed: options.speed || 0.95,
+  // Default settings (Phase 7C)
+  const defaultSettings = useRef({
+    speed: options.speed || 1.0,
     pitch: options.pitch || 1.0,
     volume: options.volume || 1.0,
-    preferredVoice: options.voice || null,
-    emotion: options.emotion || 'neutral',
-    bass: options.bass || 0,
-    mid: options.mid || 0,
-    treble: options.treble || 0
-  };
+    voiceProfile: options.voiceProfile || 'neutral_female',
+    emotion: options.emotion || 'neutral'
+  });
+
+  // Update settings when options change
+  useEffect(() => {
+    if (options.speed !== undefined) defaultSettings.current.speed = options.speed;
+    if (options.pitch !== undefined) defaultSettings.current.pitch = options.pitch;
+    if (options.volume !== undefined) defaultSettings.current.volume = options.volume;
+    if (options.voiceProfile !== undefined) defaultSettings.current.voiceProfile = options.voiceProfile;
+    if (options.emotion !== undefined) defaultSettings.current.emotion = options.emotion;
+  }, [options.speed, options.pitch, options.volume, options.voiceProfile, options.emotion]);
 
   // Setup or update EQ nodes from external audio context
   useEffect(() => {
@@ -141,36 +154,41 @@ export default function useTTS(options = {}) {
    * Stop any currently playing speech
    */
   const stop = useCallback(() => {
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
-    if (sourceNodeRef.current) {
-      try {
-        sourceNodeRef.current.disconnect();
-      } catch (e) {}
-      sourceNodeRef.current = null;
+    try {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current = null;
+      }
+      if (utteranceRef.current) {
+        utteranceRef.current = null;
+      }
+    } catch (e) {
+      console.warn('[GlyphBot TTS] Stop error:', e);
     }
     setIsSpeaking(false);
     setIsLoading(false);
   }, []);
 
   /**
-   * Speak text using natural browser voices with Phase 7 enhancements
+   * Phase 7C: Play text using OpenAI TTS (primary) or Web Speech (fallback)
    */
-  const speak = useCallback(async (text, customSettings = {}) => {
-    if (!text || typeof text !== 'string') return false;
-    if (!ttsAvailable) {
-      setLastError('TTS not available');
+  const playText = useCallback(async (text, customSettings = {}) => {
+    if (!text || typeof text !== 'string') {
+      console.warn('[GlyphBot TTS] Invalid text provided');
       return false;
     }
     
     // Clean text for speech
     const cleanText = text
       .replace(/[#*`🦕💠🦖🌟✨🔒⚡️💡🛡️•]/g, '')
-      .replace(/```[\s\S]*?```/g, '') // Remove code blocks
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Convert markdown links to just text
-      .replace(/\*\*([^*]+)\*\*/g, '$1') // Remove bold
-      .replace(/_([^_]+)_/g, '$1') // Remove italic
+      .replace(/```[\s\S]*?```/g, '')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/\*\*([^*]+)\*\*/g, '$1')
+      .replace(/_([^_]+)_/g, '$1')
       .replace(/\n+/g, '. ')
       .replace(/\s+/g, ' ')
       .replace(/\.+/g, '.')
@@ -178,12 +196,12 @@ export default function useTTS(options = {}) {
     
     if (!cleanText || cleanText.length < 2) return false;
 
-    stop(); // Stop any current playback
+    stop();
     setIsLoading(true);
     setLastError(null);
 
-    // Phase 7: Apply emotion presets
-    let settings = { ...defaultSettings, ...customSettings };
+    // Merge settings (custom overrides defaults + emotion presets)
+    let settings = { ...defaultSettings.current, ...customSettings };
     if (settings.emotion && EMOTION_PRESETS[settings.emotion]) {
       const emotionPreset = EMOTION_PRESETS[settings.emotion];
       settings = {
@@ -194,28 +212,133 @@ export default function useTTS(options = {}) {
       };
     }
 
+    // Get voice ID from profile
+    const voiceProfile = VOICE_PROFILES[settings.voiceProfile] || VOICE_PROFILES.neutral_female;
+    const voiceId = voiceProfile.id;
+
+    // Try OpenAI TTS first
+    if (provider === 'auto' || provider === 'openai') {
+      try {
+        const success = await playWithOpenAI(cleanText, settings, voiceId);
+        if (success) return true;
+        
+        // If OpenAI fails and provider is 'auto', fall back to Web Speech
+        if (provider === 'auto') {
+          console.warn('[GlyphBot TTS] OpenAI failed, falling back to Web Speech');
+          return await playWithWebSpeech(cleanText, settings);
+        }
+        return false;
+      } catch (err) {
+        console.error('[GlyphBot TTS] OpenAI TTS error:', err);
+        if (provider === 'auto') {
+          return await playWithWebSpeech(cleanText, settings);
+        }
+        setLastError(err.message);
+        setIsLoading(false);
+        return false;
+      }
+    }
+
+    // Use Web Speech directly
+    return await playWithWebSpeech(cleanText, settings);
+  }, [provider, stop]);
+
+  /**
+   * Phase 7C: OpenAI TTS playback
+   */
+  const playWithOpenAI = async (text, settings, voiceId) => {
     try {
-      const utterance = new SpeechSynthesisUtterance(cleanText);
+      const response = await fetch('https://api.openai.com/v1/audio/speech', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY || ''}`
+        },
+        body: JSON.stringify({
+          model: 'tts-1',
+          voice: voiceId,
+          input: text,
+          speed: Math.max(0.25, Math.min(4.0, settings.speed)) // OpenAI accepts 0.25-4.0
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`OpenAI TTS failed: ${response.status}`);
+      }
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      audio.volume = settings.volume;
+
+      audio.onplay = () => {
+        setIsLoading(false);
+        setIsSpeaking(true);
+        setMetadata({
+          provider: 'openai',
+          voiceId,
+          pitch: settings.pitch,
+          speed: settings.speed,
+          emotion: settings.emotion,
+          timestamp: Date.now()
+        });
+      };
+
+      audio.onended = () => {
+        setIsSpeaking(false);
+        URL.revokeObjectURL(audioUrl);
+        audioRef.current = null;
+      };
+
+      audio.onerror = (e) => {
+        console.error('[GlyphBot TTS] Audio playback error:', e);
+        setIsSpeaking(false);
+        setIsLoading(false);
+        setLastError('Audio playback failed');
+        URL.revokeObjectURL(audioUrl);
+        audioRef.current = null;
+      };
+
+      await audio.play();
+      return true;
+
+    } catch (error) {
+      console.error('[GlyphBot TTS] OpenAI error:', error);
+      throw error;
+    }
+  };
+
+  /**
+   * Phase 7C: Web Speech API fallback
+   */
+  const playWithWebSpeech = async (text, settings) => {
+    try {
+      if (!('speechSynthesis' in window)) {
+        throw new Error('Web Speech not available');
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
       utteranceRef.current = utterance;
       
-      // Get best natural voice
       const voice = getBestVoice();
       if (voice) {
         utterance.voice = voice;
       }
 
-      // Natural speech settings - pitch range is 0-2, with 1 being normal
-      utterance.rate = settings.speed;
-      utterance.pitch = Math.max(0.1, Math.min(2, settings.pitch)); // Clamp to valid range
+      // Apply settings - make changes NOTICEABLE
+      utterance.rate = Math.max(0.5, Math.min(2.0, settings.speed));
+      utterance.pitch = Math.max(0.5, Math.min(2.0, settings.pitch));
       utterance.volume = settings.volume;
       
-      console.log('[TTS] Settings - Rate:', settings.speed, 'Pitch:', settings.pitch, 'Volume:', settings.volume);
+      console.log('[GlyphBot TTS] Web Speech - Rate:', utterance.rate, 'Pitch:', utterance.pitch);
 
       utterance.onstart = () => {
         setIsLoading(false);
         setIsSpeaking(true);
-        // Phase 7: Store playback metadata
         setMetadata({
+          provider: 'webspeech',
           voice: voice?.name || 'Default',
           pitch: settings.pitch,
           speed: settings.speed,
@@ -230,50 +353,45 @@ export default function useTTS(options = {}) {
       };
 
       utterance.onerror = (e) => {
-        console.error('[TTS] Error:', e);
+        console.error('[GlyphBot TTS] Web Speech error:', e);
         setIsSpeaking(false);
         setIsLoading(false);
         setLastError(e.error || 'Speech error');
         utteranceRef.current = null;
       };
 
-      // Chrome bug workaround: cancel before speaking
       window.speechSynthesis.cancel();
-      
-      // Small delay to ensure cancel completes
       await new Promise(r => setTimeout(r, 50));
-      
       window.speechSynthesis.speak(utterance);
       return true;
 
     } catch (error) {
-      console.error('[TTS] Failed:', error);
+      console.error('[GlyphBot TTS] Web Speech failed:', error);
       setLastError(error.message);
       setIsLoading(false);
       return false;
     }
-  }, [stop, defaultSettings, ttsAvailable, getBestVoice]);
+  };
 
   /**
    * Test TTS functionality
    */
   const testTTS = useCallback(async () => {
-    return speak('Hello! This is GlyphBot, your elite security assistant. How can I help you today?');
-  }, [speak]);
+    return playText('Hello! This is GlyphBot, your elite security assistant.');
+  }, [playText]);
 
   /**
-   * Get available voices for UI selection
+   * Get available voice profiles
    */
-  const getVoices = useCallback(() => {
-    return voices.filter(v => v.lang.startsWith('en')).map(v => ({
-      name: v.name,
-      lang: v.lang,
-      local: v.localService
+  const getVoiceProfiles = useCallback(() => {
+    return Object.keys(VOICE_PROFILES).map(key => ({
+      id: key,
+      ...VOICE_PROFILES[key]
     }));
-  }, [voices]);
+  }, []);
 
   /**
-   * Phase 7: Get emotion presets
+   * Get emotion presets
    */
   const getEmotionPresets = useCallback(() => {
     return Object.keys(EMOTION_PRESETS).map(key => ({
@@ -283,18 +401,31 @@ export default function useTTS(options = {}) {
     }));
   }, []);
 
+  /**
+   * Get available Web Speech voices (for fallback UI)
+   */
+  const getWebSpeechVoices = useCallback(() => {
+    return voices.filter(v => v.lang.startsWith('en')).map(v => ({
+      name: v.name,
+      lang: v.lang,
+      local: v.localService
+    }));
+  }, [voices]);
+
   return {
-    speak,
+    playText,
+    speak: playText, // Alias for backward compatibility
     stop,
     testTTS,
-    getVoices,
+    getVoiceProfiles,
     getEmotionPresets,
+    getWebSpeechVoices,
     isSpeaking,
     isLoading,
     ttsAvailable,
     lastError,
     metadata,
-    currentVoice: getBestVoice()?.name || 'Default',
-    currentSettings: defaultSettings
+    provider,
+    currentSettings: defaultSettings.current
   };
 }

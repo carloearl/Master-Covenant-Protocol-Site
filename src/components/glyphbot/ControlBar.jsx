@@ -71,7 +71,7 @@ export default function ControlBar({
   onClear,
   onVoiceSettingsChange,
   voiceSettings,
-  availableVoices = [],
+  voiceProfiles = [],
   emotionPresets = []
 }) {
   const [showVoiceControls, setShowVoiceControls] = useState(false);
@@ -180,7 +180,7 @@ export default function ControlBar({
                     </div>
                   )}
 
-                  {/* Pitch Slider */}
+                  {/* Pitch Slider (0.5-2.0, noticeable range) */}
                   <div className="space-y-2">
                     <Label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Pitch</span>
@@ -189,27 +189,35 @@ export default function ControlBar({
                     <Slider
                       value={[voiceSettings?.pitch || 1.0]}
                       onValueChange={([val]) => handleVoiceChange('pitch', val)}
-                      min={0.5}
-                      max={2.0}
-                      step={0.1}
-                      className="w-full"
-                    />
-                  </div>
-
-                  {/* Speed Slider */}
-                  <div className="space-y-2">
-                    <Label className="text-xs text-slate-400 flex items-center justify-between">
-                      <span>Speed</span>
-                      <span className="text-cyan-400 font-mono">{voiceSettings?.speed?.toFixed(2) || '0.95'}</span>
-                    </Label>
-                    <Slider
-                      value={[voiceSettings?.speed || 0.95]}
-                      onValueChange={([val]) => handleVoiceChange('speed', val)}
-                      min={0.5}
-                      max={2.0}
+                      min={0.7}
+                      max={1.3}
                       step={0.05}
                       className="w-full"
                     />
+                    <div className="flex justify-between text-[9px] text-slate-600">
+                      <span>Deeper</span>
+                      <span>Brighter</span>
+                    </div>
+                  </div>
+
+                  {/* Speed Slider (0.7-1.3, noticeable range) */}
+                  <div className="space-y-2">
+                    <Label className="text-xs text-slate-400 flex items-center justify-between">
+                      <span>Speed</span>
+                      <span className="text-cyan-400 font-mono">{voiceSettings?.speed?.toFixed(2) || '1.00'}</span>
+                    </Label>
+                    <Slider
+                      value={[voiceSettings?.speed || 1.0]}
+                      onValueChange={([val]) => handleVoiceChange('speed', val)}
+                      min={0.7}
+                      max={1.3}
+                      step={0.05}
+                      className="w-full"
+                    />
+                    <div className="flex justify-between text-[9px] text-slate-600">
+                      <span>Slower</span>
+                      <span>Faster</span>
+                    </div>
                   </div>
                 </div>
               </PopoverContent>

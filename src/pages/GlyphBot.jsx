@@ -74,40 +74,38 @@ export default function GlyphBotPage() {
   const [providerMeta, setProviderMeta] = useState(null);
   const chatContainerRef = useRef(null);
   
-  // TTS settings state
+  // Phase 7C: TTS settings state (refined ranges)
   const [voiceSettings, setVoiceSettings] = useState({
-    voice: null,
-    speed: 0.95,
+    voiceProfile: 'neutral_female',
+    speed: 1.0,
     pitch: 1.0,
     volume: 1.0,
-    bass: 0,
-    mid: 0,
-    treble: 0
+    emotion: 'neutral',
+    provider: 'auto'
   });
 
-  // TTS Hook with dynamic settings (Phase 7 enhanced)
+  // Phase 7C: TTS Hook (production-ready)
   const { 
-    speak, 
+    playText, 
     stop: stopTTS, 
     isSpeaking, 
-    getVoices, 
+    getVoiceProfiles, 
     getEmotionPresets,
-    metadata: ttsMetadata,
-    currentSettings: ttsCurrentSettings
+    metadata: ttsMetadata
   } = useTTS(voiceSettings);
 
-  // Phase 7: Available voices and emotions
-  const [availableVoices, setAvailableVoices] = useState([]);
+  // Phase 7C: Voice profiles and emotions
+  const [voiceProfiles, setVoiceProfiles] = useState([]);
   const [emotionPresets, setEmotionPresets] = useState([]);
 
   useEffect(() => {
-    if (getVoices) {
-      setAvailableVoices(getVoices());
+    if (getVoiceProfiles) {
+      setVoiceProfiles(getVoiceProfiles());
     }
     if (getEmotionPresets) {
       setEmotionPresets(getEmotionPresets());
     }
-  }, [getVoices, getEmotionPresets]);
+  }, [getVoiceProfiles, getEmotionPresets]);
 
   // Persistence hook - Phase 5
   const {
@@ -312,10 +310,11 @@ export default function GlyphBotPage() {
         providerId: response.providerUsed,
         latencyMs: response.meta?.providerStats?.[response.providerUsed]?.lastLatencyMs,
         ttsMetadata: modes.voice ? {
-          voice: voiceSettings.voice,
+          voiceProfile: voiceSettings.voiceProfile,
           pitch: voiceSettings.pitch,
           speed: voiceSettings.speed,
-          emotion: voiceSettings.emotion
+          emotion: voiceSettings.emotion,
+          provider: voiceSettings.provider
         } : null
       };
       
@@ -339,9 +338,9 @@ export default function GlyphBotPage() {
         shouldSpeak: response.shouldSpeak
       });
 
-      // Auto-speak if voice mode is on
+      // Phase 7C: Auto-speak if voice mode is on
       if (modes.voice && botText) {
-        speak(botText);
+        playText(botText);
       }
 
       if (response.meta) {
@@ -498,10 +497,10 @@ export default function GlyphBotPage() {
       setMessages(prev => [...prev, completeMsg]);
       trackMessage(completeMsg);
 
-      // Auto-speak if voice mode is on
+      // Phase 7C: Auto-speak if voice mode is on
       if (modes.voice) {
         const voiceSummary = `${channelLabel} audit complete for ${auditData.targetIdentifier}. Overall grade ${auditResults.overallGrade}. Risk score ${auditResults.riskScore || 0} out of 100. ${auditResults.summary}`;
-        speak(voiceSummary);
+        playText(voiceSummary);
       }
 
       // Refresh audit list
@@ -529,7 +528,7 @@ export default function GlyphBotPage() {
     setSelectedAuditView(audit);
   }, []);
 
-  // Phase 6: Play audit summary via TTS
+  // Phase 6/7C: Play audit summary via TTS
   const handlePlayAuditSummary = useCallback(() => {
     if (selectedAuditView?.summary) {
       const channelLabel = selectedAuditView.targetType === 'business' 
@@ -538,9 +537,9 @@ export default function GlyphBotPage() {
           ? 'People background' 
           : 'Government agency';
       const voiceText = `${channelLabel} audit for ${selectedAuditView.targetIdentifier || selectedAuditView.targetUrl}. Overall grade ${selectedAuditView.overallGrade}. ${selectedAuditView.summary}`;
-      speak(voiceText);
+      playText(voiceText);
     }
-  }, [selectedAuditView, speak]);
+  }, [selectedAuditView, playText]);
 
   // Phase 6: Archive audit from report view
   const handleArchiveAudit = useCallback(async (auditId) => {
@@ -574,26 +573,26 @@ export default function GlyphBotPage() {
     }
   };
 
-  // Manual TTS trigger for individual messages
+  // Phase 7C: Manual TTS trigger for individual messages
   const handlePlayTTS = (messageId) => {
     const msg = messages.find(m => m.id === messageId);
     if (msg?.content) {
-      speak(msg.content);
+      playText(msg.content);
     }
   };
 
-  // Phase 7: Replay with stored TTS settings
+  // Phase 7C: Replay with stored TTS settings
   const handleReplayWithSettings = useCallback((messageId, ttsSettings) => {
     const msg = messages.find(m => m.id === messageId);
     if (msg?.content && ttsSettings) {
-      speak(msg.content, {
-        voice: ttsSettings.voice,
+      playText(msg.content, {
+        voiceProfile: ttsSettings.voiceProfile,
         pitch: ttsSettings.pitch,
         speed: ttsSettings.speed,
         emotion: ttsSettings.emotion
       });
     }
-  }, [messages, speak]);
+  }, [messages, playText]);
 
   // Build providers for display
   const providers = providerMeta?.availableProviders?.map(p => ({
@@ -683,7 +682,7 @@ export default function GlyphBotPage() {
             onClear={handleClear}
             onVoiceSettingsChange={setVoiceSettings}
             voiceSettings={voiceSettings}
-            availableVoices={availableVoices}
+            voiceProfiles={voiceProfiles}
             emotionPresets={emotionPresets}
           />
 
