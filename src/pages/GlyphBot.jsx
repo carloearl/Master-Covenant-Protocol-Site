@@ -338,7 +338,9 @@ export default function GlyphBotPage() {
   const handleLoadChat = useCallback(async (chatId) => {
     const result = await loadChat(chatId);
     if (result?.messages) {
-      setMessages([WELCOME_MESSAGE, ...result.messages.filter(m => m.id !== 'welcome-1')]);
+      // Use visibleMessages for UI, full messages stored in fullHistory
+      const messagesToDisplay = result.visibleMessages || result.messages.slice(-10);
+      setMessages([WELCOME_MESSAGE, ...messagesToDisplay.filter(m => m.id !== 'welcome-1')]);
       if (result.persona) setPersona(result.persona);
       if (result.provider) setProvider(result.provider);
     }
