@@ -21,8 +21,8 @@ export default function ChatStudio() {
   const speechSynthRef = useRef(null);
 
   useEffect(() => {
-    if (!isLoading) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (!isLoading && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
     }
   }, [messages, isLoading]);
 
@@ -152,7 +152,7 @@ export default function ChatStudio() {
         </div>
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto mb-6 space-y-4 pr-2 overscroll-contain">
+        <div className="flex-1 overflow-y-auto mb-6 space-y-4 pr-2 overscroll-contain scroll-smooth" style={{ overscrollBehaviorY: 'contain' }}>
           {messages.map((msg) => (
             <div
               key={msg.id}
