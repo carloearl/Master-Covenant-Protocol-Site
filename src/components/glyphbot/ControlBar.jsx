@@ -83,7 +83,7 @@ export default function ControlBar({
   };
 
   return (
-    <div className="px-4 py-4 border-b border-purple-500/30 bg-gradient-to-r from-slate-950/90 via-purple-950/20 to-slate-950/90 backdrop-blur-xl">
+    <div className="px-4 py-4 border-b border-purple-500/30 bg-transparent backdrop-blur-xl">
       <div className="flex flex-wrap items-center gap-4 justify-between">
         {/* Dropdowns */}
         <div className="flex items-center gap-4">
