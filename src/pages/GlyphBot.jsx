@@ -17,6 +17,7 @@ import AuditHistoryPanel from '@/components/glyphbot/AuditHistoryPanel';
 import AuditReportView from '@/components/glyphbot/AuditReportView';
 import useTTS from '@/components/glyphbot/useTTS';
 import { createPageUrl } from '@/utils';
+import { toast } from 'sonner';
 
 // Storage keys
 const STORAGE_KEYS = {
@@ -423,40 +424,6 @@ export default function GlyphBotPage() {
         content: auditPrompt
       };
 
-      // Send to LLM (already formatted by runAudit)
-      const response = await glyphbotClient.sendMessage([...messages, startMsg, auditRequestMsg], {
-  "overallGrade": "B-",
-  "riskScore": 68,
-  "summary": "Brief executive summary of key findings and overall security posture.",
-  "technicalFindings": [
-    {
-      "id": "F1",
-      "title": "Finding title",
-      "severity": "HIGH",
-      "area": "Headers/Auth/Sessions/etc",
-      "description": "Detailed description",
-      "businessImpact": "What this means for business",
-      "recommendation": "How to fix",
-      "sampleFix": "Code/config example if applicable"
-    }
-  ],
-  "businessRisks": [
-    {
-      "id": "R1",
-      "title": "Risk title",
-      "likelihood": "HIGH/MEDIUM/LOW",
-      "impact": "HIGH/MEDIUM/LOW",
-      "notes": "Additional context"
-    }
-  ],
-  "fixPlan": [
-    {
-      "order": 1,
-      "title": "Action item",
-      "effort": "HIGH/MEDIUM/LOW",
-      "owner": "Team/role responsible"
-    }
-  ]
       // Send to LLM (already formatted by runAudit)
       const response = await glyphbotClient.sendMessage([...messages, startMsg, auditRequestMsg], {
         persona: 'SECURITY',
