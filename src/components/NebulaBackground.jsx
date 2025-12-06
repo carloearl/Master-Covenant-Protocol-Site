@@ -214,33 +214,37 @@ export default function NebulaBackground({ className = '', intensity = 0.15 }) {
       ctx.fillStyle = nebula2;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw CURSOR GLOW BALL (BIG AND NOTICEABLE)
+      // Draw CURSOR GLOW BALL (BIG, BRIGHT, PULSING)
+      const pulse = Math.sin(time * 3) * 0.3 + 0.7; // 0.4-1.0 range
+      const glowRadius = 150 * pulse;
+      
       const cursorGlow = ctx.createRadialGradient(
         mouseX, mouseY, 0,
-        mouseX, mouseY, 120
+        mouseX, mouseY, glowRadius
       );
-      cursorGlow.addColorStop(0, `hsla(${cursorHue}, 100%, 65%, ${0.6 * intensity})`);
-      cursorGlow.addColorStop(0.3, `hsla(${cursorHue}, 90%, 60%, ${0.4 * intensity})`);
-      cursorGlow.addColorStop(0.6, `hsla(${cursorHue + 30}, 85%, 55%, ${0.2 * intensity})`);
+      cursorGlow.addColorStop(0, `hsla(${cursorHue}, 100%, 70%, ${0.9 * pulse * intensity})`);
+      cursorGlow.addColorStop(0.3, `hsla(${cursorHue}, 95%, 65%, ${0.6 * pulse * intensity})`);
+      cursorGlow.addColorStop(0.6, `hsla(${cursorHue + 30}, 90%, 60%, ${0.3 * pulse * intensity})`);
       cursorGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       
       ctx.fillStyle = cursorGlow;
       ctx.beginPath();
-      ctx.arc(mouseX, mouseY, 120, 0, Math.PI * 2);
+      ctx.arc(mouseX, mouseY, glowRadius, 0, Math.PI * 2);
       ctx.fill();
 
-      // Core bright center
+      // Core bright center with pulse
+      const coreRadius = 40 * pulse;
       const cursorCore = ctx.createRadialGradient(
         mouseX, mouseY, 0,
-        mouseX, mouseY, 30
+        mouseX, mouseY, coreRadius
       );
-      cursorCore.addColorStop(0, `hsla(${cursorHue}, 100%, 80%, ${0.8 * intensity})`);
-      cursorCore.addColorStop(0.5, `hsla(${cursorHue}, 100%, 70%, ${0.5 * intensity})`);
+      cursorCore.addColorStop(0, `hsla(${cursorHue}, 100%, 85%, ${1.0 * pulse * intensity})`);
+      cursorCore.addColorStop(0.5, `hsla(${cursorHue}, 100%, 75%, ${0.7 * pulse * intensity})`);
       cursorCore.addColorStop(1, 'rgba(0, 0, 0, 0)');
       
       ctx.fillStyle = cursorCore;
       ctx.beginPath();
-      ctx.arc(mouseX, mouseY, 30, 0, Math.PI * 2);
+      ctx.arc(mouseX, mouseY, coreRadius, 0, Math.PI * 2);
       ctx.fill();
 
       // Update and draw nodes
@@ -307,15 +311,15 @@ export default function NebulaBackground({ className = '', intensity = 0.15 }) {
         style={{ 
           zIndex: 0,
           background: 'radial-gradient(ellipse at center, rgba(8, 12, 30, 1) 0%, rgba(0, 0, 0, 1) 100%)',
-          opacity: 0.9
+          opacity: 1
         }}
       />
       
-      {/* Animated neural network layer */}
+      {/* Animated neural network layer - SITE WIDE */}
       <canvas
         ref={canvasRef}
         className={`fixed inset-0 pointer-events-none ${className}`}
-        style={{ zIndex: 1 }}
+        style={{ zIndex: 1, mixBlendMode: 'screen' }}
       />
     </>
   );
