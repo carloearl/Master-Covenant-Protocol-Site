@@ -795,8 +795,8 @@ export default function GlyphBotPage() {
             {/* Messages */}
             <div 
               ref={chatContainerRef}
-              className="flex-1 min-h-0 overflow-y-auto px-4 py-6 space-y-4"
-              style={{ position: 'relative', zIndex: 9000, background: 'transparent' }}
+              className="flex-1 min-h-0 overflow-y-auto px-4 py-6 space-y-4 chat-scroll-container"
+              style={{ position: 'relative', zIndex: 99999, background: 'transparent', isolation: 'isolate' }}
             >
               {messages.map((msg) => (
                 <ChatMessage
