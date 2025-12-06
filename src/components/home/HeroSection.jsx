@@ -15,13 +15,13 @@ export default function HeroSection() {
             muted
             playsInline
             preload="auto"
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover z-0"
             style={{ filter: 'brightness(1.1) contrast(1.1)' }}
           >
             <source src="https://cdn-lw-prod-video.limewire.com/d/X9vuf/video.mp4" type="video/mp4" />
           </video>
           
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-[#1E3A8A]/10 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-[#1E3A8A]/10 to-transparent pointer-events-none z-[1]" />
           
           <div className="absolute z-10 bottom-1.5 right-1.5 sm:bottom-2 sm:right-2 md:bottom-3 md:right-3 lg:bottom-4 lg:right-4 flex items-center gap-2 md:gap-3">
             <span className="text-white font-black tracking-[0.3em] text-[10px] sm:text-xs md:text-sm uppercase hidden sm:block drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] animate-pulse">
