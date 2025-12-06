@@ -790,7 +790,7 @@ export default function GlyphBotPage() {
               ref={chatContainerRef}
               className="flex-1 chat-scroll-container px-4 py-6 space-y-4"
             >
-              {messages.map((msg) => (
+              {messages.filter(m => m.content).map((msg) => (
                 <ChatMessage
                   key={msg.id}
                   msg={msg}
