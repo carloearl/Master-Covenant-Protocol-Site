@@ -51,10 +51,6 @@ export default function ChatStudio() {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
-    
-    // Prevent auto-scroll on send
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView = () => {};
 
     try {
       const conversationContext = messages.map(m => ({
