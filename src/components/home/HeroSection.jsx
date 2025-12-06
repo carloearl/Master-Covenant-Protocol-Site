@@ -18,7 +18,7 @@ export default function HeroSection() {
             className="w-full h-full object-cover"
             style={{ filter: 'brightness(1.1) contrast(1.1)' }}
           >
-            <source src="sandbox:/mnt/data/Dec_05__2220_13s_202512052257_lc8rw.mp4" type="video/mp4" />
+            <source src="https://cdn-lw-prod-video.limewire.com/d/X9vuf/video.mp4" type="video/mp4" />
           </video>
           
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-[#1E3A8A]/10 to-transparent pointer-events-none" />
