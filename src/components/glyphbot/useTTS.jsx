@@ -166,6 +166,136 @@ export default function useTTS(options = {}) {
   }, []);
 
   /**
+   * Phase 7C: OpenAI TTS playback
+   */
+  const playWithOpenAI = useCallback(async (text, settings, voiceId) => {
+    try {
+      const response = await fetch('https://api.openai.com/v1/audio/speech', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY || ''}`
+        },
+        body: JSON.stringify({
+          model: 'tts-1',
+          voice: voiceId,
+          input: text,
+          speed: Math.max(0.25, Math.min(4.0, settings.speed)) // OpenAI accepts 0.25-4.0
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`OpenAI TTS failed: ${response.status}`);
+      }
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      audio.volume = settings.volume;
+
+      audio.onplay = () => {
+        setIsLoading(false);
+        setIsSpeaking(true);
+        setMetadata({
+          provider: 'openai',
+          voiceId,
+          pitch: settings.pitch,
+          speed: settings.speed,
+          emotion: settings.emotion,
+          timestamp: Date.now()
+        });
+      };
+
+      audio.onended = () => {
+        setIsSpeaking(false);
+        URL.revokeObjectURL(audioUrl);
+        audioRef.current = null;
+      };
+
+      audio.onerror = (e) => {
+        console.error('[GlyphBot TTS] Audio playback error:', e);
+        setIsSpeaking(false);
+        setIsLoading(false);
+        setLastError('Audio playback failed');
+        URL.revokeObjectURL(audioUrl);
+        audioRef.current = null;
+      };
+
+      await audio.play();
+      return true;
+
+    } catch (error) {
+      console.error('[GlyphBot TTS] OpenAI error:', error);
+      throw error;
+    }
+  }, []);
+
+  /**
+   * Phase 7C: Web Speech API fallback
+   */
+  const playWithWebSpeech = useCallback(async (text, settings) => {
+    try {
+      if (!('speechSynthesis' in window)) {
+        throw new Error('Web Speech not available');
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utteranceRef.current = utterance;
+      
+      const voice = getBestVoice();
+      if (voice) {
+        utterance.voice = voice;
+      }
+
+      // Apply settings - make changes NOTICEABLE
+      utterance.rate = Math.max(0.5, Math.min(2.0, settings.speed));
+      utterance.pitch = Math.max(0.5, Math.min(2.0, settings.pitch));
+      utterance.volume = settings.volume;
+      
+      console.log('[GlyphBot TTS] Web Speech - Rate:', utterance.rate, 'Pitch:', utterance.pitch);
+
+      utterance.onstart = () => {
+        setIsLoading(false);
+        setIsSpeaking(true);
+        setMetadata({
+          provider: 'webspeech',
+          voice: voice?.name || 'Default',
+          pitch: settings.pitch,
+          speed: settings.speed,
+          emotion: settings.emotion,
+          timestamp: Date.now()
+        });
+      };
+
+      utterance.onend = () => {
+        setIsSpeaking(false);
+        utteranceRef.current = null;
+      };
+
+      utterance.onerror = (e) => {
+        console.error('[GlyphBot TTS] Web Speech error:', e);
+        setIsSpeaking(false);
+        setIsLoading(false);
+        setLastError(e.error || 'Speech error');
+        utteranceRef.current = null;
+      };
+
+      window.speechSynthesis.cancel();
+      await new Promise(r => setTimeout(r, 50));
+      window.speechSynthesis.speak(utterance);
+      return true;
+
+    } catch (error) {
+      console.error('[GlyphBot TTS] Web Speech failed:', error);
+      setLastError(error.message);
+      setIsLoading(false);
+      return false;
+    }
+  }, [getBestVoice]);
+
+  /**
    * Phase 7C: Play text using OpenAI TTS (primary) or Web Speech (fallback)
    */
   const playText = useCallback(async (text, customSettings = {}) => {
@@ -233,137 +363,7 @@ export default function useTTS(options = {}) {
 
     // Use Web Speech directly
     return await playWithWebSpeech(cleanText, settings);
-  }, [provider, stop]);
-
-  /**
-   * Phase 7C: OpenAI TTS playback
-   */
-  const playWithOpenAI = async (text, settings, voiceId) => {
-    try {
-      const response = await fetch('https://api.openai.com/v1/audio/speech', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY || ''}`
-        },
-        body: JSON.stringify({
-          model: 'tts-1',
-          voice: voiceId,
-          input: text,
-          speed: Math.max(0.25, Math.min(4.0, settings.speed)) // OpenAI accepts 0.25-4.0
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`OpenAI TTS failed: ${response.status}`);
-      }
-
-      const audioBlob = await response.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      audioRef.current = audio;
-
-      audio.volume = settings.volume;
-
-      audio.onplay = () => {
-        setIsLoading(false);
-        setIsSpeaking(true);
-        setMetadata({
-          provider: 'openai',
-          voiceId,
-          pitch: settings.pitch,
-          speed: settings.speed,
-          emotion: settings.emotion,
-          timestamp: Date.now()
-        });
-      };
-
-      audio.onended = () => {
-        setIsSpeaking(false);
-        URL.revokeObjectURL(audioUrl);
-        audioRef.current = null;
-      };
-
-      audio.onerror = (e) => {
-        console.error('[GlyphBot TTS] Audio playback error:', e);
-        setIsSpeaking(false);
-        setIsLoading(false);
-        setLastError('Audio playback failed');
-        URL.revokeObjectURL(audioUrl);
-        audioRef.current = null;
-      };
-
-      await audio.play();
-      return true;
-
-    } catch (error) {
-      console.error('[GlyphBot TTS] OpenAI error:', error);
-      throw error;
-    }
-  };
-
-  /**
-   * Phase 7C: Web Speech API fallback
-   */
-  const playWithWebSpeech = async (text, settings) => {
-    try {
-      if (!('speechSynthesis' in window)) {
-        throw new Error('Web Speech not available');
-      }
-
-      const utterance = new SpeechSynthesisUtterance(text);
-      utteranceRef.current = utterance;
-      
-      const voice = getBestVoice();
-      if (voice) {
-        utterance.voice = voice;
-      }
-
-      // Apply settings - make changes NOTICEABLE
-      utterance.rate = Math.max(0.5, Math.min(2.0, settings.speed));
-      utterance.pitch = Math.max(0.5, Math.min(2.0, settings.pitch));
-      utterance.volume = settings.volume;
-      
-      console.log('[GlyphBot TTS] Web Speech - Rate:', utterance.rate, 'Pitch:', utterance.pitch);
-
-      utterance.onstart = () => {
-        setIsLoading(false);
-        setIsSpeaking(true);
-        setMetadata({
-          provider: 'webspeech',
-          voice: voice?.name || 'Default',
-          pitch: settings.pitch,
-          speed: settings.speed,
-          emotion: settings.emotion,
-          timestamp: Date.now()
-        });
-      };
-
-      utterance.onend = () => {
-        setIsSpeaking(false);
-        utteranceRef.current = null;
-      };
-
-      utterance.onerror = (e) => {
-        console.error('[GlyphBot TTS] Web Speech error:', e);
-        setIsSpeaking(false);
-        setIsLoading(false);
-        setLastError(e.error || 'Speech error');
-        utteranceRef.current = null;
-      };
-
-      window.speechSynthesis.cancel();
-      await new Promise(r => setTimeout(r, 50));
-      window.speechSynthesis.speak(utterance);
-      return true;
-
-    } catch (error) {
-      console.error('[GlyphBot TTS] Web Speech failed:', error);
-      setLastError(error.message);
-      setIsLoading(false);
-      return false;
-    }
-  };
+  }, [provider, stop, playWithOpenAI, playWithWebSpeech]);
 
   /**
    * Test TTS functionality
