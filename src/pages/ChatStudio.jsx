@@ -104,8 +104,8 @@ export default function ChatStudio() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950/20 to-slate-950 text-white">
-      <div className="max-w-5xl mx-auto h-screen flex flex-col px-4 py-8">
+    <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-blue-950/20 to-slate-950 text-white overflow-hidden">
+      <div className="max-w-5xl mx-auto h-full flex flex-col px-4 py-8">
         
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -150,7 +150,7 @@ export default function ChatStudio() {
         </div>
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto mb-6 space-y-4 pr-2">
+        <div className="flex-1 overflow-y-auto mb-6 space-y-4 pr-2 overscroll-contain">
           {messages.map((msg) => (
             <div
               key={msg.id}
