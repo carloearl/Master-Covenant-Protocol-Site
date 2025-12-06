@@ -214,18 +214,33 @@ export default function NebulaBackground({ className = '', intensity = 0.15 }) {
       ctx.fillStyle = nebula2;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw subtle cursor glow
+      // Draw cursor glow ball (follows everywhere)
       const cursorGlow = ctx.createRadialGradient(
         mouseX, mouseY, 0,
-        mouseX, mouseY, 80
+        mouseX, mouseY, 100
       );
-      cursorGlow.addColorStop(0, `hsla(${cursorHue}, 100%, 60%, ${0.3 * intensity})`);
-      cursorGlow.addColorStop(0.5, `hsla(${cursorHue}, 90%, 55%, ${0.15 * intensity})`);
+      cursorGlow.addColorStop(0, `hsla(${cursorHue}, 100%, 65%, ${0.6 * intensity})`);
+      cursorGlow.addColorStop(0.4, `hsla(${cursorHue}, 90%, 60%, ${0.35 * intensity})`);
+      cursorGlow.addColorStop(0.7, `hsla(${cursorHue + 20}, 85%, 55%, ${0.15 * intensity})`);
       cursorGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       
       ctx.fillStyle = cursorGlow;
       ctx.beginPath();
-      ctx.arc(mouseX, mouseY, 80, 0, Math.PI * 2);
+      ctx.arc(mouseX, mouseY, 100, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Bright center
+      const centerGlow = ctx.createRadialGradient(
+        mouseX, mouseY, 0,
+        mouseX, mouseY, 25
+      );
+      centerGlow.addColorStop(0, `hsla(${cursorHue}, 100%, 75%, ${0.8 * intensity})`);
+      centerGlow.addColorStop(0.6, `hsla(${cursorHue}, 100%, 65%, ${0.4 * intensity})`);
+      centerGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      
+      ctx.fillStyle = centerGlow;
+      ctx.beginPath();
+      ctx.arc(mouseX, mouseY, 25, 0, Math.PI * 2);
       ctx.fill();
 
       // Update and draw nodes
@@ -291,16 +306,15 @@ export default function NebulaBackground({ className = '', intensity = 0.15 }) {
         className={`fixed inset-0 pointer-events-none ${className}`}
         style={{ 
           zIndex: 0,
-          background: 'radial-gradient(ellipse at center, rgba(8, 12, 30, 1) 0%, rgba(0, 0, 0, 1) 100%)',
-          opacity: 0.9
+          background: 'radial-gradient(ellipse at center, rgba(8, 12, 30, 1) 0%, rgba(0, 0, 0, 1) 100%)'
         }}
       />
       
-      {/* Animated neural network layer */}
+      {/* Animated neural network + cursor glow layer - SITE WIDE */}
       <canvas
         ref={canvasRef}
         className={`fixed inset-0 pointer-events-none ${className}`}
-        style={{ zIndex: 1 }}
+        style={{ zIndex: 1, opacity: 1 }}
       />
     </>
   );
