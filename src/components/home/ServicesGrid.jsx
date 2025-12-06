@@ -56,7 +56,7 @@ const services = [
 
 export default function ServicesGrid() {
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 pt-8 pb-16">
+    <div className="w-full max-w-7xl mx-auto px-4 pt-8 pb-16 relative">
       <div className="text-center mb-12">
         <h2 className="text-3xl md:text-5xl font-black text-white mb-4 drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
           Complete Security <span className="bg-gradient-to-r from-[#1E40AF] via-[#3B82F6] to-[#60A5FA] bg-clip-text text-transparent">Ecosystem</span>
