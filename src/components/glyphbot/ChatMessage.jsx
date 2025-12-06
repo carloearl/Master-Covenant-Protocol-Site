@@ -49,10 +49,10 @@ export default function ChatMessage({
         <div className={`
           rounded-2xl px-4 py-3 shadow-lg border backdrop-blur-sm
           ${isAssistant 
-            ? 'bg-slate-900/80 border-slate-700/60 text-slate-100' 
-            : 'bg-gradient-to-br from-cyan-500/15 to-blue-500/15 border-cyan-400/50 text-cyan-50'
+            ? 'bg-slate-900/80 border-slate-700/60 text-white' 
+            : 'bg-gradient-to-br from-cyan-500/15 to-blue-500/15 border-cyan-400/50 text-white'
           }
-        `}>
+        `} style={{ color: '#ffffff' }}>
           {/* Header */}
           <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-700/30">
             <div className="flex items-center gap-2">
@@ -146,7 +146,7 @@ export default function ChatMessage({
               </ReactMarkdown>
             </div>
           ) : (
-            <div className="whitespace-pre-wrap leading-relaxed text-sm">{msg.content}</div>
+            <div className="whitespace-pre-wrap leading-relaxed text-sm text-white" style={{ color: '#ffffff' }}>{msg.content}</div>
           )}
         </div>
         
