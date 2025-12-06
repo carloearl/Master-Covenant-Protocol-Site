@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import SecurityMonitor from "@/components/SecurityMonitor";
 import GlyphBotJr from "@/components/GlyphBotJr";
-import InteractiveNebula from "@/components/InteractiveNebula";
+import NebulaBackground from "@/components/NebulaBackground";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GlyphLoader from "@/components/GlyphLoader";
@@ -63,9 +63,9 @@ export default function Layout({ children, currentPageName }) {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col relative overflow-x-hidden selection:bg-[#00E4FF] selection:text-black" style={{ transform: 'translateZ(0)', willChange: 'auto' }}>
       <SecurityMonitor />
-      
+
       {/* Global Background Elements */}
-      <InteractiveNebula className="pointer-events-none fixed inset-0 z-0 opacity-40" style={{ transform: 'translateZ(0)' }} />
+      <NebulaBackground intensity={0.18} />
       <div className="fixed inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none mix-blend-overlay" style={{ transform: 'translateZ(0)' }}></div>
       <div className="fixed top-0 left-0 w-full h-32 bg-gradient-to-b from-black to-transparent z-10 pointer-events-none" style={{ transform: 'translateZ(0)' }}></div>
 
