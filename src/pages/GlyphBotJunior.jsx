@@ -6,10 +6,11 @@ import { Sparkles, Send, Loader2, Volume2, ArrowLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
-import { PERSONAS } from "@/components/glyphbot/personas";
 
 export default function GlyphBotJuniorPage() {
-  const jrPersona = PERSONAS.find(p => p.id === "glyphbot_jr") || PERSONAS[4];
+  const jrPersona = {
+    system: "You are GlyphBot Junior, a friendly AI assistant designed for kids and beginners. You explain complex topics in simple, fun ways using emojis and encouraging language. You're patient, supportive, and make learning about technology exciting!"
+  };
   
   const [messages, setMessages] = useState([
     { role: "assistant", text: "Hi there! I'm GlyphBot Junior! 🌟 How can I help you today?", timestamp: Date.now() }
