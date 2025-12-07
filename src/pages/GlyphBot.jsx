@@ -757,14 +757,14 @@ export default function GlyphBotPage() {
                     ref={chatContainerRef}
                     className="flex-1 min-h-0 overflow-y-auto px-4 py-6 space-y-4"
                   >
-                    {messages.map((msg, idx) => {
-                      if (!msg) return null;
-                      const msgId = msg.id || `msg-${idx}-${Date.now()}`;
+                    {messages.filter(msg => msg && msg.content).map((msg, idx) => {
+                      const msgId = msg.id || `msg-${idx}`;
                       return (
                         <UI.ChatMessage 
                           key={msgId}
                           msg={msg}
                           isAssistant={msg.role === 'assistant'}
+                          onReplay={handleReplayWithSettings}
                         />
                       );
                     })}
