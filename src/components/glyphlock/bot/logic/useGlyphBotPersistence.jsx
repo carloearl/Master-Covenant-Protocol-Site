@@ -70,15 +70,19 @@ export function useGlyphBotPersistence(currentUser) {
 
   const saveChat = useCallback(async (messages, options = {}) => {
     if (!currentUser?.email) {
-      console.warn('[Persistence] No user - retrying save in 300ms');
-      setTimeout(() => saveChat(messages, options), 300);
-      return null;
+      console.error('[Persistence] Cannot save - no user email:', currentUser);
+      throw new Error('User not authenticated - please log in');
     }
 
     const { title, provider, persona } = options;
     const historyToSave = Array.isArray(fullHistory) && fullHistory.length > messages.length
       ? fullHistory
       : messages;
+
+    if (!historyToSave || historyToSave.length === 0) {
+      console.warn('[Persistence] No messages to save');
+      throw new Error('No messages to save');
+    }
 
     const chatTitle = title || generateChatTitle(historyToSave);
 
@@ -98,7 +102,8 @@ export function useGlyphBotPersistence(currentUser) {
       chatId: currentChatId,
       title: chatTitle,
       messageCount: historyToSave.length,
-      isUpdate: !!currentChatId
+      isUpdate: !!currentChatId,
+      user: currentUser.email
     });
 
     try {
@@ -116,13 +121,14 @@ export function useGlyphBotPersistence(currentUser) {
         localStorage.setItem(STORAGE_KEYS.CURRENT_CHAT_ID, newId);
       }
 
-      console.log('[Persistence] Chat saved successfully, refreshing list');
+      console.log('[Persistence] Chat saved successfully:', savedChat);
       await loadSavedChats();
       return savedChat;
     } catch (e) {
       console.error('[Persistence] Failed to save chat:', e);
       console.error('[Persistence] Chat data:', chatData);
-      throw e; // Re-throw to let caller handle
+      console.error('[Persistence] Full error:', e?.message, e?.stack);
+      throw e;
     }
   }, [currentUser?.email, currentChatId, fullHistory, loadSavedChats]);
 

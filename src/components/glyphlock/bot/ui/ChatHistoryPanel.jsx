@@ -33,34 +33,58 @@ export default function ChatHistoryPanel({
   }, [showArchived, onGetArchived]);
 
   const handleSave = async () => {
-    if (!onSave) return;
+    if (!onSave) {
+      console.error('[ChatHistory] No onSave handler provided');
+      return;
+    }
+    
+    console.log('[ChatHistory] Save button clicked');
     setIsSaving(true);
+    
     try {
+      console.log('[ChatHistory] Calling onSave()...');
       const result = await onSave();
+      console.log('[ChatHistory] Save result:', result);
+      
       if (result) {
         toast.success('Chat saved successfully');
       } else {
         toast.error('Failed to save chat');
       }
     } catch (e) {
-      toast.error('Failed to save chat');
+      console.error('[ChatHistory] Save error:', e);
+      toast.error('Failed to save: ' + (e?.message || 'Unknown error'));
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleArchive = async () => {
-    if (!onArchive || !currentChatId) return;
+    if (!onArchive) {
+      console.error('[ChatHistory] No onArchive handler');
+      return;
+    }
+    if (!currentChatId) {
+      console.warn('[ChatHistory] No currentChatId to archive');
+      toast.error('No active chat to archive');
+      return;
+    }
+    
+    console.log('[ChatHistory] Archive button clicked, chatId:', currentChatId);
     setIsArchiving(true);
+    
     try {
       const success = await onArchive();
+      console.log('[ChatHistory] Archive result:', success);
+      
       if (success) {
         toast.success('Chat archived');
       } else {
         toast.error('Failed to archive chat');
       }
     } catch (e) {
-      toast.error('Failed to archive chat');
+      console.error('[ChatHistory] Archive error:', e);
+      toast.error('Failed to archive: ' + (e?.message || 'Unknown error'));
     } finally {
       setIsArchiving(false);
     }
