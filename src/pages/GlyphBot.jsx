@@ -797,16 +797,20 @@ export default function GlyphBotPage() {
 
             {/* Messages */}
             <div 
-              ref={chatContainerRef}
-              className="flex-1 min-h-0 overflow-y-auto px-4 py-6 space-y-4"
-            >
-              {messages.map((msg) => (
-                <UI.ChatMessage 
-                  key={msg.id}
-                  msg={msg}
-                  isAssistant={msg.role === 'assistant'}
-                />
-              ))}
+                    ref={chatContainerRef}
+                    className="flex-1 min-h-0 overflow-y-auto px-4 py-6 space-y-4"
+                  >
+                    {messages.map((msg, idx) => {
+                      if (!msg) return null;
+                      const msgId = msg.id || `msg-${idx}-${Date.now()}`;
+                      return (
+                        <UI.ChatMessage 
+                          key={msgId}
+                          msg={msg}
+                          isAssistant={msg.role === 'assistant'}
+                        />
+                      );
+                    })}
 
               {isSending && (
                 <div className="flex items-center gap-3 text-sm animate-in fade-in p-4 rounded-xl bg-purple-500/10 border border-purple-500/30">
@@ -849,8 +853,11 @@ export default function GlyphBotPage() {
               </div>
 
               <div className="flex-1 chat-scroll-container p-4 space-y-3">
-                {messages.slice(-5).reverse().filter(m => m.role !== 'system').map((m) => (
-                  <div key={m.id} className="rounded-xl border-2 border-purple-500/30 bg-slate-900/60 p-3 hover:border-cyan-400/50 transition-all duration-300 shadow-[0_0_10px_rgba(168,85,247,0.15)]">
+                {messages.slice(-5).reverse().filter(m => m && m.role !== 'system').map((m, idx) => {
+                  const msgId = m?.id || `telem-${idx}-${Date.now()}`;
+                  if (!m) return null;
+                  return (
+                  <div key={msgId} className="rounded-xl border-2 border-purple-500/30 bg-slate-900/60 p-3 hover:border-cyan-400/50 transition-all duration-300 shadow-[0_0_10px_rgba(168,85,247,0.15)]">
                     <div className="flex items-center justify-between mb-2">
                       <span className={`text-[9px] uppercase tracking-wider font-bold px-2 py-1 rounded-lg ${
                         m.role === 'assistant' 
