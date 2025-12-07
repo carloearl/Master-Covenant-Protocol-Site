@@ -53,6 +53,7 @@ import SDKDocs from './pages/SDKDocs';
 import HotzoneMapper from './pages/HotzoneMapper';
 import Qr from './pages/Qr';
 import VideoUpload from './pages/VideoUpload';
+import Mobile from './pages/Mobile';
 import __Layout from './Layout.jsx';
 
 
@@ -112,6 +113,7 @@ export const PAGES = {
     "HotzoneMapper": HotzoneMapper,
     "Qr": Qr,
     "VideoUpload": VideoUpload,
+    "Mobile": Mobile,
 }
 
 export const pagesConfig = {
