@@ -294,7 +294,11 @@ export default function GlyphBotPage() {
       });
 
       if (modes.voice && botText) {
-        playText(botText, voiceSettings);
+        try {
+          playText(botText, voiceSettings);
+        } catch (e) {
+          console.warn('[TTS Auto-speak]', e);
+        }
       }
 
       if (response.meta) {
@@ -524,11 +528,14 @@ export default function GlyphBotPage() {
   }, []);
 
   const handleToggleMode = (key) => {
-    setModes(prev => ({ ...prev, [key]: !prev[key] }));
-    // Stop TTS if voice mode is turned off
     if (key === 'voice' && modes.voice) {
-      stopTTS();
+      try {
+        stopTTS();
+      } catch (e) {
+        console.warn('[TTS Stop]', e);
+      }
     }
+    setModes(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   // Phase 7C: Manual TTS trigger for individual messages
@@ -639,8 +646,20 @@ export default function GlyphBotPage() {
               onToggleMode={handleToggleMode}
               onClear={handleClear}
               onVoiceSettingsChange={{
-                playText,
-                setVoiceSettings
+                playText: (text, settings) => {
+                  try {
+                    playText(text, settings);
+                  } catch (e) {
+                    console.warn('[TTS Test]', e);
+                  }
+                },
+                setVoiceSettings: (updater) => {
+                  setVoiceSettings(prev => {
+                    const updated = typeof updater === 'function' ? updater(prev) : updater;
+                    localStorage.setItem('glyphbot_voice_settings', JSON.stringify(updated));
+                    return updated;
+                  });
+                }
               }}
               voiceSettings={voiceSettings}
               voiceProfiles={voiceProfiles}

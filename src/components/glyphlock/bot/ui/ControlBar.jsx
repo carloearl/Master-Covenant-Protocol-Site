@@ -56,17 +56,9 @@ export default function ControlBar({
 }) {
   const [showVoiceControls, setShowVoiceControls] = useState(false);
 
-  const [localSettings, setLocalSettings] = React.useState(voiceSettings);
-
-  React.useEffect(() => {
-    setLocalSettings(voiceSettings);
-  }, [voiceSettings]);
-
   const handleVoiceChange = (key, value) => {
-    const updated = { ...localSettings, [key]: value };
-    setLocalSettings(updated);
     if (onVoiceSettingsChange?.setVoiceSettings) {
-      onVoiceSettingsChange.setVoiceSettings(updated);
+      onVoiceSettingsChange.setVoiceSettings(prev => ({ ...prev, [key]: value }));
     }
   };
 
@@ -125,7 +117,7 @@ export default function ControlBar({
                   <div className="space-y-2">
                     <Label className="text-xs text-slate-400">Emotion Preset</Label>
                     <Select 
-                      value={localSettings?.emotion || 'neutral'} 
+                      value={voiceSettings?.emotion || 'neutral'} 
                       onValueChange={(val) => handleVoiceChange('emotion', val)}
                     >
                       <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
@@ -144,7 +136,7 @@ export default function ControlBar({
                   <div className="space-y-2">
                     <Label className="text-xs text-slate-400">Voice Profile</Label>
                     <Select 
-                      value={localSettings?.voiceProfile || 'neutral_female'} 
+                      value={voiceSettings?.voiceProfile || 'neutral_female'} 
                       onValueChange={(val) => handleVoiceChange('voiceProfile', val)}
                     >
                       <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
@@ -163,10 +155,10 @@ export default function ControlBar({
                   <div className="space-y-2">
                     <Label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Pitch</span>
-                      <span className="text-cyan-400 font-mono">{localSettings?.pitch?.toFixed(2) || '1.00'}x</span>
+                      <span className="text-cyan-400 font-mono">{voiceSettings?.pitch?.toFixed(2) || '1.00'}x</span>
                     </Label>
                     <Slider
-                      value={[localSettings?.pitch || 1.0]}
+                      value={[voiceSettings?.pitch || 1.0]}
                       onValueChange={([val]) => handleVoiceChange('pitch', val)}
                       min={0.5}
                       max={2.0}
@@ -182,10 +174,10 @@ export default function ControlBar({
                   <div className="space-y-2">
                     <Label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Speed</span>
-                      <span className="text-cyan-400 font-mono">{localSettings?.speed?.toFixed(2) || '1.00'}x</span>
+                      <span className="text-cyan-400 font-mono">{voiceSettings?.speed?.toFixed(2) || '1.00'}x</span>
                     </Label>
                     <Slider
-                      value={[localSettings?.speed || 1.0]}
+                      value={[voiceSettings?.speed || 1.0]}
                       onValueChange={([val]) => handleVoiceChange('speed', val)}
                       min={0.8}
                       max={1.4}
@@ -201,10 +193,10 @@ export default function ControlBar({
                   <div className="space-y-2">
                     <Label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Volume</span>
-                      <span className="text-cyan-400 font-mono">{((localSettings?.volume || 1.0) * 100).toFixed(0)}%</span>
+                      <span className="text-cyan-400 font-mono">{((voiceSettings?.volume || 1.0) * 100).toFixed(0)}%</span>
                     </Label>
                     <Slider
-                      value={[localSettings?.volume || 1.0]}
+                      value={[voiceSettings?.volume || 1.0]}
                       onValueChange={([val]) => handleVoiceChange('volume', val)}
                       min={0.0}
                       max={1.0}
@@ -216,10 +208,10 @@ export default function ControlBar({
                   <div className="space-y-2">
                     <Label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Bass</span>
-                      <span className="text-purple-400 font-mono">{((localSettings?.bass || 0) * 100).toFixed(0)}%</span>
+                      <span className="text-purple-400 font-mono">{((voiceSettings?.bass || 0) * 100).toFixed(0)}%</span>
                     </Label>
                     <Slider
-                      value={[localSettings?.bass || 0]}
+                      value={[voiceSettings?.bass || 0]}
                       onValueChange={([val]) => handleVoiceChange('bass', val)}
                       min={-1.0}
                       max={1.0}
@@ -235,10 +227,10 @@ export default function ControlBar({
                   <div className="space-y-2">
                     <Label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Clarity</span>
-                      <span className="text-purple-400 font-mono">{((localSettings?.clarity || 0) * 100).toFixed(0)}%</span>
+                      <span className="text-purple-400 font-mono">{((voiceSettings?.clarity || 0) * 100).toFixed(0)}%</span>
                     </Label>
                     <Slider
-                      value={[localSettings?.clarity || 0]}
+                      value={[voiceSettings?.clarity || 0]}
                       onValueChange={([val]) => handleVoiceChange('clarity', val)}
                       min={-1.0}
                       max={1.0}
@@ -256,7 +248,7 @@ export default function ControlBar({
                       type="button"
                       onClick={() => {
                         if (onVoiceSettingsChange?.playText) {
-                          onVoiceSettingsChange.playText("This is a voice test with your current settings.", localSettings);
+                          onVoiceSettingsChange.playText("This is a voice test with your current settings.", voiceSettings);
                         }
                       }}
                       className="flex-1 px-3 py-2 rounded-lg text-xs bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 hover:bg-cyan-500/30 transition-all flex items-center justify-center gap-1.5"
@@ -267,7 +259,7 @@ export default function ControlBar({
                     <button
                       type="button"
                       onClick={() => {
-                        localStorage.setItem('glyphbot_voice_settings', JSON.stringify(localSettings));
+                        localStorage.setItem('glyphbot_voice_settings', JSON.stringify(voiceSettings));
                       }}
                       className="flex-1 px-3 py-2 rounded-lg text-xs bg-purple-500/20 border border-purple-500/50 text-purple-300 hover:bg-purple-500/30 transition-all flex items-center justify-center gap-1.5"
                     >
