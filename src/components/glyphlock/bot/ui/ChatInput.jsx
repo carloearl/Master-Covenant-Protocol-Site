@@ -85,9 +85,9 @@ export default function ChatInput({
   };
 
   return (
-    <div className="border-t-2 border-purple-500/30 bg-transparent px-4 py-5" style={{ position: 'relative', zIndex: 300 }}>
-      <div className="max-w-4xl mx-auto" style={{ position: 'relative', zIndex: 301 }}>
-        <div className="relative flex items-end gap-3 bg-transparent border-2 border-purple-500/40 rounded-2xl p-3 focus-within:border-cyan-400 focus-within:shadow-[0_0_30px_rgba(6,182,212,0.4),inset_0_0_20px_rgba(168,85,247,0.1)] transition-all duration-300 backdrop-blur-xl shadow-[0_0_20px_rgba(168,85,247,0.2)]" style={{ position: 'relative', zIndex: 302 }}>
+    <div className="border-t-2 border-purple-500/30 px-4 py-5" style={{ position: 'relative', zIndex: 9999, background: 'rgba(10, 10, 20, 0.9)', backdropFilter: 'blur(20px)' }}>
+      <div className="max-w-4xl mx-auto" style={{ position: 'relative', zIndex: 10000 }}>
+        <div className="relative flex items-end gap-3 border-2 border-purple-500/40 rounded-2xl p-3 focus-within:border-cyan-400 focus-within:shadow-[0_0_30px_rgba(6,182,212,0.4),inset_0_0_20px_rgba(168,85,247,0.1)] transition-all duration-300 backdrop-blur-xl shadow-[0_0_20px_rgba(168,85,247,0.2)]" style={{ position: 'relative', zIndex: 10001, background: 'rgba(10, 10, 20, 0.8)' }}>
           <div className="flex items-center gap-1 pb-1">
             <button
               type="button"
@@ -119,7 +119,7 @@ export default function ChatInput({
             placeholder="Ask GlyphBot about security, code, blockchain..."
             disabled={disabled}
             className="flex-1 resize-none bg-transparent text-white placeholder:text-purple-400/60 focus:outline-none text-sm leading-relaxed max-h-[150px] py-2"
-            style={{ fontSize: '16px', color: '#ffffff', position: 'relative', zIndex: 303, fontWeight: '500' }}
+            style={{ fontSize: '16px', color: '#ffffff', position: 'relative', zIndex: 10002, fontWeight: '500' }}
           />
 
           <div className="flex items-center gap-2 pb-1">
