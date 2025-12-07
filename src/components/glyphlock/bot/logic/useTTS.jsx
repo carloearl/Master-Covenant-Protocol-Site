@@ -1,7 +1,22 @@
+// GlyphBot Phase 7 — Voice pipeline upgraded:
+// - Real mapping of speed/pitch/emotion to TTS
+// - Provider TTS preferred, Web Speech fallback
+// - Backwards compatible with existing GlyphBot phases
+
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { VOICE_PROFILES, EMOTION_PRESETS } from '../config';
 import { tts as ttsService } from '../services';
 import { synthesizeTTS } from '../services/ttsClient';
+
+// Normalization helpers
+function normalizeSpeed(speed) {
+  return Math.min(2.0, Math.max(0.5, speed || 1.0));
+}
+
+function normalizePitch(pitch) {
+  if (pitch === undefined || pitch === null) return 1.0;
+  return Math.min(2.0, Math.max(0.5, pitch));
+}
 
 export default function useTTS(options = {}) {
   const [isSpeaking, setIsSpeaking] = useState(false);
