@@ -145,7 +145,7 @@ export function useGlyphBotPersistence(currentUser) {
       setFullHistory(history);
       localStorage.setItem(STORAGE_KEYS.FULL_HISTORY, JSON.stringify(history));
 
-      const visibleMessages = history.slice(-10).filter(m => m.id !== 'welcome-1');
+      const visibleMessages = history.filter(m => m.id !== 'welcome-1');
 
       return {
         ...chat,
