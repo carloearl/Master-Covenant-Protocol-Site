@@ -84,50 +84,33 @@ export function useGlyphBotPersistence(currentUser) {
       throw new Error('No messages to save');
     }
 
-    const chatTitle = title || generateChatTitle(historyToSave);
-
-    const chatData = {
-      userId: currentUser.email,
-      title: chatTitle,
-      fullHistory: JSON.stringify(
-        Array.isArray(historyToSave) ? historyToSave : []
-      ),
-      messageCount: historyToSave.length,
-      isArchived: false,
-      provider: provider || 'AUTO',
-      persona: persona || 'GENERAL'
-    };
-
-    console.log('[Persistence] Saving chat:', {
-      chatId: currentChatId,
-      title: chatTitle,
-      messageCount: historyToSave.length,
-      isUpdate: !!currentChatId,
-      user: currentUser.email
-    });
+    console.log('[Persistence] Calling backend function saveGlyphBotChat');
 
     try {
-      let savedChat;
+      const response = await base44.functions.invoke('saveGlyphBotChat', {
+        chatId: currentChatId,
+        messages: historyToSave,
+        title: title || generateChatTitle(historyToSave),
+        provider: provider || 'AUTO',
+        persona: persona || 'GENERAL'
+      });
 
-      if (currentChatId) {
-        console.log('[Persistence] Updating existing chat:', currentChatId);
-        savedChat = await base44.entities.GlyphBotChat.update(currentChatId, chatData);
-      } else {
-        console.log('[Persistence] Creating new chat');
-        savedChat = await base44.entities.GlyphBotChat.create(chatData);
-        const newId = savedChat.id || savedChat._id || savedChat.entity_id;
-        console.log('[Persistence] New chat created with ID:', newId);
-        setCurrentChatId(newId);
-        localStorage.setItem(STORAGE_KEYS.CURRENT_CHAT_ID, newId);
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || 'Save failed');
       }
 
-      console.log('[Persistence] Chat saved successfully:', savedChat);
+      const savedChat = response.data.chat;
+      const newId = response.data.chatId || savedChat.id || savedChat._id || savedChat.entity_id;
+      
+      console.log('[Persistence] Chat saved successfully:', newId);
+      
+      setCurrentChatId(newId);
+      localStorage.setItem(STORAGE_KEYS.CURRENT_CHAT_ID, newId);
+      
       await loadSavedChats();
       return savedChat;
     } catch (e) {
       console.error('[Persistence] Failed to save chat:', e);
-      console.error('[Persistence] Chat data:', chatData);
-      console.error('[Persistence] Full error:', e?.message, e?.stack);
       throw e;
     }
   }, [currentUser?.email, currentChatId, fullHistory, loadSavedChats]);
@@ -189,13 +172,22 @@ export function useGlyphBotPersistence(currentUser) {
   const archiveChat = useCallback(async (chatId) => {
     if (!chatId) return false;
 
+    console.log('[Persistence] Calling backend function archiveGlyphBotChat');
+
     try {
-      await base44.entities.GlyphBotChat.update(chatId, { isArchived: true });
+      const response = await base44.functions.invoke('archiveGlyphBotChat', {
+        chatId
+      });
+
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || 'Archive failed');
+      }
 
       if (chatId === currentChatId) startNewChat();
       await loadSavedChats();
       return true;
     } catch (e) {
+      console.error('[Persistence] Archive failed:', e);
       return false;
     }
   }, [currentChatId, loadSavedChats, startNewChat]);
