@@ -46,10 +46,9 @@ export default function Navbar({ user, onLogin, onLogout }) {
             <div 
               key={section.label} 
               className="relative group/nav"
-              onMouseEnter={() => setOpen(section.label)}
-              onMouseLeave={() => setOpen(null)}
             >
               <button
+                onClick={() => setOpen(open === section.label ? null : section.label)}
                 className="relative flex items-center gap-1.5 text-gray-300 hover:text-[#00E4FF] transition-all duration-200 py-2 text-sm font-bold uppercase tracking-wide group/btn"
               >
                 {section.label}
