@@ -546,18 +546,17 @@ export default function GlyphBotPage() {
     }
   };
 
-  // Phase 7C: Replay with stored TTS settings
   const handleReplayWithSettings = useCallback((messageId, ttsSettings) => {
-    const msg = messages.find(m => m.id === messageId);
-    if (msg?.content && ttsSettings) {
-      playText(msg.content, {
-        voiceProfile: ttsSettings.voiceProfile,
-        pitch: ttsSettings.pitch,
-        speed: ttsSettings.speed,
-        emotion: ttsSettings.emotion
-      });
+    if (!messageId) return;
+    const msg = messages.find(m => m && m.id === messageId);
+    if (msg?.content) {
+      try {
+        playText(msg.content, ttsSettings || voiceSettings);
+      } catch (e) {
+        console.warn('[TTS Replay]', e);
+      }
     }
-  }, [messages, playText]);
+  }, [messages, playText, voiceSettings]);
 
   // Build providers for display
   const providers = providerMeta?.availableProviders?.map(p => ({
