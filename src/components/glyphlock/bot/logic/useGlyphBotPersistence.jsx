@@ -202,11 +202,21 @@ export function useGlyphBotPersistence(currentUser) {
   const unarchiveChat = useCallback(async (chatId) => {
     if (!chatId) return false;
 
+    console.log('[Persistence] Calling backend function unarchiveGlyphBotChat');
+
     try {
-      await base44.entities.GlyphBotChat.update(chatId, { isArchived: false });
+      const response = await base44.functions.invoke('unarchiveGlyphBotChat', {
+        chatId
+      });
+
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || 'Unarchive failed');
+      }
+
       await loadSavedChats();
       return true;
-    } catch {
+    } catch (e) {
+      console.error('[Persistence] Unarchive failed:', e);
       return false;
     }
   }, [loadSavedChats]);
@@ -214,12 +224,22 @@ export function useGlyphBotPersistence(currentUser) {
   const deleteChat = useCallback(async (chatId) => {
     if (!chatId) return false;
 
+    console.log('[Persistence] Calling backend function deleteGlyphBotChat');
+
     try {
-      await base44.entities.GlyphBotChat.delete(chatId);
+      const response = await base44.functions.invoke('deleteGlyphBotChat', {
+        chatId
+      });
+
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || 'Delete failed');
+      }
+
       if (chatId === currentChatId) startNewChat();
       await loadSavedChats();
       return true;
-    } catch {
+    } catch (e) {
+      console.error('[Persistence] Delete failed:', e);
       return false;
     }
   }, [currentChatId, loadSavedChats, startNewChat]);

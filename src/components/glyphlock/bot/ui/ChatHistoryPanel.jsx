@@ -28,9 +28,19 @@ export default function ChatHistoryPanel({
       onGetArchived().then(chats => {
         setArchivedChats(chats || []);
         setLoadingArchived(false);
+      }).catch(err => {
+        console.error('[ChatHistory] Failed to load archived:', err);
+        setLoadingArchived(false);
       });
     }
   }, [showArchived, onGetArchived]);
+
+  // Auto-refresh when panel opens
+  useEffect(() => {
+    if (savedChats.length === 0 && !isLoading) {
+      console.log('[ChatHistory] Panel opened, no chats loaded - requesting refresh');
+    }
+  }, [savedChats, isLoading]);
 
   const handleSave = async () => {
     if (!onSave) {

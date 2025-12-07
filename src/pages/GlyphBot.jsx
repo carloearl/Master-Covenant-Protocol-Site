@@ -389,10 +389,21 @@ export default function GlyphBotPage() {
 
   // Handle save chat
   const handleSaveChat = useCallback(async () => {
+    console.log('[GlyphBot] Save initiated', {
+      messageCount: messages.length,
+      hasUser: !!currentUser?.email,
+      provider,
+      persona
+    });
+    
     try {
       const result = await saveChat(messages, { provider, persona });
+      console.log('[GlyphBot] Save result:', result);
+      
       if (result) {
         toast.success('Chat saved successfully');
+        // Force refresh the chat list
+        await loadSavedChats();
         return result;
       } else {
         toast.error('Failed to save chat');
@@ -403,7 +414,7 @@ export default function GlyphBotPage() {
       toast.error('Failed to save chat: ' + (err?.message || 'Unknown error'));
       return null;
     }
-  }, [messages, saveChat, provider, persona]);
+  }, [messages, saveChat, provider, persona, currentUser, loadSavedChats]);
 
   // Handle load chat from history
   const handleLoadChat = useCallback(async (chatId) => {
