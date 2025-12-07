@@ -673,18 +673,21 @@ export default function GlyphBotPage() {
 
           {/* Control Bar */}
           <UI.ControlBar
-            persona={persona}
-            setPersona={setPersona}
-            provider={provider}
-            setProvider={setProvider}
-            modes={modes}
-            onToggleMode={handleToggleMode}
-            onClear={handleClear}
-            onVoiceSettingsChange={setVoiceSettings}
-            voiceSettings={voiceSettings}
-            voiceProfiles={voiceProfiles}
-            emotionPresets={emotionPresets}
-          />
+              persona={persona}
+              setPersona={setPersona}
+              provider={provider}
+              setProvider={setProvider}
+              modes={modes}
+              onToggleMode={handleToggleMode}
+              onClear={handleClear}
+              onVoiceSettingsChange={{
+                ...setVoiceSettings,
+                testVoice: (text, settings) => playText(text, settings)
+              }}
+              voiceSettings={voiceSettings}
+              voiceProfiles={voiceProfiles}
+              emotionPresets={emotionPresets}
+            />
 
           {/* Provider Chain */}
           {providerMeta && (

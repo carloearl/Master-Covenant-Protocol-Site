@@ -256,10 +256,44 @@ export default function ControlBar({
                       <span>Crisp</span>
                     </div>
                   </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-          )}
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-2 pt-2 border-t border-slate-700">
+                    <button
+                      onClick={() => {
+                        const testPhrase = "This is a voice test with your current settings.";
+                        if (onVoiceSettingsChange?.testVoice) {
+                          onVoiceSettingsChange.testVoice(testPhrase, voiceSettings);
+                        }
+                      }}
+                      className="flex-1 px-3 py-2 rounded-lg text-xs bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 hover:bg-cyan-500/30 transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <Volume2 className="w-3 h-3" />
+                      Test Voice
+                    </button>
+                    <button
+                      onClick={() => {
+                        try {
+                          localStorage.setItem('glyphbot_voice_settings', JSON.stringify(voiceSettings));
+                          // Visual feedback
+                          const btn = event.target.closest('button');
+                          const originalText = btn.innerHTML;
+                          btn.innerHTML = '<span class="text-emerald-400">✓ Saved</span>';
+                          setTimeout(() => { btn.innerHTML = originalText; }, 1500);
+                        } catch (e) {
+                          console.warn('Failed to save voice settings:', e);
+                        }
+                      }}
+                      className="flex-1 px-3 py-2 rounded-lg text-xs bg-purple-500/20 border border-purple-500/50 text-purple-300 hover:bg-purple-500/30 transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <Settings2 className="w-3 h-3" />
+                      Save Default
+                    </button>
+                  </div>
+                  </div>
+                  </PopoverContent>
+                  </Popover>
+                  )}
           
           <ModeToggle 
             active={modes.live} 
