@@ -871,9 +871,9 @@ export default function GlyphBotPage() {
                       )}
                     </div>
                     <p className="text-[11px] text-slate-300 line-clamp-2">{m.content}</p>
-                    </div>
-                    );
-                    })}
+                  </div>
+                  );
+                })}
 
                     {lastMeta && (
                   <div className="mt-4 p-4 rounded-xl border-2 border-cyan-500/40 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 shadow-[0_0_20px_rgba(6,182,212,0.2)]">
