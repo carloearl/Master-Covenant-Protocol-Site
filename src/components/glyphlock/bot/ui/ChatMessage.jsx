@@ -9,10 +9,12 @@ export default function ChatMessage({ msg, isAssistant }) {
         isAssistant ? 'mr-auto text-left' : 'ml-auto text-right'
       }`}
       style={{
-        background: 'linear-gradient(270deg, #4a00e0, #8e2de2, #4a00e0)',
-        backgroundSize: '600% 600%',
-        animation: 'shimmer 6s ease infinite',
-        color: '#39ff14',
+        background: 'rgba(30, 64, 175, 0.3)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: '2px solid rgba(59, 130, 246, 0.4)',
+        boxShadow: '0 0 30px rgba(59, 130, 246, 0.3), inset 0 0 20px rgba(59, 130, 246, 0.1)',
+        color: '#ffffff',
         position: 'relative',
         zIndex: 9999,
         fontSize: '16px',
