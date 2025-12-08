@@ -190,7 +190,7 @@ export default function TechnologyMarquee() {
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
           Enterprise Engineering Excellence
         </h2>
-        <p className="text-lg md:text-xl text-white/70 max-w-4xl mx-auto">
+        <p className="text-lg md:text-xl text-white/90 max-w-4xl mx-auto">
           Engineered under the Triple-E Standard — enterprise best practices amplified and aligned with the same high-integrity benchmarks that leading global platforms refuse to compromise on.
         </p>
       </div>
@@ -307,7 +307,7 @@ export default function TechnologyMarquee() {
 
         .logo-item:hover .logo-img {
           filter: brightness(1) invert(0) opacity(1);
-          drop-shadow: 0 0 20px rgba(0, 228, 255, 0.6));
+          drop-shadow: 0 0 20px rgba(87, 61, 255, 0.8));
         }
 
         @keyframes marquee-left {
@@ -356,7 +356,7 @@ export default function TechnologyMarquee() {
           left: -100%;
           width: 100%;
           height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(0, 228, 255, 0.1), transparent);
+          background: linear-gradient(90deg, transparent, rgba(87, 61, 255, 0.15), transparent);
           animation: scan 4s linear infinite;
         }
       `}</style>

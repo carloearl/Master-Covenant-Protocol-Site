@@ -27,7 +27,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
         {/* Logo Area */}
         <Link to={createPageUrl("Home")} className="flex items-center gap-3 group">
           <div className="relative">
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#00E4FF] to-[#8C4BFF] rounded-full blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full blur opacity-40 group-hover:opacity-60 transition duration-200"></div>
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d92107808_glyphlock-3d-logo.png"
               alt="GlyphLock"
@@ -36,7 +36,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
           </div>
           <span className="text-2xl font-black tracking-tighter font-space">
             <span className="text-white">GLYPH</span>
-            <span className="text-transparent bg-gradient-to-r from-[#00E4FF] to-[#8C4BFF] bg-clip-text">LOCK</span>
+            <span className="text-transparent bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text">LOCK</span>
           </span>
         </Link>
 
@@ -131,14 +131,14 @@ export default function Navbar({ user, onLogin, onLogout }) {
         {/* Desktop Actions */}
         <div className="hidden lg:flex items-center gap-6">
           <Link to={createPageUrl("Pricing")}>
-            <button className="text-gray-300 hover:text-[#00E4FF] transition-colors text-sm font-bold uppercase tracking-wide">Pricing</button>
+            <button className="text-violet-200 hover:text-indigo-300 hover:drop-shadow-[0_0_8px_rgba(87,61,255,0.8)] transition-all text-sm font-bold uppercase tracking-wide">Pricing</button>
           </Link>
 
           <Link to={createPageUrl("Consultation")}>
             <button className="group relative px-6 py-2.5 rounded-full bg-transparent overflow-hidden transition-all hover:scale-105">
-              <div className="absolute inset-0 border border-[#00E4FF] rounded-full"></div>
-              <div className="absolute inset-0 bg-[#00E4FF]/10 group-hover:bg-[#00E4FF]/20 transition-all"></div>
-              <span className="relative text-[#00E4FF] text-sm font-bold uppercase tracking-wide group-hover:text-white transition-colors">
+              <div className="absolute inset-0 border border-indigo-400 rounded-full"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-violet-500/10 group-hover:from-indigo-500/20 group-hover:to-violet-500/20 transition-all"></div>
+              <span className="relative text-indigo-300 text-sm font-bold uppercase tracking-wide group-hover:text-white transition-colors">
                 Get Started
               </span>
             </button>
@@ -147,28 +147,28 @@ export default function Navbar({ user, onLogin, onLogout }) {
           {user ? (
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
-                <Button className="bg-[#0A0F24] border border-[#8C4BFF]/50 text-white hover:bg-[#8C4BFF]/20 hover:border-[#8C4BFF] transition-all text-sm font-medium px-4 py-2 h-auto gap-2 rounded-lg">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#00E4FF] to-[#8C4BFF] flex items-center justify-center text-[10px] font-bold text-black">
+                <Button className="bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-violet-400/40 transition-all text-sm font-medium px-4 py-2 h-auto gap-2 rounded-lg backdrop-blur-md">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_10px_rgba(87,61,255,0.6)]">
                     {user.full_name?.charAt(0) || "U"}
                   </div>
                   <span className="max-w-[100px] truncate">{user.full_name?.split(" ")[0]}</span>
-                  <ChevronDown size={12} className="text-gray-400" />
+                  <ChevronDown size={12} className="text-violet-200" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-[#0A0F24]/95 border border-[#8C4BFF]/30 shadow-[0_0_30px_rgba(140,75,255,0.2)] backdrop-blur-2xl rounded-xl p-1 mt-2 w-56">
-                <div className="px-2 py-2 mb-2 border-b border-white/10">
-                  <p className="text-xs text-gray-400">Signed in as</p>
+              <DropdownMenuContent className="bg-white/5 backdrop-blur-2xl border border-white/20 shadow-[0_0_40px_rgba(87,61,255,0.35)] rounded-xl p-1 mt-2 w-56">
+                <div className="px-2 py-2 mb-2 border-b border-white/15">
+                  <p className="text-xs text-violet-200">Signed in as</p>
                   <p className="text-sm font-bold text-white truncate">{user.email}</p>
                 </div>
-                <DropdownMenuItem asChild className="text-gray-300 focus:bg-[#8C4BFF]/20 focus:text-white rounded-lg cursor-pointer mb-1">
+                <DropdownMenuItem asChild className="text-violet-200 focus:bg-indigo-500/20 focus:text-white rounded-lg cursor-pointer mb-1">
                   <Link to={createPageUrl("Dashboard")}>
-                    <User className="w-4 h-4 mr-2 text-[#00E4FF]" />
+                    <User className="w-4 h-4 mr-2 text-indigo-400" />
                     Dashboard
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild className="text-gray-300 focus:bg-[#8C4BFF]/20 focus:text-white rounded-lg cursor-pointer mb-1">
+                <DropdownMenuItem asChild className="text-violet-200 focus:bg-violet-500/20 focus:text-white rounded-lg cursor-pointer mb-1">
                   <Link to={createPageUrl("CommandCenter")}>
-                    <Terminal className="w-4 h-4 mr-2 text-[#8C4BFF]" />
+                    <Terminal className="w-4 h-4 mr-2 text-violet-400" />
                     Command Center
                   </Link>
                 </DropdownMenuItem>
@@ -185,7 +185,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
           ) : (
             <Button
               onClick={onLogin}
-              className="text-gray-300 hover:text-white hover:bg-white/5 transition-colors text-sm font-bold uppercase tracking-wide border-none shadow-none"
+              className="text-violet-200 hover:text-white hover:bg-white/10 transition-all text-sm font-bold uppercase tracking-wide border-none shadow-none"
             >
               Sign In
             </Button>
@@ -208,16 +208,16 @@ export default function Navbar({ user, onLogin, onLogout }) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-white/10 bg-black/15 overflow-hidden backdrop-blur-2xl"
+            className="lg:hidden border-t border-white/10 bg-white/3 overflow-hidden backdrop-blur-2xl"
           >
             <div className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
               <div className="space-y-3">
-                <h3 className="text-[#00E4FF] text-xs font-bold uppercase tracking-widest">Featured</h3>
+                <h3 className="text-indigo-300 text-xs font-bold uppercase tracking-widest">Featured</h3>
                 <div className="grid grid-cols-1 gap-2 pl-4 border-l border-white/10">
                   <Link
                     to={createPageUrl("Qr")}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="text-gray-400 hover:text-white text-sm py-1 block"
+                    className="text-violet-200 hover:text-white text-sm py-1 block"
                   >
                     QR Studio
                   </Link>
@@ -225,14 +225,14 @@ export default function Navbar({ user, onLogin, onLogout }) {
               </div>
               {NAV.map((section) => (
                 <div key={section.label} className="space-y-3">
-                  <h3 className="text-[#00E4FF] text-xs font-bold uppercase tracking-widest">{section.label}</h3>
+                  <h3 className="text-indigo-300 text-xs font-bold uppercase tracking-widest">{section.label}</h3>
                   <div className="grid grid-cols-1 gap-2 pl-4 border-l border-white/10">
                     {section.items.map((item) => (
                       <Link
                         key={item.page}
                         to={createPageUrl(item.page)}
                         onClick={() => setMobileMenuOpen(false)}
-                        className="text-gray-400 hover:text-white text-sm py-1 block"
+                        className="text-violet-200 hover:text-white text-sm py-1 block"
                       >
                         {item.label}
                       </Link>
@@ -247,7 +247,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
                 {user ? (
                   <>
                     <Link to={createPageUrl("Dashboard")} onClick={() => setMobileMenuOpen(false)}>
-                      <Button className="w-full bg-[#00E4FF]/10 text-[#00E4FF] border border-[#00E4FF]/30">Dashboard</Button>
+                      <Button className="w-full bg-indigo-500/15 text-indigo-300 border border-indigo-400/40">Dashboard</Button>
                     </Link>
                     <Button onClick={onLogout} variant="ghost" className="text-red-400 hover:text-red-300 hover:bg-red-500/10">
                       Sign Out
@@ -257,7 +257,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
                   <div className="grid grid-cols-2 gap-4">
                     <Button onClick={onLogin} variant="ghost" className="text-white hover:bg-white/10">Sign In</Button>
                     <Link to={createPageUrl("Consultation")} onClick={() => setMobileMenuOpen(false)}>
-                      <Button className="w-full bg-gradient-to-r from-[#00E4FF] to-[#8C4BFF] text-white border-none">Get Started</Button>
+                      <Button className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white border-none">Get Started</Button>
                     </Link>
                   </div>
                 )}
