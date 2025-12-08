@@ -69,7 +69,7 @@ export default function ServicesGrid() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {services.map((service, idx) => (
           <Link key={idx} to={createPageUrl(service.link)}>
-            <div className="bg-white/15 backdrop-blur-md backdrop-saturate-150 border border-white/20 rounded-xl overflow-hidden group cursor-pointer hover:scale-[1.03] transition-all duration-600 ease-out h-full shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_0_50px_rgba(59,130,246,0.4)] hover:bg-white/20 hover:border-white/30">
+            <div className="backdrop-blur-md border-2 border-indigo-500/60 rounded-xl overflow-hidden group cursor-pointer hover:scale-[1.03] transition-all duration-600 ease-out h-full shadow-[0_0_30px_rgba(87,61,255,0.4)] hover:shadow-[0_0_60px_rgba(87,61,255,0.7)] hover:border-indigo-400/80" style={{ background: 'rgba(87,61,255,0.08)' }}>
               <div className="relative h-48 overflow-hidden">
                 <img 
                   src={service.image} 
