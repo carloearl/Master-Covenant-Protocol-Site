@@ -79,44 +79,42 @@ function DreamTeamCard({ member, isFlipped, onFlip }) {
           ...(!isFlipped ? tiltStyle : {})
         }}
       >
-        {/* FRONT - NBA Trading Card */}
+        {/* FRONT - NBA Trading Card Image */}
         <div
-          className="absolute inset-0 rounded-2xl overflow-hidden"
+          className="absolute inset-0 rounded-2xl overflow-hidden group"
           style={{ 
             backfaceVisibility: 'hidden', 
             WebkitBackfaceVisibility: 'hidden',
             boxShadow: `0 0 50px ${member.glowColor}, 0 0 80px rgba(87,61,255,0.3)`
           }}
         >
-          {/* Holographic foil border */}
-          <div
-            className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${member.borderColor} p-[3px]`}
-            style={{
-              boxShadow: `0 0 50px ${member.glowColor}, 0 0 80px rgba(87,61,255,0.3), inset 0 0 30px rgba(255,255,255,0.15)`
-            }}
-          >
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950/60 via-violet-950/40 to-blue-950/60" />
-          </div>
-
-          {/* Card image */}
+          {/* Card image as main background */}
           <img
             src={member.frontImage}
             alt={member.name}
             className="absolute inset-0 w-full h-full object-cover rounded-2xl"
             loading="lazy"
+            style={{ zIndex: 1 }}
+          />
+
+          {/* Holographic foil border overlay */}
+          <div
+            className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${member.borderColor} opacity-0 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none`}
+            style={{ zIndex: 2 }}
           />
 
           {/* Holographic shimmer overlay */}
           <div
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"
+            className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-300 pointer-events-none rounded-2xl"
             style={{
+              zIndex: 3,
               background: `
                 linear-gradient(
                   105deg,
                   transparent 40%,
-                  rgba(255, 255, 255, 0.2) 45%,
-                  rgba(255, 255, 255, 0.3) 50%,
-                  rgba(255, 255, 255, 0.2) 55%,
+                  rgba(255, 255, 255, 0.3) 45%,
+                  rgba(255, 255, 255, 0.5) 50%,
+                  rgba(255, 255, 255, 0.3) 55%,
                   transparent 60%
                 )
               `,
@@ -125,42 +123,17 @@ function DreamTeamCard({ member, isFlipped, onFlip }) {
             }}
           />
 
-          {/* Foil highlights */}
-          <div
-            className="absolute inset-0 opacity-40 pointer-events-none rounded-2xl overflow-hidden"
-            style={{
-              background: `
-                linear-gradient(
-                  135deg,
-                  transparent 0%,
-                  rgba(244, 114, 182, 0.1) 25%,
-                  rgba(6, 182, 212, 0.15) 50%,
-                  rgba(168, 85, 247, 0.1) 75%,
-                  transparent 100%
-                )
-              `
-            }}
-          />
-
           {/* Bound badge */}
-          <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/20 border border-green-400/50 backdrop-blur-md shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+          <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/20 border border-green-400/50 backdrop-blur-md shadow-[0_0_15px_rgba(34,197,94,0.3)]" style={{ zIndex: 4 }}>
             <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
             <span className="text-[10px] text-green-300 font-bold uppercase tracking-wider">Bound</span>
           </div>
 
-          {/* Player number */}
-          <div className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm px-2.5 py-1 rounded-lg border border-indigo-400/30">
-            <span className="text-lg font-black text-white">{member.number}</span>
+          {/* Tap hint */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-xs text-white flex items-center gap-2 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full" style={{ zIndex: 4 }}>
+            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse shadow-[0_0_8px_rgba(87,61,255,0.8)]" />
+            Tap to flip
           </div>
-
-          {/* Nebula glow */}
-          <div 
-            className="absolute inset-0 pointer-events-none rounded-2xl"
-            style={{
-              background: `radial-gradient(circle at 50% 80%, ${member.glowColor} 0%, transparent 50%)`,
-              opacity: 0.4
-            }}
-          />
         </div>
 
         {/* BACK - Binding Details */}
