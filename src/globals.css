@@ -1256,6 +1256,56 @@ input::placeholder, textarea::placeholder {
   cursor: not-allowed;
 }
 
+/* DREAM TEAM MODULE — ROYAL BLUE OMEGA MODE */
+.dreamteam-shell {
+  position: relative;
+  backdrop-filter: blur(12px);
+}
+
+.dreamteam-title {
+  color: #ffffff;
+  text-shadow: 0 0 22px rgba(80, 120, 255, 0.95);
+  letter-spacing: -0.5px;
+}
+
+.dreamteam-subtitle {
+  color: #9bb5ff;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.dreamteam-description {
+  color: #a5c0ff;
+  font-size: 1.1rem;
+}
+
+.dreamteam-button {
+  padding: 16px 52px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #4f5dff, #008cff);
+  box-shadow: 0 0 28px rgba(0, 102, 255, 0.7);
+  transition: all 0.25s ease;
+  color: white;
+}
+
+.dreamteam-button:hover {
+  background: linear-gradient(90deg, #6c7cff, #0ea4ff);
+  box-shadow: 0 0 36px rgba(0, 136, 255, 0.9);
+  transform: translateY(-2px);
+}
+
+.dreamteam-ticker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  color: #8fb3ff;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
 .dino-conv-list {
   position: absolute;
   top: 60px;
