@@ -1,7 +1,7 @@
-// GLYPHLOCK DREAM TEAM HARD-LOCK
-// This file is the canonical data source for the 5 holographic Dream Team flip cards.
+// DREAM TEAM SECTION - DO NOT MODIFY, DELETE, OR RENDER ON HOME PAGE
+// This is the canonical data source for the 5 holographic Dream Team flip cards.
+// These cards are ONLY rendered on pages/DreamTeam.jsx
 // Do not replace this with archetype data, placeholder data, or alternative structures.
-// Any change to this file MUST be explicitly requested by Carlo Rene Earl.
 
 export const dreamTeam = [
   {

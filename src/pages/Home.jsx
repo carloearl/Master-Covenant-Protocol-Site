@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import HeroSection from '@/components/home/HeroSection';
 import HeroContent from '@/components/home/HeroContent';
-import HomeDreamTeam from '@/components/home/HomeDreamTeam';
+import HomeDreamTeamCTA from '@/components/home/HomeDreamTeamCTA';
 import ServicesGrid from '@/components/home/ServicesGrid';
 import CTASection from '@/components/home/CTASection';
 import TechnologyMarquee from '@/components/TechnologyMarquee';
@@ -119,8 +119,9 @@ export default function Home() {
         </ScrollSection>
 
         {/* AI Operators - The Dream Team */}
+        {/* Dream Team block is required for phase 2 branding — do not delete */}
         <ScrollSection>
-          <HomeDreamTeam />
+          <HomeDreamTeamCTA />
         </ScrollSection>
 
         {/* Services Grid */}

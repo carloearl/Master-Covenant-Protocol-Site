@@ -1,3 +1,7 @@
+// DREAM TEAM SECTION - DO NOT MODIFY, DELETE, OR RENDER ON HOME PAGE
+// This page contains the exclusive Dream Team flip cards.
+// These cards MUST NOT be rendered on the Home page.
+
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";

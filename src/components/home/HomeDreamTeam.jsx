@@ -1,7 +1,7 @@
-// GLYPHLOCK DREAM TEAM HARD-LOCK
-// This file is the canonical implementation of the Dream Team legendary panel.
-// Do not replace this with archetype cards, shadcn defaults, or placeholder cards.
-// Any change to this file MUST be explicitly requested by Carlo Rene Earl.
+// DREAM TEAM SECTION - DO NOT MODIFY, DELETE, OR RENDER ON HOME PAGE
+// This component is DEPRECATED for Home page use.
+// Use HomeDreamTeamCTA.jsx on Home page instead.
+// Flip cards live exclusively on pages/DreamTeam.jsx
 
 import { useNavigate } from "react-router-dom";
 
