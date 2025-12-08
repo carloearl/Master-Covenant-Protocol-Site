@@ -92,7 +92,7 @@ function DreamTeamCard({ member, isFlipped, onFlip }) {
           <img
             src={member.frontImage}
             alt={member.name}
-            className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+            className="absolute inset-0 w-full h-full object-contain rounded-2xl"
             loading="lazy"
             style={{ zIndex: 1 }}
           />
