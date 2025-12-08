@@ -40,7 +40,10 @@ export default function AboutCarloPage() {
 
             <p className="max-w-3xl text-base sm:text-lg md:text-xl text-violet-100/90 leading-relaxed">
               Creator and architect of GlyphLock.  
-              Carlo turns pressure into systems and pain into design.  
+              Carlo does not invent under comfort.  
+              He forges under pressure.  
+              He takes the weight life throws at him and turns it into structure.  
+              He takes pain and turns it into design.  
               This page is not a resume.  
               It is the Covenant behind the platform.
             </p>
@@ -69,25 +72,29 @@ export default function AboutCarloPage() {
               Carlo did not wake up one morning and decide to become a founder.  
               The world pushed him there.  
               He watched identity become a costume and truth become a product.  
-              He felt what it was like to be copied ignored underestimated and written off while others tried to profit from the work he bled for.
+              He felt what it was like to be copied ignored underestimated and stripped of credit for the work he broke himself to create.  
+              It began when identity became something anyone could steal with a click.  
+              It began when truth became a product that could be replaced and rewritten by anyone with the nerve to lie louder.
             </p>
 
             <p className="text-lg sm:text-xl text-violet-100/95 leading-relaxed mb-6">
-              In Arizona a simple conversation about camouflage and patterns cracked something open.  
+              In Arizona a simple conversation about camouflage cracked everything open.  
               Collin talked about how patterns hide people.  
-              Carlo asked the question that changed everything.  
+              Carlo looked past the camouflage and into its soul and asked the question that changed the trajectory of his life.  
               What if the pattern is not hiding you.  
               What if the pattern itself is the intelligence.  
-              That line stayed.  
-              It refused to leave.  
-              It evolved into the idea that images could carry proof and that glyphs could carry living contracts.
+              That question refused to die.  
+              It evolved into the idea that images are not decoration and symbols are not art.  
+              They are vessels for proof.  
+              For action.  
+              For contracts that cannot be faked.
             </p>
 
             <p className="text-lg sm:text-xl text-violet-100/95 leading-relaxed">
-              The journey from that moment to GlyphLock was not smooth.  
-              It passed through broken trust late bills lost time bad collaborators and heavy days with a family that still needed stability.  
-              Each setback added weight but also added clarity.  
-              Either the idea died or Carlo became the one who would not let it.
+              The path from that moment to GlyphLock was carved through broken trust unpaid bills slow partners empty promises and a family that needed stability even when life was anything but stable.  
+              The idea should have died many times.  
+              But Carlo refused to let it.  
+              So the idea lived because he carried it when no one else would.
             </p>
           </div>
         </section>
@@ -111,23 +118,30 @@ export default function AboutCarloPage() {
 
           <div className="relative z-10">
             <p className="text-lg sm:text-xl text-violet-100/95 leading-relaxed mb-6 text-center">
-              I did not build GlyphLock to impress investors or win attention.  
-              I built it because something sacred was being left undefended.  
-              I watched lies travel faster than facts and saw how easy it became to steal a voice a face a creation or a life and erase the evidence after.
+              GlyphLock was never built to impress investors.  
+              It was built because something sacred was being left undefended.  
+              Carlo watched lies outrun facts.  
+              He watched identity become a costume anyone could steal.  
+              He watched creations get ripped from their creators with no consequence.  
+              He watched evidence get erased like it never existed.  
+              He saw the world sliding into a place where nothing could be trusted unless someone built a system that made truth undeniable.
             </p>
 
             <p className="text-lg sm:text-xl text-violet-100/95 leading-relaxed mb-6 text-center">
-              Every loss I took every partner who vanished every promise that fell apart became material for the foundation.  
-              I carried those moments into the architecture.  
-              The Master Covenant the way we bind proof to action the way we hold identity and intent to account none of that is theory.  
-              It is a ledger written in experience.
+              Every loss every betrayal every promise that collapsed became material for the foundation.  
+              Carlo brought all of it into the Master Covenant.  
+              The way we bind proof to action.  
+              The way we hold identity accountable.  
+              The way glyphs carry intent.  
+              None of this is theory.  
+              It is lived experience translated into architecture.
             </p>
 
             <p className="text-lg sm:text-xl text-violet-100/95 leading-relaxed text-center">
-              GlyphLock is my answer to a world that started treating truth as optional.  
-              It is a promise to my children to my wife to my family and to every creator and builder who has ever been copied stolen or silenced.  
+              GlyphLock is his answer to a world that treats truth as optional.  
+              It is his promise to his children to his wife to his family and to every creator and builder who has ever been copied stolen erased or silenced.  
               This is not here so people can simply stay afloat.  
-              This is here so they can move from fear into something stronger.
+              It is here so they can move from fear into something stronger.
             </p>
           </div>
         </section>
@@ -151,24 +165,24 @@ export default function AboutCarloPage() {
 
           <div className="relative z-10">
             <p className="text-lg sm:text-xl text-violet-100/95 leading-relaxed mb-6">
-              Carlo is not just the person who named the company.  
-              He is the one who keeps the line straight between vision and reality.  
-              He designs the frameworks that decide how truth is stored how actions are bound and how glyphs carry more than simple links.  
-              He holds the tension between art and system between human story and machine logic.
+              Inside the company Carlo is not just the founder.  
+              He is the keeper of the line between vision and reality.  
+              He designs the logic that holds truth in place.  
+              He shapes the frameworks that anchor identity intent and verification.  
+              He carries the tension between art and system between story and logic between what is felt and what is provable.
             </p>
 
             <p className="text-lg sm:text-xl text-violet-100/95 leading-relaxed mb-6">
-              His background moves through music design security and hard life lessons.  
-              That mix is why GlyphLock feels less like a product and more like a living organism.  
-              It is structured but emotional technical but human exact but still creative.  
-              Carlo is the reason those extremes do not cancel out.  
-              They converge.
+              His life does not come from textbooks.  
+              It comes from music design struggle security and hard earned lessons that left scars and wisdom in equal measure.  
+              That is why GlyphLock feels alive instead of manufactured.  
+              It breathes because he does.
             </p>
 
             <p className="text-lg sm:text-xl text-violet-100/95 leading-relaxed">
-              Every decision runs through one simple question.  
+              Every decision passes through one question.  
               Does this protect the people who cannot afford another betrayal.  
-              If the answer is no the feature does not ship.
+              If the answer is no it never ships.
             </p>
           </div>
         </section>
