@@ -102,7 +102,7 @@ export default function Home() {
         <p>Enterprise-grade security solutions including quantum-resistant encryption, AI-powered threat detection, visual cryptography, blockchain security, and comprehensive security operations.</p>
       </div>
 
-      <div className="w-full relative" style={{ background: 'transparent' }}>
+      <div className="w-full relative" style={{ background: '#000000', pointerEvents: 'auto' }}>
         {/* Hero Video */}
         <ScrollSection>
           <HeroSection />

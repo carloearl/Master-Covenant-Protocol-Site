@@ -92,13 +92,15 @@ export default function Layout({ children, currentPageName }) {
       </div>
 
       {/* Main content */}
-      <main className="flex-1 relative pt-4" style={{ background: 'transparent', zIndex: 10 }}>
+      <main className="flex-1 relative pt-4" style={{ background: '#000000', zIndex: 10, pointerEvents: 'auto' }}>
         {children}
       </main>
 
       {/* GlyphBot Jr - High priority */}
-      <div style={{ position: 'fixed', bottom: 0, right: 0, zIndex: 9000 }}>
-        <GlyphBotJr />
+      <div style={{ position: 'fixed', bottom: 0, right: 0, zIndex: 9000, pointerEvents: 'none' }}>
+        <div style={{ pointerEvents: 'auto' }}>
+          <GlyphBotJr />
+        </div>
       </div>
 
         {/* Footer */}

@@ -100,9 +100,8 @@ export default function Qr() {
         keywords="QR code generator, secure QR codes, anti-quishing, steganography QR, QR security, hot zones QR, bulk QR generation, GlyphLock QR Studio, dynamic QR codes"
         url="/qr"
       />
-      <div className="min-h-screen text-white relative" style={{ background: 'transparent' }}>
-
-        <div className="relative z-10 py-8">
+      <div className="min-h-screen text-white relative" style={{ background: '#000000', pointerEvents: 'auto' }}>
+        <div className="relative z-10 py-8" style={{ pointerEvents: 'auto' }}>
           <QrStudio initialTab={initialTab} />
         </div>
       </div>

@@ -322,18 +322,46 @@ p {
 html, body {
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
+  pointer-events: auto !important;
 }
 
-/* Fix touch event normalization */
-button, a, input, textarea, select, [role="button"] {
+/* CRITICAL: Restore pointer events on all interactive elements */
+button, a, input, textarea, select, [role="button"], [type="button"], [type="submit"], label {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
+/* Ensure all input types are interactive */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+input[type="file"],
+textarea,
+select {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
 }
 
 /* Ensure scroll containers don't trap events */
 .scroll-container, [class*="scroll"], [class*="overflow"] {
   touch-action: pan-y pan-x;
   overscroll-behavior: contain;
+}
+
+/* Fix for any accidentally disabled parent containers */
+main, section, article, div, form {
+  pointer-events: auto !important;
+}
+
+/* Prevent canvas overlays from blocking interaction */
+canvas {
+  pointer-events: none !important;
 }
 
 /* Prevent Text Overflow */
