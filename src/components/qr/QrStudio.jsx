@@ -577,9 +577,9 @@ export default function QrStudio({ initialTab = 'create' }) {
             ))}
           </TabsList>
 
-          {/* Mobile Tabs */}
-          <div className="lg:hidden mb-6 -mx-4 px-4">
-            <div className="flex gap-1 overflow-x-auto pb-2 scrollbar-hide bg-black/60 backdrop-blur-sm border border-cyan-500/20 p-1">
+          {/* Mobile Tabs - Optimized Scroll */}
+          <div className="lg:hidden mb-6 -mx-4 px-4 relative">
+            <div className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide bg-black/60 backdrop-blur-sm border border-cyan-500/20 p-2 rounded-lg">
               {[
                 { value: 'create', icon: Wand2, label: 'Create', num: '01' },
                 { value: 'customize', icon: Layers, label: 'Customize', num: '02' },
@@ -594,21 +594,23 @@ export default function QrStudio({ initialTab = 'create' }) {
                   <button
                     key={tab.value}
                     onClick={() => setActiveTab(tab.value)}
-                    className={`flex flex-col items-center justify-center px-3 py-2 whitespace-nowrap text-xs font-mono uppercase tracking-wider transition-all min-h-[48px] min-w-[72px] ${
+                    className={`flex flex-col items-center justify-center px-4 py-2 whitespace-nowrap text-xs font-mono uppercase tracking-wider transition-all min-h-[52px] min-w-[80px] rounded-lg snap-center flex-shrink-0 ${
                       activeTab === tab.value
-                        ? 'bg-gradient-to-b from-cyan-500/30 to-transparent text-cyan-300 border-t-2 border-t-cyan-400 shadow-lg'
-                        : 'text-gray-500 hover:text-gray-300'
+                        ? 'bg-gradient-to-b from-cyan-500/30 to-transparent text-cyan-300 border-2 border-cyan-400 shadow-lg'
+                        : 'text-gray-500 hover:text-gray-300 border-2 border-transparent'
                     }`}
                   >
-                    <div className="flex items-center gap-1 mb-0.5">
-                      <Icon className="w-3 h-3" />
+                    <div className="flex items-center gap-1 mb-1">
+                      <Icon className="w-4 h-4" />
                       <span className="text-[10px] opacity-60">{tab.num}</span>
                     </div>
-                    <span className="text-[9px]">{tab.label}</span>
+                    <span className="text-[10px]">{tab.label}</span>
                   </button>
                 );
               })}
             </div>
+            {/* Scroll hint */}
+            <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black via-black/80 to-transparent pointer-events-none" />
           </div>
 
           {/* ========== 01_CREATE TAB ========== */}
@@ -716,7 +718,7 @@ export default function QrStudio({ initialTab = 'create' }) {
                       <QRTypeForm qrType={qrType} qrData={qrData} setQrData={setQrData} />
 
                       {/* Size */}
-                      <div>
+                      <div className="touch-target-safe">
                         <Label className="text-white">Size: {size}px</Label>
                         <Slider
                           value={[size]}
@@ -724,7 +726,7 @@ export default function QrStudio({ initialTab = 'create' }) {
                           min={256}
                           max={1024}
                           step={64}
-                          className="mt-2"
+                          className="mt-2 min-h-[44px] flex items-center"
                         />
                       </div>
 
@@ -732,7 +734,7 @@ export default function QrStudio({ initialTab = 'create' }) {
                       <div>
                         <Label className="text-white">Error Correction</Label>
                         <Select value={errorCorrectionLevel} onValueChange={setErrorCorrectionLevel}>
-                          <SelectTrigger className="bg-gray-800 border-gray-700 text-white mt-2">
+                          <SelectTrigger className="bg-gray-800 border-gray-700 text-white mt-2 min-h-[48px]">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent className="bg-gray-800 border-gray-700">
@@ -748,7 +750,7 @@ export default function QrStudio({ initialTab = 'create' }) {
                       <Button
                         onClick={generateQR}
                         disabled={isScanning}
-                        className={`${GlyphButton.primary} w-full ${GlyphShadows.neonCyan}`}
+                        className={`${GlyphButton.primary} w-full ${GlyphShadows.neonCyan} min-h-[48px]`}
                       >
                         {isScanning ? (
                           <>

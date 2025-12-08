@@ -9,6 +9,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GlyphLoader from "@/components/GlyphLoader";
 import MobileScalingSystem from "@/components/mobile/mobile-utils";
+import MobileTouchOptimizer from "@/components/mobile/MobileTouchOptimizer";
 
 const { GlyphBotJr } = UI;
 
@@ -65,6 +66,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen text-white flex flex-col relative overflow-x-hidden selection:bg-[#00E4FF] selection:text-black" style={{ background: 'transparent' }}>
+      <MobileTouchOptimizer />
       <SecurityMonitor />
 
       {/* SITE-WIDE COSMIC SYSTEM - Lowest layer */}
