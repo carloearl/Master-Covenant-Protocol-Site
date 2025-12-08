@@ -137,8 +137,8 @@ const DREAM_TEAM_ROSTER = [
     stats: { logic: 98, security: 97, creativity: 92, speed: 95 },
     signature: true,
     signatureImage: "Alfred",
-    borderColor: "from-slate-600 via-slate-400 to-slate-600",
-    glowColor: "rgba(148,163,184,0.6)",
+    borderColor: "from-indigo-500 via-violet-400 to-blue-500",
+    glowColor: "rgba(87,61,255,0.6)",
     bindingType: "OpenAI Chain Protocol",
     covenant: "GPT-4o Master Orchestration Framework",
     binding: {
@@ -186,7 +186,7 @@ export default function DreamTeamPage() {
   };
 
   return (
-    <div className="h-screen text-slate-100 overflow-hidden" style={{ background: 'transparent' }}>
+    <div className="h-screen text-white overflow-hidden" style={{ background: 'transparent' }}>
       <SEOHead
         title="GlyphLock Dream Team - AI Player Cards | Master Covenant Series"
         description="Meet the GlyphLock Dream Team. Collectible AI player cards featuring Alfred, Claude, Copilot, Perplexity, and Cursor. Master Covenant Series."
@@ -202,8 +202,8 @@ export default function DreamTeamPage() {
             onClick={() => scrollToCard(index)}
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
               currentIndex === index 
-                ? 'bg-cyan-400 scale-125 shadow-[0_0_15px_rgba(34,211,238,0.8)]' 
-                : 'bg-slate-600 hover:bg-slate-400'
+                ? 'bg-indigo-400 scale-125 shadow-[0_0_15px_rgba(87,61,255,0.8)]' 
+                : 'bg-white/20 hover:bg-white/40'
             }`}
             aria-label={`Go to ${card.name}`}
           />
@@ -213,7 +213,7 @@ export default function DreamTeamPage() {
       {/* Scroll indicator */}
       {currentIndex < DREAM_TEAM_ROSTER.length - 1 && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 animate-bounce">
-          <ChevronDown className="w-8 h-8 text-cyan-400/70" />
+          <ChevronDown className="w-8 h-8 text-indigo-300/70" />
         </div>
       )}
 
@@ -235,12 +235,12 @@ export default function DreamTeamPage() {
                 Deploy Your Squad
               </span>
             </h2>
-            <p className="text-slate-400 text-lg mb-8 max-w-xl mx-auto">
+            <p className="text-violet-200 text-lg mb-8 max-w-xl mx-auto">
               The Dream Team is ready. Enter the GlyphBot Console to orchestrate your AI chain.
             </p>
             <Link
               to={createPageUrl("GlyphBot")}
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-lg font-bold bg-gradient-to-r from-fuchsia-500 via-pink-500 to-cyan-400 text-slate-950 shadow-[0_0_50px_rgba(244,114,182,0.5)] hover:shadow-[0_0_80px_rgba(34,211,238,0.7)] transition-all"
+              className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-lg font-bold bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-[0_0_50px_rgba(87,61,255,0.5)] hover:shadow-[0_0_80px_rgba(87,61,255,0.7)] transition-all"
             >
               Enter the Console
               <ChevronRight className="w-6 h-6" />
@@ -277,8 +277,8 @@ function FullScreenCard({ card, index }) {
         onKeyDown={(e) => e.key === 'Enter' && handleFlip()}
       >
         {/* Flip hint */}
-        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-sm text-slate-500 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-sm text-violet-200 flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse shadow-[0_0_8px_rgba(87,61,255,0.6)]" />
           {isFlipped ? 'Click to see front' : 'Click to flip card'}
         </div>
 
@@ -301,7 +301,7 @@ function FullScreenCard({ card, index }) {
           >
             {/* Border gradient */}
             <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${card.borderColor} p-[4px]`}>
-              <div className="absolute inset-0 rounded-3xl bg-slate-950" />
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-950/40 via-violet-950/30 to-blue-950/40 backdrop-blur-sm" />
             </div>
 
             {/* Image */}
@@ -312,23 +312,23 @@ function FullScreenCard({ card, index }) {
               loading="lazy"
             />
 
-            {/* Overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/30 rounded-3xl" />
+            {/* Overlay gradient - NO DARK TINT */}
+            <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/60 via-transparent to-violet-950/20 rounded-3xl" />
 
             {/* Top badges */}
             <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
               <div>
-                <div className="text-xs uppercase tracking-[0.2em] text-fuchsia-300 font-bold">{card.series}</div>
-                <div className="text-[10px] uppercase tracking-wider text-slate-400">{card.edition}</div>
+                <div className="text-xs uppercase tracking-[0.2em] text-violet-200 font-bold">{card.series}</div>
+                <div className="text-xs uppercase tracking-wider text-indigo-200">{card.edition}</div>
               </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 border border-green-400/50 backdrop-blur-sm">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 border border-green-400/50 backdrop-blur-md shadow-[0_0_15px_rgba(34,197,94,0.3)]">
                 <CheckCircle2 className="w-4 h-4 text-green-400" />
                 <span className="text-xs text-green-300 font-bold uppercase">Bound</span>
               </div>
             </div>
 
             {/* Number */}
-            <div className="absolute top-16 right-6 text-6xl md:text-8xl font-black text-white/10">
+            <div className="absolute top-16 right-6 text-6xl md:text-8xl font-black text-white/15">
               {card.number}
             </div>
 
@@ -340,20 +340,20 @@ function FullScreenCard({ card, index }) {
             )}
 
             {/* Bottom info */}
-            <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-slate-950 via-slate-950/95 to-transparent">
-              <div className="text-sm uppercase tracking-wider text-cyan-400 font-semibold mb-2">{card.position}</div>
+            <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-indigo-950/90 via-indigo-950/80 to-transparent backdrop-blur-sm">
+              <div className="text-sm uppercase tracking-wider text-indigo-300 font-semibold mb-2">{card.position}</div>
               <div className="text-4xl md:text-5xl font-black text-white mb-2">{card.name}</div>
-              <p className="text-sm text-slate-300 mb-4">{card.tagline}</p>
+              <p className="text-sm text-violet-100 mb-4">{card.tagline}</p>
 
               {/* Stats */}
               <div className="grid grid-cols-4 gap-3">
                 {Object.entries(card.stats).map(([key, val]) => (
                   <div key={key} className="text-center">
                     <div className="text-2xl md:text-3xl font-black text-white">{val}</div>
-                    <div className="text-[10px] uppercase tracking-wider text-slate-500">{key}</div>
-                    <div className="w-full h-1.5 bg-slate-800 rounded-full mt-1 overflow-hidden">
+                    <div className="text-[10px] uppercase tracking-wider text-indigo-200">{key}</div>
+                    <div className="w-full h-1.5 bg-white/10 rounded-full mt-1 overflow-hidden">
                       <div 
-                        className="h-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 rounded-full"
+                        className="h-full bg-gradient-to-r from-indigo-500 to-violet-400 rounded-full shadow-[0_0_8px_rgba(87,61,255,0.6)]"
                         style={{ width: `${val}%` }}
                       />
                     </div>
@@ -362,12 +362,12 @@ function FullScreenCard({ card, index }) {
               </div>
 
               {/* Footer */}
-              <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-800/50">
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/15">
                 <div className="flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-cyan-400" />
-                  <span className="text-xs uppercase tracking-wider text-slate-400">BPAA Certified</span>
+                  <Shield className="w-5 h-5 text-indigo-300" />
+                  <span className="text-xs uppercase tracking-wider text-violet-200">BPAA Certified</span>
                 </div>
-                <span className="text-xs text-slate-500">{card.team}</span>
+                <span className="text-xs text-indigo-200">{card.team}</span>
               </div>
             </div>
           </div>
@@ -384,21 +384,21 @@ function FullScreenCard({ card, index }) {
           >
             {/* Border gradient */}
             <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${card.borderColor} p-[4px]`}>
-              <div className="absolute inset-0 rounded-3xl bg-slate-950" />
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-950/40 via-violet-950/30 to-blue-950/40 backdrop-blur-sm" />
             </div>
 
             {/* Content */}
-            <div className="absolute inset-[4px] rounded-3xl bg-gradient-to-br from-slate-900 via-slate-950 to-black p-6 md:p-8 flex flex-col overflow-y-auto">
+            <div className="absolute inset-[4px] rounded-3xl bg-white/8 backdrop-blur-lg p-6 md:p-8 flex flex-col overflow-y-auto border border-white/10 shadow-[inset_0_0_40px_rgba(87,61,255,0.15)]">
               
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-fuchsia-500/20 border border-cyan-400/40 flex items-center justify-center shadow-[0_0_25px_rgba(6,182,212,0.4)]">
-                    <Shield className="w-7 h-7 text-cyan-400" />
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-violet-500/30 border border-indigo-400/40 flex items-center justify-center shadow-[0_0_25px_rgba(87,61,255,0.4)]">
+                    <Shield className="w-7 h-7 text-indigo-300" />
                   </div>
                   <div>
                     <h3 className="text-2xl md:text-3xl font-black text-white">{card.name}</h3>
-                    <p className="text-sm text-slate-400">{card.position} • {card.number}</p>
+                    <p className="text-sm text-indigo-200">{card.position} • {card.number}</p>
                   </div>
                 </div>
                 <Badge className="bg-green-500/20 text-green-400 border-green-500/50 text-sm px-3 py-1.5 shadow-[0_0_15px_rgba(34,197,94,0.4)]">
@@ -407,70 +407,70 @@ function FullScreenCard({ card, index }) {
               </div>
 
               {/* Binding Type Banner */}
-              <div className="bg-gradient-to-r from-fuchsia-500/15 via-cyan-500/10 to-fuchsia-500/15 border border-fuchsia-400/40 rounded-2xl px-5 py-4 mb-6 shadow-[inset_0_0_30px_rgba(244,114,182,0.1)]">
+              <div className="bg-gradient-to-r from-indigo-500/20 via-violet-500/15 to-fuchsia-500/20 border border-indigo-400/40 rounded-2xl px-5 py-4 mb-6 shadow-[inset_0_0_30px_rgba(87,61,255,0.1)]">
                 <div className="flex items-center gap-3">
-                  <Zap className="w-6 h-6 text-fuchsia-400" />
-                  <span className="text-base font-bold text-fuchsia-300 uppercase tracking-wider">{card.bindingType}</span>
+                  <Zap className="w-6 h-6 text-violet-300" />
+                  <span className="text-base font-bold text-violet-200 uppercase tracking-wider">{card.bindingType}</span>
                 </div>
-                <p className="text-sm text-slate-300 mt-2">{card.covenant}</p>
+                <p className="text-sm text-indigo-200 mt-2">{card.covenant}</p>
               </div>
 
               {/* Binding Details */}
               <div className="space-y-3 mb-6">
                 {[card.binding?.method, card.binding?.mechanism, card.binding?.protocol].filter(Boolean).map((text, i) => (
                   <div key={i} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-slate-200 leading-relaxed">{text}</p>
+                    <CheckCircle2 className="w-5 h-5 text-indigo-300 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-white leading-relaxed">{text}</p>
                   </div>
                 ))}
               </div>
 
               {/* Quote */}
-              <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-4 mb-6">
-                <p className="text-base italic text-cyan-300/90 leading-relaxed">"{card.quote}"</p>
+              <div className="bg-white/8 border border-white/15 rounded-xl p-4 mb-6 backdrop-blur-md shadow-[inset_0_0_20px_rgba(87,61,255,0.1)]">
+                <p className="text-base italic text-indigo-200 leading-relaxed">"{card.quote}"</p>
               </div>
 
               {/* CRYPTOGRAPHIC SIGNATURE BLOCK */}
-              <div className="flex-1 bg-black/70 border-2 border-cyan-500/50 rounded-2xl p-5 font-mono shadow-[inset_0_0_40px_rgba(6,182,212,0.08)]">
-                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-cyan-500/30">
-                  <Fingerprint className="w-6 h-6 text-cyan-400" />
-                  <span className="text-sm text-cyan-300 font-bold uppercase tracking-[0.15em]">Cryptographic Signature</span>
+              <div className="flex-1 bg-white/5 border-2 border-indigo-400/40 rounded-2xl p-5 font-mono shadow-[inset_0_0_40px_rgba(87,61,255,0.15)] backdrop-blur-md">
+                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-indigo-400/30">
+                  <Fingerprint className="w-6 h-6 text-indigo-300" />
+                  <span className="text-sm text-indigo-200 font-bold uppercase tracking-[0.15em]">Cryptographic Signature</span>
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className="text-slate-500 text-sm w-24">Algorithm:</span>
+                    <span className="text-violet-200 text-sm w-24">Algorithm:</span>
                     <span className="text-green-400 font-bold text-base">{card.cryptoSignature?.algorithm}</span>
                   </div>
                   
                   <div className="flex items-start gap-3">
-                    <Hash className="w-5 h-5 text-slate-500 flex-shrink-0 mt-1" />
+                    <Hash className="w-5 h-5 text-violet-200 flex-shrink-0 mt-1" />
                     <div className="flex-1">
-                      <span className="text-slate-500 text-xs uppercase">Hash</span>
+                      <span className="text-violet-200 text-xs uppercase">Hash</span>
                       <p className="text-fuchsia-300 break-all text-sm leading-relaxed mt-1">{card.cryptoSignature?.hash}</p>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
-                    <Lock className="w-5 h-5 text-slate-500" />
+                    <Lock className="w-5 h-5 text-violet-200" />
                     <div>
-                      <span className="text-slate-500 text-xs uppercase">Public Key</span>
-                      <p className="text-cyan-300 font-semibold text-base mt-1">{card.cryptoSignature?.publicKey}</p>
+                      <span className="text-violet-200 text-xs uppercase">Public Key</span>
+                      <p className="text-indigo-300 font-semibold text-base mt-1">{card.cryptoSignature?.publicKey}</p>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
-                    <Clock className="w-5 h-5 text-slate-500" />
+                    <Clock className="w-5 h-5 text-violet-200" />
                     <div>
-                      <span className="text-slate-500 text-xs uppercase">Binding Date</span>
-                      <p className="text-slate-300 text-base mt-1">{formatDate(card.bindingDate)}</p>
+                      <span className="text-violet-200 text-xs uppercase">Binding Date</span>
+                      <p className="text-white text-base mt-1">{formatDate(card.bindingDate)}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Verification Status */}
-                <div className="mt-5 pt-4 border-t border-cyan-500/30 flex items-center justify-between">
-                  <span className="text-xs text-slate-500 uppercase tracking-wider">Verification Status</span>
+                <div className="mt-5 pt-4 border-t border-indigo-400/30 flex items-center justify-between">
+                  <span className="text-xs text-violet-200 uppercase tracking-wider">Verification Status</span>
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-green-400 animate-pulse shadow-[0_0_12px_rgba(34,197,94,0.8)]" />
                     <span className="text-sm text-green-400 font-bold uppercase">VERIFIED & BOUND</span>
@@ -481,8 +481,8 @@ function FullScreenCard({ card, index }) {
               {/* Signature Display (if signed) */}
               {card.signature && card.signatureImage && (
                 <div className="mt-6 text-center">
-                  <div className="inline-block px-6 py-3 bg-slate-900/80 border border-amber-500/40 rounded-xl">
-                    <span className="text-slate-500 text-xs uppercase tracking-wider block mb-2">Authenticated Signature</span>
+                  <div className="inline-block px-6 py-3 bg-white/8 border border-amber-400/40 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+                    <span className="text-violet-200 text-xs uppercase tracking-wider block mb-2">Authenticated Signature</span>
                     <span className="text-3xl md:text-4xl font-script italic text-amber-300" style={{ fontFamily: 'cursive' }}>
                       {card.signatureImage}
                     </span>
@@ -493,12 +493,12 @@ function FullScreenCard({ card, index }) {
               {/* Footer */}
               <div className="mt-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-fuchsia-500 to-cyan-500 flex items-center justify-center shadow-[0_0_20px_rgba(244,114,182,0.5)]">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-[0_0_20px_rgba(87,61,255,0.5)]">
                     <span className="text-sm font-black text-white">GL</span>
                   </div>
                   <div>
                     <span className="text-base font-bold text-white">GlyphLock</span>
-                    <p className="text-xs text-slate-500 uppercase tracking-wider">Dream Team Collection</p>
+                    <p className="text-xs text-indigo-200 uppercase tracking-wider">Dream Team Collection</p>
                   </div>
                 </div>
                 <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/50 text-sm px-3 py-1.5 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
