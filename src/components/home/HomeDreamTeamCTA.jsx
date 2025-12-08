@@ -28,7 +28,7 @@ export default function HomeDreamTeamCTA() {
           </p>
         </div>
 
-        {/* Barrier image section with basketball court and logo */}
+        {/* Barrier image section with basketball court and tagline */}
         <div className="relative mb-10 h-48 md:h-64 rounded-3xl border border-cyan-400/40 shadow-[0_0_60px_rgba(56,189,248,0.4)] overflow-hidden">
           {/* Basketball court background */}
           <div className="absolute inset-0">
@@ -42,23 +42,29 @@ export default function HomeDreamTeamCTA() {
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-indigo-950/60 via-blue-950/40 to-violet-950/60 backdrop-blur-sm" />
 
-          {/* Centered pulsing logo */}
+          {/* Tagline text */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative animate-pulse">
-              <div className="absolute inset-0 blur-3xl opacity-70 bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 rounded-full" />
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/0584b5287_34226b41-415a-418e-821f-a17c8751522d.jpg"
-                alt="GlyphLock Dream Team"
-                className="relative w-32 h-32 md:w-40 md:h-40 object-contain drop-shadow-[0_0_40px_rgba(56,189,248,1)]"
-              />
-            </div>
+            <p className="text-2xl md:text-3xl lg:text-4xl font-black text-cyan-100 drop-shadow-[0_0_20px_rgba(56,189,248,0.8)] text-center px-4">
+              1 Coach. 5 Positions. $1B Vision.
+            </p>
           </div>
         </div>
 
         {/* Content card below */}
-        <div className="relative rounded-3xl border border-indigo-400/40 bg-gradient-to-b from-indigo-950/80 via-[#030518]/95 to-black/95 px-6 py-10 shadow-[0_0_40px_rgba(56,189,248,0.35)] backdrop-blur-xl">
+        <div className="relative rounded-3xl border border-indigo-400/40 bg-gradient-to-b from-indigo-950/80 via-[#030518]/95 to-black/95 px-6 py-10 shadow-[0_0_40px_rgba(56,189,248,0.35)] backdrop-blur-xl overflow-hidden">
+        {/* GL Logo background */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none">
+          <div className="relative animate-pulse">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/0584b5287_34226b41-415a-418e-821f-a17c8751522d.jpg"
+              alt=""
+              className="w-64 h-64 md:w-96 md:h-96 object-contain"
+            />
+          </div>
+        </div>
+
         {/* Badge */}
-        <div className="mb-6 flex justify-center">
+        <div className="mb-6 flex justify-center relative z-10">
           <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-gradient-to-r from-indigo-700/60 via-blue-700/70 to-violet-700/60 px-4 py-1 text-xs font-semibold tracking-[0.18em] uppercase text-cyan-100/90 shadow-[0_0_20px_rgba(56,189,248,0.5)]">
             <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,1)]" />
             <span>AI Operators · Roster Engine</span>
@@ -66,7 +72,7 @@ export default function HomeDreamTeamCTA() {
         </div>
 
         {/* Heading & subheading */}
-        <div className="text-center">
+        <div className="text-center relative z-10">
           <h3 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
             Behind GlyphLock
           </h3>
@@ -85,7 +91,7 @@ export default function HomeDreamTeamCTA() {
         </div>
 
         {/* Content grid */}
-        <div className="mt-8 grid gap-8 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start">
+        <div className="mt-8 grid gap-8 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start relative z-10">
           {/* Left: bullets / explanation */}
           <div className="space-y-4 text-sm md:text-[0.95rem] text-indigo-50/90">
             <div className="flex gap-3">
@@ -177,7 +183,7 @@ export default function HomeDreamTeamCTA() {
         </div>
 
         {/* CTA */}
-        <div className="mt-10 flex flex-col items-center gap-2">
+        <div className="mt-10 flex flex-col items-center gap-2 relative z-10">
           <Link
             to="/dreamteam"
             className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-500 via-blue-500 to-violet-500 px-8 py-3 text-sm md:text-base font-semibold text-white shadow-[0_0_25px_rgba(59,130,246,0.75)] transition-transform hover:scale-[1.03] hover:shadow-[0_0_35px_rgba(59,130,246,0.9)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
