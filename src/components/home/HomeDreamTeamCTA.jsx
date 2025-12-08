@@ -14,17 +14,38 @@ export default function HomeDreamTeamCTA() {
         <div className="absolute -bottom-32 right-10 h-56 w-56 rounded-full bg-sky-500/30 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-5xl rounded-3xl border border-indigo-400/40 bg-gradient-to-b from-indigo-950/80 via-[#030518]/95 to-black/95 px-6 py-10 shadow-[0_0_40px_rgba(56,189,248,0.35)] backdrop-blur-xl">
+      <div className="relative mx-auto max-w-5xl rounded-3xl border border-indigo-400/40 bg-gradient-to-b from-indigo-950/80 via-[#030518]/95 to-black/95 px-6 py-10 shadow-[0_0_40px_rgba(56,189,248,0.35)] backdrop-blur-xl overflow-hidden">
+        {/* Basketball court background overlay */}
+        <div className="absolute inset-0 opacity-[0.08] pointer-events-none">
+          <img 
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/24df5ae09_Whisk_700dafa6070c5a48ef74745234e723a3dr.jpg"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        {/* Gradient overlay to blend background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/90 via-[#030518]/85 to-black/90 pointer-events-none" />
+
         {/* Badge */}
-        <div className="mb-6 flex justify-center">
+        <div className="mb-6 flex justify-center relative z-10">
           <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-gradient-to-r from-indigo-700/60 via-blue-700/70 to-violet-700/60 px-4 py-1 text-xs font-semibold tracking-[0.18em] uppercase text-cyan-100/90 shadow-[0_0_20px_rgba(56,189,248,0.5)]">
             <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,1)]" />
             <span>AI Operators · Roster Engine</span>
           </div>
         </div>
 
+        {/* Logo icon */}
+        <div className="flex justify-center mb-6 relative z-10">
+          <img 
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/798b74a4a_Whisk_bd85583b947dcac83fc479363a774286dr.jpg"
+            alt="GlyphLock Dream Team"
+            className="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]"
+          />
+        </div>
+
         {/* Heading & subheading */}
-        <div className="text-center">
+        <div className="text-center relative z-10">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
             The{" "}
             <span className="bg-gradient-to-r from-sky-400 via-blue-400 to-violet-400 bg-clip-text text-transparent">
@@ -47,7 +68,7 @@ export default function HomeDreamTeamCTA() {
         </div>
 
         {/* Content grid */}
-        <div className="mt-8 grid gap-8 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start">
+        <div className="mt-8 grid gap-8 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start relative z-10">
           {/* Left: bullets / explanation */}
           <div className="space-y-4 text-sm md:text-[0.95rem] text-indigo-50/90">
             <div className="flex gap-3">
@@ -139,7 +160,7 @@ export default function HomeDreamTeamCTA() {
         </div>
 
         {/* CTA */}
-        <div className="mt-10 flex flex-col items-center gap-2">
+        <div className="mt-10 flex flex-col items-center gap-2 relative z-10">
           <Link
             to="/dreamteam"
             className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-500 via-blue-500 to-violet-500 px-8 py-3 text-sm md:text-base font-semibold text-white shadow-[0_0_25px_rgba(59,130,246,0.75)] transition-transform hover:scale-[1.03] hover:shadow-[0_0_35px_rgba(59,130,246,0.9)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
