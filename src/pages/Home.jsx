@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import HeroSection from '@/components/home/HeroSection';
 import HeroContent from '@/components/home/HeroContent';
-import ServicesGrid from '@/components/home/ServicesGrid';
+import DreamTeamHero from '@/components/home/DreamTeamHero';
 import HomeDreamTeam from '@/components/home/HomeDreamTeam';
+import ServicesGrid from '@/components/home/ServicesGrid';
 import CTASection from '@/components/home/CTASection';
 import TechnologyMarquee from '@/components/TechnologyMarquee';
 import CountdownPill from '@/components/marketing/CountdownPill';
@@ -118,7 +119,10 @@ export default function Home() {
           <HeroContent />
         </ScrollSection>
 
-        {/* AI Operators - HomeDreamTeam */}
+        {/* Protected Archetypes - Big Holographic Cards */}
+        <DreamTeamHero />
+
+        {/* AI Operators - The Dream Team Flip Cards */}
         <ScrollSection>
           <HomeDreamTeam />
         </ScrollSection>
