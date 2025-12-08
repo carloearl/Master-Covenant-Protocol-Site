@@ -7,7 +7,7 @@ import ServicesGrid from '@/components/home/ServicesGrid';
 import DreamTeamHero from '@/components/home/DreamTeamHero';
 import CTASection from '@/components/home/CTASection';
 import TechnologyMarquee from '@/components/TechnologyMarquee';
-import LaunchCountdownBar from '@/components/marketing/LaunchCountdownBar';
+import CountdownPill from '@/components/marketing/CountdownPill';
 import SEOHead from '@/components/SEOHead';
 
 const useScrollEffect = (sectionRef) => {
@@ -103,10 +103,8 @@ export default function Home() {
       </div>
 
       <div className="w-full relative" style={{ background: 'transparent' }}>
-        {/* Launch Countdown Bar */}
-        <div className="container-responsive pt-4">
-          <LaunchCountdownBar />
-        </div>
+        {/* Launch Countdown Pill */}
+        <CountdownPill />
 
         {/* Hero Video */}
         <ScrollSection>
