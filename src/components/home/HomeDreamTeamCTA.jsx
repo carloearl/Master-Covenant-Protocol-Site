@@ -41,6 +41,9 @@ export default function HomeDreamTeamCTA() {
         <Link to={createPageUrl("DreamTeam")}>
           <div className="relative group cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95 flex flex-col items-center">
             
+            {/* BLACK GLOW BEHIND BUTTON */}
+            <div className="absolute inset-0 -m-8 rounded-full bg-black/60 blur-3xl z-0"></div>
+            
             {/* DREAM GLOW */}
             <div className="dream-glow"></div>
             
@@ -53,7 +56,7 @@ export default function HomeDreamTeamCTA() {
             />
 
             {/* LABEL */}
-            <span className="block mt-6 text-white text-2xl font-black tracking-wider group-hover:text-blue-400 transition-colors drop-shadow-[0_4px_8px_rgba(0,0,0,1)]">
+            <span className="relative z-10 block mt-6 text-white text-2xl font-black tracking-wider group-hover:text-blue-400 transition-colors drop-shadow-[0_4px_8px_rgba(0,0,0,1)]">
               Tap the ball to meet the roster
             </span>
           </div>
