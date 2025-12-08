@@ -66,7 +66,7 @@ export default function DreamTeamFlipCard({ card }) {
         >
           {/* Holographic border gradient */}
           <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${card.borderColor} p-[2px]`}>
-            <div className="absolute inset-0 rounded-2xl bg-slate-950" />
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950/80 via-violet-950/60 to-blue-950/80" />
           </div>
 
           {/* Card image */}
@@ -78,7 +78,7 @@ export default function DreamTeamFlipCard({ card }) {
             onLoad={() => setImageLoaded(true)}
           />
           {!imageLoaded && (
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 animate-pulse rounded-2xl" />
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 to-violet-950 animate-pulse rounded-2xl" />
           )}
 
           {/* Holographic shimmer overlay */}
@@ -112,11 +112,11 @@ export default function DreamTeamFlipCard({ card }) {
         >
           {/* Border gradient */}
           <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${card.borderColor} p-[2px]`}>
-            <div className="absolute inset-0 rounded-2xl bg-slate-950" />
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950/80 via-violet-950/60 to-blue-950/80" />
           </div>
 
           {/* Content */}
-          <div className="absolute inset-[2px] rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-black p-3 md:p-4 flex flex-col overflow-hidden">
+          <div className="absolute inset-[2px] rounded-2xl bg-gradient-to-br from-indigo-950/50 via-violet-950/40 to-black p-3 md:p-4 flex flex-col overflow-hidden">
             
             {/* Header */}
             <div className="flex items-center justify-between mb-2">
@@ -126,7 +126,7 @@ export default function DreamTeamFlipCard({ card }) {
                 </div>
                 <div>
                   <h3 className="text-sm md:text-base font-bold text-white">{card.name}</h3>
-                  <p className="text-[10px] text-slate-400">{card.position} • {card.number}</p>
+                  <p className="text-[10px] text-indigo-200">{card.position} • {card.number}</p>
                 </div>
               </div>
               <Badge className="bg-green-500/20 text-green-400 border-green-500/50 text-[9px] px-1.5 py-0.5">
@@ -140,27 +140,27 @@ export default function DreamTeamFlipCard({ card }) {
                 <Zap className="w-3 h-3 text-fuchsia-400" />
                 <span className="text-[10px] font-bold text-fuchsia-300 uppercase tracking-wider">{card.bindingType}</span>
               </div>
-              <p className="text-[9px] text-slate-400 mt-0.5">{card.covenant}</p>
+              <p className="text-[9px] text-violet-200 mt-0.5">{card.covenant}</p>
             </div>
 
             {/* Binding Details */}
             <div className="space-y-1.5 mb-2 flex-shrink-0">
               <div className="flex items-start gap-1.5">
                 <CheckCircle2 className="w-3 h-3 text-cyan-400 flex-shrink-0 mt-0.5" />
-                <p className="text-[9px] md:text-[10px] text-slate-300 leading-tight">{card.binding?.method}</p>
+                <p className="text-[9px] md:text-[10px] text-violet-100 leading-tight">{card.binding?.method}</p>
               </div>
               <div className="flex items-start gap-1.5">
                 <CheckCircle2 className="w-3 h-3 text-cyan-400 flex-shrink-0 mt-0.5" />
-                <p className="text-[9px] md:text-[10px] text-slate-300 leading-tight">{card.binding?.mechanism}</p>
+                <p className="text-[9px] md:text-[10px] text-violet-100 leading-tight">{card.binding?.mechanism}</p>
               </div>
               <div className="flex items-start gap-1.5">
                 <CheckCircle2 className="w-3 h-3 text-cyan-400 flex-shrink-0 mt-0.5" />
-                <p className="text-[9px] md:text-[10px] text-slate-300 leading-tight">{card.binding?.protocol}</p>
+                <p className="text-[9px] md:text-[10px] text-violet-100 leading-tight">{card.binding?.protocol}</p>
               </div>
             </div>
 
             {/* Quote */}
-            <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-2 mb-2">
+            <div className="bg-white/5 border border-white/10 rounded-lg p-2 mb-2 backdrop-blur-sm">
               <p className="text-[8px] md:text-[9px] italic text-cyan-300/80 leading-tight">"{card.quote}"</p>
             </div>
 
@@ -175,26 +175,26 @@ export default function DreamTeamFlipCard({ card }) {
               
               <div className="space-y-1 text-[8px] md:text-[9px]">
                 <div className="flex items-center gap-1">
-                  <span className="text-slate-500">Algorithm:</span>
+                  <span className="text-indigo-300">Algorithm:</span>
                   <span className="text-green-400">{card.cryptoSignature?.algorithm}</span>
                 </div>
                 <div className="flex items-start gap-1">
-                  <Hash className="w-2.5 h-2.5 text-slate-500 flex-shrink-0 mt-0.5" />
+                  <Hash className="w-2.5 h-2.5 text-indigo-300 flex-shrink-0 mt-0.5" />
                   <span className="text-fuchsia-300 break-all leading-tight">{card.cryptoSignature?.hash}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Lock className="w-2.5 h-2.5 text-slate-500" />
+                  <Lock className="w-2.5 h-2.5 text-indigo-300" />
                   <span className="text-cyan-300">{card.cryptoSignature?.publicKey}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Clock className="w-2.5 h-2.5 text-slate-500" />
-                  <span className="text-slate-400">{formatDate(card.bindingDate)}</span>
+                  <Clock className="w-2.5 h-2.5 text-indigo-300" />
+                  <span className="text-violet-200">{formatDate(card.bindingDate)}</span>
                 </div>
               </div>
 
               {/* Verification status */}
               <div className="mt-2 pt-1.5 border-t border-cyan-500/20 flex items-center justify-between">
-                <span className="text-[8px] text-slate-500 uppercase">Status</span>
+                <span className="text-[8px] text-indigo-300 uppercase">Status</span>
                 <div className="flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
                   <span className="text-[8px] text-green-400 font-bold">VERIFIED & BOUND</span>
@@ -208,7 +208,7 @@ export default function DreamTeamFlipCard({ card }) {
                 <div className="w-4 h-4 rounded-full bg-gradient-to-br from-fuchsia-500 to-cyan-500 flex items-center justify-center">
                   <span className="text-[6px] font-black text-white">GL</span>
                 </div>
-                <span className="text-[8px] text-slate-500 uppercase tracking-wider">GlyphLock</span>
+                <span className="text-[8px] text-indigo-200 uppercase tracking-wider">GlyphLock</span>
               </div>
               <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/50 text-[7px] px-1 py-0.5">
                 BPAA CERTIFIED

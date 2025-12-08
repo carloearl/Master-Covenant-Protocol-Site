@@ -173,11 +173,11 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
         >
           {/* Border */}
           <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${card.borderColor} p-[3px]`}>
-            <div className="absolute inset-0 rounded-2xl bg-slate-950" />
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950/80 via-violet-950/60 to-blue-950/80" />
           </div>
 
           {/* Content */}
-          <div className="absolute inset-[3px] rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-black p-4 flex flex-col overflow-hidden">
+          <div className="absolute inset-[3px] rounded-2xl bg-gradient-to-br from-indigo-950/50 via-violet-950/40 to-black p-4 flex flex-col overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
@@ -186,7 +186,7 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-white">{card.name}</h3>
-                  <p className="text-[10px] text-slate-400">{card.position} • {card.number}</p>
+                  <p className="text-[10px] text-indigo-200">{card.position} • {card.number}</p>
                 </div>
               </div>
               <Badge className="bg-green-500/20 text-green-400 border-green-500/50 text-[9px] shadow-[0_0_10px_rgba(34,197,94,0.3)]">
@@ -200,7 +200,7 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
                 <Zap className="w-4 h-4 text-fuchsia-400" />
                 <span className="text-xs font-bold text-fuchsia-300 uppercase tracking-wider">{card.bindingType}</span>
               </div>
-              <p className="text-[10px] text-slate-400 mt-1">{card.covenant}</p>
+              <p className="text-[10px] text-violet-200 mt-1">{card.covenant}</p>
             </div>
 
             {/* Binding Details */}
@@ -208,13 +208,13 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
               {[card.binding?.method, card.binding?.mechanism, card.binding?.protocol].filter(Boolean).map((text, i) => (
                 <div key={i} className="flex items-start gap-2">
                   <CheckCircle2 className="w-3 h-3 text-cyan-400 flex-shrink-0 mt-0.5" />
-                  <p className="text-[10px] text-slate-300 leading-tight">{text}</p>
+                  <p className="text-[10px] text-violet-100 leading-tight">{text}</p>
                 </div>
               ))}
             </div>
 
             {/* Quote */}
-            <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-2.5 mb-3">
+            <div className="bg-white/5 border border-white/10 rounded-lg p-2.5 mb-3 backdrop-blur-sm">
               <p className="text-[9px] italic text-cyan-300/80 leading-relaxed">"{card.quote}"</p>
             </div>
 
@@ -227,25 +227,25 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
 
               <div className="space-y-1.5 text-[9px]">
                 <div className="flex items-center gap-2">
-                  <span className="text-slate-500">Algorithm:</span>
+                  <span className="text-indigo-300">Algorithm:</span>
                   <span className="text-green-400 font-semibold">{card.cryptoSignature?.algorithm}</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Hash className="w-3 h-3 text-slate-500 flex-shrink-0 mt-0.5" />
+                  <Hash className="w-3 h-3 text-indigo-300 flex-shrink-0 mt-0.5" />
                   <span className="text-fuchsia-300 break-all leading-tight">{card.cryptoSignature?.hash?.slice(0, 24)}...</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Lock className="w-3 h-3 text-slate-500" />
+                  <Lock className="w-3 h-3 text-indigo-300" />
                   <span className="text-cyan-300">{card.cryptoSignature?.publicKey}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock className="w-3 h-3 text-slate-500" />
-                  <span className="text-slate-400">{formatDate(card.bindingDate)}</span>
+                  <Clock className="w-3 h-3 text-indigo-300" />
+                  <span className="text-violet-200">{formatDate(card.bindingDate)}</span>
                 </div>
               </div>
 
               <div className="mt-2 pt-2 border-t border-cyan-500/30 flex items-center justify-between">
-                <span className="text-[8px] text-slate-500 uppercase">Status</span>
+                <span className="text-[8px] text-indigo-300 uppercase">Status</span>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
                   <span className="text-[9px] text-green-400 font-bold">VERIFIED & BOUND</span>
@@ -259,7 +259,7 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
                 <div className="w-5 h-5 rounded-full bg-gradient-to-br from-fuchsia-500 to-cyan-500 flex items-center justify-center shadow-[0_0_10px_rgba(244,114,182,0.5)]">
                   <span className="text-[7px] font-black text-white">GL</span>
                 </div>
-                <span className="text-[9px] text-slate-500 uppercase tracking-wider">GlyphLock</span>
+                <span className="text-[9px] text-indigo-200 uppercase tracking-wider">GlyphLock</span>
               </div>
               <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/50 text-[8px] shadow-[0_0_10px_rgba(245,158,11,0.3)]">
                 BPAA CERTIFIED

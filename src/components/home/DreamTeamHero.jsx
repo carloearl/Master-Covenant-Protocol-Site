@@ -144,7 +144,7 @@ const DREAM_TEAM = [
       verified: true
     },
     stats: { logic: 98, security: 97, creativity: 92, speed: 95 },
-    borderColor: 'from-slate-600 via-amber-400 to-slate-600',
+    borderColor: 'from-indigo-500 via-amber-400 to-violet-500',
     glowColor: 'rgba(251,191,36,0.6)'
   }
 ];
@@ -178,17 +178,17 @@ export default function DreamTeamHero() {
             </span>
           </h2>
           
-          <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed mb-6">
+          <p className="text-lg md:text-xl text-violet-200 max-w-2xl mx-auto leading-relaxed mb-6">
             Cryptographically bound AI systems operating under the Master Covenant
           </p>
 
           <div className="flex justify-center gap-6">
-            <div className="flex items-center gap-2 text-sm text-slate-400">
-              <Lock className="w-4 h-4 text-green-400" />
+            <div className="flex items-center gap-2 text-sm text-indigo-200">
+              <Lock className="w-4 h-4 text-green-400 drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
               <span>Verified Signatures</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-slate-400">
-              <Shield className="w-4 h-4 text-cyan-400" />
+            <div className="flex items-center gap-2 text-sm text-indigo-200">
+              <Shield className="w-4 h-4 text-indigo-400 drop-shadow-[0_0_8px_rgba(129,140,248,0.8)]" />
               <span>BPAA Certified</span>
             </div>
           </div>
