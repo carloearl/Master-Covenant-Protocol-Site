@@ -56,8 +56,7 @@ export default function HomeDreamTeamCTA() {
         </div>
 
         {/* Content card below */}
-        <div className="relative rounded-3xl border border-indigo-400/40 bg-gradient-to-b from-indigo-950/80 via-[#030518]/95 to-black/95 px-6 py-10 shadow-[0_0_40px_rgba(56,189,248,0.35)] backdrop-blur-xl"
-
+        <div className="relative rounded-3xl border border-indigo-400/40 bg-gradient-to-b from-indigo-950/80 via-[#030518]/95 to-black/95 px-6 py-10 shadow-[0_0_40px_rgba(56,189,248,0.35)] backdrop-blur-xl">
         {/* Badge */}
         <div className="mb-6 flex justify-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-gradient-to-r from-indigo-700/60 via-blue-700/70 to-violet-700/60 px-4 py-1 text-xs font-semibold tracking-[0.18em] uppercase text-cyan-100/90 shadow-[0_0_20px_rgba(56,189,248,0.5)]">
