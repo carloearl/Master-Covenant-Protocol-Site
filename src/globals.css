@@ -933,6 +933,43 @@ input::placeholder, textarea::placeholder {
   --blur: blur(14px);
 }
 
+/* DREAM TEAM GLOW ANIMATION */
+@keyframes gl-dream-glow {
+  0% {
+    opacity: 0;
+    background: radial-gradient(
+      circle,
+      rgba(0, 0, 0, 1),
+      rgba(0, 0, 0, 1)
+    );
+  }
+  50% {
+    opacity: 0.9;
+    background: radial-gradient(
+      circle,
+      rgba(79, 70, 229, 0.9),
+      rgba(65, 105, 225, 0.9)
+    );
+  }
+  100% {
+    opacity: 0;
+    background: radial-gradient(
+      circle,
+      rgba(0, 0, 0, 1),
+      rgba(0, 0, 0, 1)
+    );
+  }
+}
+
+.dream-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: gl-dream-glow 3.8s ease-in-out infinite;
+}
+
 /* DREAM TEAM LEGENDARY PANEL EFFECTS */
 
 /* SIGIL PULSE */

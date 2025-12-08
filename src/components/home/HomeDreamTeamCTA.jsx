@@ -19,33 +19,29 @@ export default function HomeDreamTeamCTA() {
       {/* CONTENT */}
       <div className="relative z-20 flex flex-col items-center text-center px-6 py-8">
 
-        {/* TAGLINE - TOP */}
-        <p className="text-cyan-300 text-2xl md:text-3xl font-black mb-8 drop-shadow-[0_4px_12px_rgba(0,0,0,1)]">
-          One model fails. A team doesn't.
-        </p>
-
-        {/* HEADLINE - HIGH CONTRAST */}
-        <h2 className="text-white text-5xl md:text-6xl font-black mb-6 leading-tight drop-shadow-[0_4px_8px_rgba(0,0,0,1)]">
-          AI didn't understand teamwork…
-          <br />
-          <span className="text-purple-400 drop-shadow-[0_4px_12px_rgba(168,85,247,1)]">
-            until we showed it the Dream Team.
-          </span>
+        {/* HEADLINE */}
+        <h2 className="text-white text-5xl md:text-6xl font-black mb-8 leading-tight drop-shadow-[0_4px_8px_rgba(0,0,0,1)]">
+          THE GLYPHLOCK DREAM TEAM
         </h2>
 
-        {/* SUBTEXT - VISIBLE */}
-        <p className="text-white text-2xl md:text-3xl max-w-4xl leading-relaxed mb-12 font-bold drop-shadow-[0_4px_8px_rgba(0,0,0,1)]">
-          GlyphLock runs five AI systems like a championship lineup—each one covering the others, checking every output, and eliminating blind spots in real time.
-        </p>
+        {/* TEXT BLOCK */}
+        <div className="text-white text-xl md:text-2xl max-w-4xl leading-relaxed mb-6 font-bold drop-shadow-[0_4px_8px_rgba(0,0,0,1)] space-y-4">
+          <p>Others run a model.<br />We run a squad.</p>
+          
+          <p>One AI can miss.<br />Ours don't.<br />The Dream Team checks every angle every time.</p>
+          
+          <p>GlyphLock runs five AI systems like a championship lineup —<br />logic, recall, orchestration, engineering, and code precision all cross-checking each other in real time so bad answers die before they ever reach you.</p>
+          
+          <p className="text-cyan-300 text-2xl font-black mt-8">Tap the ball to meet the roster.</p>
+        </div>
 
         {/* GLYPHLOCK LOGO BUTTON - CENTERED */}
         <div className="flex justify-center w-full">
           <Link to={createPageUrl("DreamTeam")}>
             <div className="relative group cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95 flex flex-col items-center">
               
-              {/* MULTIPLE GLOW LAYERS FOR DEPTH */}
-              <div className="absolute inset-0 blur-[80px] opacity-90 group-hover:opacity-100 transition-opacity" style={{ background: 'radial-gradient(circle, rgba(168,85,247,1), rgba(139,92,246,0.9), transparent)' }}></div>
-              <div className="absolute inset-0 blur-[40px] opacity-70 group-hover:opacity-90 transition-opacity" style={{ background: 'radial-gradient(circle, rgba(199,102,255,1), rgba(168,85,247,0.8), transparent)' }}></div>
+              {/* DREAM GLOW */}
+              <div className="dream-glow"></div>
               
               {/* LOGO WITH 3D DEPTH */}
               <img
