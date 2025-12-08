@@ -274,10 +274,7 @@ export default function useTTS(options = {}) {
   }, [getBestVoice]);
 
   const playText = useCallback(async (text, customSettings = {}) => {
-    if (!text || typeof text !== 'string') {
-      console.warn('[TTS] Invalid text provided');
-      return false;
-    }
+    if (!text || typeof text !== 'string') return false;
     
     const cleanText = text
       .replace(/[#*`🦕💠🦖🌟✨🔒⚡️💡🛡️•]/g, '')

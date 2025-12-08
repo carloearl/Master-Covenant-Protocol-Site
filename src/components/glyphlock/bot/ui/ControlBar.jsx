@@ -28,7 +28,7 @@ function ModeToggle({ active, icon: Icon, label, onClick, color = 'cyan' }) {
       onClick={onClick}
       className={`
         flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-semibold uppercase tracking-wide
-        border-2 transition-all duration-300 backdrop-blur-sm
+        border-2 transition-all duration-300 backdrop-blur-sm min-h-[44px]
         ${active 
           ? colors[color]
           : `bg-slate-900/60 border-slate-700/50 text-slate-400 ${colors[color]}`

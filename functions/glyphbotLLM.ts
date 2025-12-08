@@ -560,13 +560,19 @@ Deno.serve(async (req) => {
       status: 'success'
     }).catch(() => {});
 
+    // Mobile-optimized response (reduce payload size)
+    const isMobileRequest = req.headers.get('user-agent')?.match(/Mobile|Android|iPhone/i);
+    
     return Response.json({
       text: result,
       model: usedProvider.label,
       providerUsed: usedProvider.id,
       providerLabel: usedProvider.label,
       latencyMs: totalLatency,
-      meta: {
+      meta: isMobileRequest ? {
+        providerUsed: usedProvider.id,
+        availableProviders: getProviderChain().slice(0, 3)
+      } : {
         providerUsed: usedProvider.id,
         providerLabel: usedProvider.label,
         availableProviders: getProviderChain(),

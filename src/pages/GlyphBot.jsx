@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { UI, Logic, Config } from '@/components/glyphlock/bot';
+import ChatMessageMemo from '@/components/glyphlock/bot/ui/ChatMessageMemo';
 import SEOHead from '@/components/SEOHead';
 import { base44 } from '@/api/base44Client';
 import { Activity, Zap, Shield, Bot, AlertTriangle, X, PanelRightOpen, PanelRightClose } from 'lucide-react';
@@ -762,7 +763,7 @@ export default function GlyphBotPage() {
                     {messages.filter(msg => msg && msg.content).map((msg, idx) => {
                       const msgId = msg.id || `msg-${idx}`;
                       return (
-                        <UI.ChatMessage 
+                        <ChatMessageMemo 
                           key={msgId}
                           msg={msg}
                           isAssistant={msg.role === 'assistant'}

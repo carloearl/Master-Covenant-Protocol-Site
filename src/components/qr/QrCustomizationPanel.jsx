@@ -207,14 +207,14 @@ export default function QrCustomizationPanel({
     <div className="space-y-6">
       {/* Section Tabs */}
       <Tabs value={activeSection} onValueChange={setActiveSection}>
-        <TabsList className="w-full bg-gray-900/50 border border-cyan-500/20 p-1 flex-wrap h-auto">
-          <TabsTrigger value="dots" className="flex-1 text-xs min-h-[36px]">Dots</TabsTrigger>
-          <TabsTrigger value="eyes" className="flex-1 text-xs min-h-[36px]">Eyes</TabsTrigger>
-          <TabsTrigger value="colors" className="flex-1 text-xs min-h-[36px]">Colors</TabsTrigger>
-          <TabsTrigger value="gradient" className="flex-1 text-xs min-h-[36px]">Gradient</TabsTrigger>
-          <TabsTrigger value="background" className="flex-1 text-xs min-h-[36px]">BG</TabsTrigger>
-          <TabsTrigger value="logo" className="flex-1 text-xs min-h-[36px]">Logo</TabsTrigger>
-          <TabsTrigger value="shape" className="flex-1 text-xs min-h-[36px]">Shape</TabsTrigger>
+        <TabsList className="w-full bg-gray-900/50 border border-cyan-500/20 p-1 flex-wrap h-auto gap-1">
+          <TabsTrigger value="dots" className="flex-1 text-xs min-h-[44px] min-w-[60px]">Dots</TabsTrigger>
+          <TabsTrigger value="eyes" className="flex-1 text-xs min-h-[44px] min-w-[60px]">Eyes</TabsTrigger>
+          <TabsTrigger value="colors" className="flex-1 text-xs min-h-[44px] min-w-[60px]">Colors</TabsTrigger>
+          <TabsTrigger value="gradient" className="flex-1 text-xs min-h-[44px] min-w-[60px]">Grad</TabsTrigger>
+          <TabsTrigger value="background" className="flex-1 text-xs min-h-[44px] min-w-[60px]">BG</TabsTrigger>
+          <TabsTrigger value="logo" className="flex-1 text-xs min-h-[44px] min-w-[60px]">Logo</TabsTrigger>
+          <TabsTrigger value="shape" className="flex-1 text-xs min-h-[44px] min-w-[60px]">Shape</TabsTrigger>
         </TabsList>
 
         {/* DOT STYLES */}
@@ -227,14 +227,14 @@ export default function QrCustomizationPanel({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                 {DOT_STYLES.map(style => {
                   const Icon = style.icon;
                   return (
                     <button
                       key={style.id}
                       onClick={() => updateCustomization('dotStyle', style.id)}
-                      className={`flex flex-col items-center p-2 rounded-lg border transition-all ${
+                      className={`flex flex-col items-center p-3 rounded-lg border transition-all min-h-[56px] ${
                         customization.dotStyle === style.id 
                           ? 'border-cyan-500 bg-cyan-500/20 text-cyan-300' 
                           : 'border-gray-700 hover:border-gray-600 text-gray-400'
@@ -833,7 +833,7 @@ export default function QrCustomizationPanel({
         <Button
           onClick={resetToDefaults}
           variant="outline"
-          className="w-full border-gray-700 text-gray-400 hover:bg-gray-800"
+          className="w-full border-gray-700 text-gray-400 hover:bg-gray-800 min-h-[48px]"
         >
           <RotateCcw className="w-4 h-4 mr-2" />
           Reset to Defaults
