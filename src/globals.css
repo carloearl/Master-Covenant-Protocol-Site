@@ -963,11 +963,12 @@ input::placeholder, textarea::placeholder {
 
 .dream-glow {
   position: absolute;
-  inset: 0;
-  z-index: -1;
+  inset: -20px;
+  z-index: 0;
   border-radius: 50%;
-  filter: blur(60px);
+  filter: blur(80px);
   animation: gl-dream-glow 3.8s ease-in-out infinite;
+  pointer-events: none;
 }
 
 /* DREAM TEAM LEGENDARY PANEL EFFECTS */
