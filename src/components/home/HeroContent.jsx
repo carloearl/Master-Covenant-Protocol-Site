@@ -10,7 +10,7 @@ export default function HeroContent() {
     <div className="w-full max-w-7xl mx-auto px-4 py-16 relative" style={{ background: 'transparent', pointerEvents: 'auto' }}>
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 text-white tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] leading-tight">
-          THE FUTURE OF SECURITY ISN'T COMING — <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(6,182,212,0.8)] animate-pulse">IT'S ALREADY HERE.</span>
+          THE FUTURE OF SECURITY ISN'T COMING — <span className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(59,130,246,0.8)] animate-pulse">IT'S ALREADY HERE.</span>
         </h1>
         <p className="text-xl md:text-2xl text-white max-w-4xl mx-auto mb-6 font-medium leading-relaxed">
           Quantum-immune authentication, autonomous threat suppression, and AI-driven audit intelligence designed for infrastructures that cannot afford to fail.
