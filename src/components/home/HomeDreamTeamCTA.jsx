@@ -14,45 +14,63 @@ export default function HomeDreamTeamCTA() {
         <div className="absolute -bottom-32 right-10 h-56 w-56 rounded-full bg-sky-500/30 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-5xl rounded-3xl border border-indigo-400/40 bg-gradient-to-b from-indigo-950/80 via-[#030518]/95 to-black/95 px-6 py-10 shadow-[0_0_40px_rgba(56,189,248,0.35)] backdrop-blur-xl overflow-hidden">
-        {/* Basketball court background overlay */}
-        <div className="absolute inset-0 opacity-[0.08] pointer-events-none">
-          <img 
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/24df5ae09_Whisk_700dafa6070c5a48ef74745234e723a3dr.jpg"
-            alt=""
-            className="w-full h-full object-cover"
-          />
+      <div className="relative mx-auto max-w-6xl">
+        {/* Hero visual section with both images */}
+        <div className="relative mb-10 rounded-3xl border border-cyan-400/40 bg-gradient-to-br from-indigo-950/60 via-blue-950/40 to-violet-950/50 p-8 md:p-12 shadow-[0_0_60px_rgba(56,189,248,0.4)] backdrop-blur-xl overflow-hidden">
+          {/* Basketball court dramatic background */}
+          <div className="absolute inset-0 opacity-30 pointer-events-none mix-blend-luminosity">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/24df5ae09_Whisk_700dafa6070c5a48ef74745234e723a3dr.jpg"
+              alt=""
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          {/* Cyan glow overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/20 via-blue-600/10 to-violet-600/20 pointer-events-none" />
+
+          {/* Large centered logo with glow */}
+          <div className="relative z-10 flex justify-center mb-8">
+            <div className="relative">
+              <div className="absolute inset-0 blur-2xl opacity-70 bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 rounded-full" />
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/798b74a4a_Whisk_bd85583b947dcac83fc479363a774286dr.jpg"
+                alt="GlyphLock Dream Team"
+                className="relative w-32 h-32 md:w-48 md:h-48 object-contain drop-shadow-[0_0_40px_rgba(56,189,248,1)]"
+              />
+            </div>
+          </div>
+
+          {/* Title over imagery */}
+          <div className="relative z-10 text-center">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight drop-shadow-[0_0_20px_rgba(56,189,248,0.8)]">
+              THE{" "}
+              <span className="bg-gradient-to-r from-cyan-300 via-blue-300 to-violet-300 bg-clip-text text-transparent">
+                DREAM TEAM
+              </span>
+            </h2>
+            <p className="mt-4 text-lg md:text-xl font-bold text-cyan-100 drop-shadow-[0_0_15px_rgba(56,189,248,0.6)]">
+              1 Coach. 5 Positions. $1B Vision.
+            </p>
+          </div>
         </div>
 
-        {/* Gradient overlay to blend background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/90 via-[#030518]/85 to-black/90 pointer-events-none" />
+        {/* Content card below */}
+        <div className="relative rounded-3xl border border-indigo-400/40 bg-gradient-to-b from-indigo-950/80 via-[#030518]/95 to-black/95 px-6 py-10 shadow-[0_0_40px_rgba(56,189,248,0.35)] backdrop-blur-xl"
 
         {/* Badge */}
-        <div className="mb-6 flex justify-center relative z-10">
+        <div className="mb-6 flex justify-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-gradient-to-r from-indigo-700/60 via-blue-700/70 to-violet-700/60 px-4 py-1 text-xs font-semibold tracking-[0.18em] uppercase text-cyan-100/90 shadow-[0_0_20px_rgba(56,189,248,0.5)]">
             <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,1)]" />
             <span>AI Operators · Roster Engine</span>
           </div>
         </div>
 
-        {/* Logo icon */}
-        <div className="flex justify-center mb-6 relative z-10">
-          <img 
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/798b74a4a_Whisk_bd85583b947dcac83fc479363a774286dr.jpg"
-            alt="GlyphLock Dream Team"
-            className="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]"
-          />
-        </div>
-
         {/* Heading & subheading */}
-        <div className="text-center relative z-10">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
-            The{" "}
-            <span className="bg-gradient-to-r from-sky-400 via-blue-400 to-violet-400 bg-clip-text text-transparent">
-              Dream Team
-            </span>{" "}
+        <div className="text-center">
+          <h3 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
             Behind GlyphLock
-          </h2>
+          </h3>
 
           <p className="mt-4 text-base md:text-lg text-sky-100/85">
             AI is a roster, not a religion. When one model stumbles, another
@@ -68,7 +86,7 @@ export default function HomeDreamTeamCTA() {
         </div>
 
         {/* Content grid */}
-        <div className="mt-8 grid gap-8 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start relative z-10">
+        <div className="mt-8 grid gap-8 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start">
           {/* Left: bullets / explanation */}
           <div className="space-y-4 text-sm md:text-[0.95rem] text-indigo-50/90">
             <div className="flex gap-3">
@@ -160,7 +178,7 @@ export default function HomeDreamTeamCTA() {
         </div>
 
         {/* CTA */}
-        <div className="mt-10 flex flex-col items-center gap-2 relative z-10">
+        <div className="mt-10 flex flex-col items-center gap-2">
           <Link
             to="/dreamteam"
             className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-500 via-blue-500 to-violet-500 px-8 py-3 text-sm md:text-base font-semibold text-white shadow-[0_0_25px_rgba(59,130,246,0.75)] transition-transform hover:scale-[1.03] hover:shadow-[0_0_35px_rgba(59,130,246,0.9)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
@@ -171,6 +189,7 @@ export default function HomeDreamTeamCTA() {
             See the full roster, positions, and how each AI is bound into the
             GlyphLock stack.
           </p>
+        </div>
         </div>
       </div>
     </section>
