@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 
 export default function CTASection() {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    navigate(createPageUrl("Consultation") + `?email=${encodeURIComponent(email)}`);
+  const handleGetStarted = () => {
+    window.location.href = createPageUrl("Consultation") + `?email=${encodeURIComponent(email)}`;
   };
 
   const benefits = [
@@ -35,7 +33,7 @@ export default function CTASection() {
             Join hundreds of enterprises protecting their infrastructure with GlyphLock
           </p>
 
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto mb-8">
+          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto mb-8">
             <Input
               type="email"
               required
@@ -45,14 +43,14 @@ export default function CTASection() {
               className="bg-white/8 backdrop-blur-md border-2 border-white/20 text-white placeholder:text-white/50 focus:border-indigo-400 focus:shadow-[0_0_30px_rgba(87,61,255,0.5)] transition-all"
             />
             <Button 
-              type="submit"
+              onClick={handleGetStarted}
               size="lg"
               className="bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] hover:from-[#2563EB] hover:to-[#60A5FA] text-white font-black tracking-wide shadow-[0_0_25px_rgba(59,130,246,0.5)] hover:shadow-[0_0_40px_rgba(30,64,175,0.7)] transition-all duration-300"
             >
               GET STARTED
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
-          </form>
+          </div>
 
           <div className="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto">
             {benefits.map((benefit, idx) => (
