@@ -25,7 +25,7 @@ export default function CTASection() {
     <div className="w-full max-w-5xl mx-auto px-4 py-16 relative" style={{ background: 'transparent', pointerEvents: 'auto' }}>
       <div className="relative backdrop-blur-xl border-2 border-indigo-500/60 rounded-2xl p-8 md:p-12 text-center shadow-[0_0_50px_rgba(87,61,255,0.5)] hover:shadow-[0_0_80px_rgba(87,61,255,0.7)] transition-all duration-600 ease-out" style={{ background: 'rgba(87,61,255,0.08)' }}>
         {/* Pulsing glow overlay */}
-        <div className="absolute -inset-1 bg-gradient-to-r from-indigo-600 via-violet-500 to-blue-600 rounded-2xl blur-xl opacity-30 animate-pulse pointer-events-none"></div>
+        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-cyan-500 to-indigo-600 rounded-2xl blur-xl opacity-30 animate-pulse pointer-events-none"></div>
         
         <div className="relative z-10">
           <h2 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight drop-shadow-[0_0_25px_rgba(255,255,255,0.4)]">

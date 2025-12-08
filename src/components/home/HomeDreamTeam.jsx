@@ -10,13 +10,13 @@ export default function HomeDreamTeam() {
     <section className="w-full py-16 px-4 relative">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <Badge className="mb-4 bg-gradient-to-r from-indigo-500/30 to-violet-500/30 backdrop-blur-md border-2 border-indigo-400/60 text-white px-6 py-2 shadow-[0_0_30px_rgba(87,61,255,0.6)]">
+          <Badge className="mb-4 bg-gradient-to-r from-blue-600/30 to-cyan-500/30 backdrop-blur-md border-2 border-cyan-400/60 text-white px-6 py-2 shadow-[0_0_30px_rgba(6,182,212,0.6)]">
             <span className="font-black tracking-[0.2em] text-sm">AI OPERATORS</span>
           </Badge>
           <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
-            The <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-blue-400 bg-clip-text text-transparent">Dream Team</span>
+            The <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 bg-clip-text text-transparent">Dream Team</span>
           </h2>
-          <p className="text-lg text-violet-100 max-w-2xl mx-auto">
+          <p className="text-lg text-cyan-50 max-w-2xl mx-auto">
             Five AI operators cryptographically bound to GlyphLock — tap any card to flip.
           </p>
         </div>
