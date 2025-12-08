@@ -688,9 +688,31 @@ export default function QrStudio({ initialTab = 'create' }) {
                 <div className="w-full lg:w-[540px]">
                   <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg}`}>
                     <CardHeader className="border-b border-purple-500/20">
-                      <CardTitle className="text-white">{currentTypeConfig?.name || 'QR Configuration'}</CardTitle>
+                      <CardTitle className="text-white flex items-center justify-between">
+                        <span>{currentTypeConfig?.name || 'QR Configuration'}</span>
+                        <span className="px-3 py-1 text-xs bg-cyan-500/20 text-cyan-300 rounded-lg border border-cyan-500/30">
+                          {qrType.toUpperCase()}
+                        </span>
+                      </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-6 pt-6">
+                      {/* Mobile QR Type Selector */}
+                      <div className="lg:hidden">
+                        <Label className="text-white mb-2 block">QR Type</Label>
+                        <Select value={qrType} onValueChange={setQrType}>
+                          <SelectTrigger className="bg-gray-800 border-gray-700 text-white min-h-[48px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-gray-800 border-gray-700">
+                            {qrTypes.map((type) => (
+                              <SelectItem key={type.id} value={type.id}>
+                                {type.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
                       <QRTypeForm qrType={qrType} qrData={qrData} setQrData={setQrData} />
 
                       {/* Size */}

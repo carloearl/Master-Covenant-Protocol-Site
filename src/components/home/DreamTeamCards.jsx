@@ -183,8 +183,27 @@ export default function DreamTeamCards() {
           <p className="text-sm text-gray-500 mt-4 md:hidden">Tap cards to reveal binding details</p>
         </div>
 
-        {/* 2-2-1 Layout */}
-        <div className="max-w-5xl mx-auto mb-8">
+        {/* Mobile: Snap Scroll | Desktop: 2-2-1 Grid */}
+        
+        {/* Mobile Single-Card Snap Scroll */}
+        <div className="md:hidden mb-8 -mx-4">
+          <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide px-4 gap-4">
+            {DREAM_TEAM.map((card) => (
+              <div key={card.id} className="flex-shrink-0 w-[85vw] snap-center">
+                <DreamTeamFlipCard card={card} />
+              </div>
+            ))}
+          </div>
+          {/* Scroll Indicator */}
+          <div className="flex justify-center gap-1.5 mt-4">
+            {DREAM_TEAM.map((_, idx) => (
+              <div key={idx} className="w-1.5 h-1.5 rounded-full bg-purple-500/30" />
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop 2-2-1 Layout */}
+        <div className="hidden md:block max-w-5xl mx-auto mb-8">
           {/* Top Row - 2 cards */}
           <div className="grid grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6 max-w-3xl mx-auto">
             <DreamTeamFlipCard card={DREAM_TEAM[0]} />

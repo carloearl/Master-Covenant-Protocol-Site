@@ -13,37 +13,48 @@ const useScrollEffect = (sectionRef) => {
   const [style, setStyle] = useState({ transform: 'perspective(1000px)', opacity: 1 });
 
   useEffect(() => {
+    // Disable scroll effects on mobile for performance
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      return;
+    }
+
+    let ticking = false;
     const handleScroll = () => {
-      if (sectionRef.current) {
-        const { top, height } = sectionRef.current.getBoundingClientRect();
-        const screenHeight = window.innerHeight;
-        const elementCenter = top + height / 2;
-        const screenCenter = screenHeight / 2;
-        const distance = screenCenter - elementCenter;
-        const factor = distance / (screenCenter * 1.5);
-
-        let rotation = 0;
-        let scale = 1;
-        let opacity = 1;
-
-        if (factor < 0) {
-          const progress = Math.max(0, Math.min(1, (1 + factor) * 1.5));
-          rotation = (1 - progress) * 10;
-          scale = 0.95 + (progress * 0.05);
-          opacity = Math.max(0.5, progress);
-        } else if (factor > 0) {
-          const progress = Math.min(1, factor * 1.5);
-          rotation = -progress * 10;
-          scale = 1 - (progress * 0.05);
-          opacity = Math.max(0.5, 1 - progress);
-        }
-
+      if (!ticking) {
         requestAnimationFrame(() => {
-          setStyle({
-            transform: `perspective(1000px) rotateX(${rotation}deg) scale(${scale})`,
-            opacity: opacity,
-          });
+          if (sectionRef.current) {
+            const { top, height } = sectionRef.current.getBoundingClientRect();
+            const screenHeight = window.innerHeight;
+            const elementCenter = top + height / 2;
+            const screenCenter = screenHeight / 2;
+            const distance = screenCenter - elementCenter;
+            const factor = distance / (screenCenter * 1.5);
+
+            let rotation = 0;
+            let scale = 1;
+            let opacity = 1;
+
+            if (factor < 0) {
+              const progress = Math.max(0, Math.min(1, (1 + factor) * 1.5));
+              rotation = (1 - progress) * 10;
+              scale = 0.95 + (progress * 0.05);
+              opacity = Math.max(0.5, progress);
+            } else if (factor > 0) {
+              const progress = Math.min(1, factor * 1.5);
+              rotation = -progress * 10;
+              scale = 1 - (progress * 0.05);
+              opacity = Math.max(0.5, 1 - progress);
+            }
+
+            setStyle({
+              transform: `perspective(1000px) rotateX(${rotation}deg) scale(${scale})`,
+              opacity: opacity,
+            });
+          }
+          ticking = false;
         });
+        ticking = true;
       }
     };
     
