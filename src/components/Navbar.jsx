@@ -22,12 +22,12 @@ export default function Navbar({ user, onLogin, onLogout }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="w-full bg-gradient-to-r from-indigo-950/20 via-violet-950/10 to-blue-950/20 border-b border-white/10 shadow-[0_2px_25px_rgba(87,61,255,0.2)] text-white sticky top-0 backdrop-blur-2xl" style={{ zIndex: 10000 }}>
+    <nav className="w-full bg-gradient-to-r from-blue-900/25 via-indigo-900/30 to-violet-900/25 border-b border-indigo-400/20 shadow-[0_2px_35px_rgba(59,130,246,0.3)] text-white sticky top-0 backdrop-blur-2xl" style={{ zIndex: 10000 }}>
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
         {/* Logo Area */}
         <Link to={createPageUrl("Home")} className="flex items-center gap-3 group">
           <div className="relative">
-            <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full blur opacity-40 group-hover:opacity-60 transition duration-200"></div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-600 rounded-full blur opacity-50 group-hover:opacity-75 transition duration-200"></div>
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d92107808_glyphlock-3d-logo.png"
               alt="GlyphLock"
@@ -36,7 +36,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
           </div>
           <span className="text-2xl font-black tracking-tighter font-space">
             <span className="text-white">GLYPH</span>
-            <span className="text-transparent bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text">LOCK</span>
+            <span className="text-transparent bg-gradient-to-r from-blue-400 via-indigo-500 to-violet-500 bg-clip-text">LOCK</span>
           </span>
         </Link>
 
