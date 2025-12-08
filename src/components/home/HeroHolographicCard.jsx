@@ -59,7 +59,11 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
     <div
       ref={cardRef}
       className={`relative ${sizeClasses[size]} cursor-pointer group select-none`}
-      style={{ perspective: '1200px' }}
+      style={{ 
+        perspective: '1200px',
+        filter: 'brightness(1.15) saturate(1.2)',
+        transition: 'filter 0.6s ease-out'
+      }}
       onClick={handleClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -74,6 +78,7 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
           transform: isFlipped ? 'rotateY(180deg)' : (tiltStyle.transform || 'rotateY(0deg)'),
           transition: isFlipped ? 'transform 0.6s ease-in-out' : 'transform 0.15s ease-out',
           willChange: 'transform',
+          boxShadow: '0 0 50px rgba(87, 61, 255, 0.4)',
           ...(!isFlipped ? tiltStyle : {})
         }}
       >
@@ -88,10 +93,10 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
           <div
             className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${card.borderColor} p-[3px]`}
             style={{
-              boxShadow: `0 0 40px ${card.glowColor}, inset 0 0 20px rgba(255,255,255,0.1)`
+              boxShadow: `0 0 50px ${card.glowColor}, 0 0 80px rgba(87, 61, 255, 0.3), inset 0 0 30px rgba(255,255,255,0.15)`
             }}
           >
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950/80 via-violet-950/60 to-blue-950/80" />
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950/60 via-violet-950/40 to-blue-950/60" />
           </div>
 
           {/* Card image */}
@@ -173,11 +178,11 @@ export default function HeroHolographicCard({ card, size = 'normal' }) {
         >
           {/* Border */}
           <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${card.borderColor} p-[3px]`}>
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950/80 via-violet-950/60 to-blue-950/80" />
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950/60 via-violet-950/40 to-blue-950/60" />
           </div>
 
           {/* Content */}
-          <div className="absolute inset-[3px] rounded-2xl bg-gradient-to-br from-indigo-950/50 via-violet-950/40 to-black p-4 flex flex-col overflow-hidden">
+          <div className="absolute inset-[3px] rounded-2xl bg-gradient-to-br from-indigo-950/40 via-violet-950/30 to-indigo-950/40 p-4 flex flex-col overflow-hidden" style={{ backdropFilter: 'blur(12px)' }}>
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">

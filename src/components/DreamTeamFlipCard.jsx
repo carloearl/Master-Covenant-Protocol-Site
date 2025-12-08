@@ -112,11 +112,11 @@ export default function DreamTeamFlipCard({ card }) {
         >
           {/* Border gradient */}
           <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${card.borderColor} p-[2px]`}>
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950/80 via-violet-950/60 to-blue-950/80" />
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950/60 via-violet-950/40 to-blue-950/60" />
           </div>
 
           {/* Content */}
-          <div className="absolute inset-[2px] rounded-2xl bg-gradient-to-br from-indigo-950/50 via-violet-950/40 to-black p-3 md:p-4 flex flex-col overflow-hidden">
+          <div className="absolute inset-[2px] rounded-2xl bg-gradient-to-br from-indigo-950/40 via-violet-950/30 to-indigo-950/40 p-3 md:p-4 flex flex-col overflow-hidden" style={{ backdropFilter: 'blur(12px)' }}>
             
             {/* Header */}
             <div className="flex items-center justify-between mb-2">

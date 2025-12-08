@@ -151,14 +151,14 @@ const DREAM_TEAM = [
 
 export default function DreamTeamHero() {
   return (
-    <section className="relative py-20 md:py-32 overflow-hidden" style={{ background: 'transparent' }}>
-      {/* Animated grid overlay */}
+    <section className="relative py-20 md:py-32 overflow-hidden" style={{ background: 'transparent', pointerEvents: 'auto' }}>
+      {/* Animated grid overlay - INDIGO GLOW */}
       <div 
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.08]"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(6,182,212,0.5) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(6,182,212,0.5) 1px, transparent 1px)
+            linear-gradient(rgba(87,61,255,0.6) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(87,61,255,0.6) 1px, transparent 1px)
           `,
           backgroundSize: '50px 50px'
         }}
@@ -167,7 +167,7 @@ export default function DreamTeamHero() {
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
-          <Badge className="mb-6 bg-gradient-to-r from-[#1E40AF]/30 to-[#3B82F6]/30 text-white border-[#3B82F6]/50 px-6 py-2 text-sm backdrop-blur-md shadow-[0_0_20px_rgba(59,130,246,0.3)]">
+          <Badge className="mb-6 bg-gradient-to-r from-indigo-500/20 to-violet-500/20 text-white border-white/20 px-6 py-2 text-sm backdrop-blur-md shadow-[0_0_30px_rgba(87,61,255,0.4)]">
             <Trophy className="w-4 h-4 mr-2 text-amber-400" />
             GlyphLock Dream Team
           </Badge>
@@ -194,22 +194,36 @@ export default function DreamTeamHero() {
           </div>
         </div>
 
-        {/* Cards Grid - Premium 2-2-1 Layout with BIGGER cards */}
-        <div className="max-w-7xl mx-auto mb-12 px-4">
+        {/* Cards Grid - FULLSCREEN MOBILE SNAP SCROLL */}
+        <div className="max-w-7xl mx-auto mb-12 px-4 md:snap-none snap-y snap-mandatory md:overflow-visible overflow-y-auto md:h-auto h-auto">
           {/* Top Row */}
-          <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-10 mb-8 md:mb-10">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-10 mb-8 md:mb-10 md:min-h-0 min-h-[90vh] snap-start md:snap-align-none">
             <HeroHolographicCard card={DREAM_TEAM[0]} size="large" />
+            <div className="hidden md:block">
+              <HeroHolographicCard card={DREAM_TEAM[1]} size="large" />
+            </div>
+          </div>
+
+          {/* Card 2 - Mobile Only Fullscreen */}
+          <div className="flex md:hidden justify-center items-center min-h-[90vh] snap-start">
             <HeroHolographicCard card={DREAM_TEAM[1]} size="large" />
           </div>
 
           {/* Middle Row */}
-          <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-10 mb-8 md:mb-10">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-10 mb-8 md:mb-10 md:min-h-0 min-h-[90vh] snap-start md:snap-align-none">
             <HeroHolographicCard card={DREAM_TEAM[2]} size="large" />
+            <div className="hidden md:block">
+              <HeroHolographicCard card={DREAM_TEAM[3]} size="large" />
+            </div>
+          </div>
+
+          {/* Card 4 - Mobile Only Fullscreen */}
+          <div className="flex md:hidden justify-center items-center min-h-[90vh] snap-start">
             <HeroHolographicCard card={DREAM_TEAM[3]} size="large" />
           </div>
 
           {/* Bottom - Alfred Anchor - LARGEST */}
-          <div className="flex justify-center">
+          <div className="flex justify-center md:min-h-0 min-h-[95vh] snap-start md:snap-align-none">
             <HeroHolographicCard card={DREAM_TEAM[4]} size="hero" />
           </div>
         </div>

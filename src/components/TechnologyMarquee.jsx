@@ -185,7 +185,7 @@ export default function TechnologyMarquee() {
   const repeatedRow3 = [...row3Logos, ...row3Logos, ...row3Logos, ...row3Logos, ...row3Logos, ...row3Logos];
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-16 relative" style={{ background: 'transparent' }}>
+    <div className="w-full max-w-7xl mx-auto px-4 py-16 relative" style={{ background: 'transparent', pointerEvents: 'auto' }}>
       <div className="text-center mb-12">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
           Enterprise Engineering Excellence

@@ -22,7 +22,7 @@ export default function CTASection() {
   ];
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-16 relative" style={{ background: 'transparent' }}>
+    <div className="w-full max-w-5xl mx-auto px-4 py-16 relative" style={{ background: 'transparent', pointerEvents: 'auto' }}>
       <div className="relative bg-white/15 backdrop-blur-xl backdrop-saturate-150 border border-white/20 rounded-2xl p-8 md:p-12 text-center shadow-[0_0_40px_rgba(255,255,255,0.12)] hover:shadow-[0_0_70px_rgba(59,130,246,0.4)] hover:bg-white/20 transition-all duration-600 ease-out">
         {/* Pulsing glow overlay */}
         <div className="absolute -inset-1 bg-gradient-to-r from-[#1E3A8A] via-[#3B82F6] to-[#1E40AF] rounded-2xl blur-xl opacity-20 animate-pulse pointer-events-none"></div>
@@ -42,7 +42,7 @@ export default function CTASection() {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-slate-800/80 border-2 border-[#3B82F6]/40 text-white placeholder:text-white/50 focus:border-[#3B82F6] focus:shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all"
+              className="bg-white/8 backdrop-blur-md border-2 border-white/20 text-white placeholder:text-white/50 focus:border-indigo-400 focus:shadow-[0_0_30px_rgba(87,61,255,0.5)] transition-all"
             />
             <Button 
               type="submit"

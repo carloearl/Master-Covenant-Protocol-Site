@@ -142,16 +142,18 @@ p {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(87, 61, 255, 0.4);
+  background: rgba(87, 61, 255, 0.5);
   border-radius: 999px;
+  box-shadow: 0 0 10px rgba(87, 61, 255, 0.6);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(87, 61, 255, 0.6);
+  background: rgba(87, 61, 255, 0.7);
+  box-shadow: 0 0 15px rgba(87, 61, 255, 0.8);
 }
 
 /* Isolated Chat Scroll - prevents page scroll interference */
@@ -311,6 +313,18 @@ p {
     contain: strict;
     isolation: isolate;
   }
+}
+
+/* Smooth Snap Scroll for Mobile Cards */
+.snap-y {
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 /* Mobile-Safe Animations */

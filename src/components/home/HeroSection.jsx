@@ -2,7 +2,7 @@ import React from "react";
 
 export default function HeroSection() {
   return (
-    <div className="w-full flex justify-center px-4 sm:px-6 py-8" style={{ background: 'transparent' }}>
+    <div className="w-full flex justify-center px-4 sm:px-6 py-8" style={{ background: 'transparent', pointerEvents: 'auto' }}>
       <div className="relative w-full max-w-[1200px] group">
         {/* Royal Blue Glow Effect with Pulse */}
         <div className="absolute -inset-2 bg-gradient-to-r from-[#1E3A8A] via-[#3B82F6] to-[#1E40AF] rounded-2xl blur-xl opacity-40 group-hover:opacity-60 transition duration-1000 animate-pulse" style={{ willChange: 'opacity', transform: 'translateZ(0)' }}></div>
