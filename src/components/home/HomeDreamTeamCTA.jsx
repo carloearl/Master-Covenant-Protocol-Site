@@ -31,7 +31,7 @@ export default function HomeDreamTeamCTA() {
             
             <p className="text-white">GlyphLock runs <span className="text-blue-400">five AI systems</span> like a championship lineup —<br /><span className="text-white">logic, recall, orchestration, engineering, and code precision</span> all cross-checking each other in real time so <span className="text-blue-500">bad answers die before they ever reach you.</span></p>
             
-            <p className="text-blue-400 text-2xl font-black mt-8">Tap the ball to meet the roster.</p>
+
           </div>
         </div>
       </section>
@@ -53,8 +53,8 @@ export default function HomeDreamTeamCTA() {
             />
 
             {/* LABEL */}
-            <span className="block mt-6 text-white text-3xl font-black tracking-wider group-hover:text-purple-300 transition-colors drop-shadow-[0_4px_8px_rgba(0,0,0,1)]">
-              ENTER THE DREAM TEAM →
+            <span className="block mt-6 text-white text-2xl font-black tracking-wider group-hover:text-blue-400 transition-colors drop-shadow-[0_4px_8px_rgba(0,0,0,1)]">
+              Tap the ball to meet the roster
             </span>
           </div>
         </Link>
