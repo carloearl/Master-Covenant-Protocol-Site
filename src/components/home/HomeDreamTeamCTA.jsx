@@ -14,187 +14,97 @@ export default function HomeDreamTeamCTA() {
         <div className="absolute -bottom-32 right-10 h-56 w-56 rounded-full bg-sky-500/30 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl">
-        {/* Hero title section */}
-        <div className="relative mb-6 text-center">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight">
-            THE{" "}
-            <span className="bg-gradient-to-r from-cyan-300 via-blue-300 to-violet-300 bg-clip-text text-transparent">
-              DREAM TEAM
-            </span>
-          </h2>
-          <p className="mt-4 text-lg md:text-xl font-bold text-cyan-100">
-            1 Coach. 5 Positions. $1B Vision.
+      <div className="relative mx-auto max-w-6xl space-y-12">
+        {/* DREAM TEAM CREST */}
+        <div className="flex flex-col items-center space-y-6">
+          <img
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/54c764af0_Whisk_bd85583b947dcac83fc479363a774286dr.jpg"
+            alt="Dream Team Emblem"
+            className="w-80 h-80 md:w-96 md:h-96 object-contain drop-shadow-[0_0_30px_rgba(120,0,255,0.7)] animate-pulse"
+          />
+          <h1 className="text-4xl md:text-6xl font-black tracking-wide text-center text-white">
+            THE DREAM TEAM
+          </h1>
+          <p className="text-xl md:text-2xl text-cyan-100/80 text-center max-w-3xl">
+            Multiple Models. One Machine. Zero Weak Links.
           </p>
         </div>
 
-        {/* Barrier image section with basketball court and tagline */}
-        <div className="relative mb-10 h-48 md:h-64 rounded-3xl border border-cyan-400/40 shadow-[0_0_60px_rgba(56,189,248,0.4)] overflow-hidden">
-          {/* Basketball court background */}
-          <div className="absolute inset-0">
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/24df5ae09_Whisk_700dafa6070c5a48ef74745234e723a3dr.jpg"
-              alt=""
-              className="w-full h-full object-cover opacity-40"
-            />
+        {/* BEHIND GLYPHLOCK SECTION */}
+        <div className="w-full bg-gradient-to-br from-indigo-900/50 to-blue-900/40 border border-indigo-700/30 rounded-3xl p-10 shadow-xl backdrop-blur-xl space-y-6">
+          <h2 className="text-3xl font-bold mb-4 text-white">Behind GlyphLock</h2>
+
+          <p className="text-lg leading-relaxed text-white/90">
+            GlyphLock doesn't "use" AI — it deploys it.  
+            This system isn't praying one model gets the answer right.  
+            It runs a coordinated AI roster, each operator built to challenge the others,
+            override errors, and reinforce the truth.
+          </p>
+
+          <ul className="list-disc ml-8 space-y-2 text-indigo-200">
+            <li><strong>Positioned</strong> — every engine has a defined job, not a guess.</li>
+            <li><strong>Cross-Checked</strong> — outputs are reviewed and corrected across operators.</li>
+            <li><strong>Covenant-Bound</strong> — no rogue models, no free agents, no silent failures.</li>
+            <li><strong>No Single Point of Failure</strong> — redundancy by design, intelligence by rotation.</li>
+          </ul>
+
+          <p className="text-lg leading-relaxed text-white/90 mt-4">
+            GlyphLock isn't "one AI." It's a five-position machine running one vision:
+            execution without compromise.
+          </p>
+        </div>
+
+        {/* OPERATOR ROLES BOX */}
+        <div className="relative w-full bg-black/40 border border-blue-700/40 rounded-3xl p-10 shadow-xl backdrop-blur-xl overflow-hidden">
+          {/* LOCK/BRAIN BADGE */}
+          <img
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/6db20a295_34226b41-415a-418e-821f-a17c8751522d.jpg"
+            alt="GlyphLock Core Badge"
+            className="absolute right-6 top-6 w-44 h-44 md:w-56 md:h-56 opacity-80 pointer-events-none select-none animate-pulse"
+          />
+
+          <h3 className="text-3xl font-bold mb-8 text-white">Operator Roles</h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-lg text-white/90">
+            <div className="space-y-3">
+              <p><strong>Claude</strong> — Deep Reasoning · Cross-Examination · Audit</p>
+              <p><strong>Alfred</strong> — System Orchestration · Flow Enforcement</p>
+              <p><strong>GPT</strong> — Creative Intelligence · Expansion Logic</p>
+            </div>
+            <div className="space-y-3">
+              <p><strong>Cursor</strong> — Code Precision · Refactor Discipline</p>
+              <p><strong>Perplexity</strong> — Real-Time Recall · Signal Verification</p>
+            </div>
           </div>
 
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-indigo-950/60 via-blue-950/40 to-violet-950/60 backdrop-blur-sm" />
+          <p className="text-center text-indigo-300 mt-6 text-lg tracking-wide">
+            One roster. Many positions. Zero blind spots.
+          </p>
+        </div>
 
-          {/* Tagline text */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-2xl md:text-3xl lg:text-4xl font-black text-cyan-100 drop-shadow-[0_0_20px_rgba(56,189,248,0.8)] text-center px-4">
-              1 Coach. 5 Positions. $1B Vision.
+        {/* CTA SECTION */}
+        <div className="w-full bg-gradient-to-br from-blue-800/40 to-indigo-900/40 border border-blue-700/40 rounded-3xl p-10 shadow-xl backdrop-blur-2xl flex flex-col md:flex-row items-center gap-10">
+          {/* CTA IMAGE LEFT */}
+          <img
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b3faa0663_Whisk_700dafa6070c5a48ef74745234e723a3dr.jpg"
+            alt="Dream Team Lock Emblem"
+            className="w-64 h-64 md:w-80 md:h-80 object-contain drop-shadow-[0_0_35px_rgba(0,150,255,0.7)]"
+          />
+
+          {/* CTA TEXT RIGHT */}
+          <div className="flex flex-col space-y-4">
+            <h3 className="text-4xl font-bold text-white">Enter the Dream Team</h3>
+            <p className="text-lg text-white/80 max-w-xl">
+              Meet the operators. See the roles.  
+              Understand the architecture behind GlyphLock's firepower.
             </p>
+            <Link
+              to="/dreamteam"
+              className="mt-4 inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl shadow-lg hover:opacity-90 transition text-lg font-semibold text-white"
+            >
+              Enter the Dream Team
+            </Link>
           </div>
-        </div>
-
-        {/* Content card below */}
-        <div className="relative rounded-3xl border border-indigo-400/40 bg-gradient-to-b from-indigo-950/80 via-[#030518]/95 to-black/95 px-6 py-10 shadow-[0_0_40px_rgba(56,189,248,0.35)] backdrop-blur-xl overflow-hidden">
-        {/* GL Logo background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none">
-          <div className="relative animate-pulse">
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/0584b5287_34226b41-415a-418e-821f-a17c8751522d.jpg"
-              alt=""
-              className="w-64 h-64 md:w-96 md:h-96 object-contain"
-            />
-          </div>
-        </div>
-
-        {/* Badge */}
-        <div className="mb-6 flex justify-center relative z-10">
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-gradient-to-r from-indigo-700/60 via-blue-700/70 to-violet-700/60 px-4 py-1 text-xs font-semibold tracking-[0.18em] uppercase text-cyan-100/90 shadow-[0_0_20px_rgba(56,189,248,0.5)]">
-            <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,1)]" />
-            <span>AI Operators · Roster Engine</span>
-          </div>
-        </div>
-
-        {/* Heading & subheading */}
-        <div className="text-center relative z-10">
-          <h3 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
-            Behind GlyphLock
-          </h3>
-
-          <p className="mt-4 text-base md:text-lg text-sky-100/85">
-            AI is a roster, not a religion. When one model stumbles, another
-            picks up the play.
-          </p>
-
-          <p className="mt-3 text-sm md:text-base text-indigo-100/80 max-w-2xl mx-auto">
-            GlyphLock runs multiple AI operators like a championship lineup —
-            each assigned to a role, cross-checking the others, and logged into
-            the Master Covenant. Their overlap turns "one model&apos;s answer"
-            into audited intelligence.
-          </p>
-        </div>
-
-        {/* Content grid */}
-        <div className="mt-8 grid gap-8 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start relative z-10">
-          {/* Left: bullets / explanation */}
-          <div className="space-y-4 text-sm md:text-[0.95rem] text-indigo-50/90">
-            <div className="flex gap-3">
-              <div className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.9)]" />
-              <p>
-                <span className="font-semibold text-sky-100">
-                  Positioned, not random —
-                </span>{" "}
-                Claude, Alfred, GPT, Cursor, Perplexity and others each have a
-                defined job: analysis, orchestration, creative lift, code
-                precision, real-time recall.
-              </p>
-            </div>
-
-            <div className="flex gap-3">
-              <div className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.9)]" />
-              <p>
-                <span className="font-semibold text-sky-100">
-                  Overlap by design —
-                </span>{" "}
-                outputs are compared and cross-checked so hallucinations,
-                missing context, and bad logic get flagged instead of shipped.
-              </p>
-            </div>
-
-            <div className="flex gap-3">
-              <div className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-violet-400 shadow-[0_0_10px_rgba(129,140,248,0.9)]" />
-              <p>
-                <span className="font-semibold text-sky-100">
-                  Bound by contract —
-                </span>{" "}
-                every operator runs under the same proof, logging, and
-                accountability rules as the rest of GlyphLock. No free agents,
-                no rogue answers.
-              </p>
-            </div>
-
-            <p className="pt-1 text-xs md:text-[0.8rem] uppercase tracking-[0.18em] text-indigo-200/70">
-              Claude · Alfred · GPT · CoPilot · Cursor · Perplexity — one
-              system, many positions.
-            </p>
-          </div>
-
-          {/* Right: mini roster / chips */}
-          <div className="rounded-2xl border border-indigo-500/50 bg-gradient-to-b from-indigo-900/70 via-blue-950/80 to-black/90 p-4 shadow-[0_0_25px_rgba(56,189,248,0.35)]">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sky-200/90 mb-3">
-              Operator Roles
-            </p>
-
-            <div className="space-y-2 text-xs md:text-sm text-sky-100/90">
-              <div className="flex justify-between gap-3 border-b border-indigo-500/30 pb-2">
-                <span>Claude</span>
-                <span className="text-sky-300/90">Deep Reasoning · Audit</span>
-              </div>
-              <div className="flex justify-between gap-3 border-b border-indigo-500/20 pb-2">
-                <span>Alfred</span>
-                <span className="text-sky-300/90">
-                  System Orchestration · Flow
-                </span>
-              </div>
-              <div className="flex justify-between gap-3 border-b border-indigo-500/20 pb-2">
-                <span>GPT</span>
-                <span className="text-sky-300/90">
-                  Creative Intelligence · Language
-                </span>
-              </div>
-              <div className="flex justify-between gap-3 border-b border-indigo-500/20 pb-2">
-                <span>Cursor</span>
-                <span className="text-sky-300/90">Code Precision · Refactor</span>
-              </div>
-              <div className="flex justify-between gap-3">
-                <span>Perplexity</span>
-                <span className="text-sky-300/90">Real-Time Recall · Signals</span>
-              </div>
-            </div>
-
-            <div className="mt-4 flex flex-wrap gap-2 text-[0.7rem]">
-              <span className="rounded-full border border-cyan-300/60 bg-cyan-500/20 px-3 py-1 text-cyan-100">
-                Model overlap
-              </span>
-              <span className="rounded-full border border-sky-300/60 bg-sky-500/20 px-3 py-1 text-sky-100">
-                Covenant-bound
-              </span>
-              <span className="rounded-full border border-violet-300/60 bg-violet-500/20 px-3 py-1 text-violet-100">
-                No single point of failure
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="mt-10 flex flex-col items-center gap-2 relative z-10">
-          <Link
-            to="/dreamteam"
-            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-500 via-blue-500 to-violet-500 px-8 py-3 text-sm md:text-base font-semibold text-white shadow-[0_0_25px_rgba(59,130,246,0.75)] transition-transform hover:scale-[1.03] hover:shadow-[0_0_35px_rgba(59,130,246,0.9)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-          >
-            Enter the Dream Team
-          </Link>
-          <p className="text-[0.8rem] md:text-xs text-indigo-200/75">
-            See the full roster, positions, and how each AI is bound into the
-            GlyphLock stack.
-          </p>
-        </div>
         </div>
       </div>
     </section>
