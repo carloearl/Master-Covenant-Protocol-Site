@@ -15,7 +15,7 @@ export default function QRTypeForm({ qrType, qrData, setQrData }) {
             value={qrData.url}
             onChange={(e) => setQrData({...qrData, url: e.target.value})}
             placeholder="https://example.com"
-            className="bg-gray-800 border-gray-700 text-white"
+            className="bg-gray-800 border-gray-700 text-white min-h-[48px] text-base"
           />
         </div>
       );
@@ -30,7 +30,7 @@ export default function QRTypeForm({ qrType, qrData, setQrData }) {
             onChange={(e) => setQrData({...qrData, text: e.target.value})}
             placeholder="Enter any text..."
             rows={5}
-            className="bg-gray-800 border-gray-700 text-white"
+            className="bg-gray-800 border-gray-700 text-white min-h-[48px] text-base"
           />
         </div>
       );
@@ -46,7 +46,7 @@ export default function QRTypeForm({ qrType, qrData, setQrData }) {
               value={qrData.email}
               onChange={(e) => setQrData({...qrData, email: e.target.value})}
               placeholder="contact@example.com"
-              className="bg-gray-800 border-gray-700 text-white"
+              className="bg-gray-800 border-gray-700 text-white min-h-[48px] text-base"
             />
           </div>
           <div>

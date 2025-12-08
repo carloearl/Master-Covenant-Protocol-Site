@@ -73,8 +73,13 @@ export default function DreamTeamFlipCard({ card }) {
           <img 
             src={card.frontImage} 
             alt={card.name}
-            className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+            className={`absolute inset-0 w-full h-full object-cover rounded-2xl transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            loading="lazy"
+            onLoad={() => setImageLoaded(true)}
           />
+          {!imageLoaded && (
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 animate-pulse rounded-2xl" />
+          )}
 
           {/* Holographic shimmer overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] pointer-events-none" 
