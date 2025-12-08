@@ -18,10 +18,10 @@ export default function HomeDreamTeamCTA() {
         {/* DREAM TEAM CREST */}
         <div className="flex flex-col items-center space-y-2 mb-4">
           <img
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/54252f1f5_Whisk_43152c64a0d1d49bbc244415f014d1f3dr.jpg"
-            alt="GlyphLock Dream Team Basketball"
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/168848645_Whisk_dc6bc22c5ef0f01a1264315f95279f3edr.jpeg"
+            alt="GlyphLock Dream Team Logo"
             className="w-48 h-48 md:w-56 md:h-56 object-contain drop-shadow-[0_0_35px_rgba(87,61,255,0.8)] animate-pulse"
-            style={{ mixBlendMode: 'multiply', filter: 'brightness(1.5) contrast(1.4) saturate(1.2)' }}
+            style={{ mixBlendMode: 'screen', filter: 'brightness(1.2) contrast(1.3)' }}
           />
           <h1 className="text-2xl md:text-4xl font-black tracking-wide text-center text-white">
             THE DREAM TEAM
