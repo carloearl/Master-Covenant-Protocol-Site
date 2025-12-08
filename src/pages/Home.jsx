@@ -5,6 +5,7 @@ import HeroSection from '@/components/home/HeroSection';
 import HeroContent from '@/components/home/HeroContent';
 import ServicesGrid from '@/components/home/ServicesGrid';
 import DreamTeamHero from '@/components/home/DreamTeamHero';
+import HomeDreamTeam from '@/components/home/HomeDreamTeam';
 import CTASection from '@/components/home/CTASection';
 import TechnologyMarquee from '@/components/TechnologyMarquee';
 import CountdownPill from '@/components/marketing/CountdownPill';
@@ -120,6 +121,11 @@ export default function Home() {
 
         {/* Dream Team Hero - Premium Holographic Cards */}
         <DreamTeamHero />
+
+        {/* AI Operators - HomeDreamTeam */}
+        <ScrollSection>
+          <HomeDreamTeam />
+        </ScrollSection>
 
         {/* Services Grid */}
         <ScrollSection>
