@@ -1,3 +1,7 @@
+// LEGACY COMPONENT
+// Do not use on Home page Dream Team section.
+// Canonical Dream Team is HomeDreamTeam + DreamTeamFlipCard + components/data/dreamTeam
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";

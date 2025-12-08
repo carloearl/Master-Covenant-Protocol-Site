@@ -1,3 +1,7 @@
+// ARCHETYPE COMPONENT (Protected Archetypes - 4 cards)
+// Do not use on Home page Dream Team section.
+// Canonical Dream Team is HomeDreamTeam + DreamTeamFlipCard + components/data/dreamTeam
+
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, Shield, Lock, ChevronRight } from 'lucide-react';

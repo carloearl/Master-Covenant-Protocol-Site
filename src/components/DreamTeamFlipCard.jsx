@@ -1,3 +1,8 @@
+// GLYPHLOCK DREAM TEAM HARD-LOCK
+// This file is the canonical Dream Team flip card component.
+// Do not replace this with archetype cards, shadcn defaults, or placeholder cards.
+// Any change to this file MUST be explicitly requested by Carlo Rene Earl.
+
 import React, { useState, useCallback } from "react";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Shield, Lock, Fingerprint, Hash, Clock, Zap } from "lucide-react";
@@ -100,8 +105,8 @@ export default function DreamTeamFlipCard({ card }) {
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-950/40 via-violet-950/30 to-blue-950/40 backdrop-blur-md" />
           </div>
 
-          {/* Content */}
-          <div className="absolute inset-[3px] rounded-3xl bg-white/8 backdrop-blur-lg p-4 md:p-6 flex flex-col overflow-hidden border border-white/10 shadow-[inset_0_0_40px_rgba(87,61,255,0.15)]">
+          {/* Content - NO GREY TINT, BLUE-VIOLET GLASS */}
+          <div className="absolute inset-[3px] rounded-3xl bg-[rgba(10,10,30,0.6)] backdrop-blur-xl p-4 md:p-6 flex flex-col overflow-hidden border border-indigo-400/30 shadow-[inset_0_0_40px_rgba(87,61,255,0.2),0_0_30px_rgba(59,130,246,0.3)]">
             
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
@@ -119,8 +124,8 @@ export default function DreamTeamFlipCard({ card }) {
               </Badge>
             </div>
 
-            {/* Binding Type Banner */}
-            <div className="bg-gradient-to-r from-indigo-500/20 via-violet-500/15 to-fuchsia-500/20 border border-indigo-400/40 rounded-xl px-3 py-2 mb-3 shadow-[inset_0_0_20px_rgba(87,61,255,0.1)]">
+            {/* Binding Type Banner - ENHANCED GLOW */}
+            <div className="bg-gradient-to-r from-indigo-500/25 via-violet-500/20 to-fuchsia-500/25 border-2 border-indigo-400/50 rounded-xl px-3 py-2 mb-3 shadow-[inset_0_0_25px_rgba(87,61,255,0.15),0_0_20px_rgba(129,140,248,0.2)]">
               <div className="flex items-center gap-2">
                 <Zap className="w-4 h-4 text-violet-300" />
                 <span className="text-xs font-bold text-violet-200 uppercase tracking-wider">{card.bindingType}</span>
@@ -144,13 +149,13 @@ export default function DreamTeamFlipCard({ card }) {
               </div>
             </div>
 
-            {/* Quote */}
-            <div className="bg-white/8 border border-white/15 rounded-xl p-3 mb-3 backdrop-blur-md shadow-[inset_0_0_20px_rgba(87,61,255,0.1)]">
+            {/* Quote - NO GREY, BLUE GLASS */}
+            <div className="bg-indigo-500/10 border-2 border-indigo-400/40 rounded-xl p-3 mb-3 backdrop-blur-md shadow-[inset_0_0_20px_rgba(87,61,255,0.15),0_0_15px_rgba(59,130,246,0.2)]">
               <p className="text-xs italic text-indigo-200 leading-relaxed">"{card.quote}"</p>
             </div>
 
-            {/* CRYPTOGRAPHIC SIGNATURE BLOCK */}
-            <div className="flex-1 bg-white/5 border border-indigo-400/30 rounded-xl p-3 font-mono overflow-hidden backdrop-blur-md shadow-[inset_0_0_30px_rgba(87,61,255,0.1)]">
+            {/* CRYPTOGRAPHIC SIGNATURE BLOCK - BLUE VIOLET GLOW */}
+            <div className="flex-1 bg-indigo-950/40 border-2 border-indigo-400/40 rounded-xl p-3 font-mono overflow-hidden backdrop-blur-md shadow-[inset_0_0_35px_rgba(87,61,255,0.2),0_0_25px_rgba(59,130,246,0.25)]">
               <div className="flex items-center gap-2 mb-2 pb-2 border-b border-indigo-400/30">
                 <Fingerprint className="w-4 h-4 text-indigo-300" />
                 <span className="text-xs text-indigo-200 font-bold uppercase tracking-wider">Cryptographic Signature</span>

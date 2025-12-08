@@ -1,3 +1,7 @@
+// LEGACY / FEATURE COMPONENT
+// Do not use on Home page Dream Team section.
+// Canonical Dream Team is HomeDreamTeam + DreamTeamFlipCard + components/data/dreamTeam
+
 import React from "react";
 import { motion } from "framer-motion";
 import { Brain, Shield, Zap, Code, Eye, Lock } from "lucide-react";

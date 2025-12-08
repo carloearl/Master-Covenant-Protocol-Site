@@ -1,3 +1,7 @@
+// LEGACY COMPONENT
+// Do not use on Home page Dream Team section.
+// Canonical Dream Team is HomeDreamTeam + DreamTeamFlipCard + components/data/dreamTeam
+
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
