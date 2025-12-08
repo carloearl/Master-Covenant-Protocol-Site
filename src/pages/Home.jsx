@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "@/utils";
 import HeroSection from '@/components/home/HeroSection';
 import HeroContent from '@/components/home/HeroContent';
 import HomeDreamTeamCTA from '@/components/home/HomeDreamTeamCTA';
@@ -71,17 +69,15 @@ const ScrollSection = ({ children, className = "" }) => {
   const sectionRef = useRef(null);
   const style = useScrollEffect(sectionRef);
   return (
-    <section ref={sectionRef} className={`w-full relative py-12 md:py-16 lg:py-20 ${className}`}>
-      <div style={style} className="w-full transition-all duration-600 ease-out">
+    <div ref={sectionRef} className={`w-full py-16 md:py-20 lg:py-24 ${className}`}>
+      <div style={style} className="transition-all duration-500 ease-out">
         {children}
       </div>
-    </section>
+    </div>
   );
 };
 
 export default function Home() {
-  const navigate = useNavigate();
-
   useEffect(() => {
     document.documentElement.style.scrollBehavior = 'smooth';
     return () => { document.documentElement.style.scrollBehavior = ''; };
@@ -96,49 +92,47 @@ export default function Home() {
         url="/"
       />
       
-      {/* SEO Content for Crawlers */}
-      <div className="sr-only">
-        <h1>GlyphLock Security LLC - Quantum-Resistant Cybersecurity Platform</h1>
-        <p>Enterprise-grade security solutions including quantum-resistant encryption, AI-powered threat detection, visual cryptography, blockchain security, and comprehensive security operations.</p>
-      </div>
+      {/* SEO H1 - Hidden but crawlable */}
+      <h1 className="sr-only">GlyphLock Security LLC - Quantum-Resistant Cybersecurity Platform</h1>
 
-      <div className="w-full relative" style={{ background: 'transparent', pointerEvents: 'auto' }}>
-        {/* Hero Video */}
-        <ScrollSection>
-          <HeroSection />
-        </ScrollSection>
+      <main className="w-full relative" style={{ background: 'transparent' }}>
+        
+        {/* Hero Section */}
+        <section className="w-full">
+          <ScrollSection>
+            <HeroSection />
+          </ScrollSection>
+          
+          <div className="flex justify-center -mt-8">
+            <CountdownPill />
+          </div>
+        </section>
 
-        {/* Launch Countdown Pill - Below Hero */}
-        <div className="w-full mt-10">
-          <CountdownPill />
-        </div>
-
-        {/* Hero Content - Stats & CTAs */}
-        <ScrollSection>
+        {/* Value Proposition */}
+        <ScrollSection className="container-responsive">
           <HeroContent />
         </ScrollSection>
 
-        {/* AI Operators - The Dream Team */}
-        {/* Dream Team block is required for phase 2 branding — do not delete */}
-        <ScrollSection>
+        {/* Dream Team CTA */}
+        <ScrollSection className="container-responsive">
           <HomeDreamTeamCTA />
         </ScrollSection>
 
-        {/* Services Grid */}
-        <ScrollSection>
+        {/* Services Overview */}
+        <ScrollSection className="container-responsive">
           <ServicesGrid />
         </ScrollSection>
 
-        {/* Technology Partners Marquee */}
+        {/* Technology Partners */}
         <ScrollSection>
           <TechnologyMarquee />
         </ScrollSection>
 
-        {/* Final CTA */}
-        <ScrollSection>
+        {/* Final Call to Action */}
+        <ScrollSection className="container-responsive">
           <CTASection />
         </ScrollSection>
-      </div>
+      </main>
     </>
   );
 }
