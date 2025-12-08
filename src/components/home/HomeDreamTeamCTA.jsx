@@ -17,6 +17,18 @@ export default function HomeDreamTeamCTA() {
       <div className="relative mx-auto max-w-6xl">
         {/* Hero visual section with both images */}
         <div className="relative mb-10 rounded-3xl border border-cyan-400/40 bg-gradient-to-br from-indigo-950/60 via-blue-950/40 to-violet-950/50 p-8 md:p-12 shadow-[0_0_60px_rgba(56,189,248,0.4)] backdrop-blur-xl overflow-hidden">
+          {/* Pulsing logo in top right */}
+          <div className="absolute top-4 right-4 md:top-6 md:right-6 z-20 animate-pulse">
+            <div className="relative w-16 h-16 md:w-20 md:h-20">
+              <div className="absolute inset-0 blur-xl opacity-60 bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 rounded-full animate-pulse" />
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/0584b5287_34226b41-415a-418e-821f-a17c8751522d.jpg"
+                alt="GlyphLock"
+                className="relative w-full h-full object-contain drop-shadow-[0_0_25px_rgba(56,189,248,1)]"
+              />
+            </div>
+          </div>
+
           {/* Basketball court dramatic background */}
           <div className="absolute inset-0 opacity-30 pointer-events-none mix-blend-luminosity">
             <img 
