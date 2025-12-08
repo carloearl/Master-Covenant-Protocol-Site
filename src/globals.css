@@ -936,39 +936,62 @@ input::placeholder, textarea::placeholder {
 /* DREAM TEAM GLOW ANIMATION */
 @keyframes gl-dream-glow {
   0% {
-    opacity: 0;
+    opacity: 0.3;
     background: radial-gradient(
       circle,
-      rgba(0, 0, 0, 1),
-      rgba(0, 0, 0, 1)
+      rgba(79, 70, 229, 0.5),
+      rgba(65, 105, 225, 0.4),
+      transparent
     );
   }
   50% {
-    opacity: 0.9;
+    opacity: 1;
     background: radial-gradient(
       circle,
-      rgba(79, 70, 229, 0.9),
-      rgba(65, 105, 225, 0.9)
+      rgba(79, 70, 229, 1),
+      rgba(65, 105, 225, 0.9),
+      rgba(30, 64, 175, 0.6)
     );
   }
   100% {
-    opacity: 0;
+    opacity: 0.3;
     background: radial-gradient(
       circle,
-      rgba(0, 0, 0, 1),
-      rgba(0, 0, 0, 1)
+      rgba(79, 70, 229, 0.5),
+      rgba(65, 105, 225, 0.4),
+      transparent
     );
   }
 }
 
 .dream-glow {
   position: absolute;
-  inset: -20px;
+  inset: -60px;
   z-index: 0;
   border-radius: 50%;
-  filter: blur(80px);
-  animation: gl-dream-glow 3.8s ease-in-out infinite;
+  filter: blur(100px);
+  animation: gl-dream-glow 2.5s ease-in-out infinite;
   pointer-events: none;
+}
+
+/* NEON RING CTA CARD */
+@keyframes neon-ring-pulse {
+  0%, 100% {
+    border-color: rgba(79, 70, 229, 0.6);
+    box-shadow: 0 0 30px rgba(79, 70, 229, 0.5), 
+                0 0 60px rgba(65, 105, 225, 0.4),
+                inset 0 0 30px rgba(79, 70, 229, 0.2);
+  }
+  50% {
+    border-color: rgba(65, 105, 225, 0.9);
+    box-shadow: 0 0 50px rgba(79, 70, 229, 0.8), 
+                0 0 100px rgba(65, 105, 225, 0.6),
+                inset 0 0 50px rgba(65, 105, 225, 0.3);
+  }
+}
+
+.neon-ring-cta {
+  animation: neon-ring-pulse 3s ease-in-out infinite;
 }
 
 /* DREAM TEAM LEGENDARY PANEL EFFECTS */
