@@ -71,8 +71,8 @@ const ScrollSection = ({ children, className = "" }) => {
   const sectionRef = useRef(null);
   const style = useScrollEffect(sectionRef);
   return (
-    <section ref={sectionRef} className={`w-full relative py-8 md:py-12 ${className}`} style={{ background: 'transparent' }}>
-      <div style={{ ...style, background: 'transparent' }} className="w-full transition-all duration-200 ease-out">
+    <section ref={sectionRef} className={`w-full relative py-8 md:py-12 ${className}`}>
+      <div style={style} className="w-full transition-all duration-200 ease-out">
         {children}
       </div>
     </section>
@@ -102,7 +102,7 @@ export default function Home() {
         <p>Enterprise-grade security solutions including quantum-resistant encryption, AI-powered threat detection, visual cryptography, blockchain security, and comprehensive security operations.</p>
       </div>
 
-      <div className="w-full relative" style={{ background: '#000000', pointerEvents: 'auto' }}>
+      <div className="w-full relative" style={{ background: 'transparent', pointerEvents: 'auto' }}>
         {/* Hero Video */}
         <ScrollSection>
           <HeroSection />

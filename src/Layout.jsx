@@ -67,18 +67,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <ThemeProvider>
-      <div 
-        className="min-h-screen text-white flex flex-col relative overflow-x-hidden selection:bg-[#00E4FF] selection:text-black" 
-        style={{ 
-          background: '#000000',
-          paddingBottom: 'env(safe-area-inset-bottom)',
-          overscrollBehavior: 'none'
-        }}
-      >
-        <MobileTouchOptimizer />
-        <SecurityMonitor />
-
-      {/* SITE-WIDE COSMIC SYSTEM - Lowest layer */}
+      {/* SITE-WIDE NEBULA - Absolute bottom layer */}
       <div 
         style={{ 
           position: 'fixed', 
@@ -95,6 +84,8 @@ export default function Layout({ children, currentPageName }) {
       >
         <NebulaLayer intensity={1.0} />
       </div>
+
+      {/* CURSOR ORB - Desktop only, above nebula */}
       <div 
         className="hidden md:block" 
         style={{ 
@@ -113,28 +104,40 @@ export default function Layout({ children, currentPageName }) {
         <CursorOrb />
       </div>
 
-      {/* Navbar - Highest priority */}
-      <div style={{ position: 'relative', zIndex: 9999 }}>
-        <Navbar user={user} onLogin={handleLogin} onLogout={handleLogout} />
-      </div>
+      <div 
+        className="min-h-screen text-white flex flex-col relative overflow-x-hidden selection:bg-[#00E4FF] selection:text-black" 
+        style={{ 
+          background: 'transparent',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          overscrollBehavior: 'none',
+          zIndex: 10
+        }}
+      >
+        <MobileTouchOptimizer />
+        <SecurityMonitor />
 
-      {/* Main content */}
-      <main className="flex-1 relative pt-4" style={{ background: '#000000', zIndex: 10, pointerEvents: 'auto' }}>
-        {children}
-      </main>
-
-      {/* GlyphBot Jr - High priority */}
-      <div style={{ position: 'fixed', bottom: 0, right: 0, zIndex: 9000, pointerEvents: 'none' }}>
-        <div style={{ pointerEvents: 'auto' }}>
-          <GlyphBotJr />
+        {/* Navbar */}
+        <div style={{ position: 'relative', zIndex: 50 }}>
+          <Navbar user={user} onLogin={handleLogin} onLogout={handleLogout} />
         </div>
-      </div>
+
+        {/* Main content */}
+        <main className="flex-1 relative pt-4" style={{ background: 'transparent', zIndex: 10, pointerEvents: 'auto' }}>
+          {children}
+        </main>
+
+        {/* GlyphBot Jr */}
+        <div style={{ position: 'fixed', bottom: 0, right: 0, zIndex: 999, pointerEvents: 'none' }}>
+          <div style={{ pointerEvents: 'auto' }}>
+            <GlyphBotJr />
+          </div>
+        </div>
 
         {/* Footer */}
-        <div className="relative" style={{ zIndex: 100 }}>
+        <div className="relative" style={{ zIndex: 20 }}>
           <Footer />
         </div>
       </div>
     </ThemeProvider>
   );
-}
+  }

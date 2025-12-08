@@ -30,12 +30,12 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  background: #000000 !important;
+  background: transparent;
   color: #ffffff !important;
 }
 
 html.dark {
-  background: #000000 !important;
+  background: transparent;
 }
 
 body {
@@ -48,22 +48,18 @@ body {
   contain: layout style;
   transform: translateZ(0);
   backface-visibility: hidden;
-  background: #000000 !important;
+  background: transparent;
   color: #ffffff !important;
 }
 
 body, #root, #__next, main, section {
-  background: #000000 !important;
-}
-
-#root, #__next {
-  background: #000000 !important;
+  background: transparent !important;
 }
 
 /* Mobile-specific background fix */
 @media (max-width: 768px) {
   html, body, #root, #__next {
-    background: #000000 !important;
+    background: transparent !important;
   }
 }
 
