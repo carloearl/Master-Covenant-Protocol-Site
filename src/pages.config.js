@@ -54,6 +54,7 @@ import HotzoneMapper from './pages/HotzoneMapper';
 import Qr from './pages/Qr';
 import VideoUpload from './pages/VideoUpload';
 import Mobile from './pages/Mobile';
+import AboutCarlo from './pages/AboutCarlo';
 import __Layout from './Layout.jsx';
 
 
@@ -114,6 +115,7 @@ export const PAGES = {
     "Qr": Qr,
     "VideoUpload": VideoUpload,
     "Mobile": Mobile,
+    "AboutCarlo": AboutCarlo,
 }
 
 export const pagesConfig = {

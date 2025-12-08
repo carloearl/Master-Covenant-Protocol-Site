@@ -1,4 +1,3 @@
-
 /**
  * UNIFIED NAVIGATION CONFIGURATION
  * Single source of truth for Navbar and Footer
@@ -20,6 +19,7 @@ export const NAV_SECTIONS = [
     label: "Company",
     items: [
       { label: "About Us", page: "About" },
+      { label: "Founder Story", page: "AboutCarlo" },
       { label: "Partners", page: "Partners" },
       { label: "Contact", page: "Contact" },
       { label: "Accessibility", page: "Accessibility" }
@@ -53,6 +53,7 @@ export const NAV_SECTIONS = [
 export const FOOTER_LINKS = {
   company: [
     { label: "About Us", page: "About" },
+    { label: "Founder Story", page: "AboutCarlo" },
     { label: "Partners", page: "Partners" },
     { label: "Contact", page: "Contact" },
     { label: "Accessibility", page: "Accessibility" }
