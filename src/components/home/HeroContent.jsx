@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 export default function HeroContent() {
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-16 relative" style={{ background: 'transparent', pointerEvents: 'auto' }}>
-      <div className="text-black mb-16 text-center opacity-100">
+      <div className="text-center mb-16">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 text-white tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] leading-tight">
           THE FUTURE OF SECURITY ISN'T COMING — <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-violet-600 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(139,92,246,0.9)] animate-pulse">IT'S ALREADY HERE.</span>
         </h1>
@@ -32,7 +32,7 @@ export default function HeroContent() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to={createPageUrl("Consultation")}>
-            <Button size="lg" className="bg-transparent text-white px-8 text-lg font-black tracking-wide rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 shadow-[0_0_35px_rgba(59,130,246,0.6)] hover:shadow-[0_0_55px_rgba(59,130,246,0.8)] transition-all duration-300">
+            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-lg px-8 font-black tracking-wide shadow-[0_0_35px_rgba(59,130,246,0.6)] hover:shadow-[0_0_55px_rgba(59,130,246,0.8)] transition-all duration-300">
               BOOK FREE CONSULTATION
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
@@ -45,23 +45,23 @@ export default function HeroContent() {
         </div>
       </div>
 
-      <div className="bg-transparent opacity-100 grid md:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-4 gap-6">
         {[
-        { label: "THREATS DETECTED", value: "500K+", icon: Shield },
-        { label: "AI MONITORING", value: "24/7", icon: Lock },
-        { label: "ENCRYPTION", value: "AES-256", icon: Lock },
-        { label: "RESPONSE TIME", value: "<1ms", icon: Shield }].
-        map((stat, idx) => {
+          { label: "THREATS DETECTED", value: "500K+", icon: Shield },
+          { label: "AI MONITORING", value: "24/7", icon: Lock },
+          { label: "ENCRYPTION", value: "AES-256", icon: Lock },
+          { label: "RESPONSE TIME", value: "<1ms", icon: Shield }
+        ].map((stat, idx) => {
           const Icon = stat.icon;
           return (
-            <div key={idx} className="bg-transparent p-6 text-center opacity-100 rounded-xl group from-blue-600/20 via-cyan-500/15 to-indigo-500/20 backdrop-blur-md border border-cyan-400/20 shadow-[0_0_35px_rgba(6,182,212,0.4)] hover:shadow-[0_0_55px_rgba(6,182,212,0.6)] hover:border-cyan-400/40 transition-all duration-600 ease-out">
+            <div key={idx} className="bg-gradient-to-br from-blue-600/20 via-cyan-500/15 to-indigo-500/20 backdrop-blur-md border border-cyan-400/20 p-6 rounded-xl text-center shadow-[0_0_35px_rgba(6,182,212,0.4)] hover:shadow-[0_0_55px_rgba(6,182,212,0.6)] hover:border-cyan-400/40 transition-all duration-600 ease-out group">
               <Icon className="w-8 h-8 text-cyan-300 mx-auto mb-3 drop-shadow-[0_0_15px_rgba(6,182,212,1)] group-hover:scale-110 group-hover:text-blue-300 transition-all duration-300" />
-              <div className="text-violet-700 mb-2 text-3xl font-black tracking-tight opacity-90 drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">{stat.value}</div>
+              <div className="text-3xl font-black text-white mb-2 tracking-tight drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">{stat.value}</div>
               <div className="text-sm text-cyan-100 font-bold tracking-wider">{stat.label}</div>
-            </div>);
-
+            </div>
+          );
         })}
       </div>
-    </div>);
-
+    </div>
+  );
 }
