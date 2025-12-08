@@ -4,16 +4,16 @@ import { createPageUrl } from "@/utils";
 
 export default function HomeDreamTeamCTA() {
   return (
-    <section className="relative w-full py-20 overflow-hidden mt-20 mx-auto max-w-7xl rounded-3xl border-4 border-transparent neon-ring-cta">
+    <section className="relative w-full py-20 overflow-hidden mt-20 mx-auto max-w-7xl rounded-3xl border-4 border-transparent neon-ring-cta shadow-[0_0_80px_rgba(79,70,229,0.6)]">
 
       {/* COURT BACKGROUND - CONTAINED */}
       <div className="absolute inset-0 rounded-3xl overflow-hidden">
         <img
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/03ba5648e_3880beef-889a-4dec-9b80-2b561f3c47a31.jpg"
           alt=""
-          className="w-full h-full object-contain"
+          className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/85"></div>
+        <div className="absolute inset-0 bg-black/50"></div>
       </div>
 
       {/* CONTENT */}
@@ -28,7 +28,7 @@ export default function HomeDreamTeamCTA() {
         <div className="text-xl md:text-2xl max-w-4xl leading-relaxed mb-6 font-black drop-shadow-[0_4px_12px_rgba(0,0,0,1)] space-y-4">
           <p className="text-blue-500">The Dream Team checks every angle every time.</p>
           
-          <p className="text-indigo-400">GlyphLock runs <span className="text-blue-400">five AI systems</span> like a championship lineup —<br /><span className="text-indigo-300">logic, recall, orchestration, engineering, and code precision</span> all cross-checking each other in real time so <span className="text-blue-500">bad answers die before they ever reach you.</span></p>
+          <p className="text-white">GlyphLock runs <span className="text-blue-400">five AI systems</span> like a championship lineup —<br /><span className="text-white">logic, recall, orchestration, engineering, and code precision</span> all cross-checking each other in real time so <span className="text-blue-500">bad answers die before they ever reach you.</span></p>
           
           <p className="text-blue-400 text-2xl font-black mt-8">Tap the ball to meet the roster.</p>
         </div>
