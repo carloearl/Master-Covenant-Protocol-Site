@@ -22,7 +22,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="w-full bg-gradient-to-r from-blue-900/25 via-indigo-900/30 to-violet-900/25 border-b border-indigo-400/20 shadow-[0_2px_35px_rgba(59,130,246,0.3)] text-white sticky top-0 backdrop-blur-2xl" style={{ zIndex: 10000 }}>
+    <nav className="w-full bg-gradient-to-r from-blue-900/25 via-indigo-900/30 to-violet-900/25 border-b border-indigo-400/20 shadow-[0_2px_35px_rgba(59,130,246,0.3)] text-white sticky top-0 backdrop-blur-2xl" style={{ zIndex: 10000, pointerEvents: 'auto', position: 'sticky' }}>
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
         {/* Logo Area */}
         <Link to={createPageUrl("Home")} className="flex items-center gap-3 group">
