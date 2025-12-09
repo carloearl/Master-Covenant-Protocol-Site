@@ -227,8 +227,8 @@ export default function DreamTeamPage() {
       />
 
       {/* Introduction Section - The Dream Team Philosophy */}
-      <div className="h-screen snap-start flex items-center justify-center relative px-6">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
+      <div className="min-h-[85vh] flex items-center justify-center relative px-6 py-12">
+        <div className="max-w-4xl mx-auto text-center space-y-6">
           <h1 className="text-5xl md:text-7xl font-black mb-6">
             <span className="text-white">WHY THE </span>
             <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">DREAM TEAM?</span>
