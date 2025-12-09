@@ -141,7 +141,7 @@ When answering questions, use the knowledge bases to provide accurate informatio
 
   return (
     <div 
-      className="fixed bottom-6 right-6 z-[9999] flex flex-col overflow-hidden rounded-2xl shadow-2xl border glyph-glass-dark"
+      className="fixed bottom-6 right-6 z-[99999] flex flex-col overflow-hidden rounded-2xl shadow-2xl border glyph-glass-dark"
       style={{ 
         borderColor: 'rgba(37, 99, 235, 0.3)',
         width: '400px',
@@ -149,7 +149,12 @@ When answering questions, use the knowledge bases to provide accurate informatio
         maxWidth: 'calc(100vw - 48px)',
         maxHeight: 'calc(100vh - 100px)',
         boxShadow: '0 0 40px rgba(37, 99, 235, 0.5), 0 0 80px rgba(37, 99, 235, 0.2)',
-        pointerEvents: 'auto'
+        pointerEvents: 'auto',
+        touchAction: 'manipulation',
+        WebkitTapHighlightColor: 'transparent',
+        display: 'flex',
+        visibility: 'visible',
+        isolation: 'isolate'
       }}
     >
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM2YTAwZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0YzAtMi4yMS0xLjc5LTQtNC00cy00IDEuNzktNCA0IDEuNzkgNCA0IDQgNC0xLjc5IDQtNHptMC0xMGMwLTIuMjEtMS43OS00LTQtNHMtNCAxLjc5LTQgNCAxLjc5IDQgNCA0IDQtMS43OSA0LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-20 pointer-events-none"></div>
