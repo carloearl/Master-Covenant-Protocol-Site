@@ -226,7 +226,73 @@ export default function DreamTeamPage() {
         description="Meet the GlyphLock Dream Team. Collectible AI player cards featuring Alfred, Claude, Copilot, Perplexity, and Cursor. Master Covenant Series."
       />
 
-
+      {/* Introduction Section - The Dream Team Philosophy */}
+      <div className="h-screen snap-start flex items-center justify-center relative px-6">
+        <div className="max-w-4xl mx-auto text-center space-y-8">
+          <h1 className="text-5xl md:text-7xl font-black mb-6">
+            <span className="text-white">WHY THE </span>
+            <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">DREAM TEAM?</span>
+          </h1>
+          
+          <div className="space-y-6 text-lg md:text-xl text-violet-100 leading-relaxed">
+            <p className="text-white font-bold text-2xl">
+              Because no single AI can dominate every play.
+            </p>
+            
+            <p>
+              Other platforms throw multiple LLMs at you and call it "choice." That's not a strategy—that's chaos. 
+              You pick a model, cross your fingers, and hope it doesn't hallucinate your billion-dollar contract.
+            </p>
+            
+            <p className="text-cyan-300 font-semibold">
+              GlyphLock doesn't give you models. We give you a TEAM.
+            </p>
+            
+            <p>
+              Just like the 1992 Dream Team didn't win gold by making Michael Jordan play center, 
+              we don't force one AI to handle logic, creativity, speed, and security all at once. 
+              <span className="text-white font-bold"> Every AI has a position. Every position has a purpose.</span>
+            </p>
+            
+            <div className="bg-white/5 border-2 border-indigo-500/40 rounded-2xl p-8 backdrop-blur-xl mt-8">
+              <h3 className="text-2xl font-black text-white mb-4">THE GLYPHLOCK DIFFERENCE</h3>
+              <div className="grid md:grid-cols-2 gap-6 text-left">
+                <div>
+                  <div className="text-cyan-400 font-bold mb-2">❌ OTHER PLATFORMS</div>
+                  <ul className="space-y-2 text-violet-200">
+                    <li>• Give you a roster, tell you to coach yourself</li>
+                    <li>• No orchestration, no validation</li>
+                    <li>• One bad output = catastrophic failure</li>
+                    <li>• You pick the model. You own the risk.</li>
+                  </ul>
+                </div>
+                <div>
+                  <div className="text-green-400 font-bold mb-2">✓ GLYPHLOCK</div>
+                  <ul className="space-y-2 text-white">
+                    <li>• Orchestrated chain execution</li>
+                    <li>• Cross-validation between models</li>
+                    <li>• Bad answers die before reaching you</li>
+                    <li>• We coach. We validate. We win.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <p className="text-white font-bold text-xl pt-6">
+              Alfred orchestrates. Claude reasons. Gemini sees everything. Perplexity finds truth. Cursor builds.
+            </p>
+            
+            <p className="text-cyan-300 text-2xl font-black">
+              They don't compete. They dominate together.
+            </p>
+          </div>
+          
+          <div className="pt-8">
+            <ChevronDown className="w-12 h-12 text-indigo-300/70 mx-auto animate-bounce" />
+            <p className="text-sm text-violet-300 mt-2">Scroll to meet the roster</p>
+          </div>
+        </div>
+      </div>
 
       {/* Navigation dots */}
       <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3">
