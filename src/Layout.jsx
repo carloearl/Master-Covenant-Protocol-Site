@@ -127,10 +127,19 @@ export default function Layout({ children, currentPageName }) {
         </main>
 
         {/* GlyphBot Jr */}
-        <div style={{ position: 'fixed', bottom: 0, right: 0, zIndex: 999, pointerEvents: 'none' }}>
-          <div style={{ pointerEvents: 'auto' }}>
-            <GlyphBotJr />
-          </div>
+        <div style={{ 
+          position: 'fixed', 
+          bottom: 0, 
+          right: 0, 
+          zIndex: 99999, 
+          pointerEvents: 'auto',
+          isolation: 'isolate',
+          touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent',
+          display: 'block',
+          visibility: 'visible'
+        }}>
+          <GlyphBotJr />
         </div>
 
         {/* Footer */}
