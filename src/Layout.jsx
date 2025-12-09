@@ -125,7 +125,7 @@ export default function Layout({ children, currentPageName }) {
         )}
 
         {/* Main content */}
-        <main className="flex-1 relative pt-4" style={{ background: 'transparent', zIndex: 100, pointerEvents: 'auto', position: 'relative' }}>
+        <main className={`flex-1 relative ${currentPageName === 'DreamTeam' ? '' : 'pt-4'}`} style={{ background: 'transparent', zIndex: currentPageName === 'DreamTeam' ? 'auto' : 100, pointerEvents: 'auto', position: 'relative' }}>
           {children}
         </main>
 
