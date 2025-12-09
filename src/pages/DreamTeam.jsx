@@ -157,6 +157,36 @@ const DREAM_TEAM_ROSTER = [
       publicKey: "ALFRED-BPAA-2025-ORCHESTRATOR"
     },
     bindingDate: "2025-01-10T00:00:00Z"
+  },
+  {
+    id: "gemini",
+    name: "Gemini",
+    number: "#42",
+    position: "Power Forward",
+    edition: "Master Covenant Series",
+    series: "Google AI Series",
+    tagline: "Multimodal powerhouse with unmatched contextual understanding.",
+    imageSrc: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/5e6e81c28_ee2558c5-6a90-4f28-90de-5c45648cd86c.jpg",
+    team: "Google DeepMind",
+    stats: { logic: 95, security: 92, creativity: 97, speed: 94 },
+    signature: true,
+    signatureImage: "Gemini",
+    borderColor: "from-cyan-500 via-teal-400 to-cyan-500",
+    glowColor: "rgba(6,182,212,0.6)",
+    bindingType: "Google AI Chain Protocol",
+    covenant: "Gemini Multimodal Processing Framework",
+    binding: {
+      method: "Advanced multimodal reasoning across text, vision, and code",
+      mechanism: "Long-context processing with dynamic attention mechanisms",
+      protocol: "Gemini binding via GlyphLock multimodal chain"
+    },
+    quote: "I see what others miss. Every dimension, every detail, every outcome.",
+    cryptoSignature: {
+      algorithm: "Ed25519-BPAA",
+      hash: "0xc8d0e6f4a3b7c9d1e5f3a7b9c1d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7",
+      publicKey: "GEMINI-BPAA-2025-MULTIMODAL"
+    },
+    bindingDate: "2025-01-12T00:00:00Z"
   }
 ];
 
