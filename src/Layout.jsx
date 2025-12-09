@@ -117,10 +117,12 @@ export default function Layout({ children, currentPageName }) {
         <MobileTouchOptimizer />
         <SecurityMonitor />
 
-        {/* Navbar */}
-        <div style={{ position: 'relative', zIndex: 9998, pointerEvents: 'auto' }}>
-          <Navbar user={user} onLogin={handleLogin} onLogout={handleLogout} />
-        </div>
+        {/* Navbar - Hidden on Dream Team page */}
+        {currentPageName !== 'DreamTeam' && (
+          <div style={{ position: 'relative', zIndex: 9998, pointerEvents: 'auto' }}>
+            <Navbar user={user} onLogin={handleLogin} onLogout={handleLogout} />
+          </div>
+        )}
 
         {/* Main content */}
         <main className="flex-1 relative pt-4" style={{ background: 'transparent', zIndex: 100, pointerEvents: 'auto', position: 'relative' }}>

@@ -320,15 +320,20 @@ export default function DreamTeamPage() {
       {/* Scrollable container */}
       <div 
         ref={containerRef}
-        className="h-screen overflow-y-auto snap-y snap-mandatory scroll-smooth"
-        style={{ scrollSnapType: 'y mandatory' }}
+        className="h-screen overflow-y-scroll snap-y snap-mandatory"
+        style={{ 
+          scrollSnapType: 'y mandatory',
+          scrollBehavior: 'smooth',
+          overscrollBehavior: 'contain',
+          WebkitOverflowScrolling: 'touch'
+        }}
       >
         {DREAM_TEAM_ROSTER.map((card, index) => (
           <FullScreenCard key={card.id} card={card} index={index} />
-        ))}
+          ))}
 
-        {/* CTA Section */}
-        <div className="h-screen snap-start flex items-center justify-center relative">
+          {/* CTA Section */}
+          <div className="min-h-screen snap-start flex items-center justify-center relative py-20">
           <div className="text-center px-6">
             <h2 className="text-4xl md:text-6xl font-black mb-6">
               <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-cyan-300 bg-clip-text text-transparent">
