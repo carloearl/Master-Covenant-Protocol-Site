@@ -230,11 +230,11 @@ export default function DreamTeamPage() {
       {/* Scrollable container */}
       <div 
         ref={containerRef}
-        className="h-screen overflow-y-scroll snap-y snap-mandatory"
+        className="h-screen overflow-y-scroll snap-y snap-mandatory hide-scrollbar"
         style={{ 
           scrollSnapType: 'y mandatory',
           scrollBehavior: 'smooth',
-          overscrollBehavior: 'contain',
+          overscrollBehavior: 'none',
           WebkitOverflowScrolling: 'touch'
         }}
       >

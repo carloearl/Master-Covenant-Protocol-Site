@@ -145,10 +145,12 @@ export default function Layout({ children, currentPageName }) {
           <GlyphBotJr />
         </div>
 
-        {/* Footer */}
-        <div className="relative" style={{ zIndex: 9997, pointerEvents: 'auto', position: 'relative' }}>
-          <Footer />
-        </div>
+        {/* Footer - Hidden on Dream Team page */}
+        {currentPageName !== 'DreamTeam' && (
+          <div className="relative" style={{ zIndex: 9997, pointerEvents: 'auto', position: 'relative' }}>
+            <Footer />
+          </div>
+        )}
       </div>
     </ThemeProvider>
   );
