@@ -147,7 +147,7 @@ export default function Layout({ children, currentPageName }) {
 
         {/* Footer - Hidden on Dream Team page */}
         {currentPageName !== 'DreamTeam' && (
-          <div className="relative" style={{ zIndex: 9997, pointerEvents: 'auto', position: 'relative' }}>
+          <div className="relative z-10 overflow-hidden" style={{ pointerEvents: 'auto', isolation: 'isolate' }}>
             <Footer />
           </div>
         )}

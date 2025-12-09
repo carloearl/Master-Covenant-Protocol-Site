@@ -308,6 +308,11 @@ p {
   -webkit-backface-visibility: hidden;
 }
 
+/* Global stacking context isolation */
+section, main {
+  isolation: isolate;
+}
+
 @media (max-width: 768px) {
   .nebula-layer-container {
     contain: strict;

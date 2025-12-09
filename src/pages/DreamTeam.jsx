@@ -312,7 +312,7 @@ export default function DreamTeamPage() {
       ))}
 
       {/* CTA Section */}
-      <div className="min-h-screen snap-start flex items-center justify-center relative py-20">
+      <div className="min-h-screen snap-start flex items-center justify-center relative py-20 z-20 overflow-hidden" style={{ isolation: 'isolate' }}>
         <div className="text-center px-6">
             <h2 className="text-4xl md:text-6xl font-black mb-6">
               <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-cyan-300 bg-clip-text text-transparent">
@@ -382,11 +382,11 @@ function FullScreenCard({ card, index }) {
   };
 
   return (
-    <div className="h-screen w-full snap-start flex items-center justify-center px-4 py-8 relative">
+    <div className="h-screen w-full snap-start flex items-center justify-center px-4 py-8 relative" style={{ zIndex: 5, isolation: 'isolate' }}>
       {/* Card container */}
       <div 
         className="relative w-full max-w-lg md:max-w-xl lg:max-w-2xl cursor-pointer"
-        style={{ perspective: '2000px' }}
+        style={{ perspective: '2000px', isolation: 'isolate' }}
         onClick={handleFlip}
         role="button"
         tabIndex={0}
