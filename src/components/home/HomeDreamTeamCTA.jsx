@@ -87,9 +87,8 @@ export default function HomeDreamTeamCTA() {
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/48ca17dba_c44b0deb.png"
               alt="Enter Dream Team"
-              className="relative w-64 sm:w-72 md:w-80 h-auto"
+              className="relative w-64 sm:w-72 md:w-80 h-auto dream-team-logo-glow"
               style={{ 
-                filter: 'drop-shadow(0 10px 40px rgba(0,0,0,0.8)) drop-shadow(0 0 80px rgba(168,85,247,1)) drop-shadow(0_10px_80px_rgba(168,85,247,1))',
                 zIndex: 100,
                 pointerEvents: 'auto !important',
                 display: 'block !important',
