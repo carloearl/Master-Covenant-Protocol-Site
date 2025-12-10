@@ -194,36 +194,16 @@ const DREAM_TEAM_ROSTER = [
 
 export default function DreamTeamPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const scrollTop = containerRef.current.scrollTop;
-      const cardHeight = window.innerHeight;
-      const index = Math.round(scrollTop / cardHeight);
-      setCurrentIndex(Math.min(index, DREAM_TEAM_ROSTER.length - 1));
-    };
-
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('scroll', handleScroll);
-      return () => container.removeEventListener('scroll', handleScroll);
-    }
-  }, []);
 
   const scrollToCard = (index) => {
-    if (containerRef.current) {
-      const scrollIndex = index === -1 ? 0 : index;
-      containerRef.current.scrollTo({
-        top: scrollIndex * window.innerHeight,
-        behavior: 'smooth'
-      });
+    const sections = document.querySelectorAll('.snap-start');
+    if (sections[index]) {
+      sections[index].scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="min-h-screen w-full relative overflow-x-hidden bg-black text-white snap-y snap-mandatory" style={{ isolation: 'isolate', scrollSnapType: 'y mandatory' }}>
+    <div className="min-h-screen w-full relative overflow-x-hidden bg-black text-white" style={{ isolation: 'isolate' }}>
       <SEOHead
         title="GlyphLock Dream Team - AI Player Cards | Master Covenant Series"
         description="Meet the GlyphLock Dream Team. Collectible AI player cards featuring Alfred, Claude, Copilot, Perplexity, and Cursor. Master Covenant Series."
@@ -239,10 +219,8 @@ export default function DreamTeamPage() {
 
       {/* Foreground content wrapper */}
       <div className="relative z-10">
-        {/* Snap sections container */}
-        <div ref={containerRef}>
         {/* Introduction Section - The Dream Team Philosophy */}
-        <div className="h-screen snap-start flex items-center justify-center relative px-6">
+        <div className="min-h-screen snap-start flex items-center justify-center relative px-6">
           <div className="max-w-4xl mx-auto text-center space-y-6">
           <h1 className="text-5xl md:text-7xl font-black mb-6">
             <span className="text-white">WHY THE </span>
@@ -313,61 +291,30 @@ export default function DreamTeamPage() {
       {DREAM_TEAM_ROSTER.map((card, index) => (
         <FullScreenCard key={card.id} card={card} index={index} />
       ))}
-      </div>
 
-      {/* CTA SECTION — OUTSIDE SNAP CONTAINER */}
+      {/* CTA SECTION */}
       <div className="min-h-screen flex items-center justify-center relative py-20 overflow-hidden">
-      <div className="text-center px-6">
-        <h2 className="text-4xl md:text-6xl font-black mb-6">
-          <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-cyan-300 bg-clip-text text-transparent">
-            Deploy Your Squad
-          </span>
-        </h2>
-        <p className="text-violet-200 text-lg mb-8 max-w-xl mx-auto">
-          The Dream Team is ready. Enter the GlyphBot Console to orchestrate your AI chain.
-        </p>
-        <Link
-          to={createPageUrl("GlyphBot")}
-          className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-lg font-bold bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-[0_0_50px_rgba(87,61,255,0.5)] hover:shadow-[0_0_80px_rgba(87,61,255,0.7)] transition-all"
-        >
-          Enter the Console
-          <ChevronRight className="w-6 h-6" />
-        </Link>
-      </div>
+        <div className="text-center px-6">
+          <h2 className="text-4xl md:text-6xl font-black mb-6">
+            <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-cyan-300 bg-clip-text text-transparent">
+              Deploy Your Squad
+            </span>
+          </h2>
+          <p className="text-violet-200 text-lg mb-8 max-w-xl mx-auto">
+            The Dream Team is ready. Enter the GlyphBot Console to orchestrate your AI chain.
+          </p>
+          <Link
+            to={createPageUrl("GlyphBot")}
+            className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-lg font-bold bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-[0_0_50px_rgba(87,61,255,0.5)] hover:shadow-[0_0_80px_rgba(87,61,255,0.7)] transition-all"
+          >
+            Enter the Console
+            <ChevronRight className="w-6 h-6" />
+          </Link>
+        </div>
       </div>
       </div>
 
-    {/* Navigation dots */}
-    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-[60] flex flex-col gap-3">
-      <button
-        onClick={() => scrollToCard(-1)}
-        className={`w-3 h-3 rounded-full transition-all duration-300 ${
-          currentIndex === 0 
-            ? 'bg-indigo-400 scale-125 shadow-[0_0_15px_rgba(87,61,255,0.8)]' 
-            : 'bg-white/20 hover:bg-white/40'
-        }`}
-        aria-label="Go to introduction"
-      />
-      {DREAM_TEAM_ROSTER.map((card, index) => (
-        <button
-          key={card.id}
-          onClick={() => scrollToCard(index + 1)}
-          className={`w-3 h-3 rounded-full transition-all duration-300 ${
-            currentIndex === index + 1 
-              ? 'bg-indigo-400 scale-125 shadow-[0_0_15px_rgba(87,61,255,0.8)]' 
-              : 'bg-white/20 hover:bg-white/40'
-          }`}
-          aria-label={`Go to ${card.name}`}
-        />
-      ))}
-    </div>
 
-    {/* Scroll indicator */}
-    {currentIndex < DREAM_TEAM_ROSTER.length && (
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[60] animate-bounce">
-        <ChevronDown className="w-8 h-8 text-indigo-300/70" />
-      </div>
-    )}
   </div>
 );
 }
@@ -386,7 +333,7 @@ function FullScreenCard({ card, index }) {
   };
 
   return (
-    <div className="h-screen w-full snap-start flex items-center justify-center px-4 py-8 relative" style={{ zIndex: 5, isolation: 'isolate' }}>
+    <div className="min-h-screen w-full snap-start flex items-center justify-center px-4 py-8 relative" style={{ zIndex: 5, isolation: 'isolate' }}>
       {/* Card container */}
       <div 
         className="relative w-full max-w-lg md:max-w-xl lg:max-w-2xl cursor-pointer"
