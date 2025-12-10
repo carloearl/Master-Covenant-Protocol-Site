@@ -43,7 +43,7 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "instant" });
   }, [location.pathname]);
 
   if (loading) return <GlyphLoader text="Initializing Secure Environment..." />;
