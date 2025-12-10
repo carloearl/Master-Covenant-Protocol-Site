@@ -291,7 +291,7 @@ export default function DreamTeamPage() {
       ))}
 
       {/* CTA SECTION */}
-      <div className="min-h-screen flex items-center justify-center relative py-20 overflow-hidden z-10">
+      <div className="min-h-screen flex items-center justify-center relative py-20 overflow-hidden z-10 mb-32">
         <div className="text-center px-6">
           <h2 className="text-4xl md:text-6xl font-black mb-6">
             <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-cyan-300 bg-clip-text text-transparent">
@@ -308,11 +308,11 @@ export default function DreamTeamPage() {
             Enter the Console
             <ChevronRight className="w-6 h-6" />
           </Link>
-          </div>
-          </div>
-          </>
-          );
-          }
+        </div>
+      </div>
+      </>
+      );
+      }
 
       function FullScreenCard({ card, index }) {
   const [isFlipped, setIsFlipped] = useState(false);
