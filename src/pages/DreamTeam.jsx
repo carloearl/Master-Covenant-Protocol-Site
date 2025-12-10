@@ -239,10 +239,10 @@ export default function DreamTeamPage() {
 
       {/* Foreground content wrapper */}
       <div className="relative z-10">
-        {/* Scrollable snap container */}
+        {/* Snap-scroll container: INTRO + CARDS ONLY */}
         <div 
           ref={containerRef}
-          className="h-screen overflow-y-scroll snap-y snap-mandatory hide-scrollbar"
+          className="min-h-screen overflow-y-auto snap-y snap-mandatory hide-scrollbar"
           style={{ 
             scrollSnapType: 'y mandatory',
             scrollBehavior: 'smooth',
@@ -322,26 +322,26 @@ export default function DreamTeamPage() {
       {DREAM_TEAM_ROSTER.map((card, index) => (
         <FullScreenCard key={card.id} card={card} index={index} />
       ))}
+      </div>
 
-      {/* CTA Section */}
-      <div className="min-h-screen snap-start flex items-center justify-center relative py-20 overflow-hidden">
-        <div className="text-center px-6">
-            <h2 className="text-4xl md:text-6xl font-black mb-6">
-              <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-cyan-300 bg-clip-text text-transparent">
-                Deploy Your Squad
-              </span>
-            </h2>
-            <p className="text-violet-200 text-lg mb-8 max-w-xl mx-auto">
-              The Dream Team is ready. Enter the GlyphBot Console to orchestrate your AI chain.
-            </p>
-          <Link
-            to={createPageUrl("GlyphBot")}
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-lg font-bold bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-[0_0_50px_rgba(87,61,255,0.5)] hover:shadow-[0_0_80px_rgba(87,61,255,0.7)] transition-all"
-          >
-            Enter the Console
-            <ChevronRight className="w-6 h-6" />
-          </Link>
-        </div>
+      {/* CTA SECTION — OUTSIDE SNAP CONTAINER */}
+      <div className="min-h-screen flex items-center justify-center relative py-20 overflow-hidden">
+      <div className="text-center px-6">
+        <h2 className="text-4xl md:text-6xl font-black mb-6">
+          <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-cyan-300 bg-clip-text text-transparent">
+            Deploy Your Squad
+          </span>
+        </h2>
+        <p className="text-violet-200 text-lg mb-8 max-w-xl mx-auto">
+          The Dream Team is ready. Enter the GlyphBot Console to orchestrate your AI chain.
+        </p>
+        <Link
+          to={createPageUrl("GlyphBot")}
+          className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-lg font-bold bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-[0_0_50px_rgba(87,61,255,0.5)] hover:shadow-[0_0_80px_rgba(87,61,255,0.7)] transition-all"
+        >
+          Enter the Console
+          <ChevronRight className="w-6 h-6" />
+        </Link>
       </div>
       </div>
       </div>
