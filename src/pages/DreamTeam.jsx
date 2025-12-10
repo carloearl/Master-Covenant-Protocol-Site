@@ -429,9 +429,14 @@ export default function DreamTeamPage() {
         tabIndex={0}
         onKeyDown={(e) => e.key === 'Enter' && handleFlip()}
       >
-        {/* Stats Above Card */}
+        {/* Name and Stats Above Card */}
         {!isFlipped && (
           <div className="w-full max-w-2xl mx-auto mb-6">
+            <div className="text-center mb-6">
+              <h3 className="text-3xl md:text-4xl font-black text-white mb-2">{card.name}</h3>
+              <p className="text-base text-indigo-300 uppercase tracking-wider font-bold">{card.position} {card.number}</p>
+              <p className="text-sm text-violet-200 mt-2">{card.tagline}</p>
+            </div>
             <div className="grid grid-cols-4 gap-4 p-6 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-violet-500/10 to-blue-500/10 border-2 border-indigo-400/30 backdrop-blur-xl shadow-[0_0_40px_rgba(87,61,255,0.3)]">
               {Object.entries(card.stats).map(([key, val]) => (
                 <div key={key} className="text-center">
@@ -445,11 +450,6 @@ export default function DreamTeamPage() {
                   </div>
                 </div>
               ))}
-            </div>
-            <div className="text-center mt-4">
-              <h3 className="text-2xl md:text-3xl font-black text-white mb-1">{card.name}</h3>
-              <p className="text-sm text-indigo-300 uppercase tracking-wider">{card.position} {card.number}</p>
-              <p className="text-sm text-violet-200 mt-2">{card.tagline}</p>
             </div>
           </div>
         )}
@@ -479,11 +479,11 @@ export default function DreamTeamPage() {
               <div className="absolute inset-0 rounded-3xl bg-black/20 backdrop-blur-sm" />
             </div>
 
-            {/* Image - Clean, no overlays */}
+            {/* Image - Full card visible, no cropping */}
             <img 
               src={card.imageSrc} 
               alt={card.name}
-              className="absolute inset-0 w-full h-full object-cover object-center rounded-3xl"
+              className="absolute inset-0 w-full h-full object-contain object-center rounded-3xl"
               loading="eager"
               decoding="sync"
               style={{ 
