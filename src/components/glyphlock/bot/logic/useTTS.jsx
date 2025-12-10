@@ -138,8 +138,11 @@ export default function useTTS(options = {}) {
     setIsLoading(false);
   }, []);
 
-  const playWithOpenAI = useCallback(async (text, settings, voiceId) => {
+  const playWithOpenAI = useCallback(async (text, settings, voiceProfile) => {
     try {
+      // GLYPHLOCK: Call OpenAI TTS backend function
+      const { base44 } = await import('@/api/base44Client');
+      
       if (!audioContextRef.current) {
         audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
       }
@@ -149,12 +152,25 @@ export default function useTTS(options = {}) {
         await audioContext.resume();
       }
 
-      const audioData = await synthesizeTTS(text, {
-        voice: voiceId,
+      // Call backend function for OpenAI TTS
+      const response = await base44.functions.invoke('textToSpeechOpenAI', {
+        text,
+        voiceProfile: voiceProfile || settings.voiceProfile || 'neutral_female',
         speed: normalizeSpeed(settings.speed)
       });
 
+      if (!response.data || response.data.error) {
+        throw new Error(response.data?.error || 'TTS generation failed');
+      }
+
+      // Convert response to ArrayBuffer
+      const audioData = response.data instanceof ArrayBuffer 
+        ? response.data 
+        : await (await fetch(URL.createObjectURL(new Blob([response.data])))).arrayBuffer();
+
       let audioBuffer = await audioContext.decodeAudioData(audioData);
+      
+      // GLYPHLOCK: Apply audio filters (bass/clarity/pitch)
       audioBuffer = await applyAudioFilters(audioContext, audioBuffer, settings);
 
       const source = audioContext.createBufferSource();
@@ -177,7 +193,7 @@ export default function useTTS(options = {}) {
       setIsSpeaking(true);
       setMetadata({
         provider: 'openai',
-        voiceId,
+        voiceProfile: voiceProfile || settings.voiceProfile,
         pitch: settings.pitch,
         speed: settings.speed,
         bass: settings.bass,
