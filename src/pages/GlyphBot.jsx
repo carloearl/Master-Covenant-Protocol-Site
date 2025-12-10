@@ -215,11 +215,16 @@ export default function GlyphBotPage() {
     }
   }, [messages, isSending]);
 
-  const handleSend = useCallback(async () => {
+  const handleSend = useCallback(async (files = []) => {
     const trimmed = input.trim();
     if (!trimmed || isSending) return;
 
-    const newUserMsg = { id: `user-${Date.now()}`, role: 'user', content: trimmed };
+    const newUserMsg = { 
+      id: `user-${Date.now()}`, 
+      role: 'user', 
+      content: trimmed,
+      files: files.map(f => ({ name: f.name, size: f.size, type: f.type }))
+    };
     const updatedMessages = [...messages, newUserMsg];
     setMessages(updatedMessages);
     setInput('');
@@ -366,6 +371,17 @@ export default function GlyphBotPage() {
   // Handle new chat
   const handleNewChat = useCallback(() => {
     handleClear();
+  }, []);
+
+  // Handle import chat
+  const handleImportChat = useCallback(async (importedMessages) => {
+    if (!importedMessages || importedMessages.length === 0) {
+      toast.error('No messages in imported file');
+      return;
+    }
+    
+    setMessages([WELCOME_MESSAGE, ...importedMessages]);
+    toast.success(`Imported ${importedMessages.length} messages`);
   }, []);
 
   // Phase 6: Handle audit start
@@ -806,6 +822,8 @@ export default function GlyphBotPage() {
                   onUnarchive={unarchiveChat}
                   onDelete={deleteChat}
                   hasMessages={messages.length > 1}
+                  messages={messages}
+                  onImportChat={handleImportChat}
                 />
               </aside>
             )}

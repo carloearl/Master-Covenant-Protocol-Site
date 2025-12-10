@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Archive, Plus, Clock, MessageSquare, ArchiveRestore, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Save, Archive, Plus, Clock, MessageSquare, ArchiveRestore, Trash2, ChevronDown, ChevronUp, Download, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
@@ -14,13 +14,16 @@ export default function ChatHistoryPanel({
   onGetArchived,
   onUnarchive,
   onDelete,
-  hasMessages = false
+  hasMessages = false,
+  messages = [],
+  onImportChat
 }) {
   const [showArchived, setShowArchived] = useState(false);
   const [archivedChats, setArchivedChats] = useState([]);
   const [loadingArchived, setLoadingArchived] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isArchiving, setIsArchiving] = useState(false);
+  const fileInputRef = React.useRef(null);
 
   useEffect(() => {
     if (showArchived && onGetArchived) {
@@ -126,6 +129,57 @@ export default function ChatHistoryPanel({
     }
   };
 
+  const handleExport = () => {
+    if (!messages || messages.length === 0) {
+      toast.error('No messages to export');
+      return;
+    }
+
+    const exportData = {
+      version: '1.0',
+      exported: new Date().toISOString(),
+      chatId: currentChatId,
+      messages: messages.filter(m => m.id !== 'welcome-1'),
+      metadata: {
+        messageCount: messages.length - 1,
+        provider: messages[messages.length - 1]?.providerId || 'unknown'
+      }
+    };
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `glyphbot_chat_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('Chat exported successfully');
+  };
+
+  const handleImport = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      
+      if (!data.messages || !Array.isArray(data.messages)) {
+        throw new Error('Invalid chat file format');
+      }
+
+      if (onImportChat) {
+        await onImportChat(data.messages);
+        toast.success('Chat imported successfully');
+      }
+    } catch (err) {
+      console.error('[Import]', err);
+      toast.error('Failed to import: ' + (err.message || 'Invalid file'));
+    }
+
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
   return (
     <div className="flex flex-col h-full bg-slate-950/80 border-l border-purple-500/30">
       <div className="px-4 py-3 border-b border-purple-500/30 bg-purple-500/10">
@@ -142,6 +196,7 @@ export default function ChatHistoryPanel({
           onClick={onNewChat}
           variant="outline"
           size="sm"
+          style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', minHeight: '44px' }}
           className="w-full justify-start gap-2 text-xs bg-slate-900/60 border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400"
         >
           <Plus className="w-3.5 h-3.5" />
@@ -153,17 +208,50 @@ export default function ChatHistoryPanel({
           disabled={!hasMessages || isSaving}
           variant="outline"
           size="sm"
+          style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', minHeight: '44px' }}
           className="w-full justify-start gap-2 text-xs bg-slate-900/60 border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/20 hover:border-emerald-400 disabled:opacity-40"
         >
           <Save className="w-3.5 h-3.5" />
           {isSaving ? 'Saving...' : (currentChatId ? 'Update Save' : 'Save Chat')}
         </Button>
         
+        <div className="grid grid-cols-2 gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            className="hidden"
+            onChange={handleImport}
+          />
+          <Button
+            onClick={handleExport}
+            disabled={!hasMessages}
+            variant="outline"
+            size="sm"
+            style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', minHeight: '44px' }}
+            className="justify-start gap-2 text-xs bg-slate-900/60 border-blue-500/40 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400 disabled:opacity-40"
+          >
+            <Download className="w-3.5 h-3.5" />
+            Export
+          </Button>
+          <Button
+            onClick={() => fileInputRef.current?.click()}
+            variant="outline"
+            size="sm"
+            style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', minHeight: '44px' }}
+            className="justify-start gap-2 text-xs bg-slate-900/60 border-indigo-500/40 text-indigo-300 hover:bg-indigo-500/20 hover:border-indigo-400"
+          >
+            <Upload className="w-3.5 h-3.5" />
+            Import
+          </Button>
+        </div>
+        
         <Button
           onClick={handleArchive}
           disabled={!currentChatId || isArchiving}
           variant="outline"
           size="sm"
+          style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', minHeight: '44px' }}
           className="w-full justify-start gap-2 text-xs bg-slate-900/60 border-amber-500/40 text-amber-300 hover:bg-amber-500/20 hover:border-amber-400 disabled:opacity-40"
         >
           <Archive className="w-3.5 h-3.5" />
