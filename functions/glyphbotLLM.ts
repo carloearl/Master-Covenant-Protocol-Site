@@ -535,6 +535,102 @@ Deno.serve(async (req) => {
       content: sanitizeInput(m.content)
     }));
 
+    // CRITICAL: If realTime or auditMode, use Base44 InvokeLLM with web search
+    if (realTime || auditMode) {
+      console.log('[GlyphBot LLM] Using Base44 InvokeLLM with web search for audit/realtime');
+      
+      const lastUserMsg = sanitizedMessages[sanitizedMessages.length - 1];
+      const conversationContext = sanitizedMessages.slice(0, -1).map(m => 
+        `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`
+      ).join('\n\n');
+      
+      const enhancedPrompt = buildPrompt(sanitizedMessages, persona, auditMode, realTime);
+      
+      try {
+        const llmResult = await base44.integrations.Core.InvokeLLM({
+          prompt: enhancedPrompt,
+          add_context_from_internet: true, // ENABLE WEB SEARCH
+          response_json_schema: auditMode ? {
+            type: "object",
+            properties: {
+              target: { type: "string" },
+              targetType: { type: "string" },
+              auditMode: { type: "string" },
+              overallGrade: { type: "string" },
+              riskScore: { type: "number" },
+              summary: { type: "string" },
+              sourcesAnalyzed: { type: "number" },
+              technicalFindings: { 
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    title: { type: "string" },
+                    description: { type: "string" },
+                    severity: { type: "string" },
+                    sources: { type: "array", items: { type: "string" } }
+                  }
+                }
+              },
+              businessRisks: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    title: { type: "string" },
+                    description: { type: "string" },
+                    severity: { type: "string" }
+                  }
+                }
+              },
+              fixPlan: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    title: { type: "string" },
+                    description: { type: "string" },
+                    timeline: { type: "string" }
+                  }
+                }
+              }
+            }
+          } : null
+        });
+        
+        const totalLatency = Date.now() - startTime;
+        const resultText = auditMode ? JSON.stringify(llmResult) : llmResult;
+        
+        // Audit log
+        base44.entities.SystemAuditLog.create({
+          event_type: 'GLYPHBOT_LLM_CALL',
+          description: `LLM via Base44 Broker (Web Search)`,
+          actor_email: user.email,
+          resource_id: 'glyphbot',
+          metadata: { persona, provider: 'BASE44_WEB_SEARCH', latencyMs: totalLatency, auditMode, realTime },
+          status: 'success'
+        }).catch(() => {});
+        
+        return Response.json({
+          text: resultText,
+          model: 'Base44 LLM + Web Search',
+          providerUsed: 'BASE44_WEB_SEARCH',
+          providerLabel: 'Base44 (Web Search Enabled)',
+          latencyMs: totalLatency,
+          meta: {
+            providerUsed: 'BASE44_WEB_SEARCH',
+            providerLabel: 'Base44 (Web Search Enabled)',
+            availableProviders: getProviderChain(),
+            providerStats: { ...providerStats },
+            webSearchUsed: true
+          }
+        });
+      } catch (webSearchError) {
+        console.error('[GlyphBot LLM] Web search failed, falling back to standard chain:', webSearchError);
+        // Continue to standard provider chain below
+      }
+    }
+
     // Build prompt
     const prompt = buildPrompt(sanitizedMessages, persona, auditMode, realTime);
 
