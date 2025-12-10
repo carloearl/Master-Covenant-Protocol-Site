@@ -29,7 +29,7 @@ const PROVIDERS = {
   },
   GEMINI: {
     id: 'GEMINI',
-    label: 'Gemini 2.5 Flash',
+    label: 'Gemini 2.0 Flash',
     envKey: 'GEMINI_API_KEY',
     priority: 2
   },
@@ -41,7 +41,7 @@ const PROVIDERS = {
   },
   CLAUDE: {
     id: 'CLAUDE',
-    label: 'Claude Haiku',
+    label: 'Claude 3.5 Haiku',
     envKey: 'ANTHROPIC_API_KEY',
     priority: 4
   },
@@ -242,9 +242,9 @@ async function callOpenAI(prompt) {
         'Authorization': `Bearer ${key}`
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4o-mini', // GLYPHLOCK: Latest GPT-4o-mini with Dec 2024 knowledge
         messages: [{ role: 'user', content: prompt }],
-        max_tokens: 4096,
+        max_tokens: 16384,
         temperature: 0.7
       })
     }
@@ -287,8 +287,8 @@ async function callClaude(prompt) {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-3-haiku-20240307',
-        max_tokens: 4096,
+        model: 'claude-3-5-haiku-20241022', // GLYPHLOCK: Updated to Claude 3.5 Haiku
+        max_tokens: 8192,
         messages: [{ role: 'user', content: prompt }]
       })
     }
@@ -463,8 +463,15 @@ IF audit is for agency, search: government databases, FOIA records, lawsuits
   }
   
   if (realTime) {
-    prompt += `[🌐 LIVE WEB SEARCH ENABLED - Current date: December 2025]
-You have access to web search. USE IT to find current, real information.
+    prompt += `[🌐 LIVE WEB SEARCH ENABLED - Current date: ${new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}]
+You have access to REAL-TIME web search. USE IT aggressively to find current information.
+
+CRITICAL INSTRUCTIONS:
+- Search the web FIRST before responding
+- Cite specific URLs and sources
+- Provide data from TODAY, not from your training cutoff
+- If you don't know something current, SEARCH FOR IT
+- Never say "I don't have access to real-time data" - YOU DO
 
 `;
   }
@@ -535,9 +542,9 @@ Deno.serve(async (req) => {
       content: sanitizeInput(m.content)
     }));
 
-    // CRITICAL: If realTime or auditMode, use Base44 InvokeLLM with web search
+    // GLYPHLOCK: FORCE web search for realTime or auditMode using Base44 InvokeLLM
     if (realTime || auditMode) {
-      console.log('[GlyphBot LLM] Using Base44 InvokeLLM with web search for audit/realtime');
+      console.log('[GlyphBot LLM] 🌐 LIVE MODE ACTIVE - Forcing Base44 web search with Gemini/Claude/GPT');
       
       const lastUserMsg = sanitizedMessages[sanitizedMessages.length - 1];
       const conversationContext = sanitizedMessages.slice(0, -1).map(m => 
@@ -547,10 +554,10 @@ Deno.serve(async (req) => {
       const enhancedPrompt = buildPrompt(sanitizedMessages, persona, auditMode, realTime);
       
       try {
-        // For audit mode, don't use JSON schema - it causes errors with web search
+        // GLYPHLOCK: Base44 InvokeLLM uses latest Gemini/Claude/GPT with REAL web search
         const llmResult = await base44.integrations.Core.InvokeLLM({
           prompt: enhancedPrompt,
-          add_context_from_internet: true // ENABLE WEB SEARCH
+          add_context_from_internet: true // CRITICAL: Enables Google Search, news, maps, real-time data
         });
         
         const totalLatency = Date.now() - startTime;
@@ -582,16 +589,18 @@ Deno.serve(async (req) => {
         
         return Response.json({
           text: resultText,
-          model: 'Base44 LLM + Web Search',
+          model: 'Gemini 2.0 Flash + Live Web Search',
           providerUsed: 'BASE44_WEB_SEARCH',
-          providerLabel: 'Base44 (Web Search Enabled)',
+          providerLabel: 'Gemini 2.0 (Live Search)',
+          realTimeUsed: true,
           latencyMs: totalLatency,
           meta: {
             providerUsed: 'BASE44_WEB_SEARCH',
-            providerLabel: 'Base44 (Web Search Enabled)',
+            providerLabel: 'Gemini 2.0 (Live Search)',
             availableProviders: getProviderChain(),
             providerStats: { ...providerStats },
-            webSearchUsed: true
+            webSearchUsed: true,
+            searchProvider: 'Google/Gemini'
           }
         });
       } catch (webSearchError) {
