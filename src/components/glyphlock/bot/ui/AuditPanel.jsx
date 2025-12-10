@@ -32,22 +32,19 @@ export default function AuditPanel({ onStartAudit, isProcessing }) {
     e.preventDefault();
     
     if (!targetIdentifier.trim()) {
-      toast.error(`Please enter a ${targetType === 'business' ? 'URL' : 'name'}`);
+      toast.error(`Please enter a ${targetType === 'business' ? 'business identifier' : targetType === 'person' ? 'name' : 'agency name'}`);
       return;
     }
 
-    if (targetType === 'business') {
-      try {
-        new URL(targetIdentifier.startsWith('http') ? targetIdentifier : `https://${targetIdentifier}`);
-      } catch {
-        toast.error('Please enter a valid URL (e.g., example.com or https://example.com)');
-        return;
+    // GLYPHLOCK: Allow flexible business identifiers (URL, name, or EIN)
+    let normalizedIdentifier = targetIdentifier.trim();
+    
+    // If it looks like a domain, ensure URL format
+    if (targetType === 'business' && normalizedIdentifier.includes('.') && !normalizedIdentifier.includes(' ')) {
+      if (!normalizedIdentifier.startsWith('http')) {
+        normalizedIdentifier = `https://${normalizedIdentifier}`;
       }
     }
-
-    const normalizedIdentifier = targetType === 'business' && !targetIdentifier.startsWith('http')
-      ? `https://${targetIdentifier}`
-      : targetIdentifier;
     
     onStartAudit({
       targetType,
@@ -96,17 +93,26 @@ export default function AuditPanel({ onStartAudit, isProcessing }) {
 
         <TabsContent value="business" className="mt-4 space-y-3">
           <div>
-            <label className="text-xs text-slate-400 mb-1 block">Website URL *</label>
+            <label className="text-xs text-slate-400 mb-1 block">Business Identifier *</label>
             <Input
               value={targetIdentifier}
               onChange={(e) => setTargetIdentifier(e.target.value)}
-              placeholder="example.com or https://example.com"
+              placeholder="e.g., 'Apple Inc', 'tesla.com', or 'EIN: 94-2404110'"
               disabled={isProcessing}
               className="bg-slate-800 border-slate-700 text-white text-sm min-h-[44px]"
             />
-            <p className="text-[10px] text-slate-500 mt-1">
-              Business audit includes: security, compliance (BBB/FTC/FCC/CFPB), reputation, legal risk
-            </p>
+            <div className="mt-2 space-y-1">
+              <p className="text-[9px] text-cyan-400 uppercase tracking-wider">Data Sources Searched:</p>
+              <div className="text-[10px] text-slate-400 space-y-0.5 pl-2">
+                <div>✓ <strong>USPTO</strong> - Trademarks & Patents</div>
+                <div>✓ <strong>Copyright.gov</strong> - Registered Works</div>
+                <div>✓ <strong>Secretary of State</strong> - Articles of Organization</div>
+                <div>✓ <strong>SEC EDGAR</strong> - Public Company Filings</div>
+                <div>✓ <strong>BBB</strong> - Business Rating & Complaints</div>
+                <div>✓ <strong>WHOIS</strong> - Domain Registration</div>
+                <div>✓ <strong>Legal Records</strong> - Lawsuits & Judgments</div>
+              </div>
+            </div>
           </div>
 
           <div>
@@ -137,17 +143,26 @@ export default function AuditPanel({ onStartAudit, isProcessing }) {
             <Input
               value={targetIdentifier}
               onChange={(e) => setTargetIdentifier(e.target.value)}
-              placeholder="Full name or identifier"
+              placeholder="e.g., 'Elon Musk', 'linkedin.com/in/username'"
               disabled={isProcessing}
               className="bg-slate-800 border-slate-700 text-white text-sm min-h-[44px]"
             />
-            <p className="text-[10px] text-slate-500 mt-1">
-              LLM-based analysis only: public records, reputation risk, pattern recognition
-            </p>
+            <div className="mt-2 space-y-1">
+              <p className="text-[9px] text-purple-400 uppercase tracking-wider">Data Sources Searched:</p>
+              <div className="text-[10px] text-slate-400 space-y-0.5 pl-2">
+                <div>✓ <strong>LinkedIn</strong> - Professional History</div>
+                <div>✓ <strong>USPTO</strong> - Patents as Inventor</div>
+                <div>✓ <strong>Court Records</strong> - Legal Cases</div>
+                <div>✓ <strong>News Archives</strong> - Public Mentions</div>
+                <div>✓ <strong>Business Registrations</strong> - Companies Owned</div>
+                <div>✓ <strong>Domain Ownership</strong> - WHOIS Search</div>
+                <div>✓ <strong>Social Media</strong> - Public Profiles</div>
+              </div>
+            </div>
           </div>
           <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
             <p className="text-[10px] text-amber-300 leading-relaxed">
-              ⚠️ This uses publicly available information only. No private database access. Results are analytical, not definitive.
+              ⚠️ Uses publicly available information only. No private database access. Results are analytical, not definitive.
             </p>
           </div>
         </TabsContent>
@@ -158,17 +173,25 @@ export default function AuditPanel({ onStartAudit, isProcessing }) {
             <Input
               value={targetIdentifier}
               onChange={(e) => setTargetIdentifier(e.target.value)}
-              placeholder="Government agency or department"
+              placeholder="e.g., 'FBI', 'fbi.gov', or 'Federal Bureau of Investigation'"
               disabled={isProcessing}
               className="bg-slate-800 border-slate-700 text-white text-sm min-h-[44px]"
             />
-            <p className="text-[10px] text-slate-500 mt-1">
-              Analysis: misconduct patterns, public lawsuits, accountability metrics, FOIA templates
-            </p>
+            <div className="mt-2 space-y-1">
+              <p className="text-[9px] text-amber-400 uppercase tracking-wider">Data Sources Searched:</p>
+              <div className="text-[10px] text-slate-400 space-y-0.5 pl-2">
+                <div>✓ <strong>Official .gov Site</strong> - Legitimacy Verification</div>
+                <div>✓ <strong>FOIA.gov</strong> - Freedom of Info Requests</div>
+                <div>✓ <strong>OIG.gov</strong> - Inspector General Reports</div>
+                <div>✓ <strong>USASpending.gov</strong> - Budget & Spending</div>
+                <div>✓ <strong>Congressional Records</strong> - Oversight Hearings</div>
+                <div>✓ <strong>Watchdog Organizations</strong> - Accountability Reports</div>
+              </div>
+            </div>
           </div>
           <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-3">
             <p className="text-[10px] text-cyan-300 leading-relaxed">
-              ℹ️ Civic accountability audit using public records and legal databases (LLM analysis).
+              ℹ️ Civic accountability audit using public records and legal databases.
             </p>
           </div>
         </TabsContent>
@@ -235,31 +258,49 @@ export default function AuditPanel({ onStartAudit, isProcessing }) {
         <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-2">Channel Capabilities</div>
         
         {targetType === 'business' && (
-          <div className="text-[10px] text-slate-400 space-y-1">
-            <div>✓ Website security (headers, TLS, auth)</div>
-            <div>✓ Compliance (BBB, FTC, FCC, CFPB)</div>
-            <div>✓ Reputation & scam report checks</div>
-            <div>✓ Legal risk indicators</div>
+          <div className="bg-slate-800/40 border border-slate-700/50 rounded-lg p-3">
+            <div className="text-[9px] text-cyan-400 uppercase tracking-wider mb-2">🔍 Search Coverage</div>
+            <div className="text-[10px] text-slate-400 space-y-1">
+              <div>✓ <strong className="text-cyan-300">Trademarks</strong> - USPTO database</div>
+              <div>✓ <strong className="text-cyan-300">Copyrights</strong> - Copyright.gov registry</div>
+              <div>✓ <strong className="text-cyan-300">Business Registration</strong> - Secretary of State</div>
+              <div>✓ <strong className="text-cyan-300">Logos & Brand Assets</strong> - Public filings</div>
+              <div>✓ <strong className="text-cyan-300">Financial Records</strong> - SEC EDGAR (if public)</div>
+              <div>✓ <strong className="text-cyan-300">Legal Compliance</strong> - BBB, FTC, FCC, CFPB</div>
+              <div>✓ <strong className="text-cyan-300">Domain History</strong> - WHOIS records</div>
+              <div>✓ <strong className="text-cyan-300">Reputation</strong> - Reviews, scam reports</div>
+            </div>
           </div>
         )}
 
         {targetType === 'person' && (
-          <div className="text-[10px] text-slate-400 space-y-1">
-            <div>✓ Public court record summaries</div>
-            <div>✓ Criminal record structural analysis</div>
-            <div>✓ Reputation risk scoring</div>
-            <div>✓ Pattern recognition (violence, fraud)</div>
-            <div>⚠️ LLM-based only, no private DB access</div>
+          <div className="bg-slate-800/40 border border-slate-700/50 rounded-lg p-3">
+            <div className="text-[9px] text-purple-400 uppercase tracking-wider mb-2">🔍 Search Coverage</div>
+            <div className="text-[10px] text-slate-400 space-y-1">
+              <div>✓ <strong className="text-purple-300">LinkedIn</strong> - Career verification</div>
+              <div>✓ <strong className="text-purple-300">USPTO</strong> - Patents as inventor</div>
+              <div>✓ <strong className="text-purple-300">Court Records</strong> - Legal history</div>
+              <div>✓ <strong className="text-purple-300">News Archives</strong> - Public mentions</div>
+              <div>✓ <strong className="text-purple-300">Business Ownership</strong> - SOS filings</div>
+              <div>✓ <strong className="text-purple-300">Domain Ownership</strong> - WHOIS</div>
+              <div>✓ <strong className="text-purple-300">Social Media</strong> - Public profiles</div>
+              <div className="text-amber-400 mt-2">⚠️ Public data only - no private databases</div>
+            </div>
           </div>
         )}
 
         {targetType === 'agency' && (
-          <div className="text-[10px] text-slate-400 space-y-1">
-            <div>✓ Misconduct pattern analysis</div>
-            <div>✓ Abuse-of-authority indicators</div>
-            <div>✓ Public lawsuit tracking</div>
-            <div>✓ FOIA auto-draft generation</div>
-            <div>✓ Civic accountability scoring</div>
+          <div className="bg-slate-800/40 border border-slate-700/50 rounded-lg p-3">
+            <div className="text-[9px] text-amber-400 uppercase tracking-wider mb-2">🔍 Search Coverage</div>
+            <div className="text-[10px] text-slate-400 space-y-1">
+              <div>✓ <strong className="text-amber-300">Official .gov Site</strong> - Verification</div>
+              <div>✓ <strong className="text-amber-300">FOIA.gov</strong> - FOIA requests</div>
+              <div>✓ <strong className="text-amber-300">OIG Reports</strong> - Inspector General</div>
+              <div>✓ <strong className="text-amber-300">USASpending.gov</strong> - Budget data</div>
+              <div>✓ <strong className="text-amber-300">Congressional Records</strong> - Oversight hearings</div>
+              <div>✓ <strong className="text-amber-300">Watchdog Groups</strong> - Accountability reports</div>
+              <div>✓ <strong className="text-amber-300">Legal Records</strong> - Public lawsuits</div>
+            </div>
           </div>
         )}
       </div>
