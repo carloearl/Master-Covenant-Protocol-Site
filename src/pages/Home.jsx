@@ -78,10 +78,39 @@ const ScrollSection = ({ children, className = "" }) => {
 };
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     document.documentElement.style.scrollBehavior = 'smooth';
-    return () => { document.documentElement.style.scrollBehavior = ''; };
+    
+    // Simulate initial load
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 800);
+
+    return () => {
+      document.documentElement.style.scrollBehavior = '';
+      clearTimeout(timer);
+    };
   }, []);
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black">
+        <div className="text-center space-y-6">
+          <div className="relative w-24 h-24 mx-auto">
+            <div className="absolute inset-0 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
+            <div className="absolute inset-3 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" 
+              style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} 
+            />
+          </div>
+          <h2 className="text-2xl font-black text-white animate-pulse">
+            Initializing Security...
+          </h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

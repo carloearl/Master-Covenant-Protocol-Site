@@ -203,14 +203,53 @@ const DREAM_TEAM_ROSTER = [
 ];
 
 export default function DreamTeamPage() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(0);
+  
+  useEffect(() => {
+    // Preload all card images
+    let loadedCount = 0;
+    const totalImages = DREAM_TEAM_ROSTER.length;
+    
+    DREAM_TEAM_ROSTER.forEach(card => {
+      const img = new Image();
+      img.onload = () => {
+        loadedCount++;
+        setImagesLoaded(loadedCount);
+        if (loadedCount === totalImages) {
+          setTimeout(() => setLoaded(true), 300);
+        }
+      };
+      img.src = card.imageSrc;
+    });
+  }, []);
 
-  const scrollToCard = (index) => {
-    const sections = document.querySelectorAll('.snap-start');
-    if (sections[index]) {
-      sections[index].scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  if (!loaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="text-center space-y-6">
+          <div className="relative">
+            <div className="w-20 h-20 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mx-auto" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
+            </div>
+          </div>
+          <div>
+            <h2 className="text-2xl font-black text-white mb-2">Loading Dream Team</h2>
+            <p className="text-blue-300">
+              {imagesLoaded} / {DREAM_TEAM_ROSTER.length} players ready
+            </p>
+            <div className="w-64 h-2 bg-white/10 rounded-full mx-auto mt-4 overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-500"
+                style={{ width: `${(imagesLoaded / DREAM_TEAM_ROSTER.length) * 100}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -220,7 +259,12 @@ export default function DreamTeamPage() {
       />
 
       {/* Introduction Section - The Dream Team Philosophy */}
-      <div className="min-h-screen flex items-center justify-center relative px-6">
+      <div className="min-h-screen flex items-center justify-center relative px-6 snap-start"
+        style={{
+          scrollSnapAlign: 'start',
+          scrollSnapStop: 'always'
+        }}
+      >
           <div className="max-w-4xl mx-auto text-center space-y-6">
           <h1 className="text-5xl md:text-7xl font-black mb-6">
             <span className="text-white">WHY THE </span>
@@ -287,10 +331,16 @@ export default function DreamTeamPage() {
         </div>
       </div>
 
-      {/* Player Cards */}
-      {DREAM_TEAM_ROSTER.map((card, index) => (
-        <FullScreenCard key={card.id} card={card} index={index} />
-      ))}
+      {/* Player Cards - Smooth Scroll Container */}
+      <div style={{
+        scrollSnapType: 'y mandatory',
+        scrollBehavior: 'smooth',
+        overscrollBehavior: 'contain'
+      }}>
+        {DREAM_TEAM_ROSTER.map((card, index) => (
+          <FullScreenCard key={card.id} card={card} index={index} />
+        ))}
+      </div>
 
       {/* CTA SECTION */}
       <div className="min-h-screen flex items-center justify-center relative py-20 overflow-hidden z-10 mb-32">
@@ -318,6 +368,25 @@ export default function DreamTeamPage() {
 
       function FullScreenCard({ card, index }) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => setIsVisible(true), 100 * index);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [index]);
 
   const handleFlip = useCallback(() => {
     setIsFlipped(prev => !prev);
@@ -330,7 +399,17 @@ export default function DreamTeamPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center px-4 py-8 relative z-10" style={{ isolation: 'isolate' }}>
+    <div 
+      ref={cardRef}
+      className={`min-h-screen w-full flex items-center justify-center px-4 py-8 relative z-10 snap-start transition-all duration-700 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+      }`}
+      style={{ 
+        isolation: 'isolate',
+        scrollSnapAlign: 'start',
+        scrollSnapStop: 'always'
+      }}
+    >
       {/* Card container */}
       {/* Animated Glow Behind Card */}
       <div 
@@ -385,8 +464,12 @@ export default function DreamTeamPage() {
               src={card.imageSrc} 
               alt={card.name}
               className="absolute inset-0 w-full h-full object-cover object-center rounded-3xl"
-              loading="lazy"
-              decoding="async"
+              loading="eager"
+              decoding="sync"
+              style={{ 
+                imageRendering: 'high-quality',
+                willChange: 'auto'
+              }}
             />
 
             {/* Overlay gradient - NO DARK TINT */}
