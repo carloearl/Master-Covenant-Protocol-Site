@@ -1,9 +1,19 @@
 import React, { useState } from "react";
 import SEOHead from "@/components/SEOHead";
-import { Shield, Lock, Zap } from "lucide-react";
+import { Shield, Lock, Zap, Sparkles } from "lucide-react";
+import InteractiveWebGrid from "@/components/global/InteractiveWebGrid";
 
 export default function AboutCarloPage() {
   const [easterEggFound, setEasterEggFound] = useState(false);
+  const [easterEggClicks, setEasterEggClicks] = useState(0);
+
+  const handleEasterEggClick = () => {
+    setEasterEggClicks(prev => prev + 1);
+    if (easterEggClicks + 1 >= 3) {
+      setEasterEggFound(true);
+      setEasterEggClicks(0);
+    }
+  };
 
   return (
     <>
@@ -14,25 +24,82 @@ export default function AboutCarloPage() {
         keywords={["Carlo Rene Earl", "GlyphLock founder", "cybersecurity founder", "Master Covenant", "visual cryptography", "Arizona tech founder", "quantum security", "truth architecture"]}
       />
 
-      <main className="min-h-screen w-full text-white flex flex-col items-center pt-20 pb-24 px-4" style={{ background: 'transparent' }}>
+      {/* Interactive Web Grid Background */}
+      <InteractiveWebGrid />
+
+      <main className="min-h-screen w-full text-white flex flex-col items-center pt-20 pb-24 px-4 relative z-10" style={{ background: 'transparent' }}>
         
-        {/* Easter Egg Modal */}
+        {/* Enhanced Easter Egg Modal */}
         {easterEggFound && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
-            <div className="max-w-md mx-4 p-8 rounded-3xl bg-gradient-to-br from-blue-500/20 via-indigo-500/20 to-blue-600/20 border-2 border-blue-400 shadow-[0_0_80px_rgba(59,130,246,0.8)]">
-              <div className="text-center space-y-4">
-                <div className="text-6xl animate-bounce">🔐</div>
-                <h3 className="text-2xl font-bold text-blue-100">You Found It.</h3>
-                <p className="text-blue-200 leading-relaxed">
-                  "The pattern is the intelligence."<br/>
-                  <span className="text-sm text-blue-300 mt-2 block">— Carlo, 2025</span>
-                </p>
-                <button
-                  onClick={() => setEasterEggFound(false)}
-                  className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 transition-all shadow-lg"
-                >
-                  Close
-                </button>
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-xl animate-in fade-in duration-500">
+            <div className="absolute inset-0 overflow-hidden">
+              {/* Animated particles */}
+              {[...Array(20)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-1 h-1 bg-blue-400 rounded-full animate-pulse"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 2}s`,
+                    animationDuration: `${2 + Math.random() * 3}s`
+                  }}
+                />
+              ))}
+            </div>
+            
+            <div className="relative max-w-2xl mx-4 p-10 rounded-[2.5rem] overflow-hidden animate-in zoom-in duration-700"
+              style={{
+                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(99, 102, 241, 0.25) 50%, rgba(139, 92, 246, 0.3) 100%)',
+                border: '3px solid rgba(59, 130, 246, 0.8)',
+                backdropFilter: 'blur(20px)',
+                boxShadow: '0 0 150px rgba(59, 130, 246, 1), inset 0 0 100px rgba(99, 102, 241, 0.3)'
+              }}
+            >
+              {/* Rotating glow orbs */}
+              <div className="absolute -top-20 -left-20 w-40 h-40 bg-blue-500/40 rounded-full blur-3xl animate-spin" style={{ animationDuration: '10s' }} />
+              <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-indigo-500/40 rounded-full blur-3xl animate-spin" style={{ animationDuration: '15s', animationDirection: 'reverse' }} />
+              
+              <div className="relative z-10 text-center space-y-6">
+                <div className="flex justify-center">
+                  <div className="relative">
+                    <div className="text-8xl animate-bounce drop-shadow-[0_0_30px_rgba(59,130,246,1)]">🔐</div>
+                    <Sparkles className="absolute -top-2 -right-2 w-8 h-8 text-cyan-300 animate-spin" style={{ animationDuration: '3s' }} />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="text-4xl font-black text-white drop-shadow-[0_0_20px_rgba(59,130,246,0.8)]">
+                    Pattern Recognition Unlocked
+                  </h3>
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="h-px w-12 bg-gradient-to-r from-transparent via-blue-400 to-transparent" />
+                    <Shield className="w-5 h-5 text-blue-400 animate-pulse" />
+                    <div className="h-px w-12 bg-gradient-to-r from-transparent via-blue-400 to-transparent" />
+                  </div>
+                </div>
+                
+                <div className="p-6 rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border-2 border-blue-400/50 backdrop-blur-md">
+                  <p className="text-2xl text-blue-100 leading-relaxed font-light italic">
+                    "The pattern is the intelligence."
+                  </p>
+                  <div className="flex items-center justify-center gap-2 mt-4">
+                    <div className="h-px flex-1 bg-gradient-to-r from-transparent via-blue-400 to-blue-400" />
+                    <span className="text-sm text-blue-300 font-semibold tracking-wider">CARLO, 2025</span>
+                    <div className="h-px flex-1 bg-gradient-to-l from-transparent via-blue-400 to-blue-400" />
+                  </div>
+                </div>
+
+                <div className="pt-4">
+                  <p className="text-sm text-blue-200/80 mb-4">You discovered the hidden truth behind GlyphLock</p>
+                  <button
+                    onClick={() => setEasterEggFound(false)}
+                    className="group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 text-white font-bold text-lg shadow-[0_0_40px_rgba(59,130,246,0.8)] hover:shadow-[0_0_60px_rgba(59,130,246,1)] transition-all duration-300 hover:scale-105 active:scale-95"
+                  >
+                    <span className="relative z-10">Continue The Journey</span>
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -49,9 +116,10 @@ export default function AboutCarloPage() {
               boxShadow: '0 0 100px rgba(59, 130, 246, 0.6), inset 0 0 80px rgba(79, 70, 229, 0.1)'
             }}
           >
-            {/* Animated orbs */}
-            <div className="absolute -top-32 -left-20 w-96 h-96 bg-blue-600/30 blur-[140px] rounded-full pointer-events-none animate-pulse" />
-            <div className="absolute -bottom-32 -right-20 w-96 h-96 bg-indigo-600/30 blur-[140px] rounded-full pointer-events-none animate-pulse" style={{ animationDelay: '1s' }} />
+            {/* Animated royal blue/indigo/violet orbs */}
+            <div className="absolute -top-32 -left-20 w-96 h-96 bg-blue-600/40 blur-[140px] rounded-full pointer-events-none animate-pulse shadow-[0_0_200px_rgba(59,130,246,0.6)]" />
+            <div className="absolute -bottom-32 -right-20 w-96 h-96 bg-indigo-600/40 blur-[140px] rounded-full pointer-events-none animate-pulse shadow-[0_0_200px_rgba(99,102,241,0.6)]" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-violet-600/20 blur-[160px] rounded-full pointer-events-none animate-pulse shadow-[0_0_250px_rgba(139,92,246,0.4)]" style={{ animationDelay: '2s' }} />
             
             <div className="relative z-10 flex flex-col items-center gap-8 text-center">
               <div className="inline-block px-6 py-2 rounded-full bg-blue-500/20 border border-blue-400/50 backdrop-blur-sm">
@@ -118,10 +186,20 @@ export default function AboutCarloPage() {
             </p>
 
             <div 
-              className="relative p-8 rounded-2xl bg-gradient-to-br from-blue-500/15 to-indigo-500/10 border-2 border-blue-400/50 shadow-[inset_0_0_40px_rgba(59,130,246,0.2)] cursor-pointer transition-all hover:shadow-[inset_0_0_60px_rgba(59,130,246,0.3),0_0_40px_rgba(59,130,246,0.5)]"
-              onClick={() => setEasterEggFound(true)}
-              title="Click me..."
+              className="relative p-8 rounded-2xl bg-gradient-to-br from-blue-500/15 to-indigo-500/10 border-2 border-blue-400/50 shadow-[inset_0_0_40px_rgba(59,130,246,0.2)] cursor-pointer transition-all duration-500 hover:shadow-[inset_0_0_80px_rgba(59,130,246,0.4),0_0_60px_rgba(59,130,246,0.7),0_0_100px_rgba(99,102,241,0.5)] hover:border-blue-300 hover:scale-[1.02] group"
+              onClick={handleEasterEggClick}
+              title={easterEggClicks > 0 ? `${3 - easterEggClicks} more...` : "Something's here..."}
             >
+              {easterEggClicks > 0 && (
+                <div className="absolute top-2 right-2 flex gap-1">
+                  {[...Array(easterEggClicks)].map((_, i) => (
+                    <div key={i} className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                  ))}
+                </div>
+              )}
+              
+              {/* Subtle pulsing glow hint */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-400/0 via-indigo-400/10 to-violet-400/0 opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-700" />
               <p className="text-blue-100">
                 In Arizona, a simple conversation cracked everything open. Collin talked about camouflage—how patterns hide people. 
                 I wasn't interested in hiding. I looked past the surface and asked the question that wouldn't let me go:
