@@ -43,8 +43,8 @@ export default function Pricing() {
 
   const plans = [
     {
-      name: "Professional",
-      price: 200,
+      name: "Creator",
+      price: 39,
       icon: Shield,
       priceId: "price_1SUlImAOe9xXPv0na5BmMKKY",
       description: "For individuals and small teams.",
@@ -58,14 +58,14 @@ export default function Pricing() {
       ]
     },
     {
-      name: "Enterprise",
-      price: 2000,
+      name: "Professional",
+      price: 149,
       icon: Crown,
       priceId: "price_1SUlRKAOe9xXPv0nW0uH1IQl",
       description: "Advanced security for growth-stage organizations.",
       highlight: true,
       features: [
-        "Everything in Professional",
+        "Everything in Creator",
         "Unlimited QR Generation",
         "Priority AI Processing",
         "Security Operations Center",
@@ -73,6 +73,21 @@ export default function Pricing() {
         "24/7 Premium Support",
         "Custom Integrations",
         "Dedicated Account Manager"
+      ]
+    },
+    {
+      name: "Enterprise",
+      price: "Starting at $999",
+      icon: Zap,
+      description: "Fully tailored security deployment.",
+      features: [
+        "Everything in Professional",
+        "SDK Access",
+        "Automation & Orchestration",
+        "Admin Controls",
+        "Compliance Tools",
+        "Custom Integrations",
+        "White-Label Solutions"
       ]
     },
     {
@@ -236,10 +251,10 @@ export default function Pricing() {
                     </ul>
                   </div>
 
-                  {plan.name === "Custom" ? (
+                  {plan.name === "Enterprise" ? (
                     <Link to={createPageUrl("Consultation")} className="w-full">
                       <Button className="w-full bg-transparent border border-[#8C4BFF] text-[#8C4BFF] hover:bg-[#8C4BFF] hover:text-white hover:shadow-[0_0_20px_rgba(140,75,255,0.4)] transition-all h-12 text-lg font-bold uppercase tracking-wide">
-                        Contact Sales
+                        Request Enterprise Access
                       </Button>
                     </Link>
                   ) : (

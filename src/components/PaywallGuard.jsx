@@ -111,15 +111,15 @@ export default function PaywallGuard({ serviceName, children, requirePlan = "pro
               </p>
 
               <div className="grid md:grid-cols-2 gap-6 mb-10">
-                {/* Professional Plan */}
+                {/* Creator Plan */}
                 <div className="bg-gray-900/80 backdrop-blur-xl border-2 border-cyan-500/40 rounded-2xl p-6 relative overflow-hidden transition-all duration-300 hover:border-cyan-400/60 hover:scale-[1.02]"
                      style={{ boxShadow: '0 0 30px rgba(6, 182, 212, 0.2)' }}>
                   <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-500/5 pointer-events-none" />
                   <div className="relative z-10">
                     <Shield className="w-12 h-12 text-cyan-400 mx-auto mb-4" style={{ filter: 'drop-shadow(0 0 10px rgba(6, 182, 212, 0.5))' }} />
-                    <h3 className="font-bold text-xl text-white text-center mb-2">Professional</h3>
+                    <h3 className="font-bold text-xl text-white text-center mb-2">Creator</h3>
                     <div className="text-4xl font-bold text-center mb-6">
-                      <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">$200</span>
+                      <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">$39</span>
                       <span className="text-sm text-gray-400">/mo</span>
                     </div>
                     <ul className="text-sm space-y-3 mb-6 text-gray-300">
@@ -150,7 +150,7 @@ export default function PaywallGuard({ serviceName, children, requirePlan = "pro
                   </div>
                 </div>
 
-                {/* Enterprise Plan */}
+                {/* Professional Plan */}
                 <div className="bg-gray-900/80 backdrop-blur-xl border-2 border-purple-500/50 rounded-2xl p-6 relative overflow-hidden transition-all duration-300 hover:border-purple-400/70 hover:scale-[1.02]"
                      style={{ boxShadow: '0 0 40px rgba(168, 85, 247, 0.25)' }}>
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/5 pointer-events-none" />
@@ -162,15 +162,15 @@ export default function PaywallGuard({ serviceName, children, requirePlan = "pro
                   </div>
                   <div className="relative z-10 pt-2">
                     <Crown className="w-12 h-12 text-purple-400 mx-auto mb-4" style={{ filter: 'drop-shadow(0 0 10px rgba(168, 85, 247, 0.5))' }} />
-                    <h3 className="font-bold text-xl text-white text-center mb-2">Enterprise</h3>
+                    <h3 className="font-bold text-xl text-white text-center mb-2">Professional</h3>
                     <div className="text-4xl font-bold text-center mb-6">
-                      <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">$2,000</span>
+                      <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">$149</span>
                       <span className="text-sm text-gray-400">/mo</span>
                     </div>
                     <ul className="text-sm space-y-3 mb-6 text-gray-300">
                       <li className="flex items-center gap-2">
                         <Zap className="w-4 h-4 text-purple-400" />
-                        Everything in Pro
+                        Everything in Creator
                       </li>
                       <li className="flex items-center gap-2">
                         <Zap className="w-4 h-4 text-purple-400" />
