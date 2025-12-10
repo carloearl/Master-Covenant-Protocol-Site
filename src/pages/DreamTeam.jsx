@@ -229,28 +229,27 @@ export default function DreamTeamPage() {
         description="Meet the GlyphLock Dream Team. Collectible AI player cards featuring Alfred, Claude, Copilot, Perplexity, and Cursor. Master Covenant Series."
       />
 
-      {/* Dream Team Nebula - owned by this page */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+      {/* Background layers - owned by this page */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <NebulaLayer intensity={1.2} />
+        <div className="hidden md:block">
+          <CursorOrb />
+        </div>
       </div>
 
-      {/* Dream Team Cursor Orb - owned by this page */}
-      <div className="hidden md:block" style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none' }}>
-        <CursorOrb />
-      </div>
-
-      {/* Scrollable container - above nebula */}
-      <div 
-        ref={containerRef}
-        className="h-screen overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative"
-        style={{ 
-          scrollSnapType: 'y mandatory',
-          scrollBehavior: 'smooth',
-          overscrollBehavior: 'none',
-          WebkitOverflowScrolling: 'touch',
-          zIndex: 10
-        }}
-      >
+      {/* Foreground content wrapper */}
+      <div className="relative z-10">
+        {/* Scrollable snap container */}
+        <div 
+          ref={containerRef}
+          className="h-screen overflow-y-scroll snap-y snap-mandatory hide-scrollbar"
+          style={{ 
+            scrollSnapType: 'y mandatory',
+            scrollBehavior: 'smooth',
+            overscrollBehavior: 'none',
+            WebkitOverflowScrolling: 'touch'
+          }}
+        >
         {/* Introduction Section - The Dream Team Philosophy */}
         <div className="h-screen snap-start flex items-center justify-center relative px-6">
           <div className="max-w-4xl mx-auto text-center space-y-6">
@@ -325,7 +324,7 @@ export default function DreamTeamPage() {
       ))}
 
       {/* CTA Section */}
-      <div className="min-h-screen snap-start flex items-center justify-center relative py-20 z-20 overflow-hidden" style={{ isolation: 'isolate' }}>
+      <div className="min-h-screen snap-start flex items-center justify-center relative py-20 overflow-hidden">
         <div className="text-center px-6">
             <h2 className="text-4xl md:text-6xl font-black mb-6">
               <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-cyan-300 bg-clip-text text-transparent">
@@ -344,10 +343,11 @@ export default function DreamTeamPage() {
           </Link>
         </div>
       </div>
-    </div>
+      </div>
+      </div>
 
     {/* Navigation dots */}
-    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3">
+    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-[60] flex flex-col gap-3">
       <button
         onClick={() => scrollToCard(-1)}
         className={`w-3 h-3 rounded-full transition-all duration-300 ${
@@ -373,7 +373,7 @@ export default function DreamTeamPage() {
 
     {/* Scroll indicator */}
     {currentIndex < DREAM_TEAM_ROSTER.length && (
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 animate-bounce">
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[60] animate-bounce">
         <ChevronDown className="w-8 h-8 text-indigo-300/70" />
       </div>
     )}

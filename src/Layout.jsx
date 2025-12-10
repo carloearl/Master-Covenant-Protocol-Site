@@ -104,56 +104,52 @@ export default function Layout({ children, currentPageName }) {
         <CursorOrb />
       </div>
 
-      {currentPageName === 'DreamTeam' ? (
-        // Dream Team: Self-contained page (owns its visual stack)
-        children
-      ) : (
-        // Normal pages: Full layout with navbar, footer, etc.
-        <div 
-          className="min-h-screen text-white flex flex-col relative overflow-x-hidden selection:bg-[#00E4FF] selection:text-black" 
-          style={{ 
-            background: 'transparent',
-            paddingBottom: 'env(safe-area-inset-bottom)',
-            overscrollBehavior: 'none',
-            zIndex: 10,
-            position: 'relative'
-          }}
-        >
-          <MobileTouchOptimizer />
-          <SecurityMonitor />
+      <div 
+        className="min-h-screen text-white flex flex-col relative overflow-x-hidden selection:bg-[#00E4FF] selection:text-black" 
+        style={{ 
+          background: 'transparent',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          overscrollBehavior: 'none',
+          zIndex: 10,
+          position: 'relative'
+        }}
+      >
+        <MobileTouchOptimizer />
+        <SecurityMonitor />
 
-          {/* Navbar */}
+        {/* Navbar - hidden on Dream Team page */}
+        {currentPageName !== 'DreamTeam' && (
           <div style={{ position: 'relative', zIndex: 9998, pointerEvents: 'auto' }}>
             <Navbar user={user} onLogin={handleLogin} onLogout={handleLogout} />
           </div>
+        )}
 
-          {/* Main content */}
-          <main className="flex-1 relative pt-4" style={{ background: 'transparent', zIndex: 100, pointerEvents: 'auto', position: 'relative' }}>
-            {children}
-          </main>
+        {/* Main content */}
+        <main className="flex-1 relative pt-4" style={{ background: 'transparent', zIndex: 100, pointerEvents: 'auto', position: 'relative' }}>
+          {children}
+        </main>
 
-          {/* GlyphBot Jr */}
-          <div style={{ 
-            position: 'fixed', 
-            bottom: 0, 
-            right: 0, 
-            zIndex: 99999, 
-            pointerEvents: 'auto !important',
-            isolation: 'isolate',
-            touchAction: 'manipulation',
-            WebkitTapHighlightColor: 'transparent',
-            display: 'block !important',
-            visibility: 'visible !important'
-          }}>
-            <GlyphBotJr />
-          </div>
-
-          {/* Footer */}
-          <div className="relative z-10 overflow-hidden" style={{ pointerEvents: 'auto', isolation: 'isolate' }}>
-            <Footer />
-          </div>
+        {/* GlyphBot Jr */}
+        <div style={{ 
+          position: 'fixed', 
+          bottom: 0, 
+          right: 0, 
+          zIndex: 99999, 
+          pointerEvents: 'auto !important',
+          isolation: 'isolate',
+          touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent',
+          display: 'block !important',
+          visibility: 'visible !important'
+        }}>
+          <GlyphBotJr />
         </div>
-      )}
+
+        {/* Footer - always rendered */}
+        <div className="relative z-10 overflow-hidden" style={{ pointerEvents: 'auto', isolation: 'isolate' }}>
+          <Footer />
+        </div>
+      </div>
     </ThemeProvider>
   );
   }
