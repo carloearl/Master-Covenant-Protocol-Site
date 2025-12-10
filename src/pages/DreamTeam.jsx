@@ -223,7 +223,7 @@ export default function DreamTeamPage() {
   };
 
   return (
-    <div className="min-h-screen w-full text-white overflow-x-hidden" style={{ background: '#000000', position: 'relative', isolation: 'isolate' }}>
+    <div className="min-h-screen w-full relative overflow-x-hidden bg-black text-white" style={{ isolation: 'isolate' }}>
       <SEOHead
         title="GlyphLock Dream Team - AI Player Cards | Master Covenant Series"
         description="Meet the GlyphLock Dream Team. Collectible AI player cards featuring Alfred, Claude, Copilot, Perplexity, and Cursor. Master Covenant Series."
