@@ -429,11 +429,30 @@ export default function DreamTeamPage() {
         tabIndex={0}
         onKeyDown={(e) => e.key === 'Enter' && handleFlip()}
       >
-        {/* Flip hint */}
-        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-sm text-violet-200 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse shadow-[0_0_8px_rgba(87,61,255,0.6)]" />
-          {isFlipped ? 'Click to see front' : 'Click to flip card'}
-        </div>
+        {/* Stats Above Card */}
+        {!isFlipped && (
+          <div className="w-full max-w-2xl mx-auto mb-6">
+            <div className="grid grid-cols-4 gap-4 p-6 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-violet-500/10 to-blue-500/10 border-2 border-indigo-400/30 backdrop-blur-xl shadow-[0_0_40px_rgba(87,61,255,0.3)]">
+              {Object.entries(card.stats).map(([key, val]) => (
+                <div key={key} className="text-center">
+                  <div className="text-3xl md:text-4xl font-black text-white drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]">{val}</div>
+                  <div className="text-xs uppercase tracking-wider text-indigo-200 font-bold mb-2">{key}</div>
+                  <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-indigo-500 via-blue-500 to-violet-500 rounded-full shadow-[0_0_12px_rgba(87,61,255,0.8)]"
+                      style={{ width: `${val}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="text-center mt-4">
+              <h3 className="text-2xl md:text-3xl font-black text-white mb-1">{card.name}</h3>
+              <p className="text-sm text-indigo-300 uppercase tracking-wider">{card.position} {card.number}</p>
+              <p className="text-sm text-violet-200 mt-2">{card.tagline}</p>
+            </div>
+          </div>
+        )}
 
         <div className="space-y-6">
           <div 
@@ -445,9 +464,9 @@ export default function DreamTeamPage() {
               willChange: 'transform'
             }}
           >
-          {/* FRONT OF CARD */}
+          {/* FRONT OF CARD - Clean Image Only */}
           <div 
-            className="absolute inset-0 rounded-3xl overflow-hidden"
+            className="absolute inset-0 rounded-3xl overflow-hidden group/card"
             style={{ 
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
@@ -455,12 +474,12 @@ export default function DreamTeamPage() {
               boxShadow: `0 0 80px ${card.glowColor}, 0 30px 60px rgba(0,0,0,0.5)`
             }}
           >
-            {/* Border gradient */}
-            <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${card.borderColor} p-[4px]`}>
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-950/40 via-violet-950/30 to-blue-950/40 backdrop-blur-sm" />
+            {/* Animated border gradient */}
+            <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${card.borderColor} p-[3px]`}>
+              <div className="absolute inset-0 rounded-3xl bg-black/20 backdrop-blur-sm" />
             </div>
 
-            {/* Image */}
+            {/* Image - Clean, no overlays */}
             <img 
               src={card.imageSrc} 
               alt={card.name}
@@ -473,48 +492,19 @@ export default function DreamTeamPage() {
               }}
             />
 
-            {/* Overlay gradient - NO DARK TINT */}
-            <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/60 via-transparent to-violet-950/20 rounded-3xl" />
+            {/* Subtle shimmer on hover */}
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/0 via-white/5 to-white/0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-700" 
+              style={{
+                background: 'linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(99,102,241,0.15) 50%, rgba(139,92,246,0.1) 100%)'
+              }}
+            />
 
-            {/* Top badges */}
-            <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-              <div>
-                <div className="text-xs uppercase tracking-[0.2em] text-violet-200 font-bold">{card.series}</div>
-                <div className="text-xs uppercase tracking-wider text-indigo-200">{card.edition}</div>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 border border-green-400/50 backdrop-blur-md shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                <CheckCircle2 className="w-4 h-4 text-green-400" />
-                <span className="text-xs text-green-300 font-bold uppercase">Bound</span>
-              </div>
-            </div>
-
-            {/* Number */}
-            <div className="absolute top-16 right-6 text-6xl md:text-8xl font-black text-white/15">
-              {card.number}
-            </div>
-
-            {/* Signature badge */}
-            {card.signature && (
-              <div className="absolute top-1/3 right-4 px-3 py-1.5 rounded-lg bg-amber-500/25 border border-amber-400/60 shadow-[0_0_20px_rgba(245,158,11,0.4)]">
-                <span className="text-sm text-amber-300 font-bold">✦ Autographed</span>
-              </div>
-            )}
-
-            {/* Bottom info */}
-            <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-indigo-950/90 via-indigo-950/80 to-transparent backdrop-blur-sm">
-              <div className="text-sm uppercase tracking-wider text-indigo-300 font-semibold mb-2">{card.position}</div>
-              <div className="text-4xl md:text-5xl font-black text-white mb-2">{card.name}</div>
-              <p className="text-sm text-violet-100 mb-4">{card.tagline}</p>
-
-              {/* Footer */}
-              <div className="flex items-center justify-between pt-4 border-t border-white/15">
-                <div className="flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-indigo-300" />
-                  <span className="text-xs uppercase tracking-wider text-violet-200">BPAA Certified</span>
-                </div>
-                <span className="text-xs text-indigo-200">{card.team}</span>
-              </div>
-            </div>
+            {/* Idle glow pulse */}
+            <div className="absolute inset-0 rounded-3xl opacity-30 group-hover/card:opacity-0 transition-opacity duration-700"
+              style={{
+                boxShadow: `inset 0 0 60px ${card.glowColor}`
+              }}
+            />
           </div>
 
           {/* BACK OF CARD - Cryptographic Details */}
@@ -666,26 +656,14 @@ export default function DreamTeamPage() {
               </div>
               </div>
             </div>
+          </div>
 
-            {/* Stats - Outside Card */}
-            {!isFlipped && (
-              <div className="w-full max-w-2xl mx-auto px-4">
-                <div className="grid grid-cols-4 gap-4 p-6 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-violet-500/10 to-blue-500/10 border-2 border-indigo-400/30 backdrop-blur-xl shadow-[0_0_40px_rgba(87,61,255,0.3)]">
-                  {Object.entries(card.stats).map(([key, val]) => (
-                    <div key={key} className="text-center">
-                      <div className="text-3xl md:text-4xl font-black text-white drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]">{val}</div>
-                      <div className="text-xs uppercase tracking-wider text-indigo-200 font-bold mb-2">{key}</div>
-                      <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-gradient-to-r from-indigo-500 via-blue-500 to-violet-500 rounded-full shadow-[0_0_12px_rgba(87,61,255,0.8)]"
-                          style={{ width: `${val}%` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+          {/* Flip hint */}
+          <div className="text-center mt-6">
+            <div className="flex items-center justify-center gap-2 text-sm text-violet-200">
+              <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse shadow-[0_0_8px_rgba(87,61,255,0.6)]" />
+              {isFlipped ? 'Click to see front' : 'Click to flip card'}
+            </div>
           </div>
         </div>
       </div>
