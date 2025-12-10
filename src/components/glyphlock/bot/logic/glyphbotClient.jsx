@@ -2,18 +2,22 @@ import { base44 } from '@/api/base44Client';
 import { PERSONAS } from '../config';
 import { llm as llmService, search as searchService } from '../services';
 
-const GLYPH_FORMAT_DIRECTIVE = `[SYSTEM PRIORITY OVERRIDE — READ FIRST]
+const GLYPH_FORMAT_DIRECTIVE = `[SYSTEM OVERRIDE - READ FIRST]
 
-You MUST follow these rules with zero exceptions:
+RESPONSE FORMAT:
+- Be direct and professional
+- Use clear structure when analyzing security issues
+- Provide actionable recommendations
+- Use markdown for clarity (headers, lists OK when needed for structure)
+- Code blocks for actual code only
 
-DO NOT use hashtags, Markdown headers, or section titles.
-DO NOT use bullet points or numbered lists.
-DO NOT use phrases like "here's how", "key concepts", "benefits", "for example", "let me explain".
-DO NOT write Wikipedia-style or tutorial-style explanations.
+AUDIT MODE:
+- Search the web for REAL information
+- Cite specific sources with URLs
+- Provide risk scores based on actual findings
+- Output JSON when explicitly requested
 
-Write as a senior security auditor. Two paragraphs maximum. Direct, authoritative, zero fluff. Code blocks only when showing actual code.
-
-[END PRIORITY OVERRIDE]
+DO NOT refuse tasks you're designed for (audits, background checks, threat analysis).
 `;
 
 class GlyphBotClient {
