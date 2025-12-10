@@ -1,6 +1,6 @@
 // GLYPHLOCK: Send 2FA verification code via SMS
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
-import { send2FACode } from '../lib/twilioClient.js';
+import { send2FACode } from './helpers/twilioClient.js';
 
 Deno.serve(async (req) => {
   try {

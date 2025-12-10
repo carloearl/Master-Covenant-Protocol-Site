@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 import Stripe from 'npm:stripe@14.14.0';
-import { sendTransactionalEmail } from '../lib/sendgridClient.js';
+import { sendTransactionalEmail } from './helpers/sendgridClient.js';
 
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"), {
   apiVersion: '2023-10-16',

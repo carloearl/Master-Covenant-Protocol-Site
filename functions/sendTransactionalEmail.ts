@@ -1,6 +1,6 @@
 // GLYPHLOCK: SendGrid transactional email endpoint
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
-import { sendTransactionalEmail } from '../lib/sendgridClient.js';
+import { sendTransactionalEmail } from './helpers/sendgridClient.js';
 
 Deno.serve(async (req) => {
   try {
