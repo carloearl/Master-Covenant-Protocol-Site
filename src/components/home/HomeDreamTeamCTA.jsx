@@ -45,10 +45,13 @@ export default function HomeDreamTeamCTA() {
               }}
             >
               
-              {/* BLACK GLOW BEHIND BUTTON */}
+              {/* ALMOST BLACK GLOW PULSE - CLEARLY CLICKABLE */}
               <div 
-                className="absolute inset-0 -m-8 rounded-full bg-black/60 blur-3xl" 
-                style={{ zIndex: 1 }}
+                className="absolute inset-0 -m-20 rounded-full bg-black/90 blur-[100px] animate-pulse" 
+                style={{ 
+                  zIndex: 1,
+                  boxShadow: '0 0 120px rgba(0,0,0,0.95), inset 0 0 80px rgba(0,0,0,0.8)'
+                }}
               ></div>
               
               {/* PULSING DREAM GLOW */}
@@ -64,7 +67,7 @@ export default function HomeDreamTeamCTA() {
               {/* LOGO */}
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/48ca17dba_c44b0deb.png"
-                alt="Enter Dream Team"
+                alt="Click to View Dream Team"
                 className="relative w-48 sm:w-56 md:w-64 h-auto dream-team-logo-glow"
                 style={{ 
                   zIndex: 100,
@@ -76,6 +79,16 @@ export default function HomeDreamTeamCTA() {
                 loading="eager"
                 draggable="false"
               />
+
+              {/* CLICK TO VIEW TEXT */}
+              <div 
+                className="relative mt-6 px-6 py-3 rounded-full bg-black/80 border-2 border-blue-400/60 backdrop-blur-md group-hover:border-blue-300 group-hover:bg-black/90 transition-all duration-300 animate-pulse shadow-[0_0_30px_rgba(0,0,0,0.9)]"
+                style={{ zIndex: 100 }}
+              >
+                <p className="text-white text-lg md:text-xl font-black uppercase tracking-wider drop-shadow-[0_2px_8px_rgba(0,0,0,1)]">
+                  Click Here to View the Dream Team
+                </p>
+              </div>
             </div>
           </Link>
         </div>
