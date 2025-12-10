@@ -52,6 +52,19 @@ body {
   color: #ffffff !important;
 }
 
+/* Native lazy loading for all images by default */
+img {
+  loading: lazy;
+}
+
+/* Eager loading for hero/critical images */
+img[data-priority="high"],
+img.hero-image,
+img.logo,
+[class*="hero"] img:first-child {
+  loading: eager;
+}
+
 body, #root, #__next, main, section {
   background: transparent !important;
 }

@@ -386,6 +386,7 @@ export default function DreamTeamPage() {
               alt={card.name}
               className="absolute inset-0 w-full h-full object-cover object-center rounded-3xl"
               loading="lazy"
+              decoding="async"
             />
 
             {/* Overlay gradient - NO DARK TINT */}

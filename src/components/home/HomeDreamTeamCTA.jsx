@@ -35,6 +35,8 @@ export default function HomeDreamTeamCTA() {
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/03ba5648e_3880beef-889a-4dec-9b80-2b561f3c47a31.jpg"
             alt="Basketball Court"
             className="w-full h-full object-cover object-center brightness-125 contrast-125 saturate-150"
+            loading="lazy"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
         </div>
@@ -86,7 +88,8 @@ export default function HomeDreamTeamCTA() {
                   visibility: 'visible',
                   opacity: 1
                 }}
-                loading="eager"
+                loading="lazy"
+                decoding="async"
                 draggable="false"
               />
 
