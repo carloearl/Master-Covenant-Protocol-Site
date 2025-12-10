@@ -203,14 +203,14 @@ export default function DreamTeamPage() {
   };
 
   return (
-    <div className="min-h-screen w-full relative overflow-x-hidden bg-black text-white" style={{ isolation: 'isolate' }}>
+    <>
       <SEOHead
         title="GlyphLock Dream Team - AI Player Cards | Master Covenant Series"
         description="Meet the GlyphLock Dream Team. Collectible AI player cards featuring Alfred, Claude, Copilot, Perplexity, and Cursor. Master Covenant Series."
       />
 
       {/* Background layers - owned by this page */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <NebulaLayer intensity={1.2} />
         <div className="hidden md:block">
           <CursorOrb />
@@ -220,7 +220,7 @@ export default function DreamTeamPage() {
       {/* Foreground content wrapper */}
       <div className="relative z-10">
         {/* Introduction Section - The Dream Team Philosophy */}
-        <div className="min-h-screen snap-start flex items-center justify-center relative px-6">
+        <div className="min-h-screen flex items-center justify-center relative px-6">
           <div className="max-w-4xl mx-auto text-center space-y-6">
           <h1 className="text-5xl md:text-7xl font-black mb-6">
             <span className="text-white">WHY THE </span>
@@ -333,7 +333,7 @@ function FullScreenCard({ card, index }) {
   };
 
   return (
-    <div className="min-h-screen w-full snap-start flex items-center justify-center px-4 py-8 relative" style={{ zIndex: 5, isolation: 'isolate' }}>
+    <div className="min-h-screen w-full flex items-center justify-center px-4 py-8 relative" style={{ zIndex: 5, isolation: 'isolate' }}>
       {/* Card container */}
       <div 
         className="relative w-full max-w-lg md:max-w-xl lg:max-w-2xl cursor-pointer"
@@ -575,7 +575,7 @@ function FullScreenCard({ card, index }) {
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
+        </div>
+        </>
+        );
+        }
