@@ -45,29 +45,29 @@ export default function HomeDreamTeamCTA() {
               }}
             >
               
-              {/* ALMOST BLACK GLOW PULSE - CLEARLY CLICKABLE */}
+              {/* STATIC BLACK GLOW */}
               <div 
-                className="absolute inset-0 -m-20 rounded-full bg-black/90 blur-[100px] animate-pulse" 
+                className="absolute inset-0 -m-20 rounded-full bg-black/90 blur-[100px]" 
                 style={{ 
                   zIndex: 1,
                   boxShadow: '0 0 120px rgba(0,0,0,0.95), inset 0 0 80px rgba(0,0,0,0.8)'
                 }}
               ></div>
               
-              {/* PULSING DREAM GLOW */}
+              {/* SUBTLE DREAM GLOW */}
               <div 
-                className="absolute inset-0 -m-16 rounded-full animate-pulse"
+                className="absolute inset-0 -m-16 rounded-full"
                 style={{ 
                   zIndex: 2,
-                  background: 'radial-gradient(circle, rgba(79,70,229,0.8) 0%, rgba(65,105,225,0.6) 40%, transparent 70%)',
+                  background: 'radial-gradient(circle, rgba(79,70,229,0.6) 0%, rgba(65,105,225,0.4) 40%, transparent 70%)',
                   filter: 'blur(60px)'
                 }}
               ></div>
               
-              {/* LOGO */}
+              {/* LOGO - THE BALL IS THE BUTTON */}
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/48ca17dba_c44b0deb.png"
-                alt="Click to View Dream Team"
+                alt="Click the Ball"
                 className="relative w-48 sm:w-56 md:w-64 h-auto dream-team-logo-glow"
                 style={{ 
                   zIndex: 100,
@@ -80,15 +80,10 @@ export default function HomeDreamTeamCTA() {
                 draggable="false"
               />
 
-              {/* CLICK TO VIEW TEXT */}
-              <div 
-                className="relative mt-6 px-6 py-3 rounded-full bg-black/80 border-2 border-blue-400/60 backdrop-blur-md group-hover:border-blue-300 group-hover:bg-black/90 transition-all duration-300 animate-pulse shadow-[0_0_30px_rgba(0,0,0,0.9)]"
-                style={{ zIndex: 100 }}
-              >
-                <p className="text-white text-lg md:text-xl font-black uppercase tracking-wider drop-shadow-[0_2px_8px_rgba(0,0,0,1)]">
-                  Click Here to View the Dream Team
-                </p>
-              </div>
+              {/* SUBTLE TEXT */}
+              <p className="relative mt-4 text-white/60 text-sm font-medium uppercase tracking-widest" style={{ zIndex: 100 }}>
+                Click the Ball
+              </p>
             </div>
           </Link>
         </div>
