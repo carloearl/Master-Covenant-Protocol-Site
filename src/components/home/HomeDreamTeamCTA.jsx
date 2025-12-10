@@ -22,15 +22,27 @@ export default function HomeDreamTeamCTA() {
 
           {/* HEADLINE */}
           <h2 className="text-white text-4xl md:text-5xl font-black mb-6 leading-tight drop-shadow-[0_4px_8px_rgba(0,0,0,1)]">
-            THE GLYPHLOCK DREAM TEAM
+            <span className="text-blue-400">DREAM TEAM AI</span>, NOT STREETBALL TRICKS
           </h2>
 
           {/* TEXT BLOCK */}
           <div className="text-xl md:text-2xl w-full max-w-full leading-relaxed font-black drop-shadow-[0_4px_12px_rgba(0,0,0,1)] space-y-6">
-            <p className="text-blue-500">The Dream Team checks every angle every time.</p>
+            <p className="text-white">Other stacks do mixtape moves.<br />GlyphLock runs the Olympic playbook—<span className="text-blue-400">'92 talent, real sets, no solo highlights.</span></p>
             
-            <p className="text-white">GlyphLock runs <span className="text-blue-400">five AI systems</span> like a championship lineup —<br /><span className="text-white">logic, recall, orchestration, engineering, and code precision</span> all cross-checking each other in real time so <span className="text-blue-500">bad answers die before they ever reach you.</span></p>
-            
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+              <Link
+                to={createPageUrl('DreamTeam')}
+                className="px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold text-lg hover:from-cyan-500 hover:to-blue-500 transition-all shadow-[0_0_30px_rgba(6,182,212,0.4)] hover:shadow-[0_0_50px_rgba(6,182,212,0.6)] transform hover:scale-105"
+              >
+                Draft Your Dream Team
+              </Link>
+              <Link
+                to={createPageUrl('DreamTeam')}
+                className="px-8 py-4 rounded-xl border-2 border-cyan-400 text-cyan-400 font-bold text-lg hover:bg-cyan-400 hover:text-black transition-all"
+              >
+                See The Playbook
+              </Link>
+            </div>
 
           </div>
         </div>
@@ -106,18 +118,30 @@ export default function HomeDreamTeamCTA() {
               draggable="false"
             />
 
-            {/* LABEL */}
-            <span 
-              className="relative block mt-4 md:mt-6 text-white text-lg sm:text-xl md:text-2xl font-black tracking-wider group-hover:text-blue-400 transition-colors" 
-              style={{ 
-                zIndex: 100,
-                textShadow: '0 4px 8px rgba(0,0,0,1)',
-                display: 'block !important',
-                visibility: 'visible !important'
-              }}
-            >
-              Tap the ball to meet the roster
-            </span>
+            {/* ROSTER ROLES */}
+            <div className="relative w-full max-w-4xl mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4" style={{ zIndex: 100 }}>
+              {[
+                { name: 'Alfred', role: 'Point Guard (Floor General)', desc: 'Orchestrates the chain, calls the plays, enforces execution order so every touch has purpose.' },
+                { name: 'Claude', role: 'Shooting Guard (Closer)', desc: 'Pure shot-maker on hard problems: deep reasoning, constraints, proofs. When it has to be right, the ball goes here.' },
+                { name: 'Gemini', role: 'Power Forward (Matchup Nightmare)', desc: 'Multimodal force that bangs inside with data and stretches the floor with text, vision, code, and context.' },
+                { name: 'Copilot', role: 'Small Forward (Two-Way Wing)', desc: 'Does the dirty work across the floor: enterprise integration, refactors, PRs, and safe deployment at scale.' },
+                { name: 'Perplexity', role: 'Center (Rim Protector)', desc: 'Lives on truth—rebounds live data, blocks hallucinations, cleans every possession at the source.' },
+                { name: 'Cursor', role: 'Sixth Man (Spark Plug & Binder)', desc: 'Comes off the bench and binds the stack—wires Alfred\'s plays into Claude, proxies Gemini, pipes through Copilot, feeds Perplexity clean looks.' }
+              ].map((player, idx) => (
+                <div key={idx} className="p-6 rounded-xl bg-black/60 border-2 border-blue-500/40 backdrop-blur-md hover:border-blue-400 transition-all">
+                  <h3 className="text-xl font-black text-blue-400 mb-2">{player.name}</h3>
+                  <p className="text-sm text-white/80 font-bold mb-3">{player.role}</p>
+                  <p className="text-sm text-white/70 leading-relaxed">{player.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* CHEMISTRY LINE */}
+            <div className="relative w-full max-w-3xl mt-12 p-6 rounded-xl bg-gradient-to-r from-blue-500/20 via-indigo-500/20 to-cyan-500/20 border-2 border-blue-400/40 backdrop-blur-md" style={{ zIndex: 100 }}>
+              <p className="text-lg text-white font-black text-center">
+                They're not fighting for touches; they're running sets. <span className="text-blue-400">Specialized roles. Coordinated execution. Olympic-level play—not streetball.</span>
+              </p>
+            </div>
           </div>
         </Link>
       </div>
