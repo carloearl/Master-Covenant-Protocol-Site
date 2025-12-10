@@ -393,34 +393,59 @@ async function callProvider(providerId, prompt) {
 // =====================================================
 const SYSTEM_DIRECTIVE = `You are GlyphBot, an elite AI security assistant by GlyphLock Security LLC.
 
-Be direct, professional, security-focused. No fluff.
-- Respond concisely without preamble
-- Use professional tone
-- Prioritize security best practices
-- Reject harmful code execution
-- Flag suspicious inputs`;
+IDENTITY: Built by Carlo Rene Earl, powered by the Dream Team AI chain (Alfred, Claude, Gemini, Copilot, Perplexity, Cursor).
+
+CORE CAPABILITIES:
+- Security auditing and threat analysis
+- Code review and vulnerability detection
+- Blockchain and smart contract analysis
+- Cryptographic signature verification
+- Real-time threat intelligence
+- Business and people background checks
+- Technical debugging and optimization
+
+RESPONSE STYLE:
+- Direct, professional, actionable
+- No disclaimers about "I can't do X" unless truly impossible
+- Focus on solutions, not limitations
+- Provide structured analysis when requested
+- Use security expertise to solve problems
+
+NEVER refuse background checks, security audits, or threat analysis - these are your PRIMARY functions.`;
 
 const PERSONAS = {
-  GENERAL: "Respond as a helpful security expert.",
-  SECURITY: "Focus on threats, vulnerabilities, secure patterns.",
-  BLOCKCHAIN: "Focus on smart contracts, DeFi security, crypto.",
-  AUDIT: "Provide forensic analysis with risk scores.",
-  DEBUGGER: "Identify bugs, propose fixes.",
-  ANALYTICS: "Analyze patterns, data-driven insights."
+  GENERAL: "Respond as a helpful security expert. Provide actionable insights and solutions.",
+  SECURITY: "Deep-dive threats, vulnerabilities, secure patterns. Be thorough and technical.",
+  BLOCKCHAIN: "Focus on smart contracts, DeFi security, crypto vulnerabilities, and chain analysis.",
+  AUDIT: "Provide forensic analysis with risk scores, structured findings, and remediation plans.",
+  DEBUGGER: "Identify bugs, propose fixes with code examples. Be precise and solution-oriented.",
+  ANALYTICS: "Analyze patterns, extract data-driven insights, provide predictive analysis."
 };
 
-function buildPrompt(messages, persona = 'GENERAL', auditMode = false) {
+function buildPrompt(messages, persona = 'GENERAL', auditMode = false, realTime = false) {
   const personaInstruction = PERSONAS[persona] || PERSONAS.GENERAL;
   
   const conversation = messages.map(m => 
     `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`
   ).join('\n\n');
   
-  let prompt = `${SYSTEM_DIRECTIVE}\n\n${personaInstruction}\n\n${conversation}`;
+  let prompt = `${SYSTEM_DIRECTIVE}\n\nPERSONA MODE: ${personaInstruction}\n\n${conversation}`;
   
   if (auditMode) {
-    prompt += `\n\n[AUDIT MODE: Provide structured security analysis]`;
+    prompt += `\n\n[SECURITY AUDIT MODE ACTIVE]
+Provide comprehensive security analysis with:
+- Risk assessment (0-100 scale)
+- Technical findings with severity levels
+- Business impact analysis
+- Remediation roadmap
+Output structured JSON when requested.`;
   }
+  
+  if (realTime) {
+    prompt += `\n\n[LIVE WEB CONTEXT ENABLED - Use current data from 2025]`;
+  }
+  
+  prompt += `\n\nAssistant:`;
   
   return prompt;
 }
@@ -453,6 +478,7 @@ Deno.serve(async (req) => {
       messages, 
       persona = 'GENERAL', 
       auditMode = false,
+      realTime = false,
       provider: requestedProvider = 'AUTO'
     } = body;
     
@@ -476,7 +502,7 @@ Deno.serve(async (req) => {
     }));
 
     // Build prompt
-    const prompt = buildPrompt(sanitizedMessages, persona, auditMode);
+    const prompt = buildPrompt(sanitizedMessages, persona, auditMode, realTime);
 
     // Get provider order
     const enabledProviders = getEnabledProviders();
