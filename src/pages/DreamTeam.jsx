@@ -104,7 +104,7 @@ const DREAM_TEAM_ROSTER = [
       hash: "0xc8d0e6f4a3b7c9d1e5f3a7b9c1d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7",
       publicKey: "GEMINI-BPAA-2025-MULTIMODAL"
     },
-    bindingDate: "2025-06-18T00:00:00Z"
+    bindingDate: "2025-11-15T00:00:00Z"
   },
   {
     id: "copilot",
