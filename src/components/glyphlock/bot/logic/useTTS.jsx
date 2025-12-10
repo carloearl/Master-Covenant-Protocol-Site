@@ -293,19 +293,32 @@ export default function useTTS(options = {}) {
     setIsLoading(true);
     setLastError(null);
 
-    // Merge settings: customSettings override currentSettings, emotion presets apply ONLY if not explicitly overridden
-    let settings = { ...currentSettings, ...customSettings };
+    // CRITICAL: Merge settings properly - customSettings override currentSettings
+    let settings = { ...currentSettings };
     
-    // Apply emotion preset BEFORE custom overrides (so custom always wins)
+    // Apply custom settings explicitly
+    if (customSettings.voiceProfile !== undefined) settings.voiceProfile = customSettings.voiceProfile;
+    if (customSettings.emotion !== undefined) settings.emotion = customSettings.emotion;
+    if (customSettings.speed !== undefined) settings.speed = customSettings.speed;
+    if (customSettings.pitch !== undefined) settings.pitch = customSettings.pitch;
+    if (customSettings.volume !== undefined) settings.volume = customSettings.volume;
+    if (customSettings.bass !== undefined) settings.bass = customSettings.bass;
+    if (customSettings.clarity !== undefined) settings.clarity = customSettings.clarity;
+    
+    console.log('[TTS] Merged settings:', settings);
+    
+    // Apply emotion preset ONLY for values not explicitly set in customSettings
     if (settings.emotion && EMOTION_PRESETS[settings.emotion]) {
       const emotionPreset = EMOTION_PRESETS[settings.emotion];
-      settings = {
-        ...settings,
-        // Apply emotion preset values if they exist and weren't explicitly set in customSettings
-        ...(customSettings.pitch === undefined && emotionPreset.pitch !== undefined && { pitch: emotionPreset.pitch }),
-        ...(customSettings.speed === undefined && emotionPreset.speed !== undefined && { speed: emotionPreset.speed }),
-        ...(customSettings.volume === undefined && emotionPreset.volume !== undefined && { volume: emotionPreset.volume })
-      };
+      if (customSettings.pitch === undefined && emotionPreset.pitch !== undefined) {
+        settings.pitch = emotionPreset.pitch;
+      }
+      if (customSettings.speed === undefined && emotionPreset.speed !== undefined) {
+        settings.speed = emotionPreset.speed;
+      }
+      if (customSettings.volume === undefined && emotionPreset.volume !== undefined) {
+        settings.volume = emotionPreset.volume;
+      }
     }
     
     // Normalize all values for safety
@@ -314,6 +327,8 @@ export default function useTTS(options = {}) {
     settings.volume = Math.max(0, Math.min(1, settings.volume || 1.0));
     settings.bass = Math.max(-1, Math.min(1, settings.bass || 0));
     settings.clarity = Math.max(-1, Math.min(1, settings.clarity || 0));
+
+    console.log('[TTS] Final normalized settings:', settings);
 
     const voiceProfile = VOICE_PROFILES[settings.voiceProfile] || VOICE_PROFILES.neutral_female;
     const voiceId = voiceProfile.id;

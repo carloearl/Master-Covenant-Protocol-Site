@@ -479,8 +479,18 @@ Deno.serve(async (req) => {
       persona = 'GENERAL', 
       auditMode = false,
       realTime = false,
-      provider: requestedProvider = 'AUTO'
+      provider: requestedProvider = 'AUTO',
+      autoProvider = true
     } = body;
+    
+    console.log('[GlyphBot LLM] Request received:', {
+      messageCount: messages?.length,
+      persona,
+      auditMode,
+      realTime,
+      requestedProvider,
+      autoProvider
+    });
     
     // Handle ping
     if (messages?.length === 1 && messages[0].content === "ping") {
@@ -508,14 +518,21 @@ Deno.serve(async (req) => {
     const enabledProviders = getEnabledProviders();
     let providerOrder = [];
     
-    if (requestedProvider && requestedProvider !== 'AUTO') {
+    console.log('[GlyphBot LLM] Enabled providers:', enabledProviders.map(p => p.id));
+    
+    if (requestedProvider && requestedProvider !== 'AUTO' && !autoProvider) {
+      // User explicitly selected a provider
       const requested = enabledProviders.find(p => p.id === requestedProvider);
       if (requested) {
+        console.log('[GlyphBot LLM] Using explicit provider:', requestedProvider);
         providerOrder = [requested, ...enabledProviders.filter(p => p.id !== requestedProvider)];
       } else {
+        console.log('[GlyphBot LLM] Requested provider not available, using default chain');
         providerOrder = enabledProviders;
       }
     } else {
+      // Auto mode - use priority order
+      console.log('[GlyphBot LLM] Using auto provider chain');
       providerOrder = enabledProviders;
     }
 

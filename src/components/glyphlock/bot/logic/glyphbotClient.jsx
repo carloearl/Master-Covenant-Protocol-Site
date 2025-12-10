@@ -109,13 +109,26 @@ class GlyphBotClient {
       enforceGlyphFormat: true,
       formatOverride: true,
       systemFirst: true,
-      provider: isAutoMode ? null : providerValue,
+      provider: isAutoMode ? 'AUTO' : providerValue,
       autoProvider: isAutoMode,
       jsonModeForced: options.jsonModeForced || finalOptions.jsonModeForced,
       structuredMode: options.structuredMode || finalOptions.structuredMode
     };
 
+    console.log('[GlyphBotClient] Sending payload:', { 
+      provider: payload.provider, 
+      autoProvider: payload.autoProvider,
+      persona: payload.persona,
+      auditMode: payload.auditMode
+    });
+
     const response = await base44.functions.invoke('glyphbotLLM', payload);
+    
+    console.log('[GlyphBotClient] Received response:', {
+      providerUsed: response.data?.providerUsed,
+      model: response.data?.model,
+      textLength: response.data?.text?.length
+    });
     
     const isAuditActive = finalOptions.auditMode || options.persona === 'AUDIT' || options.persona === 'AUDITOR';
     

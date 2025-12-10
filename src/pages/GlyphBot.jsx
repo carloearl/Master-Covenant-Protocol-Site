@@ -388,6 +388,8 @@ export default function GlyphBotPage() {
   // Phase 6: Handle audit start
   const handleStartAudit = useCallback(async (auditData) => {
     setIsProcessingAudit(true);
+    
+    console.log('[GlyphBot] Starting audit:', auditData);
 
     try {
       // Create audit record
@@ -411,7 +413,7 @@ export default function GlyphBotPage() {
       const startMsg = {
         id: `audit-start-${Date.now()}`,
         role: 'assistant',
-        content: `🔍 Starting ${auditData.auditMode} ${channelLabel} Audit for **${auditData.targetIdentifier}**...\n\nAudit ID: ${auditId}\n${auditData.notes ? `\nFocus: ${auditData.notes}\n` : ''}\nAnalyzing ${auditData.targetType} profile, please wait...`,
+        content: `🔍 Starting ${auditData.auditMode} ${channelLabel} Audit for **${auditData.targetIdentifier}**...\n\nAudit ID: ${auditId}\n${auditData.notes ? `\nFocus: ${auditData.notes}\n` : ''}\nSearching web, scraping public data, analyzing patterns...`,
         audit: null
       };
       setMessages(prev => [...prev, startMsg]);
@@ -427,6 +429,8 @@ export default function GlyphBotPage() {
         throw new Error('Failed to build audit prompt');
       }
 
+      console.log('[GlyphBot] Audit prompt built, sending to LLM...');
+
       // Send placeholder message and prepare for structured JSON response
       const auditRequestMsg = {
         id: `audit-req-${Date.now()}`,
@@ -434,14 +438,17 @@ export default function GlyphBotPage() {
         content: auditPrompt
       };
 
-      // Send to LLM (already formatted by runAudit)
+      // Send to LLM with REAL-TIME WEB SEARCH enabled
       const response = await glyphbotClient.sendMessage([...messages, startMsg, auditRequestMsg], {
         persona: 'SECURITY',
         auditMode: true,
+        realTime: true, // CRITICAL: Enable web search
         jsonModeForced: true,
         structuredMode: true,
         provider: provider === 'AUTO' ? null : provider
       });
+      
+      console.log('[GlyphBot] LLM response received:', response);
 
       let auditResults = {};
       try {
@@ -670,6 +677,7 @@ export default function GlyphBotPage() {
               onClear={handleClear}
               onVoiceSettingsChange={{
                 playText: (text, settings) => {
+                  console.log('[GlyphBot] Testing voice with settings:', settings);
                   try {
                     playText(text, settings);
                   } catch (e) {
@@ -679,6 +687,7 @@ export default function GlyphBotPage() {
                 setVoiceSettings: (updater) => {
                   setVoiceSettings(prev => {
                     const updated = typeof updater === 'function' ? updater(prev) : updater;
+                    console.log('[GlyphBot] Voice settings updated:', updated);
                     localStorage.setItem('glyphbot_voice_settings', JSON.stringify(updated));
                     return updated;
                   });
@@ -699,6 +708,14 @@ export default function GlyphBotPage() {
               />
             </div>
           )}
+
+          {/* Provider Debug Panel */}
+          <div className="px-4 py-3 border-b border-slate-800/50 bg-slate-900/40">
+            <UI.ProviderDebugPanel
+              providerMeta={providerMeta}
+              lastMeta={lastMeta}
+            />
+          </div>
 
           {/* Provider Panel (expandable) */}
           {modes.panel && providerMeta && (

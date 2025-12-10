@@ -113,8 +113,14 @@ You MUST search and scrape ALL publicly available information from:
   }
 
   fullPrompt += `
-CRITICAL: Use add_context_from_internet=true to enable real-time web scraping and search.
-The AI will automatically scrape Google Search, news sources, Wayback Machine, and public databases.
+CRITICAL INSTRUCTIONS FOR ${targetType.toUpperCase()} AUDIT:
+1. YOU MUST use web search capabilities to gather REAL PUBLIC DATA
+2. For businesses: scrape website, check Google Reviews, BBB, news articles, domain history
+3. For people: search social media, news mentions, court records, public profiles
+4. For agencies: search government databases, FOIA results, news coverage, lawsuits
+4. DO NOT make up data or provide generic responses
+5. If you cannot find information, explicitly state "No public information found" and explain why
+6. Cross-reference multiple sources and provide URLs
 
 Return a structured JSON response with the following schema:
 {
