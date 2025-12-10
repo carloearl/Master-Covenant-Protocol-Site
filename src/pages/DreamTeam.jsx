@@ -664,28 +664,29 @@ export default function DreamTeamPage() {
                   BPAA CERTIFIED
                 </Badge>
               </div>
-            </div>
-          </div>
-
-          {/* Stats - Outside Card */}
-          {!isFlipped && (
-            <div className="w-full max-w-2xl mx-auto px-4">
-              <div className="grid grid-cols-4 gap-4 p-6 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-violet-500/10 to-blue-500/10 border-2 border-indigo-400/30 backdrop-blur-xl shadow-[0_0_40px_rgba(87,61,255,0.3)]">
-                {Object.entries(card.stats).map(([key, val]) => (
-                  <div key={key} className="text-center">
-                    <div className="text-3xl md:text-4xl font-black text-white drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]">{val}</div>
-                    <div className="text-xs uppercase tracking-wider text-indigo-200 font-bold mb-2">{key}</div>
-                    <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-indigo-500 via-blue-500 to-violet-500 rounded-full shadow-[0_0_12px_rgba(87,61,255,0.8)]"
-                        style={{ width: `${val}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
-          )}
+
+            {/* Stats - Outside Card */}
+            {!isFlipped && (
+              <div className="w-full max-w-2xl mx-auto px-4">
+                <div className="grid grid-cols-4 gap-4 p-6 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-violet-500/10 to-blue-500/10 border-2 border-indigo-400/30 backdrop-blur-xl shadow-[0_0_40px_rgba(87,61,255,0.3)]">
+                  {Object.entries(card.stats).map(([key, val]) => (
+                    <div key={key} className="text-center">
+                      <div className="text-3xl md:text-4xl font-black text-white drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]">{val}</div>
+                      <div className="text-xs uppercase tracking-wider text-indigo-200 font-bold mb-2">{key}</div>
+                      <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-indigo-500 via-blue-500 to-violet-500 rounded-full shadow-[0_0_12px_rgba(87,61,255,0.8)]"
+                          style={{ width: `${val}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
