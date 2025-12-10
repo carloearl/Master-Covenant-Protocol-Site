@@ -8,6 +8,8 @@ import { createPageUrl } from "@/utils";
 import SEOHead from "@/components/SEOHead";
 import { Zap, Shield, Brain, Gauge, ChevronRight, ChevronDown, CheckCircle2, Lock, Fingerprint, Hash, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import NebulaLayer from "@/components/global/NebulaLayer";
+import CursorOrb from "@/components/global/CursorOrb";
 
 const DREAM_TEAM_ROSTER = [
   {
@@ -221,21 +223,32 @@ export default function DreamTeamPage() {
   };
 
   return (
-    <div className="min-h-screen text-white" style={{ background: '#000000', position: 'relative' }}>
+    <div className="min-h-screen w-full text-white overflow-x-hidden" style={{ background: '#000000', position: 'relative', isolation: 'isolate' }}>
       <SEOHead
         title="GlyphLock Dream Team - AI Player Cards | Master Covenant Series"
         description="Meet the GlyphLock Dream Team. Collectible AI player cards featuring Alfred, Claude, Copilot, Perplexity, and Cursor. Master Covenant Series."
       />
 
-      {/* Scrollable container */}
+      {/* Dream Team Nebula - owned by this page */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <NebulaLayer intensity={1.2} />
+      </div>
+
+      {/* Dream Team Cursor Orb - owned by this page */}
+      <div className="hidden md:block" style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none' }}>
+        <CursorOrb />
+      </div>
+
+      {/* Scrollable container - above nebula */}
       <div 
         ref={containerRef}
-        className="h-screen overflow-y-scroll snap-y snap-mandatory hide-scrollbar"
+        className="h-screen overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative"
         style={{ 
           scrollSnapType: 'y mandatory',
           scrollBehavior: 'smooth',
           overscrollBehavior: 'none',
-          WebkitOverflowScrolling: 'touch'
+          WebkitOverflowScrolling: 'touch',
+          zIndex: 10
         }}
       >
         {/* Introduction Section - The Dream Team Philosophy */}

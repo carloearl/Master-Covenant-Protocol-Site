@@ -105,17 +105,8 @@ export default function Layout({ children, currentPageName }) {
       </div>
 
       {currentPageName === 'DreamTeam' ? (
-        // Dream Team: Isolated full-screen document layer
-        <div style={{ 
-          position: 'relative',
-          minHeight: '100vh',
-          width: '100%',
-          background: '#000000',
-          overflow: 'hidden',
-          zIndex: 1
-        }}>
-          {children}
-        </div>
+        // Dream Team: Self-contained page (owns its visual stack)
+        children
       ) : (
         // Normal pages: Full layout with navbar, footer, etc.
         <div 
