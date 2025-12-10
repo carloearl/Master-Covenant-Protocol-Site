@@ -223,7 +223,7 @@ export default function DreamTeamPage() {
   };
 
   return (
-    <div className="min-h-screen w-full relative overflow-x-hidden bg-black text-white" style={{ isolation: 'isolate' }}>
+    <div className="min-h-screen w-full relative overflow-x-hidden bg-black text-white snap-y snap-mandatory" style={{ isolation: 'isolate', scrollSnapType: 'y mandatory' }}>
       <SEOHead
         title="GlyphLock Dream Team - AI Player Cards | Master Covenant Series"
         description="Meet the GlyphLock Dream Team. Collectible AI player cards featuring Alfred, Claude, Copilot, Perplexity, and Cursor. Master Covenant Series."
@@ -239,17 +239,8 @@ export default function DreamTeamPage() {
 
       {/* Foreground content wrapper */}
       <div className="relative z-10">
-        {/* Snap-scroll container: INTRO + CARDS ONLY */}
-        <div 
-          ref={containerRef}
-          className="min-h-screen overflow-y-auto snap-y snap-mandatory hide-scrollbar"
-          style={{ 
-            scrollSnapType: 'y mandatory',
-            scrollBehavior: 'smooth',
-            overscrollBehavior: 'none',
-            WebkitOverflowScrolling: 'touch'
-          }}
-        >
+        {/* Snap sections container */}
+        <div ref={containerRef}>
         {/* Introduction Section - The Dream Team Philosophy */}
         <div className="h-screen snap-start flex items-center justify-center relative px-6">
           <div className="max-w-4xl mx-auto text-center space-y-6">
