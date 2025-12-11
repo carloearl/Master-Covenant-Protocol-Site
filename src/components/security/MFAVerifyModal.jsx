@@ -9,11 +9,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Shield, Key, AlertTriangle } from 'lucide-react';
 
 export default function MFAVerifyModal({ isOpen, onSuccess }) {
   const [mode, setMode] = useState('totp'); // 'totp' | 'recovery'
   const [code, setCode] = useState('');
+  const [trustDevice, setTrustDevice] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -28,12 +30,13 @@ export default function MFAVerifyModal({ isOpen, onSuccess }) {
 
     try {
       const payload = mode === 'totp' 
-        ? { totpCode: code }
-        : { recoveryCode: code };
+        ? { totpCode: code, trustDevice }
+        : { recoveryCode: code, trustDevice };
 
       await base44.functions.invoke('mfaVerifyLogin', payload);
       
       setCode('');
+      setTrustDevice(false);
       onSuccess();
     } catch (err) {
       setError(err.message || 'Invalid verification code');
@@ -90,6 +93,20 @@ export default function MFAVerifyModal({ isOpen, onSuccess }) {
               className={`text-center ${mode === 'totp' ? 'text-2xl tracking-widest' : 'text-lg tracking-wider font-mono'}`}
               autoFocus
             />
+          </div>
+
+          <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-800/50 border border-slate-700">
+            <Checkbox
+              id="trustDevice"
+              checked={trustDevice}
+              onCheckedChange={setTrustDevice}
+            />
+            <label
+              htmlFor="trustDevice"
+              className="text-sm text-slate-300 cursor-pointer select-none"
+            >
+              Trust this device for 30 days
+            </label>
           </div>
 
           <Button

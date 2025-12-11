@@ -1,0 +1,49 @@
+/**
+ * POST /api/mfa/revoke-trusted-device
+ * Revoke a trusted device
+ */
+
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+
+Deno.serve(async (req) => {
+  try {
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    
+    const body = await req.json();
+    const { deviceIdPrefix } = body;
+    
+    if (!deviceIdPrefix) {
+      return Response.json({ error: 'Device ID required' }, { status: 400 });
+    }
+    
+    const userEntities = await base44.entities.User.filter({ email: user.email });
+    const userData = userEntities[0];
+    
+    if (!userData || !userData.trustedDevices) {
+      return Response.json({ error: 'No trusted devices found' }, { status: 404 });
+    }
+    
+    // Remove device matching the prefix
+    const updatedDevices = userData.trustedDevices.filter(
+      d => !d.deviceId.startsWith(deviceIdPrefix)
+    );
+    
+    await base44.entities.User.update(userData.id, {
+      trustedDevices: updatedDevices
+    });
+    
+    return Response.json({ 
+      success: true,
+      message: 'Device trust revoked successfully'
+    });
+    
+  } catch (error) {
+    console.error('[MFA Revoke Trusted Device]', error);
+    return Response.json({ error: 'Failed to revoke device trust' }, { status: 500 });
+  }
+});

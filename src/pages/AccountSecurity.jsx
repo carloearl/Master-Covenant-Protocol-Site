@@ -19,6 +19,7 @@ import SEOHead from '@/components/SEOHead';
 export default function AccountSecurity() {
   const [user, setUser] = useState(null);
   const [mfaStatus, setMfaStatus] = useState(null);
+  const [trustedDevices, setTrustedDevices] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showSetupModal, setShowSetupModal] = useState(false);
   const [showDisableModal, setShowDisableModal] = useState(false);
@@ -44,13 +45,29 @@ export default function AccountSecurity() {
       const userData = await base44.auth.me();
       setUser(userData);
 
-      const response = await base44.functions.invoke('mfaSessionStatus', {});
-      setMfaStatus(response.data);
+      const statusResponse = await base44.functions.invoke('mfaSessionStatus', {});
+      setMfaStatus(statusResponse.data);
+
+      // Load trusted devices if MFA is enabled
+      if (statusResponse.data.mfaEnabled) {
+        const devicesResponse = await base44.functions.invoke('mfaGetTrustedDevices', {});
+        setTrustedDevices(devicesResponse.data.trustedDevices || []);
+      }
     } catch (error) {
       console.error('[Account Security]', error);
       toast.error('Failed to load security settings');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleRevokeDevice = async (deviceIdPrefix) => {
+    try {
+      await base44.functions.invoke('mfaRevokeTrustedDevice', { deviceIdPrefix });
+      toast.success('Device trust revoked');
+      loadUserAndStatus();
+    } catch (error) {
+      toast.error('Failed to revoke device trust');
     }
   };
 
@@ -216,6 +233,45 @@ export default function AccountSecurity() {
             )}
           </CardContent>
         </Card>
+
+        {mfaStatus?.mfaEnabled && trustedDevices.length > 0 && (
+          <Card className="bg-slate-900/60 border-purple-500/30">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-cyan-400" />
+                Trusted Devices
+              </CardTitle>
+              <CardDescription>
+                Devices that can skip MFA verification for 30 days
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {trustedDevices.map((device, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700">
+                    <div className="flex-1">
+                      <p className="text-white font-medium">{device.deviceName}</p>
+                      <p className="text-xs text-slate-400 mt-1">
+                        Added {new Date(device.trustGrantedAt).toLocaleDateString()}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        Expires {new Date(device.expiresAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleRevokeDevice(device.deviceId.split('...')[0])}
+                      className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                    >
+                      Revoke
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <Card className="bg-slate-900/60 border-purple-500/30">
           <CardHeader>

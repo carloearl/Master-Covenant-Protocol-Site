@@ -6,6 +6,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 import { verifyTotpCode, verifyRecoveryCode } from './utils/totpService.js';
 import { decrypt } from './utils/encryption.js';
+import { generateDeviceFingerprint, extractDeviceName } from './utils/deviceFingerprint.js';
 
 Deno.serve(async (req) => {
   try {
@@ -17,7 +18,7 @@ Deno.serve(async (req) => {
     }
     
     const body = await req.json();
-    const { totpCode, recoveryCode } = body;
+    const { totpCode, recoveryCode, trustDevice = false } = body;
     
     if (!totpCode && !recoveryCode) {
       return Response.json({ error: 'No verification code provided' }, { status: 400 });
@@ -61,6 +62,33 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Invalid verification code' }, { status: 400 });
     }
     
+    // Handle trusted device
+    if (trustDevice) {
+      const deviceId = generateDeviceFingerprint(req);
+      const deviceName = extractDeviceName(req.headers.get('user-agent') || '');
+      const now = new Date();
+      const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 days
+      
+      const trustedDevices = userData.trustedDevices || [];
+      
+      // Remove existing entry for this device
+      const filteredDevices = trustedDevices.filter(d => d.deviceId !== deviceId);
+      
+      // Add new trusted device
+      filteredDevices.push({
+        deviceId,
+        deviceName,
+        trustGrantedAt: now.toISOString(),
+        expiresAt: expiresAt.toISOString(),
+        lastUsedAt: now.toISOString()
+      });
+      
+      // Update user entity
+      await base44.entities.User.update(userData.id, {
+        trustedDevices: filteredDevices
+      });
+    }
+    
     // Set MFA verified cookie (HTTP-only, secure)
     const headers = new Headers();
     headers.set('Set-Cookie', 
@@ -69,7 +97,8 @@ Deno.serve(async (req) => {
     
     return Response.json({ 
       success: true,
-      message: 'MFA verification successful'
+      message: 'MFA verification successful',
+      deviceTrusted: trustDevice
     }, { headers });
     
   } catch (error) {
