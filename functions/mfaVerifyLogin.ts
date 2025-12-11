@@ -1,10 +1,10 @@
 /**
- * POST /api/mfa/verify-login
+ * POST /api/mfaVerifyLogin
  * Verify TOTP code or recovery code during login
  */
 
 /**
- * POST /api/mfa/verify-login
+ * POST /api/mfaVerifyLogin
  * 
  * PHASE C: MFA VERIFICATION ENDPOINT
  * 
