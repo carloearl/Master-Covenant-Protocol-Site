@@ -3,6 +3,38 @@
  * Verify TOTP code or recovery code during login
  */
 
+/**
+ * POST /api/mfa/verify-login
+ * 
+ * PHASE C: MFA VERIFICATION ENDPOINT
+ * 
+ * This endpoint completes Factor 2 authentication (TOTP or recovery code).
+ * Called after Base44 authentication (Factor 1) is complete.
+ * 
+ * Request body:
+ * {
+ *   "totpCode": "123456" | null,          // 6-digit TOTP from authenticator app
+ *   "recoveryCode": "ABCD-EFGH" | null,   // One-time recovery code
+ *   "trustDevice": boolean                 // Optional: register device as trusted for 30 days
+ * }
+ * 
+ * Rules:
+ * - Exactly ONE of totpCode or recoveryCode must be provided
+ * - TOTP codes are verified using speakeasy with time window tolerance
+ * - Recovery codes are hashed and compared against stored values
+ * - Recovery codes are single-use and permanently invalidated after use
+ * 
+ * On success:
+ * - Sets HTTP-only secure cookie: mfa_verified=true (24 hour expiry)
+ * - Optionally registers device as trusted (if trustDevice=true)
+ * - Frontend should re-call /api/mfa/session-status to get updated state
+ * 
+ * Security:
+ * - Generic error messages (don't reveal if TOTP or recovery code was close)
+ * - Rate limiting recommended (implement in future)
+ * - Secrets are decrypted only in memory, never returned to client
+ */
+
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 import { verifyTotpCode, verifyRecoveryCode } from './utils/totpService.js';
 import { decrypt } from './utils/encryption.js';
@@ -58,11 +90,20 @@ Deno.serve(async (req) => {
       }
     }
     
+    // CRITICAL: Generic error message - never reveal if code was close
     if (!isValid) {
-      return Response.json({ error: 'Invalid verification code' }, { status: 400 });
+      return Response.json({ error: 'Invalid verification code' }, { status: 401 });
     }
     
-    // Handle trusted device
+    // PHASE A: Set session-level MFA verification flag
+    // Use HTTP-only secure cookie to prevent XSS attacks
+    // Cookie expires in 24 hours or on browser session end
+    const headers = new Headers();
+    headers.set('Set-Cookie', 
+      'mfa_verified=true; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=86400'
+    );
+    
+    // OPTIONAL: Handle trusted device registration (30-day bypass)
     if (trustDevice) {
       const deviceId = generateDeviceFingerprint(req);
       const deviceName = extractDeviceName(req.headers.get('user-agent') || '');
@@ -71,7 +112,7 @@ Deno.serve(async (req) => {
       
       const trustedDevices = userData.trustedDevices || [];
       
-      // Remove existing entry for this device
+      // Remove existing entry for this device (refresh trust)
       const filteredDevices = trustedDevices.filter(d => d.deviceId !== deviceId);
       
       // Add new trusted device
@@ -83,26 +124,27 @@ Deno.serve(async (req) => {
         lastUsedAt: now.toISOString()
       });
       
-      // Update user entity
+      // Update user entity with new trusted device list
       await base44.entities.User.update(userData.id, {
         trustedDevices: filteredDevices
       });
     }
     
-    // Set MFA verified cookie (HTTP-only, secure)
-    const headers = new Headers();
-    headers.set('Set-Cookie', 
-      'mfa_verified=true; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=86400'
-    );
-    
+    // PHASE D: Return success
+    // Frontend should immediately re-call /api/mfa/session-status
+    // to get updated mfaVerified=true state
     return Response.json({ 
-      success: true,
-      message: 'MFA verification successful',
-      deviceTrusted: trustDevice
+      success: true
     }, { headers });
     
   } catch (error) {
     console.error('[MFA Verify Login]', error);
-    return Response.json({ error: 'Verification failed' }, { status: 500 });
+    
+    // PHASE E: Generic error handling
+    // Never leak information about why verification failed
+    return Response.json({ 
+      error: 'Verification failed',
+      success: false
+    }, { status: 500 });
   }
 });
