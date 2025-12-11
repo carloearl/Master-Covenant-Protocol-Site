@@ -6,6 +6,7 @@
 import React from 'react';
 import SEOHead from '@/components/SEOHead';
 import Hero from '@/components/nist/Hero';
+import DifferenceComparison from '@/components/nist/DifferenceComparison';
 import ModalityTabs from '@/components/nist/ModalityTabs';
 import CovenantDiagram from '@/components/nist/CovenantDiagram';
 import Timeline from '@/components/nist/Timeline';
@@ -36,6 +37,9 @@ export default function NISTChallengePage() {
 
       {/* Hero Section */}
       <Hero />
+
+      {/* What Makes GlyphLock Different */}
+      <DifferenceComparison />
 
       {/* Overview Section */}
       <section className="py-16 bg-white">
