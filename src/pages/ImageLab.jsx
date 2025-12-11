@@ -143,9 +143,9 @@ export default function ImageLab() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Mobile Tabs - Technical Segmented */}
-            <div className="lg:hidden mb-6 -mx-4 px-4">
-              <div className="flex gap-1 bg-black/60 backdrop-blur-sm border border-cyan-500/20 p-1">
+            {/* Mobile Tabs - Enhanced Touch Targets */}
+            <div className="lg:hidden mb-6">
+              <div className="flex gap-2 bg-black/80 backdrop-blur-md border-2 border-cyan-500/30 p-2 rounded-xl shadow-[0_0_30px_rgba(87,61,255,0.4)]">
                 {[
                   { value: 'generate', icon: ImageIcon, label: 'Generate', num: '01' },
                   { value: 'interactive', icon: Layers, label: 'Interactive', num: '02' },
@@ -155,18 +155,30 @@ export default function ImageLab() {
                   return (
                     <button
                       key={tab.value}
-                      onClick={() => setActiveTab(tab.value)}
-                      className={`flex-1 flex flex-col items-center justify-center py-3 text-xs font-mono uppercase tracking-wider transition-all min-h-[52px] border-r border-cyan-500/10 last:border-r-0 ${
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setActiveTab(tab.value);
+                      }}
+                      onTouchEnd={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setActiveTab(tab.value);
+                      }}
+                      className={`flex-1 flex flex-col items-center justify-center py-4 text-xs font-mono uppercase tracking-wider transition-all min-h-[60px] rounded-lg ${
                         activeTab === tab.value
-                          ? 'bg-gradient-to-b from-purple-500/30 to-transparent text-purple-300 border-t-2 border-t-purple-400 shadow-lg'
-                          : 'text-gray-500'
+                          ? 'bg-gradient-to-b from-purple-500/40 to-transparent text-purple-300 border-2 border-purple-400/60 shadow-[0_0_20px_rgba(168,85,247,0.5)]'
+                          : 'text-gray-400 bg-white/5 hover:bg-white/10'
                       }`}
+                      style={{
+                        touchAction: 'manipulation',
+                        WebkitTapHighlightColor: 'transparent',
+                        minWidth: '80px',
+                        minHeight: '60px'
+                      }}
                     >
-                      <div className="flex items-center gap-1 mb-1">
-                        <Icon className="w-4 h-4" />
-                        <span className="text-[10px] opacity-60">{tab.num}</span>
-                      </div>
-                      <span className="text-[9px]">{tab.label}</span>
+                      <Icon className="w-5 h-5 mb-1" />
+                      <span className="text-[10px] font-bold">{tab.label}</span>
                     </button>
                   );
                 })}

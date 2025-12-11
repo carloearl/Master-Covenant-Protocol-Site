@@ -195,10 +195,26 @@ export default function Navbar({ user, onLogin, onLogout }) {
           )}
         </div>
 
-        {/* Mobile Toggle */}
+        {/* Mobile Toggle - Enhanced Touch Target */}
         <button 
-          className="lg:hidden text-white hover:text-[#00E4FF]"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="lg:hidden text-white hover:text-[#00E4FF] p-2"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setMobileMenuOpen(!mobileMenuOpen);
+          }}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setMobileMenuOpen(!mobileMenuOpen);
+          }}
+          style={{
+            touchAction: 'manipulation',
+            WebkitTapHighlightColor: 'transparent',
+            minWidth: '48px',
+            minHeight: '48px'
+          }}
+          aria-label="Toggle menu"
         >
           {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>

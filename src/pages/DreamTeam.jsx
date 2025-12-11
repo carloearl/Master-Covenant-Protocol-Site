@@ -334,11 +334,11 @@ export default function DreamTeamPage() {
         </div>
       </div>
 
-      {/* Player Cards - Smooth Scroll Container */}
+      {/* Player Cards - Mobile-Optimized Scroll */}
       <div style={{
-        scrollSnapType: 'y mandatory',
-        scrollBehavior: 'smooth',
-        overscrollBehavior: 'contain'
+        scrollSnapType: 'none',
+        scrollBehavior: 'auto',
+        overscrollBehavior: 'none'
       }}>
         {DREAM_TEAM_ROSTER.map((card, index) => (
           <FullScreenCard key={card.id} card={card} index={index} />
@@ -391,7 +391,17 @@ export default function DreamTeamPage() {
     return () => observer.disconnect();
   }, [index]);
 
-  const handleFlip = useCallback(() => {
+  const handleFlip = useCallback((e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setIsFlipped(prev => !prev);
+  }, []);
+
+  const handleTouch = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setIsFlipped(prev => !prev);
   }, []);
 
@@ -404,13 +414,13 @@ export default function DreamTeamPage() {
   return (
     <div 
       ref={cardRef}
-      className={`min-h-screen w-full flex items-center justify-center px-4 py-8 relative z-10 snap-start transition-all duration-700 ${
+      className={`min-h-screen w-full flex items-center justify-center px-4 py-8 relative z-10 transition-all duration-700 ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
       style={{ 
         isolation: 'isolate',
-        scrollSnapAlign: 'start',
-        scrollSnapStop: 'always'
+        touchAction: 'pan-y',
+        WebkitTapHighlightColor: 'transparent'
       }}
     >
       {/* Card container */}
@@ -426,11 +436,17 @@ export default function DreamTeamPage() {
 
       <div 
         className="relative w-full max-w-lg md:max-w-xl lg:max-w-2xl cursor-pointer"
-        style={{ perspective: '2000px', isolation: 'isolate' }}
+        style={{ 
+          perspective: '2000px', 
+          isolation: 'isolate',
+          touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent'
+        }}
         onClick={handleFlip}
+        onTouchEnd={handleTouch}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => e.key === 'Enter' && handleFlip()}
+        onKeyDown={(e) => e.key === 'Enter' && handleFlip(e)}
       >
         {/* Name and Stats Above Card */}
         {!isFlipped && (
