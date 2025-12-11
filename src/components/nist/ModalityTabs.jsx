@@ -250,10 +250,10 @@ function ModalityCard({ content }) {
       </CardContent>
 
       <CardFooter className="flex flex-col sm:flex-row gap-4 pt-6 border-t-2 border-gray-200">
-        <Button variant="outline" className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50">
+        <Button className="flex-1 bg-blue-700 text-white hover:bg-blue-800 font-semibold">
           View Code Sample
         </Button>
-        <Button variant="outline" className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50">
+        <Button className="flex-1 bg-gray-700 text-white hover:bg-gray-800 font-semibold">
           Technical Documentation
         </Button>
       </CardFooter>
