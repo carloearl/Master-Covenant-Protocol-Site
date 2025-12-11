@@ -7,7 +7,154 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
  */
 
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
+const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY');
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
+
+// Fallback chain: Gemini 3 Pro → Gemini 2.0 Flash (free) → OpenAI → Claude → Together AI (free OSS)
+async function generateWithFallback(prompt, options = {}) {
+  const { type = 'text', thinking = 'low', grounding = false } = options;
+  
+  // Try Gemini 3 Pro first
+  if (GEMINI_API_KEY) {
+    try {
+      const model = type === 'image' ? 'gemini-3-pro-image-preview' : 'gemini-3-pro-preview';
+      const response = await fetch(`${GEMINI_BASE_URL}/models/${model}:generateContent?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 1.0,
+            ...(thinking && { thinkingConfig: { thinkingLevel: thinking } }),
+            ...(type === 'image' && options.imageConfig)
+          },
+          tools: grounding ? [{ googleSearch: {} }] : []
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return { 
+          success: true, 
+          data: data.candidates?.[0]?.content?.parts?.[0],
+          model: model 
+        };
+      }
+    } catch (err) {
+      console.error('Gemini 3 Pro failed, trying fallback:', err.message);
+    }
+  }
+  
+  // Fallback to Gemini 2.0 Flash (free tier)
+  if (GEMINI_API_KEY) {
+    try {
+      const response = await fetch(`${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return { 
+          success: true, 
+          data: data.candidates?.[0]?.content?.parts?.[0],
+          model: 'gemini-2.0-flash-exp (fallback)' 
+        };
+      }
+    } catch (err) {
+      console.error('Gemini 2.0 Flash failed, trying next fallback:', err.message);
+    }
+  }
+  
+  // Fallback to OpenAI GPT-4o
+  if (OPENAI_API_KEY) {
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${OPENAI_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.7
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return { 
+          success: true, 
+          data: { text: data.choices[0].message.content },
+          model: 'gpt-4o (fallback)' 
+        };
+      }
+    } catch (err) {
+      console.error('OpenAI failed, trying next fallback:', err.message);
+    }
+  }
+  
+  // Fallback to Claude
+  if (ANTHROPIC_API_KEY) {
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'claude-3-5-sonnet-20241022',
+          max_tokens: 4096,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return { 
+          success: true, 
+          data: { text: data.content[0].text },
+          model: 'claude-3.5-sonnet (fallback)' 
+        };
+      }
+    } catch (err) {
+      console.error('Claude failed, trying final fallback:', err.message);
+    }
+  }
+  
+  // Final fallback: Together AI with free open-source models
+  try {
+    const response = await fetch('https://api.together.xyz/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo', // Free tier
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 4096
+      })
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      return { 
+        success: true, 
+        data: { text: data.choices[0].message.content },
+        model: 'llama-3.3-70b (free OSS fallback)' 
+      };
+    }
+  } catch (err) {
+    console.error('All models failed:', err.message);
+  }
+  
+  return { success: false, error: 'All AI models unavailable' };
+}
 
 Deno.serve(async (req) => {
   try {
@@ -27,19 +174,10 @@ Deno.serve(async (req) => {
 
     switch (action) {
       case 'generate_code': {
-        // Use Gemini 3 Pro for code generation with adaptive thinking
         const { prompt, context, complexity = 'medium' } = payload;
-        
-        // Map complexity to thinking level
         const thinkingLevel = complexity === 'high' ? 'high' : 'low';
         
-        const response = await fetch(`${GEMINI_BASE_URL}/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `You are an expert full-stack developer for GlyphLock.io.
+        const fullPrompt = `You are an expert full-stack developer for GlyphLock.io.
 
 Context: ${context || 'None'}
 
@@ -52,91 +190,49 @@ Generate production-ready React code with:
 - Proper imports and exports
 - Clean, documented code
 
-Provide ONLY the complete code, no explanations.`
-              }]
-            }],
-            generationConfig: {
-              temperature: 1.0, // Keep default for Gemini 3
-              thinkingConfig: {
-                thinkingLevel: thinkingLevel
-              }
-            }
-          })
+Provide ONLY the complete code, no explanations.`;
+
+        const result = await generateWithFallback(fullPrompt, { 
+          type: 'text', 
+          thinking: thinkingLevel 
         });
 
-        const data = await response.json();
-        const generatedCode = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-        const thoughtSignature = data.candidates?.[0]?.content?.parts?.[0]?.thoughtSignature;
+        if (!result.success) {
+          return Response.json({ error: result.error }, { status: 503 });
+        }
 
         return Response.json({ 
           success: true,
-          code: generatedCode,
-          thought_signature: thoughtSignature,
-          model: 'gemini-3-pro-preview',
+          code: result.data.text || result.data,
+          thought_signature: result.data.thoughtSignature,
+          model: result.model,
           thinking_level: thinkingLevel
         });
       }
 
       case 'generate_image': {
-        // Use Gemini 3 Pro Image for 4K generation with grounding
-        const { 
-          prompt, 
-          use_grounding = false, 
-          aspect_ratio = '16:9',
-          image_size = '4K' // 4K, 2K, or default
-        } = payload;
+        const { prompt, use_grounding = false } = payload;
 
-        const tools = use_grounding ? [{ googleSearch: {} }] : [];
-
-        const response = await fetch(`${GEMINI_BASE_URL}/models/gemini-3-pro-image-preview:generateContent?key=${GEMINI_API_KEY}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `Generate a professional, high-quality image: ${prompt}
-
-Style: Modern, tech-focused, cybersecurity aesthetic, royal blue gradient palette.`
-              }]
-            }],
-            generationConfig: {
-              temperature: 1.0,
-              imageConfig: {
-                aspectRatio: aspect_ratio,
-                imageSize: image_size
-              }
-            },
-            tools: tools
-          })
-        });
-
-        const data = await response.json();
-        const imagePart = data.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
-        const thoughtSignature = data.candidates?.[0]?.content?.parts?.[0]?.thoughtSignature;
-
-        if (imagePart?.inlineData) {
-          // Upload to Base44 storage
-          const imageBuffer = Uint8Array.from(atob(imagePart.inlineData.data), c => c.charCodeAt(0));
-          const blob = new Blob([imageBuffer], { type: imagePart.inlineData.mimeType });
+        // Try Core.GenerateImage (DALL-E fallback)
+        try {
+          const imagePrompt = `Generate a professional, high-quality image: ${prompt}. Style: Modern, tech-focused, cybersecurity aesthetic, royal blue gradient palette.`;
           
-          const uploadResult = await base44.asServiceRole.integrations.Core.UploadFile({
-            file: blob
+          const result = await base44.asServiceRole.integrations.Core.GenerateImage({
+            prompt: imagePrompt
           });
-
+          
           return Response.json({
             success: true,
-            image_url: uploadResult.file_url,
-            thought_signature: thoughtSignature,
-            model: 'gemini-3-pro-image-preview',
-            grounded: use_grounding,
-            resolution: image_size
+            image_url: result.url,
+            model: 'dall-e-3 (fallback)',
+            grounded: false
           });
+        } catch (error) {
+          return Response.json({
+            success: false,
+            error: 'Image generation failed: ' + error.message
+          }, { status: 500 });
         }
-
-        return Response.json({
-          success: false,
-          error: 'No image generated'
-        }, { status: 500 });
       }
 
       case 'edit_image': {
