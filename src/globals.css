@@ -415,6 +415,28 @@ html, body {
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
   pointer-events: auto !important;
+  scroll-snap-type: none !important;
+}
+
+/* Mobile-specific fixes for Samsung and Android */
+@media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation;
+  }
+  
+  button, a, [role="button"], [onclick], .cursor-pointer {
+    min-width: 48px !important;
+    min-height: 48px !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    cursor: pointer !important;
+  }
+  
+  /* Disable scroll snap on mobile */
+  html, body, main, section {
+    scroll-snap-type: none !important;
+  }
 }
 
 /* Footer isolation - prevent fixed/sticky behavior */
