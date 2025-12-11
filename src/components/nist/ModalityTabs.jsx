@@ -163,14 +163,14 @@ export default function ModalityTabs() {
         </p>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-6xl mx-auto">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="text" className="text-sm md:text-lg py-2 md:py-3">
+          <TabsList className="grid w-full grid-cols-3 mb-8 bg-white border-2 border-gray-300 p-1">
+            <TabsTrigger value="text" className="text-sm md:text-lg py-2 md:py-3 font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white text-gray-700">
               📝 Text
             </TabsTrigger>
-            <TabsTrigger value="image" className="text-sm md:text-lg py-2 md:py-3">
+            <TabsTrigger value="image" className="text-sm md:text-lg py-2 md:py-3 font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white text-gray-700">
               🖼️ Image
             </TabsTrigger>
-            <TabsTrigger value="code" className="text-sm md:text-lg py-2 md:py-3">
+            <TabsTrigger value="code" className="text-sm md:text-lg py-2 md:py-3 font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white text-gray-700">
               💻 Code
             </TabsTrigger>
           </TabsList>
@@ -240,9 +240,9 @@ function ModalityCard({ content }) {
           <h3 className="text-xl md:text-2xl font-semibold mb-4 text-gray-900">Target Performance</h3>
           <div className="grid grid-cols-3 gap-2 md:gap-4">
             {content.metrics.map((metric) => (
-              <div key={metric.name} className="text-center p-3 md:p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border-2 border-blue-300">
-                <div className="text-2xl md:text-3xl font-bold text-blue-700 mb-2">{metric.target}</div>
-                <div className="text-xs md:text-sm text-gray-800 font-semibold">{metric.name}</div>
+              <div key={metric.name} className="text-center p-3 md:p-6 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg border-2 border-blue-400 shadow-sm">
+                <div className="text-2xl md:text-3xl font-bold text-blue-800 mb-2">{metric.target}</div>
+                <div className="text-xs md:text-sm text-gray-900 font-bold">{metric.name}</div>
               </div>
             ))}
           </div>

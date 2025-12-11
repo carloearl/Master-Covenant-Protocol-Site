@@ -11,7 +11,7 @@ import CovenantDiagram from '@/components/nist/CovenantDiagram';
 import Timeline from '@/components/nist/Timeline';
 import ComparisonTable from '@/components/nist/ComparisonTable';
 import TechnicalCredentials from '@/components/nist/TechnicalCredentials';
-import CTASection from '@/components/nist/CTASection';
+import TechnicalFooter from '@/components/nist/TechnicalFooter';
 
 export default function NISTChallengePage() {
   return (

@@ -38,53 +38,21 @@ export default function Hero() {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* NIST + GlyphLock Branding */}
-        <div className="flex items-center justify-center gap-4 mb-8 flex-wrap" role="banner">
-          <h1 className="text-3xl md:text-4xl font-bold text-white">NIST</h1>
-          <span className="text-3xl md:text-4xl text-blue-400" aria-hidden="true">×</span>
-          <span className="text-3xl md:text-4xl font-bold text-white shadow-[0_0_10px_rgba(90,0,200,0.15)]">GLYPHLOCK</span>
+        {/* Hero Image with Branding */}
+        <div className="max-w-5xl mx-auto mb-12">
+          <img 
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/c7baa454d_4f6d13c7-16d8-4204-b8eb-92dd206546ea1.png"
+            alt="NIST x GlyphLock - Federal Validation in Progress"
+            className="w-full h-auto"
+            loading="eager"
+          />
         </div>
 
-        {/* Participant Badge */}
-        <div className="flex justify-center mb-6">
-          <Badge className="bg-blue-900/40 text-blue-100 border-blue-400/50 px-6 py-2 text-sm backdrop-blur-sm">
-            NIST GenAI Challenge Participant 2026
-          </Badge>
-        </div>
-
-        {/* Main Title */}
-        <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white text-center mb-6">
-          Federal Validation in Progress
-        </h2>
-
-        {/* Subtitle */}
-        <p className="text-lg md:text-xl lg:text-2xl text-blue-100 text-center mb-8 max-w-3xl mx-auto">
-          Competing in NIST GenAI Challenge Across Three AI Modalities
-        </p>
-
-        {/* Modality Badges */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12" role="list">
-          <Badge className="bg-blue-800/40 text-blue-100 border-blue-500/50 px-4 md:px-6 py-2 md:py-3 text-base md:text-lg backdrop-blur-sm">
-            📝 Text
-          </Badge>
-          <Badge className="bg-blue-800/40 text-blue-100 border-blue-500/50 px-4 md:px-6 py-2 md:py-3 text-base md:text-lg backdrop-blur-sm">
-            🖼️ Image
-          </Badge>
-          <Badge className="bg-blue-800/40 text-blue-100 border-blue-500/50 px-4 md:px-6 py-2 md:py-3 text-base md:text-lg backdrop-blur-sm">
-            💻 Code
-          </Badge>
-        </div>
-
-        {/* Value Proposition */}
-        <p className="text-base md:text-lg text-blue-200 text-center italic mb-12 max-w-2xl mx-auto px-4">
-          "The world's first legal-technical AI accountability platform validated through federal evaluation"
-        </p>
-
-        {/* CTAs */}
+        {/* CTAs positioned below hero image */}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
           <Button
             size="lg"
-            className="bg-white text-blue-900 hover:bg-gray-100 font-semibold"
+            className="bg-white text-blue-900 hover:bg-gray-100 font-semibold shadow-lg"
             onClick={() => scrollToSection('technical')}
             aria-label="View Technical Approach section"
           >
@@ -92,8 +60,7 @@ export default function Hero() {
           </Button>
           <Button
             size="lg"
-            variant="outline"
-            className="border-blue-300 text-blue-100 hover:bg-blue-900/30 font-semibold"
+            className="bg-blue-600 text-white hover:bg-blue-700 font-semibold shadow-lg"
             onClick={() => scrollToSection('timeline')}
             aria-label="Track progress timeline"
           >
@@ -102,7 +69,7 @@ export default function Hero() {
         </div>
 
         {/* Countdown Timer Container */}
-        <div className="max-w-2xl mx-auto bg-blue-900/30 backdrop-blur-sm rounded-lg p-6 md:p-8 border border-blue-700/40" role="timer" aria-label="Countdown to dry-run submission">
+        <div className="max-w-2xl mx-auto bg-blue-900/30 backdrop-blur-sm rounded-lg p-6 md:p-8 border border-blue-700/40 shadow-[0_0_15px_rgba(59,130,246,0.2)]" role="timer" aria-label="Countdown to dry-run submission">
           <div className="text-center text-blue-100 mb-4 text-base md:text-lg font-semibold">
             Days Until Dry-Run Submission
           </div>
