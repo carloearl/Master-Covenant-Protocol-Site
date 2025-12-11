@@ -37,14 +37,17 @@ export default function Hero() {
         </svg>
       </div>
 
-      <div className="w-full relative z-10 mb-12">
+      <div className="w-full relative z-10 mb-12 shadow-2xl">
         {/* Hero Image with Branding */}
-        <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/c7baa454d_4f6d13c7-16d8-4204-b8eb-92dd206546ea1.png"
-          alt="NIST x GlyphLock - Federal Validation in Progress"
-          className="w-full h-auto object-cover"
-          loading="eager"
-        />
+        <div className="relative overflow-hidden">
+          <img 
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/c7baa454d_4f6d13c7-16d8-4204-b8eb-92dd206546ea1.png"
+            alt="NIST x GlyphLock - Federal Validation in Progress"
+            className="w-full h-auto object-contain"
+            loading="eager"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a1324]/20 to-transparent pointer-events-none" />
+        </div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
