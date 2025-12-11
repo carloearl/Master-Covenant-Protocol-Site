@@ -163,14 +163,14 @@ export default function ModalityTabs() {
         </p>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-6xl mx-auto">
-          <TabsList className="grid w-full grid-cols-3 mb-8 bg-white border-2 border-gray-300 p-1">
-            <TabsTrigger value="text" className="text-sm md:text-lg py-2 md:py-3 font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white text-gray-700">
+          <TabsList className="grid w-full grid-cols-3 mb-8 bg-gray-100 border-2 border-gray-300 p-1">
+            <TabsTrigger value="text" className="text-sm md:text-lg py-2 md:py-3 font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white text-gray-900 hover:bg-gray-200">
               📝 Text
             </TabsTrigger>
-            <TabsTrigger value="image" className="text-sm md:text-lg py-2 md:py-3 font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white text-gray-700">
+            <TabsTrigger value="image" className="text-sm md:text-lg py-2 md:py-3 font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white text-gray-900 hover:bg-gray-200">
               🖼️ Image
             </TabsTrigger>
-            <TabsTrigger value="code" className="text-sm md:text-lg py-2 md:py-3 font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white text-gray-700">
+            <TabsTrigger value="code" className="text-sm md:text-lg py-2 md:py-3 font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white text-gray-900 hover:bg-gray-200">
               💻 Code
             </TabsTrigger>
           </TabsList>
