@@ -41,6 +41,7 @@ export const NAV_SECTIONS = [
     items: [
       { label: "Documentation", page: "SecurityDocs" },
       { label: "SDK Docs", page: "SDKDocs" },
+      { label: "NIST Challenge", page: "NISTChallenge" },
       { label: "Dream Team", page: "DreamTeam" },
       { label: "Pricing", page: "Pricing" },
       { label: "FAQ", page: "FAQ" },
@@ -75,6 +76,7 @@ export const FOOTER_LINKS = {
   resources: [
     { label: "Documentation", page: "SecurityDocs" },
     { label: "SDK Docs", page: "SDKDocs" },
+    { label: "NIST Challenge", page: "NISTChallenge" },
     { label: "Dream Team", page: "DreamTeam" },
     { label: "Pricing", page: "Pricing" },
     { label: "FAQ", page: "FAQ" },
