@@ -1,0 +1,386 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { base44 } from '@/api/base44Client';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { 
+  Loader2, 
+  Send, 
+  Code, 
+  Hammer, 
+  Zap,
+  Terminal,
+  FileCode,
+  Database,
+  Layout as LayoutIcon,
+  Sparkles,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  RefreshCw
+} from 'lucide-react';
+import { toast } from 'sonner';
+import SEOHead from '@/components/SEOHead';
+import ReactMarkdown from 'react-markdown';
+
+export default function SiteBuilder() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [conversation, setConversation] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [sending, setSending] = useState(false);
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const loadUser = async () => {
+    try {
+      const isAuth = await base44.auth.isAuthenticated();
+      if (!isAuth) {
+        toast.error('Please sign in to use Site Builder');
+        window.location.href = '/';
+        return;
+      }
+      const userData = await base44.auth.me();
+      setUser(userData);
+      await initConversation();
+    } catch (error) {
+      console.error('Auth error:', error);
+      toast.error('Authentication failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const initConversation = async () => {
+    try {
+      // Create or load conversation
+      const conv = await base44.agents.createConversation({
+        agent_name: 'siteBuilder',
+        metadata: {
+          name: 'Site Builder Session',
+          description: 'Building GlyphLock site'
+        }
+      });
+      setConversation(conv);
+      setMessages(conv.messages || []);
+    } catch (error) {
+      console.error('Failed to init conversation:', error);
+      toast.error('Failed to initialize agent');
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!input.trim() || sending || !conversation) return;
+
+    const userMessage = {
+      role: 'user',
+      content: input
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setSending(true);
+
+    try {
+      const response = await base44.agents.addMessage(conversation, userMessage);
+      
+      // Subscribe to streaming updates
+      const unsubscribe = base44.agents.subscribeToConversation(conversation.id, (data) => {
+        setMessages(data.messages);
+      });
+
+      // Cleanup after response complete
+      setTimeout(() => unsubscribe(), 100);
+      
+      toast.success('Agent responding...');
+    } catch (error) {
+      console.error('Send error:', error);
+      toast.error('Failed to send message');
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: 'Error: ' + error.message
+      }]);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-indigo-950/20 to-black">
+        <div className="text-center">
+          <Loader2 className="w-16 h-16 animate-spin text-blue-400 mx-auto mb-4" />
+          <p className="text-white">Initializing Site Builder Agent...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <SEOHead
+        title="Site Builder Agent | GlyphLock Development Console"
+        description="Autonomous AI agent that can build and modify your entire GlyphLock site"
+      />
+
+      <div className="min-h-screen bg-gradient-to-br from-black via-indigo-950/20 to-black">
+        {/* Header */}
+        <div className="border-b border-blue-500/20 bg-white/5 backdrop-blur-xl sticky top-0 z-50">
+          <div className="container mx-auto px-4 py-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.5)]">
+                  <Hammer className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-black text-white">Site Builder Agent</h1>
+                  <p className="text-sm text-blue-300">Autonomous Full-Stack Development Assistant</p>
+                </div>
+              </div>
+              <Badge className="bg-green-500/20 text-green-400 border-green-500/50">
+                <CheckCircle2 className="w-3 h-3 mr-1" />
+                Active
+              </Badge>
+            </div>
+          </div>
+        </div>
+
+        {/* Agent Capabilities Panel */}
+        <div className="container mx-auto px-4 py-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <Card className="bg-white/5 border-blue-500/20">
+              <CardContent className="p-4 flex items-center gap-3">
+                <FileCode className="w-5 h-5 text-blue-400" />
+                <div>
+                  <p className="text-xs text-blue-300 font-bold">Components</p>
+                  <p className="text-sm text-white">Create & Modify</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-white/5 border-indigo-500/20">
+              <CardContent className="p-4 flex items-center gap-3">
+                <LayoutIcon className="w-5 h-5 text-indigo-400" />
+                <div>
+                  <p className="text-xs text-indigo-300 font-bold">Pages</p>
+                  <p className="text-sm text-white">Full Page Builder</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-white/5 border-violet-500/20">
+              <CardContent className="p-4 flex items-center gap-3">
+                <Database className="w-5 h-5 text-violet-400" />
+                <div>
+                  <p className="text-xs text-violet-300 font-bold">Entities</p>
+                  <p className="text-sm text-white">Schema Design</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-white/5 border-fuchsia-500/20">
+              <CardContent className="p-4 flex items-center gap-3">
+                <Terminal className="w-5 h-5 text-fuchsia-400" />
+                <div>
+                  <p className="text-xs text-fuchsia-300 font-bold">Functions</p>
+                  <p className="text-sm text-white">Backend APIs</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Main Chat Interface */}
+          <Card className="bg-white/5 border-blue-500/20 shadow-[0_0_40px_rgba(59,130,246,0.2)]">
+            <CardHeader className="border-b border-blue-500/20">
+              <CardTitle className="text-white flex items-center gap-2">
+                <Code className="w-5 h-5 text-blue-400" />
+                Development Console
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              {/* Messages Area */}
+              <ScrollArea 
+                ref={scrollRef}
+                className="h-[500px] p-6 space-y-4"
+              >
+                {messages.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Sparkles className="w-16 h-16 text-blue-400 mx-auto mb-4 opacity-50" />
+                    <h3 className="text-xl font-bold text-white mb-2">Ready to Build</h3>
+                    <p className="text-blue-300 mb-6">Tell me what you want to create or modify</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl mx-auto">
+                      <button
+                        onClick={() => setInput('Create a new dashboard page with analytics cards')}
+                        className="p-4 rounded-xl bg-white/5 border border-blue-500/20 hover:border-blue-500/40 transition-all text-left"
+                      >
+                        <Code className="w-5 h-5 text-blue-400 mb-2" />
+                        <p className="text-sm text-white font-semibold">Create Dashboard</p>
+                        <p className="text-xs text-blue-300">New analytics page</p>
+                      </button>
+                      <button
+                        onClick={() => setInput('Add a new entity for tracking user sessions')}
+                        className="p-4 rounded-xl bg-white/5 border border-indigo-500/20 hover:border-indigo-500/40 transition-all text-left"
+                      >
+                        <Database className="w-5 h-5 text-indigo-400 mb-2" />
+                        <p className="text-sm text-white font-semibold">Create Entity</p>
+                        <p className="text-xs text-indigo-300">New database schema</p>
+                      </button>
+                      <button
+                        onClick={() => setInput('Fix the mobile navigation menu - buttons not working')}
+                        className="p-4 rounded-xl bg-white/5 border border-violet-500/20 hover:border-violet-500/40 transition-all text-left"
+                      >
+                        <Zap className="w-5 h-5 text-violet-400 mb-2" />
+                        <p className="text-sm text-white font-semibold">Fix Bugs</p>
+                        <p className="text-xs text-violet-300">Debug and repair</p>
+                      </button>
+                      <button
+                        onClick={() => setInput('Refactor the authentication flow for better security')}
+                        className="p-4 rounded-xl bg-white/5 border border-fuchsia-500/20 hover:border-fuchsia-500/40 transition-all text-left"
+                      >
+                        <RefreshCw className="w-5 h-5 text-fuchsia-400 mb-2" />
+                        <p className="text-sm text-white font-semibold">Refactor Code</p>
+                        <p className="text-xs text-fuchsia-300">Improve architecture</p>
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  messages.map((msg, idx) => (
+                    <MessageBubble key={idx} message={msg} />
+                  ))
+                )}
+                {sending && (
+                  <div className="flex items-center gap-2 text-blue-400">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-sm">Agent processing...</span>
+                  </div>
+                )}
+              </ScrollArea>
+
+              {/* Input Area */}
+              <div className="border-t border-blue-500/20 p-4 bg-white/5">
+                <div className="flex gap-3">
+                  <Textarea
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Describe what you want to build or modify..."
+                    className="flex-1 bg-white/5 border-blue-500/20 text-white placeholder:text-blue-300/50 min-h-[60px] max-h-[200px]"
+                    disabled={sending}
+                  />
+                  <Button
+                    onClick={sendMessage}
+                    disabled={!input.trim() || sending}
+                    className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-8"
+                  >
+                    {sending ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      <Send className="w-5 h-5" />
+                    )}
+                  </Button>
+                </div>
+                <p className="text-xs text-blue-300 mt-2">
+                  Press Enter to send • Shift + Enter for new line
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function MessageBubble({ message }) {
+  const isUser = message.role === 'user';
+  const isToolCall = message.tool_calls && message.tool_calls.length > 0;
+
+  return (
+    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
+      <div className={`max-w-[85%] rounded-2xl p-4 ${
+        isUser 
+          ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white' 
+          : 'bg-white/10 backdrop-blur-md border border-white/10 text-white'
+      }`}>
+        {/* Message Content */}
+        {message.content && (
+          <ReactMarkdown
+            className="prose prose-invert prose-sm max-w-none"
+            components={{
+              code: ({ inline, children }) => inline ? (
+                <code className="px-1.5 py-0.5 rounded bg-black/30 text-cyan-300 text-xs font-mono">
+                  {children}
+                </code>
+              ) : (
+                <pre className="bg-black/50 rounded-lg p-3 overflow-x-auto text-xs">
+                  <code className="text-green-400 font-mono">{children}</code>
+                </pre>
+              ),
+              p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>
+            }}
+          >
+            {message.content}
+          </ReactMarkdown>
+        )}
+
+        {/* Tool Calls */}
+        {isToolCall && (
+          <div className="mt-3 space-y-2">
+            {message.tool_calls.map((tool, idx) => (
+              <ToolCallCard key={idx} toolCall={tool} />
+            ))}
+          </div>
+        )}
+
+        {/* Timestamp */}
+        <div className="flex items-center gap-1 mt-2 text-xs opacity-60">
+          <Clock className="w-3 h-3" />
+          {new Date().toLocaleTimeString()}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ToolCallCard({ toolCall }) {
+  const getStatusIcon = () => {
+    switch (toolCall.status) {
+      case 'completed':
+        return <CheckCircle2 className="w-4 h-4 text-green-400" />;
+      case 'failed':
+        return <AlertCircle className="w-4 h-4 text-red-400" />;
+      default:
+        return <Loader2 className="w-4 h-4 animate-spin text-blue-400" />;
+    }
+  };
+
+  return (
+    <div className="bg-black/30 rounded-lg p-3 border border-blue-500/20">
+      <div className="flex items-center gap-2 mb-2">
+        {getStatusIcon()}
+        <span className="text-xs font-mono text-blue-300">{toolCall.name}</span>
+      </div>
+      {toolCall.results && (
+        <div className="text-xs text-green-400 font-mono mt-2">
+          {typeof toolCall.results === 'string' ? toolCall.results : JSON.stringify(toolCall.results, null, 2)}
+        </div>
+      )}
+    </div>
+  );
+}

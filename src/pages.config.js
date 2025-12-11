@@ -60,6 +60,7 @@ import AccountSecurity from './pages/AccountSecurity';
 import NISTChallenge from './pages/NISTChallenge';
 import CaseStudies from './pages/CaseStudies';
 import CaseStudyCovenantVictory from './pages/CaseStudyCovenantVictory';
+import SiteBuilder from './pages/SiteBuilder';
 import __Layout from './Layout.jsx';
 
 
@@ -126,6 +127,7 @@ export const PAGES = {
     "NISTChallenge": NISTChallenge,
     "CaseStudies": CaseStudies,
     "CaseStudyCovenantVictory": CaseStudyCovenantVictory,
+    "SiteBuilder": SiteBuilder,
 }
 
 export const pagesConfig = {
