@@ -31,6 +31,7 @@ export const NAV_SECTIONS = [
       { label: "QR Studio", page: "Qr" },
       { label: "Image Lab", page: "ImageLab" },
       { label: "GlyphBot AI", page: "GlyphBot" },
+      { label: "Site Builder", page: "SiteBuilder" },
       { label: "NUPS POS", page: "NUPSLogin" },
       { label: "Security Tools", page: "SecurityTools" },
       { label: "Media Upload Hub", page: "VideoUpload" }
