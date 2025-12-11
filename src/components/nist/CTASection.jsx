@@ -11,13 +11,13 @@ import { createPageUrl } from '@/utils';
 
 export default function CTASection() {
   return (
-    <section className="cta-section py-16 bg-gradient-to-br from-blue-900 to-blue-700 text-white">
+    <section className="py-16 bg-gradient-to-br from-[#0a1324] via-[#1a244b] to-[#1e293b]">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">
             Ready to Implement Accountable AI?
           </h2>
-          <p className="text-lg md:text-xl text-blue-100 mb-8">
+          <p className="text-lg md:text-xl text-blue-100 mb-8 leading-relaxed">
             GlyphLock's Master Covenant framework brings federal-grade AI accountability 
             to your enterprise. Request early access to our platform.
           </p>
@@ -86,10 +86,10 @@ export default function CTASection() {
 
 function UseCaseCard({ icon, title, description }) {
   return (
-    <div className="p-4 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all">
-      <div className="text-3xl mb-2">{icon}</div>
-      <h4 className="font-bold text-white mb-1">{title}</h4>
-      <p className="text-xs text-blue-100">{description}</p>
+    <div className="p-4 md:p-6 rounded-lg bg-blue-800/20 backdrop-blur-sm border-2 border-blue-600/40 hover:bg-blue-800/30 hover:border-blue-500/60 transition-all shadow-[0_0_10px_rgba(90,0,200,0.15)]">
+      <div className="text-3xl mb-3" aria-hidden="true">{icon}</div>
+      <h4 className="font-bold text-blue-100 mb-2 text-sm md:text-base">{title}</h4>
+      <p className="text-xs md:text-sm text-blue-200 leading-relaxed">{description}</p>
     </div>
   );
 }

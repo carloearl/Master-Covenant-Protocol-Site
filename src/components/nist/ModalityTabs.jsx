@@ -153,12 +153,12 @@ export default function ModalityTabs() {
   const [activeTab, setActiveTab] = useState('text');
 
   return (
-    <section id="technical" className="modality-section py-16 bg-gray-50">
+    <section id="technical" className="py-16 bg-gradient-to-br from-[#f8fafc] to-[#e2e8f0]">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">
           Technical Approach by Modality
         </h2>
-        <p className="text-lg md:text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
+        <p className="text-lg md:text-xl text-gray-700 text-center mb-12 max-w-3xl mx-auto">
           Three distinct systems, one unified Master Covenant framework
         </p>
 
@@ -188,31 +188,31 @@ export default function ModalityTabs() {
 
 function ModalityCard({ content }) {
   return (
-    <Card className="p-4 md:p-8 shadow-lg">
+    <Card className="p-4 md:p-8 shadow-lg border-2 border-gray-200 bg-white">
       <CardHeader>
-        <CardTitle className="text-2xl md:text-3xl mb-2">{content.title}</CardTitle>
-        <CardDescription className="text-base md:text-lg">{content.subtitle}</CardDescription>
+        <CardTitle className="text-2xl md:text-3xl mb-2 text-gray-900">{content.title}</CardTitle>
+        <CardDescription className="text-base md:text-lg text-gray-700">{content.subtitle}</CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-8">
         {/* Task Description */}
-        <div className="bg-blue-50 p-4 md:p-6 rounded-lg border-l-4 border-blue-500">
-          <h3 className="font-semibold text-base md:text-lg mb-2">Challenge Task:</h3>
-          <p className="text-sm md:text-base text-gray-700">{content.description}</p>
+        <div className="bg-blue-50 p-4 md:p-6 rounded-lg border-l-4 border-blue-600">
+          <h3 className="font-semibold text-base md:text-lg mb-2 text-gray-900">Challenge Task:</h3>
+          <p className="text-sm md:text-base text-gray-800 leading-relaxed">{content.description}</p>
         </div>
 
         {/* Approach Details */}
         <div>
-          <h3 className="text-xl md:text-2xl font-semibold mb-6">GlyphLock's Approach</h3>
-          <div className="space-y-6">
+          <h3 className="text-xl md:text-2xl font-semibold mb-6 text-gray-900">GlyphLock's Approach</h3>
+          <div className="space-y-4">
             {content.approach.map((section, idx) => (
-              <div key={idx} className={`p-4 md:p-6 rounded-lg ${section.highlight ? 'bg-yellow-50 border-2 border-yellow-400' : 'bg-gray-50'}`}>
-                <h4 className="font-semibold text-base md:text-lg mb-3 flex items-center gap-2 flex-wrap">
-                  {section.highlight && <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />}
+              <div key={idx} className={`p-4 md:p-6 rounded-lg border-2 ${section.highlight ? 'bg-amber-50 border-amber-500 shadow-[0_0_10px_rgba(90,0,200,0.15)]' : 'bg-gray-50 border-gray-200'}`}>
+                <h4 className="font-semibold text-base md:text-lg mb-3 flex items-center gap-2 flex-wrap text-gray-900">
+                  {section.highlight && <Star className="w-5 h-5 text-amber-600 fill-amber-600" />}
                   {section.title}
-                  {section.highlight && <span className="text-sm text-yellow-700 ml-2">(UNIQUE)</span>}
+                  {section.highlight && <span className="text-sm text-amber-700 font-bold ml-2">(UNIQUE)</span>}
                 </h4>
-                <ul className="list-disc list-inside space-y-1 text-sm md:text-base text-gray-700">
+                <ul className="list-disc list-inside space-y-2 text-sm md:text-base text-gray-800 leading-relaxed">
                   {section.details.map((detail, i) => (
                     <li key={i}>{detail}</li>
                   ))}
@@ -224,11 +224,11 @@ function ModalityCard({ content }) {
 
         {/* Tech Stack */}
         <div>
-          <h3 className="text-xl md:text-2xl font-semibold mb-4">Technical Stack</h3>
+          <h3 className="text-xl md:text-2xl font-semibold mb-4 text-gray-900">Technical Stack</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {content.techStack.map((tech) => (
-              <div key={tech.label} className="bg-white p-4 rounded-lg border">
-                <div className="text-sm text-gray-600 mb-1">{tech.label}</div>
+              <div key={tech.label} className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <div className="text-sm text-gray-600 mb-1 font-medium">{tech.label}</div>
                 <div className="font-semibold text-gray-900 text-sm md:text-base">{tech.value}</div>
               </div>
             ))}
@@ -237,23 +237,23 @@ function ModalityCard({ content }) {
 
         {/* Target Metrics */}
         <div>
-          <h3 className="text-xl md:text-2xl font-semibold mb-4">Target Performance</h3>
+          <h3 className="text-xl md:text-2xl font-semibold mb-4 text-gray-900">Target Performance</h3>
           <div className="grid grid-cols-3 gap-2 md:gap-4">
             {content.metrics.map((metric) => (
-              <div key={metric.name} className="text-center p-4 md:p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200">
-                <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">{metric.target}</div>
-                <div className="text-xs md:text-sm text-gray-700 font-medium">{metric.name}</div>
+              <div key={metric.name} className="text-center p-3 md:p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border-2 border-blue-300">
+                <div className="text-2xl md:text-3xl font-bold text-blue-700 mb-2">{metric.target}</div>
+                <div className="text-xs md:text-sm text-gray-800 font-semibold">{metric.name}</div>
               </div>
             ))}
           </div>
         </div>
       </CardContent>
 
-      <CardFooter className="flex flex-col sm:flex-row gap-4 pt-6 border-t">
-        <Button variant="outline" className="flex-1">
+      <CardFooter className="flex flex-col sm:flex-row gap-4 pt-6 border-t-2 border-gray-200">
+        <Button variant="outline" className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50">
           View Code Sample
         </Button>
-        <Button variant="outline" className="flex-1">
+        <Button variant="outline" className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50">
           Technical Documentation
         </Button>
       </CardFooter>

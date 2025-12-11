@@ -26,22 +26,22 @@ export default function CountdownTimer({ targetDate }) {
   }, [targetDate]);
 
   return (
-    <div className="text-center flex justify-center gap-4 text-white font-semibold text-xl">
-      <div className="flex flex-col items-center">
-        <span className="text-4xl font-bold">{timeLeft.days}</span>
-        <span className="text-xs opacity-70">Days</span>
+    <div className="flex justify-center gap-3 md:gap-6">
+      <div className="flex flex-col items-center" role="timer" aria-label={`${timeLeft.days} days`}>
+        <span className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-100 tabular-nums">{String(timeLeft.days).padStart(2, '0')}</span>
+        <span className="text-xs md:text-sm text-blue-200 mt-1 font-medium">Days</span>
       </div>
-      <div className="flex flex-col items-center">
-        <span className="text-4xl font-bold">{timeLeft.hours}</span>
-        <span className="text-xs opacity-70">Hours</span>
+      <div className="flex flex-col items-center" role="timer" aria-label={`${timeLeft.hours} hours`}>
+        <span className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-100 tabular-nums">{String(timeLeft.hours).padStart(2, '0')}</span>
+        <span className="text-xs md:text-sm text-blue-200 mt-1 font-medium">Hours</span>
       </div>
-      <div className="flex flex-col items-center">
-        <span className="text-4xl font-bold">{timeLeft.minutes}</span>
-        <span className="text-xs opacity-70">Minutes</span>
+      <div className="flex flex-col items-center" role="timer" aria-label={`${timeLeft.minutes} minutes`}>
+        <span className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-100 tabular-nums">{String(timeLeft.minutes).padStart(2, '0')}</span>
+        <span className="text-xs md:text-sm text-blue-200 mt-1 font-medium">Minutes</span>
       </div>
-      <div className="flex flex-col items-center">
-        <span className="text-4xl font-bold">{timeLeft.seconds}</span>
-        <span className="text-xs opacity-70">Seconds</span>
+      <div className="flex flex-col items-center" role="timer" aria-label={`${timeLeft.seconds} seconds`}>
+        <span className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-100 tabular-nums">{String(timeLeft.seconds).padStart(2, '0')}</span>
+        <span className="text-xs md:text-sm text-blue-200 mt-1 font-medium">Seconds</span>
       </div>
     </div>
   );
