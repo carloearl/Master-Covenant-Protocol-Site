@@ -165,9 +165,15 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Only admins can use site builder
-    if (user.role !== 'admin') {
-      return Response.json({ error: 'Admin access required' }, { status: 403 });
+    // Allow specific users + admins
+    const authorizedUsers = ['carloearl@glyphlock.com', 'carloearl@gmail.com'];
+    const isAuthorized = user.role === 'admin' || authorizedUsers.includes(user.email);
+    
+    if (!isAuthorized) {
+      return Response.json({ 
+        error: 'Site Builder access denied',
+        message: 'Contact admin@glyphlock.com for access'
+      }, { status: 403 });
     }
 
     const { action, payload } = await req.json();

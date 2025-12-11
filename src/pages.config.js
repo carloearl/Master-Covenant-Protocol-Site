@@ -61,6 +61,7 @@ import NISTChallenge from './pages/NISTChallenge';
 import CaseStudies from './pages/CaseStudies';
 import CaseStudyCovenantVictory from './pages/CaseStudyCovenantVictory';
 import SiteBuilder from './pages/SiteBuilder';
+import SiteBuilderTest from './pages/SiteBuilderTest';
 import __Layout from './Layout.jsx';
 
 
@@ -128,6 +129,7 @@ export const PAGES = {
     "CaseStudies": CaseStudies,
     "CaseStudyCovenantVictory": CaseStudyCovenantVictory,
     "SiteBuilder": SiteBuilder,
+    "SiteBuilderTest": SiteBuilderTest,
 }
 
 export const pagesConfig = {

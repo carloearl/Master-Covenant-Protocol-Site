@@ -54,6 +54,17 @@ export default function SiteBuilder() {
         return;
       }
       const userData = await base44.auth.me();
+      
+      // Check if user is authorized
+      const authorizedUsers = ['carloearl@glyphlock.com', 'carloearl@gmail.com'];
+      const isAuthorized = userData.role === 'admin' || authorizedUsers.includes(userData.email);
+      
+      if (!isAuthorized) {
+        toast.error('Site Builder access denied. Contact admin for access.');
+        window.location.href = '/';
+        return;
+      }
+      
       setUser(userData);
       await initConversation();
     } catch (error) {
@@ -250,8 +261,8 @@ export default function SiteBuilder() {
               <CardContent className="p-4 flex items-center gap-3">
                 <FileCode className="w-5 h-5 text-blue-400" />
                 <div>
-                  <p className="text-xs text-blue-300 font-bold">Gemini 2.0 Flash</p>
-                  <p className="text-sm text-white">AI Code + Images</p>
+                  <p className="text-xs text-blue-300 font-bold">Components</p>
+                  <p className="text-sm text-white">Create & Modify</p>
                 </div>
               </CardContent>
             </Card>
@@ -305,12 +316,12 @@ export default function SiteBuilder() {
                     <p className="text-blue-300 mb-6">Tell me what you want to create or modify</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl mx-auto">
                       <button
-                        onClick={() => setInput('[CODE MODE] Create a new dashboard page with analytics cards and a hero image showing data visualization')}
+                        onClick={() => setInput('Create a new dashboard page with analytics cards')}
                         className="p-4 rounded-xl bg-white/5 border border-blue-500/20 hover:border-blue-500/40 transition-all text-left"
                       >
                         <Code className="w-5 h-5 text-blue-400 mb-2" />
                         <p className="text-sm text-white font-semibold">Create Dashboard</p>
-                        <p className="text-xs text-blue-300">With AI-generated images</p>
+                        <p className="text-xs text-blue-300">New analytics page</p>
                       </button>
                       <button
                         onClick={() => setInput('Add a new entity for tracking user sessions')}
