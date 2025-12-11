@@ -68,9 +68,11 @@ const useScrollEffect = (sectionRef) => {
 const ScrollSection = ({ children, className = "" }) => {
   const sectionRef = useRef(null);
   const style = useScrollEffect(sectionRef);
+  const isMobile = typeof window !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  
   return (
     <div ref={sectionRef} className={`w-full py-16 md:py-20 lg:py-24 ${className}`}>
-      <div style={style} className="transition-all duration-500 ease-out">
+      <div style={isMobile ? {} : style} className={isMobile ? '' : 'transition-all duration-500 ease-out'}>
         {children}
       </div>
     </div>
@@ -81,7 +83,15 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    document.documentElement.style.scrollBehavior = 'smooth';
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+    if (!isMobile) {
+      document.documentElement.style.scrollBehavior = 'smooth';
+    } else {
+      // Disable scroll snap and perspective effects on mobile
+      document.documentElement.style.scrollBehavior = 'auto';
+      document.body.style.scrollSnapType = 'none';
+    }
     
     // Simulate initial load
     const timer = setTimeout(() => {

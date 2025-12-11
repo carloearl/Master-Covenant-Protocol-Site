@@ -45,6 +45,13 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   useEffect(() => {
+    // Disable scroll snap on mobile
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      document.body.style.scrollSnapType = 'none';
+      document.documentElement.style.scrollSnapType = 'none';
+    }
+    
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [location.pathname]);
 
