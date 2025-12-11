@@ -242,16 +242,31 @@ export default function Navbar({ user, onLogin, onLogout }) {
                   </Link>
                 </div>
               </div>
-              {NAV.map((section) => (
+              {NAV && NAV.map((section) => (
                 <div key={section.label} className="space-y-3">
                   <h3 className="text-indigo-300 text-xs font-bold uppercase tracking-widest">{section.label}</h3>
                   <div className="grid grid-cols-1 gap-2 pl-4 border-l border-white/10">
-                    {section.items.map((item) => (
+                    {section.items && section.items.map((item) => (
                       <Link
                         key={item.page}
                         to={createPageUrl(item.page)}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="text-violet-200 hover:text-white text-sm py-1 block"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setMobileMenuOpen(false);
+                          window.location.href = createPageUrl(item.page);
+                        }}
+                        onTouchEnd={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setMobileMenuOpen(false);
+                          window.location.href = createPageUrl(item.page);
+                        }}
+                        className="text-violet-200 hover:text-white text-sm py-3 block min-h-[48px] flex items-center"
+                        style={{
+                          touchAction: 'manipulation',
+                          WebkitTapHighlightColor: 'transparent'
+                        }}
                       >
                         {item.label}
                       </Link>
