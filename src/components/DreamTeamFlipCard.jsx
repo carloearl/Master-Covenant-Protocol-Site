@@ -155,30 +155,36 @@ export default function DreamTeamFlipCard({ card }) {
             </div>
 
             {/* CRYPTOGRAPHIC SIGNATURE BLOCK - BLUE VIOLET GLOW */}
-            <div className="flex-1 bg-indigo-950/40 border-2 border-indigo-400/40 rounded-xl p-3 font-mono overflow-hidden backdrop-blur-md shadow-[inset_0_0_35px_rgba(87,61,255,0.2),0_0_25px_rgba(59,130,246,0.25)]">
+            <div className="flex-1 bg-indigo-950/40 border-2 border-indigo-400/40 rounded-xl p-3 font-mono overflow-y-auto backdrop-blur-md shadow-[inset_0_0_35px_rgba(87,61,255,0.2),0_0_25px_rgba(59,130,246,0.25)]">
               <div className="flex items-center gap-2 mb-2 pb-2 border-b border-indigo-400/30">
                 <Fingerprint className="w-4 h-4 text-indigo-300" />
                 <span className="text-xs text-indigo-200 font-bold uppercase tracking-wider">Cryptographic Signature</span>
               </div>
               
-              <div className="space-y-2 text-xs">
-                <div className="flex items-center gap-2">
-                  <span className="text-violet-200">Algorithm:</span>
-                  <span className="text-green-400 font-semibold">{card.cryptoSignature?.algorithm}</span>
+              {card.cryptoSignature?.asciiArt ? (
+                <pre className="text-[7px] md:text-[8px] text-green-400 leading-tight whitespace-pre overflow-x-auto">
+{card.cryptoSignature.asciiArt}
+                </pre>
+              ) : (
+                <div className="space-y-2 text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className="text-violet-200">Algorithm:</span>
+                    <span className="text-green-400 font-semibold">{card.cryptoSignature?.algorithm}</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Hash className="w-3 h-3 text-violet-200 flex-shrink-0 mt-0.5" />
+                    <span className="text-fuchsia-300 break-all leading-tight">{card.cryptoSignature?.hash}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Lock className="w-3 h-3 text-violet-200" />
+                    <span className="text-indigo-300">{card.cryptoSignature?.publicKey}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-3 h-3 text-violet-200" />
+                    <span className="text-white">{formatDate(card.bindingDate)}</span>
+                  </div>
                 </div>
-                <div className="flex items-start gap-2">
-                  <Hash className="w-3 h-3 text-violet-200 flex-shrink-0 mt-0.5" />
-                  <span className="text-fuchsia-300 break-all leading-tight">{card.cryptoSignature?.hash}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Lock className="w-3 h-3 text-violet-200" />
-                  <span className="text-indigo-300">{card.cryptoSignature?.publicKey}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-3 h-3 text-violet-200" />
-                  <span className="text-white">{formatDate(card.bindingDate)}</span>
-                </div>
-              </div>
+              )}
 
               {/* Verification status */}
               <div className="mt-3 pt-2 border-t border-indigo-400/30 flex items-center justify-between">
