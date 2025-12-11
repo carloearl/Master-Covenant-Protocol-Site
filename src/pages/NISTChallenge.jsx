@@ -38,41 +38,41 @@ export default function NISTChallengePage() {
       <Hero />
 
       {/* Overview Section */}
-      <section className="overview-section py-16 bg-white">
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div>
-              <h3 className="text-2xl font-bold mb-4">What is NIST GenAI?</h3>
-              <p className="text-gray-700 leading-relaxed">
+            <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border-2 border-blue-300 shadow-sm">
+              <h3 className="text-xl md:text-2xl font-bold mb-4 text-gray-900">What is NIST GenAI?</h3>
+              <p className="text-gray-800 leading-relaxed text-sm md:text-base">
                 The National Institute of Standards and Technology (NIST) GenAI Challenge 
                 evaluates generative AI systems across five modalities: text, image, code, 
                 audio, and video. As a federal standards agency, NIST provides independent, 
                 rigorous evaluation of AI capabilities and limitations.
               </p>
             </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-4">Our Participation</h3>
-              <ul className="space-y-2 text-gray-700">
+            <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-lg border-2 border-green-400 shadow-sm">
+              <h3 className="text-xl md:text-2xl font-bold mb-4 text-gray-900">Our Participation</h3>
+              <ul className="space-y-2 text-gray-800 text-sm md:text-base">
                 <li className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span> Text Discriminator (Text-D)
+                  <span className="text-green-700 font-bold">✓</span> Text Discriminator (Text-D)
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span> Text Prompter (Text-P)
+                  <span className="text-green-700 font-bold">✓</span> Text Prompter (Text-P)
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span> Image Discriminator (Image-D)
+                  <span className="text-green-700 font-bold">✓</span> Image Discriminator (Image-D)
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span> Code Generator (Code-G)
+                  <span className="text-green-700 font-bold">✓</span> Code Generator (Code-G)
                 </li>
               </ul>
-              <p className="text-sm text-gray-600 mt-4">
-                <strong>Timeline:</strong> Jan 28 - Jun 17, 2026
+              <p className="text-sm text-gray-700 mt-4 font-semibold">
+                Timeline: Jan 28 - Jun 17, 2026
               </p>
             </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-4">Why This Matters</h3>
-              <ul className="space-y-2 text-gray-700">
+            <div className="p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border-2 border-purple-400 shadow-sm">
+              <h3 className="text-xl md:text-2xl font-bold mb-4 text-gray-900">Why This Matters</h3>
+              <ul className="space-y-2 text-gray-800 text-sm md:text-base font-medium">
                 <li>• Third-party credibility</li>
                 <li>• Benchmark vs. competitors</li>
                 <li>• Technical validation</li>
@@ -99,14 +99,14 @@ export default function NISTChallengePage() {
       {/* Timeline */}
       <Timeline />
 
-      {/* CTA Section */}
-      <CTASection />
+      {/* Technical Footer */}
+      <TechnicalFooter />
 
       {/* Disclaimer Footer */}
-      <section className="disclaimer-section py-8 bg-gray-100 border-t">
+      <section className="py-8 bg-gray-100 border-t-2 border-gray-300">
         <div className="container mx-auto px-4">
-          <p className="text-sm text-gray-600 text-center max-w-4xl mx-auto">
-            <strong>Disclaimer:</strong> GlyphLock LLC is a participant in the NIST GenAI Challenge. 
+          <p className="text-sm text-gray-800 text-center max-w-4xl mx-auto leading-relaxed">
+            <strong className="text-gray-900">Disclaimer:</strong> GlyphLock LLC is a participant in the NIST GenAI Challenge. 
             Participation does not constitute endorsement by NIST or the U.S. Government. 
             NIST does not approve, recommend, or endorse any commercial products or services. 
             Performance metrics are preliminary and subject to change pending official evaluation 
