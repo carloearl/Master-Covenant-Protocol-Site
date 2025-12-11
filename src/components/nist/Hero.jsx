@@ -37,16 +37,17 @@ export default function Hero() {
         </svg>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="w-full relative z-10 mb-12">
         {/* Hero Image with Branding */}
-        <div className="max-w-5xl mx-auto mb-12">
-          <img 
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/c7baa454d_4f6d13c7-16d8-4204-b8eb-92dd206546ea1.png"
-            alt="NIST x GlyphLock - Federal Validation in Progress"
-            className="w-full h-auto"
-            loading="eager"
-          />
-        </div>
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/c7baa454d_4f6d13c7-16d8-4204-b8eb-92dd206546ea1.png"
+          alt="NIST x GlyphLock - Federal Validation in Progress"
+          className="w-full h-auto object-cover"
+          loading="eager"
+        />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
 
         {/* CTAs positioned below hero image */}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
