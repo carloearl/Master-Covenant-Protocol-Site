@@ -282,6 +282,97 @@ export const SEO_DATA = {
     priority: 0.5,
     changefreq: "yearly",
     internalLinks: ["/legal/privacy", "/contact"]
+  },
+  "ImageLab": {
+    title: "Image Lab | AI Image Generation & Interactive Hotspot Editor",
+    description: "Create AI-generated images with blockchain verification and add interactive hotspots. Military-grade security for visual assets.",
+    keywords: ["AI image generator", "interactive image editor", "hotspot mapping", "blockchain image verification", "secure image generation"],
+    h1: "GlyphLock Image Lab",
+    url: "/image-lab",
+    ogTitle: "Image Lab - AI Generation + Hotspot Editor",
+    ogDescription: "Generate secure AI images with blockchain verification and interactive hotspots.",
+    schemaType: "SoftwareApplication",
+    priority: 0.9,
+    changefreq: "weekly",
+    internalLinks: ["/qr", "/interactive-image-studio"]
+  },
+  "GlyphBot": {
+    title: "GlyphBot AI Assistant | Cybersecurity Chatbot & Code Analysis",
+    description: "AI-powered security assistant for threat detection, code analysis, file scanning, and security auditing. Available 24/7.",
+    keywords: ["AI security assistant", "GlyphBot", "cybersecurity chatbot", "code analysis AI", "threat detection bot"],
+    h1: "GlyphBot AI Security Assistant",
+    url: "/glyphbot",
+    ogTitle: "GlyphBot - Your AI Security Analyst",
+    ogDescription: "24/7 AI assistant for security analysis, code review, and threat detection.",
+    schemaType: "SoftwareApplication",
+    priority: 0.9,
+    changefreq: "daily",
+    internalLinks: ["/dashboard", "/site-audit"]
+  },
+  "Dashboard": {
+    title: "Dashboard | GlyphLock User Portal",
+    description: "Access all GlyphLock tools and services from your centralized dashboard. Manage QR codes, images, security settings, and more.",
+    keywords: ["user dashboard", "control panel", "account portal", "GlyphLock tools"],
+    h1: "GlyphLock Dashboard",
+    url: "/dashboard",
+    ogTitle: "GlyphLock User Dashboard",
+    ogDescription: "Centralized access to all your security tools and services.",
+    schemaType: "WebPage",
+    priority: 0.8,
+    changefreq: "daily",
+    internalLinks: ["/qr", "/image-lab", "/glyphbot"]
+  },
+  "SiteBuilder": {
+    title: "Site Builder Agent | AI-Powered Development Assistant",
+    description: "Autonomous AI agent that builds and modifies your entire site. Visual chat, Agent Brain, and Dev Engine interfaces.",
+    keywords: ["AI site builder", "autonomous developer", "code generation", "AI assistant"],
+    h1: "Site Builder AI Agent",
+    url: "/site-builder",
+    ogTitle: "Site Builder - Autonomous AI Developer",
+    ogDescription: "AI agent with Visual Chat, Agent Brain, and Dev Engine modes.",
+    schemaType: "SoftwareApplication",
+    priority: 0.7,
+    changefreq: "weekly",
+    internalLinks: ["/site-audit", "/command-center"]
+  },
+  "SiteAudit": {
+    title: "Site Audit | AI Security & Performance Scanner",
+    description: "Scan your site for security vulnerabilities, performance issues, SEO problems, and UX improvements. Auto-fix available.",
+    keywords: ["site audit", "security scanner", "performance analysis", "SEO audit", "vulnerability detection"],
+    h1: "AI Site Audit & Auto-Fix",
+    url: "/site-audit",
+    ogTitle: "Site Audit - AI Security Scanner",
+    ogDescription: "Comprehensive site analysis with auto-fix for security and performance issues.",
+    schemaType: "SoftwareApplication",
+    priority: 0.7,
+    changefreq: "weekly",
+    internalLinks: ["/site-builder", "/security-operations-center"]
+  },
+  "DreamTeam": {
+    title: "Dream Team | Meet the GlyphLock Founders",
+    description: "Meet Carlo Rene Earl, Collin Vanderginst (CTO), and Jacub Lough (CSO/CFO) - the team building the future of cybersecurity.",
+    keywords: ["GlyphLock team", "Carlo Earl", "Collin Vanderginst", "Jacub Lough", "cybersecurity founders"],
+    h1: "The GlyphLock Dream Team",
+    url: "/dream-team",
+    ogTitle: "Meet the GlyphLock Founders",
+    ogDescription: "The visionaries building quantum-resistant security for the AI era.",
+    schemaType: "AboutPage",
+    priority: 0.7,
+    changefreq: "monthly",
+    internalLinks: ["/about", "/partners"]
+  },
+  "NISTChallenge": {
+    title: "NIST Challenge Victory | GlyphLock Case Study",
+    description: "How GlyphLock won the NIST cybersecurity challenge with quantum-resistant encryption and AI threat detection.",
+    keywords: ["NIST challenge", "cybersecurity competition", "quantum encryption", "case study"],
+    h1: "NIST Challenge Case Study",
+    url: "/nist-challenge",
+    ogTitle: "GlyphLock NIST Challenge Victory",
+    ogDescription: "Our winning solution for the NIST quantum-resistant encryption challenge.",
+    schemaType: "Article",
+    priority: 0.8,
+    changefreq: "monthly",
+    internalLinks: ["/case-studies", "/master-covenant"]
   }
 };
 
