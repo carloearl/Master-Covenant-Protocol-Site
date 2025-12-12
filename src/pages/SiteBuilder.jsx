@@ -93,10 +93,11 @@ export default function SiteBuilder() {
         }
       });
       setConversation(conv);
-      setMessages(conv.messages || []);
+      setMessages(Array.isArray(conv.messages) ? conv.messages : []);
     } catch (error) {
       console.error('Failed to init conversation:', error);
       toast.error('Failed to initialize agent');
+      setMessages([]);
     }
   };
 
@@ -109,16 +110,18 @@ export default function SiteBuilder() {
       content: modePrefix + input
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages(prev => Array.isArray(prev) ? [...prev, userMessage] : [userMessage]);
     setInput('');
     setSending(true);
 
     try {
       const response = await base44.agents.addMessage(conversation, userMessage);
       
-      // Subscribe to streaming updates
+      // Subscribe to streaming updates with safety checks
       const unsubscribe = base44.agents.subscribeToConversation(conversation.id, (data) => {
-        setMessages(data.messages);
+        if (data && Array.isArray(data.messages)) {
+          setMessages(data.messages);
+        }
       });
 
       // Cleanup after response complete
@@ -128,10 +131,13 @@ export default function SiteBuilder() {
     } catch (error) {
       console.error('Send error:', error);
       toast.error('Failed to send message');
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: 'Error: ' + error.message
-      }]);
+      setMessages(prev => {
+        const safePrev = Array.isArray(prev) ? prev : [];
+        return [...safePrev, {
+          role: 'assistant',
+          content: 'Error: ' + error.message
+        }];
+      });
     } finally {
       setSending(false);
     }
@@ -394,9 +400,17 @@ export default function SiteBuilder() {
                     </div>
                   </div>
                 ) : (
-                  messages.map((msg, idx) => (
-                    <MessageBubble key={idx} message={msg} />
-                  ))
+                  Array.isArray(messages) && messages.length > 0 ? (
+                    messages.map((msg, idx) => (
+                      <MessageBubble key={idx} message={msg} />
+                    ))
+                  ) : (
+                    <div className="text-center py-12">
+                      <Sparkles className="w-16 h-16 text-blue-400 mx-auto mb-4 opacity-50" />
+                      <h3 className="text-xl font-bold text-white mb-2">Ready to Build</h3>
+                      <p className="text-blue-300 mb-6">Tell me what you want to create or modify</p>
+                    </div>
+                  )
                 )}
                 {sending && (
                   <div className="flex items-center gap-2 text-blue-400">
