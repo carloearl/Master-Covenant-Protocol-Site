@@ -97,7 +97,7 @@ export default function VirtualTerminal(props) {
         })}
       </div>
       <form onSubmit={handleSubmit} className="border-t border-emerald-500/40 flex">
-        <span className="px-2 py-1 text-xs select-none">&gt;</span>
+        <span className="px-2 py-1 text-xs select-none">{'>'}</span>
         <input
           className="flex-1 bg-transparent outline-none text-[#00ff41] text-[11px] py-1 pr-2"
           value={input}
