@@ -23,15 +23,11 @@ import {
   Paperclip,
   X,
   Image as ImageIcon,
-  FileText,
-  Monitor,
-  Smartphone
+  FileText
 } from 'lucide-react';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import ReactMarkdown from 'react-markdown';
-import MobileDevConsole from '@/components/devengine/MobileDevConsole';
-import DevModeLayout from '@/components/devengine/DevModeLayout';
 
 export default function SiteBuilder() {
   const [user, setUser] = useState(null);
@@ -43,21 +39,11 @@ export default function SiteBuilder() {
   const [mode, setMode] = useState('chat'); // 'plan', 'chat', 'code'
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
-  const [viewMode, setViewMode] = useState('visual'); // 'visual', 'dev'
-  const [isMobile, setIsMobile] = useState(false);
   const fileInputRef = useRef(null);
   const scrollRef = useRef(null);
 
   useEffect(() => {
     loadUser();
-    
-    // Detect mobile
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   useEffect(() => {
@@ -234,31 +220,6 @@ export default function SiteBuilder() {
                 </div>
                 </div>
                 <div className="flex items-center gap-3">
-                {/* View Mode Toggle */}
-                <div className="flex gap-2 bg-white/5 rounded-lg p-1">
-                  <button
-                    onClick={() => setViewMode('visual')}
-                    className={`px-4 py-2 rounded-md text-xs font-bold transition-all flex items-center gap-2 ${
-                      viewMode === 'visual'
-                        ? 'bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]'
-                        : 'text-gray-400 hover:text-white'
-                    }`}
-                  >
-                    <Sparkles className="w-4 h-4" />
-                    VISUAL
-                  </button>
-                  <button
-                    onClick={() => setViewMode('dev')}
-                    className={`px-4 py-2 rounded-md text-xs font-bold transition-all flex items-center gap-2 ${
-                      viewMode === 'dev'
-                        ? 'bg-indigo-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.5)]'
-                        : 'text-gray-400 hover:text-white'
-                    }`}
-                  >
-                    <Code className="w-4 h-4" />
-                    DEV ENGINE
-                  </button>
-                </div>
                 {/* Mode Selector */}
                 <div className="flex gap-2 bg-white/5 rounded-lg p-1">
                   <button
@@ -301,111 +262,102 @@ export default function SiteBuilder() {
           </div>
         </div>
 
-        {/* Render appropriate view */}
-        {viewMode === 'dev' ? (
-          isMobile ? (
-            <MobileDevConsole />
-          ) : (
-            <DevModeLayout />
-          )
-        ) : (
-          <>
-            {/* Mode Info Banner */}
-            <div className="container mx-auto px-4 pt-6">
-          <div className="mb-6 p-4 rounded-xl border-2 transition-all" style={{
+        {/* Mode Info Banner - MOBILE RESPONSIVE */}
+        <div className="container mx-auto px-3 md:px-4 pt-4 md:pt-6">
+          <div className="mb-4 md:mb-6 p-3 md:p-4 rounded-xl border-2 transition-all" style={{
             background: mode === 'chat' ? 'rgba(59,130,246,0.1)' : mode === 'plan' ? 'rgba(99,102,241,0.1)' : 'rgba(139,92,246,0.1)',
             borderColor: mode === 'chat' ? 'rgba(59,130,246,0.3)' : mode === 'plan' ? 'rgba(99,102,241,0.3)' : 'rgba(139,92,246,0.3)'
           }}>
             {mode === 'chat' && (
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                  <span className="text-2xl">💬</span>
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-xl md:text-2xl">💬</span>
                 </div>
                 <div>
-                  <h3 className="text-white font-bold">Chat Mode Active</h3>
-                  <p className="text-sm text-blue-300">Discuss, explain, and get guidance without executing code changes</p>
+                  <h3 className="text-sm md:text-base text-white font-bold">Chat Mode Active</h3>
+                  <p className="text-xs md:text-sm text-blue-300">Discuss, explain, and get guidance without executing code changes</p>
                 </div>
               </div>
             )}
             {mode === 'plan' && (
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                  <span className="text-2xl">📋</span>
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-xl md:text-2xl">📋</span>
                 </div>
                 <div>
-                  <h3 className="text-white font-bold">Plan Mode Active</h3>
-                  <p className="text-sm text-indigo-300">Strategic thinking, architecture analysis, and implementation roadmaps</p>
+                  <h3 className="text-sm md:text-base text-white font-bold">Plan Mode Active</h3>
+                  <p className="text-xs md:text-sm text-indigo-300">Strategic thinking, architecture analysis, and implementation roadmaps</p>
                 </div>
               </div>
             )}
             {mode === 'code' && (
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                  <span className="text-2xl">⚡</span>
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-violet-500/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-xl md:text-2xl">⚡</span>
                 </div>
                 <div>
-                  <h3 className="text-white font-bold">Code Mode Active</h3>
-                  <p className="text-sm text-violet-300">Execute changes, create files, and modify codebase (⚠️ admin only)</p>
+                  <h3 className="text-sm md:text-base text-white font-bold">Code Mode Active</h3>
+                  <p className="text-xs md:text-sm text-violet-300">Execute changes, create files, and modify codebase (⚠️ admin only)</p>
                 </div>
               </div>
             )}
           </div>
         </div>
 
-        {/* Agent Capabilities Panel */}
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        {/* Agent Capabilities Panel - MOBILE RESPONSIVE */}
+        <div className="container mx-auto px-3 md:px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-6">
             <Card className="bg-white/5 border-blue-500/20">
-              <CardContent className="p-4 flex items-center gap-3">
-                <FileCode className="w-5 h-5 text-blue-400" />
+              <CardContent className="p-3 md:p-4 flex flex-col md:flex-row items-center gap-2 md:gap-3 text-center md:text-left">
+                <FileCode className="w-5 h-5 md:w-5 md:h-5 text-blue-400" />
                 <div>
                   <p className="text-xs text-blue-300 font-bold">Components</p>
-                  <p className="text-sm text-white">Create & Modify</p>
+                  <p className="text-xs md:text-sm text-white hidden md:block">Create & Modify</p>
                 </div>
               </CardContent>
             </Card>
             <Card className="bg-white/5 border-indigo-500/20">
-              <CardContent className="p-4 flex items-center gap-3">
-                <LayoutIcon className="w-5 h-5 text-indigo-400" />
+              <CardContent className="p-3 md:p-4 flex flex-col md:flex-row items-center gap-2 md:gap-3 text-center md:text-left">
+                <LayoutIcon className="w-5 h-5 md:w-5 md:h-5 text-indigo-400" />
                 <div>
                   <p className="text-xs text-indigo-300 font-bold">Pages</p>
-                  <p className="text-sm text-white">Full Page Builder</p>
+                  <p className="text-xs md:text-sm text-white hidden md:block">Full Page Builder</p>
                 </div>
               </CardContent>
             </Card>
             <Card className="bg-white/5 border-violet-500/20">
-              <CardContent className="p-4 flex items-center gap-3">
-                <Database className="w-5 h-5 text-violet-400" />
+              <CardContent className="p-3 md:p-4 flex flex-col md:flex-row items-center gap-2 md:gap-3 text-center md:text-left">
+                <Database className="w-5 h-5 md:w-5 md:h-5 text-violet-400" />
                 <div>
                   <p className="text-xs text-violet-300 font-bold">Entities</p>
-                  <p className="text-sm text-white">Schema Design</p>
+                  <p className="text-xs md:text-sm text-white hidden md:block">Schema Design</p>
                 </div>
               </CardContent>
             </Card>
             <Card className="bg-white/5 border-fuchsia-500/20">
-              <CardContent className="p-4 flex items-center gap-3">
-                <Terminal className="w-5 h-5 text-fuchsia-400" />
+              <CardContent className="p-3 md:p-4 flex flex-col md:flex-row items-center gap-2 md:gap-3 text-center md:text-left">
+                <Terminal className="w-5 h-5 md:w-5 md:h-5 text-fuchsia-400" />
                 <div>
                   <p className="text-xs text-fuchsia-300 font-bold">Functions</p>
-                  <p className="text-sm text-white">Backend APIs</p>
+                  <p className="text-xs md:text-sm text-white hidden md:block">Backend APIs</p>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Main Chat Interface */}
+          {/* Main Chat Interface - MOBILE RESPONSIVE */}
           <Card className="bg-white/5 border-blue-500/20 shadow-[0_0_40px_rgba(59,130,246,0.2)]">
-            <CardHeader className="border-b border-blue-500/20">
-              <CardTitle className="text-white flex items-center gap-2">
-                <Code className="w-5 h-5 text-blue-400" />
+            <CardHeader className="border-b border-blue-500/20 p-3 md:p-6">
+              <CardTitle className="text-white flex items-center gap-2 text-sm md:text-base">
+                <Code className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
                 Development Console
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              {/* Messages Area */}
+              {/* Messages Area - MOBILE RESPONSIVE */}
               <ScrollArea 
                 ref={scrollRef}
-                className="h-[500px] p-6 space-y-4"
+                className="h-[400px] md:h-[500px] p-3 md:p-6 space-y-3 md:space-y-4"
               >
                 {messages.length === 0 ? (
                   <div className="text-center py-12">
@@ -468,31 +420,32 @@ export default function SiteBuilder() {
                 )}
               </ScrollArea>
 
-              {/* Input Area */}
-              <div className="border-t border-blue-500/20 p-4 bg-white/5">
-                {/* Uploaded Files Preview */}
+              {/* Input Area - MOBILE TOUCH-FRIENDLY */}
+              <div className="border-t border-blue-500/20 p-3 md:p-4 bg-white/5">
+                {/* Uploaded Files Preview - MOBILE RESPONSIVE */}
                 {uploadedFiles.length > 0 && (
-                  <div className="mb-3 flex flex-wrap gap-2">
+                  <div className="mb-2 md:mb-3 flex flex-wrap gap-2">
                     {uploadedFiles.map((file, idx) => (
-                      <div key={idx} className="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2 border border-blue-500/20">
+                      <div key={idx} className="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2 border border-blue-500/20 min-h-[44px]">
                         {file.type.startsWith('image/') ? (
-                          <ImageIcon className="w-4 h-4 text-blue-400" />
+                          <ImageIcon className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
                         ) : (
-                          <FileText className="w-4 h-4 text-indigo-400" />
+                          <FileText className="w-4 h-4 md:w-5 md:h-5 text-indigo-400" />
                         )}
-                        <span className="text-xs text-white truncate max-w-[150px]">{file.name}</span>
+                        <span className="text-xs md:text-sm text-white truncate max-w-[120px] md:max-w-[150px]">{file.name}</span>
                         <button
                           onClick={() => removeFile(file.url)}
-                          className="text-red-400 hover:text-red-300"
+                          className="text-red-400 hover:text-red-300 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                          aria-label="Remove file"
                         >
-                          <X className="w-3 h-3" />
+                          <X className="w-4 h-4" />
                         </button>
                       </div>
                     ))}
                   </div>
                 )}
 
-                <div className="flex gap-3">
+                <div className="flex flex-col md:flex-row gap-2 md:gap-3">
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -501,11 +454,30 @@ export default function SiteBuilder() {
                     onChange={handleFileUpload}
                     className="hidden"
                   />
+
+                  {/* Mobile: Full-width buttons stacked */}
+                  <div className="flex gap-2 md:hidden">
+                    <Button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading || sending}
+                      variant="outline"
+                      className="flex-1 bg-white/5 border-blue-500/20 hover:bg-white/10 min-h-[48px]"
+                    >
+                      {uploading ? (
+                        <Loader2 className="w-5 h-5 animate-spin text-blue-400 mr-2" />
+                      ) : (
+                        <Paperclip className="w-5 h-5 text-blue-400 mr-2" />
+                      )}
+                      <span className="text-sm">Attach Files</span>
+                    </Button>
+                  </div>
+
+                  {/* Desktop: Side-by-side layout */}
                   <Button
                     onClick={() => fileInputRef.current?.click()}
                     disabled={uploading || sending}
                     variant="outline"
-                    className="bg-white/5 border-blue-500/20 hover:bg-white/10"
+                    className="hidden md:flex bg-white/5 border-blue-500/20 hover:bg-white/10 min-h-[48px] min-w-[48px]"
                   >
                     {uploading ? (
                       <Loader2 className="w-5 h-5 animate-spin text-blue-400" />
@@ -513,6 +485,7 @@ export default function SiteBuilder() {
                       <Paperclip className="w-5 h-5 text-blue-400" />
                     )}
                   </Button>
+
                   <Textarea
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
@@ -522,30 +495,35 @@ export default function SiteBuilder() {
                       mode === 'plan' ? 'Describe what you want to plan or architect...' :
                       'Describe the code changes to execute...'
                     }
-                    className="flex-1 bg-white/5 border-blue-500/20 text-white placeholder:text-blue-300/50 min-h-[60px] max-h-[200px]"
+                    className="flex-1 bg-white/5 border-blue-500/20 text-white placeholder:text-blue-300/50 text-base min-h-[80px] md:min-h-[60px] max-h-[200px]"
                     disabled={sending}
                   />
                   <Button
                     onClick={sendMessage}
                     disabled={!input.trim() || sending}
-                    className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-8"
+                    className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white min-h-[48px] min-w-[48px] md:px-8"
                   >
                     {sending ? (
-                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin md:mr-0" />
+                        <span className="ml-2 md:hidden">Sending...</span>
+                      </>
                     ) : (
-                      <Send className="w-5 h-5" />
+                      <>
+                        <Send className="w-5 h-5 md:mr-0" />
+                        <span className="ml-2 md:hidden">Send</span>
+                      </>
                     )}
                   </Button>
                 </div>
-                <p className="text-xs text-blue-300 mt-2">
-                  Press Enter to send • Shift + Enter for new line • Attach images & code files
+                <p className="text-xs md:text-xs text-blue-300 mt-2">
+                  <span className="hidden md:inline">Press Enter to send • Shift + Enter for new line • </span>
+                  Attach images & code files
                 </p>
               </div>
             </CardContent>
           </Card>
         </div>
-          </>
-        )}
       </div>
     </>
   );
