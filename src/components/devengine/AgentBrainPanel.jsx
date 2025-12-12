@@ -28,9 +28,12 @@ export default function AgentBrainPanel() {
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      const scrollContainer = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      if (scrollContainer) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      }
     }
-  }, [messages]);
+  }, [safeMessages]);
 
   useEffect(() => {
     // Extract plan from latest assistant message
@@ -376,6 +379,8 @@ function MessageBubble({ message }) {
 }
 
 function ToolCallCard({ toolCall }) {
+  if (!toolCall) return null;
+  
   const getStatusIcon = () => {
     switch (toolCall.status) {
       case 'completed':
@@ -387,15 +392,28 @@ function ToolCallCard({ toolCall }) {
     }
   };
 
+  const getStatusColor = () => {
+    switch (toolCall.status) {
+      case 'completed':
+        return 'border-green-500/30 bg-green-500/10';
+      case 'failed':
+        return 'border-red-500/30 bg-red-500/10';
+      default:
+        return 'border-blue-500/30 bg-blue-500/10';
+    }
+  };
+
   return (
-    <div className="bg-black/30 rounded-lg p-3 border border-blue-500/20">
+    <div className={`rounded-lg p-3 border ${getStatusColor()} transition-colors`}>
       <div className="flex items-center gap-2 mb-2">
         {getStatusIcon()}
-        <span className="text-xs font-mono text-blue-300">{toolCall.name}</span>
+        <span className="text-xs font-mono text-blue-300 font-semibold">{toolCall.name}</span>
       </div>
       {toolCall.results && (
-        <div className="text-xs text-green-400 font-mono mt-2">
-          {typeof toolCall.results === 'string' ? toolCall.results : JSON.stringify(toolCall.results, null, 2)}
+        <div className="text-xs text-green-400/90 font-mono mt-2 bg-black/30 rounded p-2 overflow-x-auto">
+          <pre className="whitespace-pre-wrap break-words">
+            {typeof toolCall.results === 'string' ? toolCall.results : JSON.stringify(toolCall.results, null, 2)}
+          </pre>
         </div>
       )}
     </div>
