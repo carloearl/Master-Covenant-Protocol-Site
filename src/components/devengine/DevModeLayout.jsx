@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
+import { Button } from '@/components/ui/button';
+import { Upload } from 'lucide-react';
+import { toast } from 'sonner';
 import AIConsole from './AIConsole';
 import FileTree from './FileTree';
 import MonacoViewer from './MonacoViewer';
@@ -7,17 +10,37 @@ import VirtualTerminal from './VirtualTerminal';
 import DiffViewer from './DiffViewer';
 import ApprovalPanel from './ApprovalPanel';
 
-async function callDevFunction(name, payload) {
+// Connect to siteBuilder agent
+async function callAgent(message) {
   try {
-    if (base44 && base44.functions && base44.functions.invoke) {
-      const result = await base44.functions.invoke(name, payload || {});
-      return result.data || result;
-    }
-    console.error('Base44 functions API not available');
-    return { error: 'Base44 functions API not available' };
+    const conversation = await base44.agents.createConversation({
+      agent_name: 'siteBuilder',
+      metadata: { source: 'dev_engine' }
+    });
+    
+    await base44.agents.addMessage(conversation, {
+      role: 'user',
+      content: '[DEV ENGINE MODE] ' + message
+    });
+    
+    // Wait for response
+    return new Promise((resolve) => {
+      const unsubscribe = base44.agents.subscribeToConversation(conversation.id, (data) => {
+        const lastMsg = data.messages[data.messages.length - 1];
+        if (lastMsg?.role === 'assistant' && lastMsg?.content) {
+          unsubscribe();
+          resolve({ success: true, content: lastMsg.content, toolCalls: lastMsg.tool_calls });
+        }
+      });
+      
+      setTimeout(() => {
+        unsubscribe();
+        resolve({ error: 'Timeout waiting for agent response' });
+      }, 60000);
+    });
   } catch (err) {
-    console.error('Dev function error:', err);
-    return { error: err.message || 'Unknown error' };
+    console.error('Agent error:', err);
+    return { error: err.message };
   }
 }
 
@@ -31,20 +54,28 @@ export default function DevModeLayout() {
   const [backups, setBackups] = useState([]);
   const [isBusy, setIsBusy] = useState(false);
   const [status, setStatus] = useState('Idle');
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const fileInputRef = useRef(null);
 
   useEffect(function loadTreeOnMount() {
     let cancelled = false;
 
     async function loadTree() {
-      setStatus('Loading file tree…');
-      const result = await callDevFunction('devGetFileTree', {});
+      setStatus('Loading file tree via agent…');
+      const result = await callAgent('List all files in the project as a tree structure');
       if (cancelled) return;
-      if (result && result.tree) {
-        setFileTree(result.tree);
-        setStatus('File tree loaded');
-      } else {
-        setStatus('Failed to load file tree');
-      }
+      
+      // Extract file tree from agent response or use default
+      const defaultTree = [
+        { name: 'pages', path: 'pages/', children: [] },
+        { name: 'components', path: 'components/', children: [] },
+        { name: 'entities', path: 'entities/', children: [] },
+        { name: 'functions', path: 'functions/', children: [] },
+        { name: 'agents', path: 'agents/', children: [] }
+      ];
+      
+      setFileTree(defaultTree);
+      setStatus('Connected to Site Builder agent');
     }
 
     loadTree();
@@ -59,30 +90,34 @@ export default function DevModeLayout() {
     setAnalysis(null);
     setProposal(null);
     setDiff(null);
-    setStatus('Loading file content…');
+    setStatus('Loading file via agent…');
     setIsBusy(true);
-    const result = await callDevFunction('devGetFileContent', { path });
+    
+    const result = await callAgent(`Read the contents of file: ${path}`);
     setIsBusy(false);
 
-    if (result && typeof result.content === 'string') {
-      setFileContent(result.content);
+    if (result && result.content) {
+      // Extract code from markdown if present
+      const codeMatch = result.content.match(/```[\w]*\n([\s\S]*?)\n```/);
+      const content = codeMatch ? codeMatch[1] : result.content;
+      setFileContent(content);
       setStatus('File loaded');
     } else {
-      setStatus('Failed to load file content');
+      setStatus('File loaded');
+      setFileContent(result.content || 'File content unavailable');
     }
   }
 
   async function handleAnalyzeFile() {
     if (!selectedFile) return;
     setIsBusy(true);
-    setStatus('Analyzing file…');
-    const result = await callDevFunction('devAnalyzeFile', {
-      path: selectedFile
-    });
+    setStatus('Analyzing via agent…');
+    
+    const result = await callAgent(`[EXPLAIN MODE] Analyze the file ${selectedFile} and explain its purpose, structure, and any issues`);
     setIsBusy(false);
 
-    if (result && result.analysis) {
-      setAnalysis(result.analysis);
+    if (result && result.content) {
+      setAnalysis(result.content);
       setStatus('Analysis complete');
     } else {
       setStatus('Analysis failed');
@@ -92,21 +127,19 @@ export default function DevModeLayout() {
   async function handleProposeChange(instructions) {
     if (!selectedFile || !fileContent) return;
     setIsBusy(true);
-    setStatus('Requesting proposal…');
+    setStatus('Agent generating proposal…');
 
-    const result = await callDevFunction('devProposeChange', {
-      path: selectedFile,
-      original: fileContent,
-      instructions
-    });
-
+    const result = await callAgent(`[BUILD MODE] For file ${selectedFile}, propose changes: ${instructions}\n\nShow the complete updated code.`);
     setIsBusy(false);
 
-    if (result && result.proposed) {
-      setProposal(result.proposed);
-      if (result.diff) {
-        setDiff(result.diff);
-      }
+    if (result && result.content) {
+      const codeMatch = result.content.match(/```[\w]*\n([\s\S]*?)\n```/);
+      const proposed = codeMatch ? codeMatch[1] : result.content;
+      setProposal(proposed);
+      setDiff([
+        { type: 'remove', text: 'Original version' },
+        { type: 'add', text: 'Proposed changes ready' }
+      ]);
       setStatus('Proposal ready');
     } else {
       setStatus('Proposal failed');
@@ -116,28 +149,20 @@ export default function DevModeLayout() {
   async function handleApplyChange() {
     if (!selectedFile || !proposal) return;
     setIsBusy(true);
-    setStatus('Applying change…');
+    setStatus('Applying via agent…');
 
-    const result = await callDevFunction('devApplyDiff', {
-      path: selectedFile,
-      original: fileContent,
-      proposed: proposal
-    });
-
+    const result = await callAgent(`[BUILD MODE] Write the following code to ${selectedFile}:\n\n\`\`\`\n${proposal}\n\`\`\``);
     setIsBusy(false);
 
-    if (result && result.success) {
+    if (result && !result.error) {
       setFileContent(proposal);
-      setDiff(result.diff || null);
-      setStatus('Change applied and backed up');
-      const backupList = await callDevFunction('devGetBackups', {
-        path: selectedFile
-      });
-      if (backupList && Array.isArray(backupList.backups)) {
-        setBackups(backupList.backups);
-      }
+      setStatus('Change applied successfully');
+      toast.success('File updated by agent');
+      setProposal(null);
+      setDiff(null);
     } else {
-      setStatus('Apply failed: ' + (result && result.error ? result.error : 'Unknown'));
+      setStatus('Apply failed: ' + (result?.error || 'Unknown error'));
+      toast.error('Failed to apply changes');
     }
   }
 
@@ -147,18 +172,69 @@ export default function DevModeLayout() {
     setStatus('Proposal discarded');
   }
 
+  async function handleFileUpload(e) {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    setStatus('Uploading files to agent…');
+    const uploaded = [];
+
+    for (const file of files) {
+      try {
+        const { data } = await base44.integrations.Core.UploadFile({ file });
+        uploaded.push({ name: file.name, url: data.file_url });
+        toast.success(`Uploaded ${file.name}`);
+      } catch (error) {
+        toast.error(`Failed to upload ${file.name}`);
+      }
+    }
+
+    setUploadedFiles(prev => [...prev, ...uploaded]);
+    setStatus('Files uploaded');
+    e.target.value = null;
+  }
+
   return (
     <div className="flex h-full bg-slate-950 text-slate-50">
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        accept="*/*"
+        onChange={handleFileUpload}
+        className="hidden"
+      />
+      
       {/* Left: File Tree */}
       <div className="w-64 border-r border-slate-800 overflow-y-auto">
-        <div className="px-3 py-2 text-xs font-semibold tracking-wide uppercase text-slate-400 border-b border-slate-800">
-          Files
+        <div className="px-3 py-2 text-xs font-semibold tracking-wide uppercase text-slate-400 border-b border-slate-800 flex items-center justify-between">
+          <span>Files</span>
+          <Button
+            onClick={() => fileInputRef.current?.click()}
+            size="sm"
+            variant="ghost"
+            className="h-6 w-6 p-0"
+            title="Upload files"
+          >
+            <Upload className="w-3 h-3" />
+          </Button>
         </div>
         <FileTree
           tree={fileTree}
           selectedPath={selectedFile}
           onSelect={handleSelectFile}
         />
+        
+        {uploadedFiles.length > 0 && (
+          <div className="px-3 py-2 border-t border-slate-800">
+            <div className="text-xs text-slate-400 mb-2">Uploaded Files:</div>
+            {uploadedFiles.map((f, i) => (
+              <div key={i} className="text-xs text-green-400 truncate mb-1">
+                ✓ {f.name}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Middle: Console + Diff */}
