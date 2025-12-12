@@ -62,6 +62,7 @@ import CaseStudies from './pages/CaseStudies';
 import CaseStudyCovenantVictory from './pages/CaseStudyCovenantVictory';
 import SiteBuilder from './pages/SiteBuilder';
 import SiteBuilderTest from './pages/SiteBuilderTest';
+import SiteAudit from './pages/SiteAudit';
 import __Layout from './Layout.jsx';
 
 
@@ -130,6 +131,7 @@ export const PAGES = {
     "CaseStudyCovenantVictory": CaseStudyCovenantVictory,
     "SiteBuilder": SiteBuilder,
     "SiteBuilderTest": SiteBuilderTest,
+    "SiteAudit": SiteAudit,
 }
 
 export const pagesConfig = {
