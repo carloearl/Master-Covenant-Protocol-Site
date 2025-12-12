@@ -65,15 +65,28 @@ Provide a concise, structured analysis.`;
       }
     });
 
-    // Log analysis
-    await base44.asServiceRole.entities.BuilderActionLog.create({
+    // SCHEMA VALIDATION - No guessing allowed
+    const logEntry = {
       timestamp: new Date().toISOString(),
       actor: user.email,
       action: 'analyze',
       filePath: filePath,
       diffSummary: `AI analysis performed on ${filePath}`,
       status: 'applied'
-    });
+    };
+
+    // Validate required fields explicitly
+    if (!logEntry.timestamp || !logEntry.actor || !logEntry.action || !logEntry.filePath) {
+      throw new Error('SCHEMA VIOLATION: Missing required fields in log entry');
+    }
+
+    // Validate action enum
+    const validActions = ['analyze', 'propose', 'modify', 'delete', 'rollback', 'backup'];
+    if (!validActions.includes(logEntry.action)) {
+      throw new Error(`SCHEMA VIOLATION: Invalid action "${logEntry.action}"`);
+    }
+
+    await base44.asServiceRole.entities.BuilderActionLog.create(logEntry);
 
     return Response.json({
       success: true,

@@ -6,6 +6,7 @@ import MonacoViewer from './MonacoViewer';
 import VirtualTerminal from './VirtualTerminal';
 import DiffViewer from './DiffViewer';
 import ApprovalPanel from './ApprovalPanel';
+import { ValidationErrorAlert } from './utils/validationErrors';
 import { Loader2, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -24,6 +25,7 @@ export default function DevModeLayout() {
   const [analysis, setAnalysis] = useState(null);
   const [proposal, setProposal] = useState(null);
   const [showDiff, setShowDiff] = useState(false);
+  const [validationErrors, setValidationErrors] = useState([]);
 
   // Check authorization
   useEffect(() => {
@@ -62,6 +64,7 @@ export default function DevModeLayout() {
     setAnalysis(null);
     setProposal(null);
     setShowDiff(false);
+    setValidationErrors([]);
 
     try {
       const response = await base44.functions.invoke('devGetFileContent', {
@@ -72,7 +75,13 @@ export default function DevModeLayout() {
         setFileContent(response.data.content);
         toast.success(`Loaded ${file.name}`);
       } else {
-        throw new Error(response.data.error || 'Failed to load file');
+        // Check if it's a schema validation error
+        if (response.data.error && response.data.error.includes('SCHEMA VIOLATION')) {
+          setValidationErrors([response.data.error]);
+          toast.error('Schema validation failed');
+        } else {
+          throw new Error(response.data.error || 'Failed to load file');
+        }
       }
     } catch (error) {
       console.error('File load error:', error);
@@ -139,6 +148,8 @@ export default function DevModeLayout() {
       return;
     }
 
+    setValidationErrors([]);
+
     try {
       const response = await base44.functions.invoke('devApplyDiff', {
         proposalId: proposalId,
@@ -153,7 +164,14 @@ export default function DevModeLayout() {
         setProposal(null);
         setShowDiff(false);
       } else {
-        throw new Error(response.data.error || 'Apply failed');
+        // Check for schema validation errors
+        if (response.data.error && response.data.error.includes('SCHEMA VIOLATION')) {
+          const errors = response.data.error.split('\n').filter(e => e.trim());
+          setValidationErrors(errors);
+          toast.error('Schema validation failed');
+        } else {
+          throw new Error(response.data.error || 'Apply failed');
+        }
       }
     } catch (error) {
       console.error('Apply error:', error);
@@ -213,6 +231,13 @@ export default function DevModeLayout() {
           </div>
         </div>
       </div>
+
+      {/* Validation Errors */}
+      {validationErrors.length > 0 && (
+        <div className="mx-4 mt-4">
+          <ValidationErrorAlert errors={validationErrors} />
+        </div>
+      )}
 
       {/* Main content area */}
       <div className="flex-1 flex overflow-hidden">

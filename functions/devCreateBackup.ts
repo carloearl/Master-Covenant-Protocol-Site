@@ -39,8 +39,8 @@ Deno.serve(async (req) => {
     // Store backup metadata
     // In production, use Deno.writeTextFile or Base44 storage API
     
-    // Log backup creation
-    await base44.asServiceRole.entities.BuilderActionLog.create({
+    // SCHEMA VALIDATION - Log backup creation
+    const logEntry = {
       timestamp: new Date().toISOString(),
       actor: user.email,
       action: 'backup',
@@ -49,7 +49,14 @@ Deno.serve(async (req) => {
       diffSummary: `Backup created: ${backupPath}`,
       status: 'applied',
       rollbackAvailable: true
-    });
+    };
+
+    // Validate required fields
+    if (!logEntry.timestamp || !logEntry.actor || !logEntry.action || !logEntry.filePath) {
+      throw new Error('SCHEMA VIOLATION: Missing required fields in backup log');
+    }
+
+    await base44.asServiceRole.entities.BuilderActionLog.create(logEntry);
 
     return Response.json({
       success: true,

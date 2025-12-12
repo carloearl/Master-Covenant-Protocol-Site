@@ -79,8 +79,8 @@ Deno.serve(async (req) => {
       backupPath: backupResponse.data.backupPath
     });
 
-    // Step 4: Create applied action log
-    await base44.asServiceRole.entities.BuilderActionLog.create({
+    // SCHEMA VALIDATION - Step 4: Create applied action log
+    const logEntry = {
       timestamp: new Date().toISOString(),
       actor: user.email,
       action: 'modify',
@@ -91,7 +91,14 @@ Deno.serve(async (req) => {
       status: 'applied',
       rollbackAvailable: true,
       backupPath: backupResponse.data.backupPath
-    });
+    };
+
+    // Validate required fields
+    if (!logEntry.timestamp || !logEntry.actor || !logEntry.action || !logEntry.filePath) {
+      throw new Error('SCHEMA VIOLATION: Missing required fields in apply log');
+    }
+
+    await base44.asServiceRole.entities.BuilderActionLog.create(logEntry);
 
     return Response.json({
       success: true,
@@ -106,9 +113,9 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Apply diff error:', error);
     
-    // Log failure
+    // SCHEMA VALIDATION - Log failure
     try {
-      await base44.asServiceRole.entities.BuilderActionLog.create({
+      const errorLog = {
         timestamp: new Date().toISOString(),
         actor: user.email,
         action: 'modify',
@@ -116,7 +123,14 @@ Deno.serve(async (req) => {
         diffSummary: 'Failed to apply change',
         status: 'failed',
         errorMessage: error.message
-      });
+      };
+
+      // Validate required fields even for error logs
+      if (!errorLog.timestamp || !errorLog.actor || !errorLog.action || !errorLog.filePath) {
+        console.error('SCHEMA VIOLATION: Cannot log error - missing required fields');
+      } else {
+        await base44.asServiceRole.entities.BuilderActionLog.create(errorLog);
+      }
     } catch (logError) {
       console.error('Failed to log error:', logError);
     }

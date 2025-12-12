@@ -68,8 +68,8 @@ Return as JSON with structure:
       }
     });
 
-    // Create proposal log entry (pending approval)
-    const logEntry = await base44.asServiceRole.entities.BuilderActionLog.create({
+    // SCHEMA VALIDATION - Create proposal log entry (pending approval)
+    const logEntry = {
       timestamp: new Date().toISOString(),
       actor: user.email,
       action: 'propose',
@@ -77,11 +77,18 @@ Return as JSON with structure:
       diffSummary: changeDescription,
       status: 'pending',
       approved: false
-    });
+    };
+
+    // Validate required fields explicitly
+    if (!logEntry.timestamp || !logEntry.actor || !logEntry.action || !logEntry.filePath) {
+      throw new Error('SCHEMA VIOLATION: Missing required fields in proposal log');
+    }
+
+    const createdLog = await base44.asServiceRole.entities.BuilderActionLog.create(logEntry);
 
     return Response.json({
       success: true,
-      proposalId: logEntry.id,
+      proposalId: createdLog.id,
       filePath: filePath,
       proposal: aiResponse,
       timestamp: new Date().toISOString()

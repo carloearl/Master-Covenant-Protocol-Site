@@ -39,15 +39,22 @@ Deno.serve(async (req) => {
       }))
     };
 
-    // Log access
-    await base44.asServiceRole.entities.BuilderActionLog.create({
+    // SCHEMA VALIDATION - Log access
+    const logEntry = {
       timestamp: new Date().toISOString(),
       actor: user.email,
       action: 'analyze',
       filePath: '/',
       diffSummary: 'Accessed file tree',
       status: 'applied'
-    });
+    };
+
+    // Validate required fields
+    if (!logEntry.timestamp || !logEntry.actor || !logEntry.action || !logEntry.filePath) {
+      throw new Error('SCHEMA VIOLATION: Missing required fields in tree access log');
+    }
+
+    await base44.asServiceRole.entities.BuilderActionLog.create(logEntry);
 
     return Response.json({
       success: true,
