@@ -30,13 +30,24 @@ export default function AgentBrainPanel() {
   }, []);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      const scrollContainer = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
-      if (scrollContainer) {
-        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+    // Auto-scroll to bottom when messages update
+    const scrollToBottom = () => {
+      if (scrollRef.current) {
+        const scrollContainer = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
+        if (scrollContainer) {
+          scrollContainer.scrollTop = scrollContainer.scrollHeight;
+        }
       }
-    }
-  }, [safeMessages]);
+    };
+    
+    // Immediate scroll
+    scrollToBottom();
+    
+    // Delayed scroll for content that loads async (images, markdown rendering)
+    const timer = setTimeout(scrollToBottom, 100);
+    
+    return () => clearTimeout(timer);
+  }, [safeMessages, sending]);
 
   useEffect(() => {
     // Extract plan from latest assistant message
