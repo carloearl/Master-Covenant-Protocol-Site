@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { BrainCircuit, Send, Loader2, CheckCircle2, AlertCircle, Clock, Zap, Paperclip, X, Image as ImageIcon, FileText } from 'lucide-react';
+import { BrainCircuit, Send, Loader2, CheckCircle2, AlertCircle, Clock, Zap, Paperclip, X, Image as ImageIcon, FileText, Upload } from 'lucide-react';
+import HoverTooltip from '@/components/ui/HoverTooltip';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 
@@ -222,24 +223,25 @@ export default function AgentBrainPanel() {
           <CardContent className="grid grid-cols-2 md:grid-cols-1 gap-2 pt-3">
             {['explain', 'build', 'refactor', 'debug'].map(m => {
               const config = {
-                explain: { color: 'bg-cyan-500', icon: '💡' },
-                build: { color: 'bg-blue-500', icon: '🔨' },
-                refactor: { color: 'bg-indigo-500', icon: '♻️' },
-                debug: { color: 'bg-red-500', icon: '🐛' }
+                explain: { color: 'bg-cyan-500', icon: '💡', tooltip: 'Analyze & document code without making changes' },
+                build: { color: 'bg-blue-500', icon: '🔨', tooltip: 'Create files, deploy changes, execute code' },
+                refactor: { color: 'bg-indigo-500', icon: '♻️', tooltip: 'Optimize & improve existing code structure' },
+                debug: { color: 'bg-red-500', icon: '🐛', tooltip: 'Auto-fix bugs and resolve errors instantly' }
               }[m];
               return (
-                <button
-                  key={m}
-                  onClick={() => setMode(m)}
-                  className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all min-h-[48px] ${
-                    mode === m
-                      ? `${config.color} text-white shadow-[0_0_20px_rgba(59,130,246,0.4)]`
-                      : 'bg-white/5 text-blue-300 hover:bg-white/10'
-                  }`}
-                >
-                  <span className="mr-2">{config.icon}</span>
-                  {m.charAt(0).toUpperCase() + m.slice(1)}
-                </button>
+                <HoverTooltip key={m} content={config.tooltip} side="right">
+                  <button
+                    onClick={() => setMode(m)}
+                    className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all min-h-[48px] ${
+                      mode === m
+                        ? `${config.color} text-white shadow-[0_0_20px_rgba(59,130,246,0.4)]`
+                        : 'bg-white/5 text-blue-300 hover:bg-white/10'
+                    }`}
+                  >
+                    <span className="mr-2">{config.icon}</span>
+                    {m.charAt(0).toUpperCase() + m.slice(1)}
+                  </button>
+                </HoverTooltip>
               );
             })}
           </CardContent>
@@ -395,19 +397,20 @@ export default function AgentBrainPanel() {
             />
 
             <div className="flex gap-2">
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading || sending}
-                variant="outline"
-                className="bg-white/5 border-blue-500/20 hover:bg-white/10 min-h-[48px] min-w-[48px]"
-                title="Attach files"
-              >
-                {uploading ? (
-                  <Loader2 className="w-5 h-5 animate-spin text-blue-400" />
-                ) : (
-                  <Paperclip className="w-5 h-5 text-blue-400" />
-                )}
-              </Button>
+              <HoverTooltip content="Upload images, code files, or documents to attach to your message">
+                <Button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading || sending}
+                  variant="outline"
+                  className="bg-white/5 border-blue-500/20 hover:bg-white/10 min-h-[48px] min-w-[48px]"
+                >
+                  {uploading ? (
+                    <Loader2 className="w-5 h-5 animate-spin text-blue-400" />
+                  ) : (
+                    <Upload className="w-5 h-5 text-blue-400" />
+                  )}
+                </Button>
+              </HoverTooltip>
 
               <Textarea
                 value={input}
@@ -417,17 +420,19 @@ export default function AgentBrainPanel() {
                 className="flex-1 bg-white/5 border-blue-500/20 text-white placeholder:text-blue-300/40 resize-none min-h-[80px] md:min-h-[60px] text-sm md:text-base"
                 disabled={sending}
               />
-              <Button
-                onClick={sendMessage}
-                disabled={!input.trim() || sending}
-                className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-[0_0_20px_rgba(59,130,246,0.3)] min-w-[48px] min-h-[48px] px-4 md:px-6"
-              >
-                {sending ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <Send className="w-5 h-5" />
-                )}
-              </Button>
+              <HoverTooltip content="Send message to Agent Brain (Enter to send, Shift+Enter for new line)">
+                <Button
+                  onClick={sendMessage}
+                  disabled={!input.trim() || sending}
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-[0_0_20px_rgba(59,130,246,0.3)] min-w-[48px] min-h-[48px] px-4 md:px-6"
+                >
+                  {sending ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
+                </Button>
+              </HoverTooltip>
             </div>
             <p className="text-xs text-blue-300/50 mt-2">
               <span className="hidden md:inline">📎 Attach files • Enter to send • Shift+Enter for new line</span>

@@ -23,8 +23,10 @@ import {
   Paperclip,
   X,
   Image as ImageIcon,
-  FileText
+  FileText,
+  Upload
 } from 'lucide-react';
+import HoverTooltip from '@/components/ui/HoverTooltip';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import ReactMarkdown from 'react-markdown';
@@ -543,18 +545,20 @@ export default function SiteBuilder() {
                   </div>
 
                   {/* Desktop: Side-by-side layout */}
-                  <Button
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={uploading || sending}
-                    variant="outline"
-                    className="hidden md:flex bg-white/5 border-blue-500/20 hover:bg-white/10 min-h-[48px] min-w-[48px]"
-                  >
-                    {uploading ? (
-                      <Loader2 className="w-5 h-5 animate-spin text-blue-400" />
-                    ) : (
-                      <Paperclip className="w-5 h-5 text-blue-400" />
-                    )}
-                  </Button>
+                  <HoverTooltip content="Upload files to attach to your message">
+                    <Button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading || sending}
+                      variant="outline"
+                      className="hidden md:flex bg-white/5 border-blue-500/20 hover:bg-white/10 min-h-[48px] min-w-[48px]"
+                    >
+                      {uploading ? (
+                        <Loader2 className="w-5 h-5 animate-spin text-blue-400" />
+                      ) : (
+                        <Upload className="w-5 h-5 text-blue-400" />
+                      )}
+                    </Button>
+                  </HoverTooltip>
 
                   <Textarea
                     value={input}
