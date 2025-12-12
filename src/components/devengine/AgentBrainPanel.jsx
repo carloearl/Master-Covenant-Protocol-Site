@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { BrainCircuit, Send, Loader2, CheckCircle2, AlertCircle, Clock, Zap } from 'lucide-react';
+import { BrainCircuit, Send, Loader2, CheckCircle2, AlertCircle, Clock, Zap, Paperclip, X, Image as ImageIcon, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 
@@ -16,7 +16,10 @@ export default function AgentBrainPanel() {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [plan, setPlan] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [uploading, setUploading] = useState(false);
   const scrollRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   // Safety guards - ensure arrays are always valid
   const safeMessages = Array.isArray(messages) ? messages : [];
@@ -103,6 +106,37 @@ export default function AgentBrainPanel() {
     return steps;
   };
 
+  const handleFileUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    setUploading(true);
+    const uploaded = [];
+
+    for (const file of files) {
+      try {
+        const { data } = await base44.integrations.Core.UploadFile({ file });
+        uploaded.push({
+          name: file.name,
+          url: data.file_url,
+          type: file.type
+        });
+        toast.success(`Uploaded ${file.name}`);
+      } catch (error) {
+        console.error('Upload failed:', error);
+        toast.error(`Failed to upload ${file.name}`);
+      }
+    }
+
+    setUploadedFiles(prev => [...prev, ...uploaded]);
+    setUploading(false);
+    e.target.value = null;
+  };
+
+  const removeFile = (fileUrl) => {
+    setUploadedFiles(prev => prev.filter(f => f.url !== fileUrl));
+  };
+
   const sendMessage = async () => {
     if (!input.trim() || sending || !conversation) return;
 
@@ -113,14 +147,18 @@ export default function AgentBrainPanel() {
       debug: '[DEBUG MODE - EXECUTE FIXES] '
     }[mode] || '[BUILD MODE - EXECUTE CHANGES] ';
 
+    const fileUrls = uploadedFiles.map(f => f.url);
+    
     const userMessage = {
       role: 'user',
-      content: modePrefix + input.trim()
+      content: modePrefix + input.trim(),
+      ...(fileUrls.length > 0 && { file_urls: fileUrls })
     };
 
     const prevMessages = Array.isArray(messages) ? messages : [];
     setMessages([...prevMessages, userMessage]);
     setInput('');
+    setUploadedFiles([]);
     setSending(true);
 
     try {
@@ -313,7 +351,53 @@ export default function AgentBrainPanel() {
 
           {/* Input Area */}
           <div className="border-t border-blue-500/20 p-3 md:p-4 bg-white/5 backdrop-blur-sm flex-shrink-0">
+            {/* Uploaded Files Preview */}
+            {uploadedFiles.length > 0 && (
+              <div className="mb-3 flex flex-wrap gap-2">
+                {uploadedFiles.map((file, idx) => (
+                  <div key={idx} className="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2 border border-blue-500/20 min-h-[44px]">
+                    {file.type.startsWith('image/') ? (
+                      <ImageIcon className="w-4 h-4 text-blue-400" />
+                    ) : (
+                      <FileText className="w-4 h-4 text-indigo-400" />
+                    )}
+                    <span className="text-xs text-white truncate max-w-[120px]">{file.name}</span>
+                    <button
+                      onClick={() => removeFile(file.url)}
+                      className="text-red-400 hover:text-red-300 p-1 min-w-[32px] min-h-[32px] flex items-center justify-center"
+                      aria-label="Remove file"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*,.pdf,.txt,.js,.jsx,.json,.css,.ts,.tsx"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+
             <div className="flex gap-2">
+              <Button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading || sending}
+                variant="outline"
+                className="bg-white/5 border-blue-500/20 hover:bg-white/10 min-h-[48px] min-w-[48px]"
+                title="Attach files"
+              >
+                {uploading ? (
+                  <Loader2 className="w-5 h-5 animate-spin text-blue-400" />
+                ) : (
+                  <Paperclip className="w-5 h-5 text-blue-400" />
+                )}
+              </Button>
+
               <Textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -335,8 +419,8 @@ export default function AgentBrainPanel() {
               </Button>
             </div>
             <p className="text-xs text-blue-300/50 mt-2">
-              <span className="hidden md:inline">Enter to send • Shift+Enter for new line</span>
-              <span className="md:hidden">Tap send to submit</span>
+              <span className="hidden md:inline">📎 Attach files • Enter to send • Shift+Enter for new line</span>
+              <span className="md:hidden">📎 Attach • Tap send</span>
             </p>
           </div>
         </CardContent>
