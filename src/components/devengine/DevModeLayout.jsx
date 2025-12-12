@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Upload } from 'lucide-react';
+import { Upload, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
+import HoverTooltip from '@/components/ui/HoverTooltip';
 import AIConsole from './AIConsole';
 import FileTree from './FileTree';
 import MonacoViewer from './MonacoViewer';
@@ -198,8 +199,11 @@ export default function DevModeLayout() {
     e.target.value = null;
   }
 
+  // Import StatusBar
+  const StatusBar = React.lazy(() => import('./StatusBar'));
+
   return (
-    <div className="flex h-full bg-slate-950 text-slate-50">
+    <div className="flex flex-col h-full bg-slate-950 text-slate-50">
       <input
         ref={fileInputRef}
         type="file"
@@ -208,20 +212,35 @@ export default function DevModeLayout() {
         onChange={handleFileUpload}
         className="hidden"
       />
+
+      <div className="flex flex-1 overflow-hidden">
       
       {/* Left: File Tree */}
       <div className="w-64 border-r border-slate-800 overflow-y-auto">
         <div className="px-3 py-2 text-xs font-semibold tracking-wide uppercase text-slate-400 border-b border-slate-800 flex items-center justify-between">
-          <span>Files</span>
-          <Button
-            onClick={() => fileInputRef.current?.click()}
-            size="sm"
-            variant="ghost"
-            className="h-6 w-6 p-0"
-            title="Upload files"
-          >
-            <Upload className="w-3 h-3" />
-          </Button>
+          <span>Files ({fileTree.length})</span>
+          <div className="flex gap-1">
+            <HoverTooltip content="Refresh file tree">
+              <Button
+                onClick={() => window.location.reload()}
+                size="sm"
+                variant="ghost"
+                className="h-6 w-6 p-0"
+              >
+                <RefreshCw className="w-3 h-3" />
+              </Button>
+            </HoverTooltip>
+            <HoverTooltip content="Upload files">
+              <Button
+                onClick={() => fileInputRef.current?.click()}
+                size="sm"
+                variant="ghost"
+                className="h-6 w-6 p-0"
+              >
+                <Upload className="w-3 h-3" />
+              </Button>
+            </HoverTooltip>
+          </div>
         </div>
         <FileTree
           tree={fileTree}
@@ -371,6 +390,12 @@ export default function DevModeLayout() {
           />
         </div>
       </div>
-    </div>
-  );
-}
+      </div>
+
+      {/* Status Bar */}
+      <React.Suspense fallback={<div className="h-8 bg-slate-900" />}>
+      <StatusBar status={status} busy={isBusy} selectedFile={selectedFile} />
+      </React.Suspense>
+      </div>
+      );
+      }

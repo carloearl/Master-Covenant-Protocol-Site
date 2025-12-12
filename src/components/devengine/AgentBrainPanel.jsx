@@ -197,30 +197,39 @@ export default function AgentBrainPanel() {
   };
 
   const handleFileUpload = async (e) => {
-    const files = Array.from(e.target.files);
+    const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
     setUploading(true);
     const uploaded = [];
 
-    for (const file of files) {
-      try {
-        const { data } = await base44.integrations.Core.UploadFile({ file });
-        uploaded.push({
-          name: file.name,
-          url: data.file_url,
-          type: file.type
-        });
-        toast.success(`Uploaded ${file.name}`);
-      } catch (error) {
-        console.error('Upload failed:', error);
-        toast.error(`Failed to upload ${file.name}`);
+    try {
+      for (const file of files) {
+        try {
+          const result = await base44.integrations.Core.UploadFile({ file });
+          const fileUrl = result?.file_url || result?.data?.file_url;
+          
+          if (fileUrl) {
+            uploaded.push({
+              name: file.name,
+              url: fileUrl,
+              type: file.type
+            });
+            toast.success(`✓ ${file.name}`);
+          } else {
+            throw new Error('No file URL returned');
+          }
+        } catch (error) {
+          console.error('Upload failed:', error);
+          toast.error(`✗ ${file.name}`);
+        }
       }
-    }
 
-    setUploadedFiles(prev => [...prev, ...uploaded]);
-    setUploading(false);
-    e.target.value = null;
+      setUploadedFiles(prev => [...prev, ...uploaded]);
+    } finally {
+      setUploading(false);
+      if (e.target) e.target.value = null;
+    }
   };
 
   const removeFile = (fileUrl) => {
