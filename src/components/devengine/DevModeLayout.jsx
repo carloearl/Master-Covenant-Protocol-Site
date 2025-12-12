@@ -61,21 +61,21 @@ export default function DevModeLayout() {
     let cancelled = false;
 
     async function loadTree() {
-      setStatus('Loading file tree via agent…');
-      const result = await callAgent('List all files in the project as a tree structure');
-      if (cancelled) return;
-      
-      // Extract file tree from agent response or use default
-      const defaultTree = [
-        { name: 'pages', path: 'pages/', children: [] },
-        { name: 'components', path: 'components/', children: [] },
-        { name: 'entities', path: 'entities/', children: [] },
-        { name: 'functions', path: 'functions/', children: [] },
-        { name: 'agents', path: 'agents/', children: [] }
-      ];
-      
-      setFileTree(defaultTree);
-      setStatus('Connected to Site Builder agent');
+      setStatus('Loading file tree...');
+      try {
+        const { data } = await base44.functions.invoke('devGetFileTree', {});
+        if (cancelled) return;
+        
+        if (data.success && data.tree) {
+          setFileTree(data.tree);
+          setStatus(`Loaded ${data.total_files} files`);
+        } else {
+          setStatus('Failed to load file tree');
+        }
+      } catch (error) {
+        console.error('File tree error:', error);
+        setStatus('Error loading files');
+      }
     }
 
     loadTree();
@@ -90,21 +90,25 @@ export default function DevModeLayout() {
     setAnalysis(null);
     setProposal(null);
     setDiff(null);
-    setStatus('Loading file via agent…');
+    setStatus('Loading file...');
     setIsBusy(true);
     
-    const result = await callAgent(`Read the contents of file: ${path}`);
-    setIsBusy(false);
+    try {
+      const { data } = await base44.functions.invoke('devGetFileContent', { file_path: path });
+      setIsBusy(false);
 
-    if (result && result.content) {
-      // Extract code from markdown if present
-      const codeMatch = result.content.match(/```[\w]*\n([\s\S]*?)\n```/);
-      const content = codeMatch ? codeMatch[1] : result.content;
-      setFileContent(content);
-      setStatus('File loaded');
-    } else {
-      setStatus('File loaded');
-      setFileContent(result.content || 'File content unavailable');
+      if (data.success && data.content) {
+        setFileContent(data.content);
+        setStatus(`Loaded ${data.lines} lines`);
+      } else {
+        setStatus('Failed to load file');
+        setFileContent('// File content unavailable');
+      }
+    } catch (error) {
+      console.error('File load error:', error);
+      setIsBusy(false);
+      setStatus('Error loading file');
+      setFileContent('// Error: ' + error.message);
     }
   }
 

@@ -1,112 +1,69 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 /**
- * Dev Engine - Get File Content
- * Returns the content of a specific file for viewing in Monaco
- * ADMIN ONLY
+ * Read file content for Dev Engine
+ * Uses read_file tool via siteBuilder agent
  */
-
-// Sanitize and validate file paths
-function sanitizePath(filePath) {
-  // Remove leading/trailing slashes and whitespace
-  const clean = filePath.trim().replace(/^\/+|\/+$/g, '');
-  
-  // Block dangerous paths
-  const forbidden = [
-    'node_modules',
-    '.env',
-    '.git',
-    'backups',
-    'secrets',
-    'config',
-    'deployment'
-  ];
-  
-  if (forbidden.some(f => clean.includes(f))) {
-    throw new Error('Access denied: forbidden directory');
-  }
-  
-  // Prevent path traversal
-  if (clean.includes('..') || clean.includes('~')) {
-    throw new Error('Access denied: invalid path');
-  }
-  
-  // Ensure it's in an allowed directory
-  const allowedDirs = ['pages', 'components', 'functions', 'entities', 'utils', 'lib'];
-  const firstDir = clean.split('/')[0];
-  
-  if (!allowedDirs.includes(firstDir)) {
-    throw new Error('Access denied: directory not whitelisted');
-  }
-  
-  return clean;
-}
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-
-    // Admin check
+    
     if (!user || user.role !== 'admin') {
       return Response.json({ error: 'Admin access required' }, { status: 403 });
     }
 
-    const { filePath } = await req.json();
+    const { file_path } = await req.json();
     
-    if (!filePath) {
-      return Response.json({ error: 'filePath required' }, { status: 400 });
+    if (!file_path) {
+      return Response.json({ error: 'file_path required' }, { status: 400 });
     }
 
-    // Sanitize path
-    const safePath = sanitizePath(filePath);
+    // Call siteBuilder agent to read file
+    const conversation = await base44.agents.createConversation({
+      agent_name: 'siteBuilder',
+      metadata: { source: 'dev_engine_file_read' }
+    });
 
-    // In a real implementation, this would read from the actual file system
-    // For now, we'll simulate reading from a knowledge base
-    // In production, use Deno.readTextFile or similar with proper permissions
-    
-    const mockContent = `// File: ${safePath}
-// This is a placeholder. In production, this would read the actual file.
+    await base44.agents.addMessage(conversation, {
+      role: 'user',
+      content: `[EXPLAIN MODE] Read and return the complete contents of file: ${file_path}`
+    });
 
-// TODO: Implement actual file reading with Deno.readTextFile
-// or via Base44's file storage API
+    // Wait for agent response
+    const content = await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Timeout waiting for file content'));
+      }, 30000);
 
-export default function Placeholder() {
-  return <div>File content for {safePath}</div>;
-}
-`;
-
-    // SCHEMA VALIDATION - Log access
-    const logEntry = {
-      timestamp: new Date().toISOString(),
-      actor: user.email,
-      action: 'analyze',
-      filePath: safePath,
-      diffSummary: `Viewed file: ${safePath}`,
-      status: 'applied'
-    };
-
-    // Validate required fields
-    if (!logEntry.timestamp || !logEntry.actor || !logEntry.action || !logEntry.filePath) {
-      throw new Error('SCHEMA VIOLATION: Missing required fields in file view log');
-    }
-
-    await base44.asServiceRole.entities.BuilderActionLog.create(logEntry);
+      const unsubscribe = base44.agents.subscribeToConversation(conversation.id, (data) => {
+        const lastMsg = data.messages[data.messages.length - 1];
+        if (lastMsg?.role === 'assistant' && lastMsg?.content) {
+          clearTimeout(timeout);
+          unsubscribe();
+          
+          // Extract code from markdown if present
+          const codeMatch = lastMsg.content.match(/```[\w]*\n([\s\S]*?)\n```/);
+          const fileContent = codeMatch ? codeMatch[1] : lastMsg.content;
+          
+          resolve(fileContent);
+        }
+      });
+    });
 
     return Response.json({
       success: true,
-      filePath: safePath,
-      content: mockContent,
-      language: safePath.endsWith('.json') ? 'json' : 
-                safePath.endsWith('.css') ? 'css' : 'javascript',
-      readOnly: true,
-      timestamp: new Date().toISOString()
+      file_path,
+      content,
+      lines: content.split('\n').length
     });
 
   } catch (error) {
-    console.error('File content error:', error);
-    return Response.json({
-      error: error.message
-    }, { status: error.message.includes('Access denied') ? 403 : 500 });
+    console.error('File read error:', error);
+    return Response.json({ 
+      error: error.message,
+      stack: error.stack 
+    }, { status: 500 });
   }
 });

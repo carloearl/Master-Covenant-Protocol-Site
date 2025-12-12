@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { BrainCircuit, Send, Loader2, CheckCircle2, AlertCircle, Clock, Zap, Paperclip, X, Image as ImageIcon, FileText, Upload } from 'lucide-react';
+import { BrainCircuit, Send, Loader2, CheckCircle2, AlertCircle, Clock, Zap, Paperclip, X, Image as ImageIcon, FileText, Upload, Save, FolderOpen, Trash2, Star } from 'lucide-react';
 import HoverTooltip from '@/components/ui/HoverTooltip';
+import { toast } from 'sonner';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 
@@ -19,6 +20,9 @@ export default function AgentBrainPanel() {
   const [plan, setPlan] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [savedConversations, setSavedConversations] = useState([]);
+  const [showSaved, setShowSaved] = useState(false);
+  const [savingConversation, setSavingConversation] = useState(false);
   const scrollRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -28,7 +32,82 @@ export default function AgentBrainPanel() {
 
   useEffect(() => {
     initConversation();
+    loadSavedConversations();
   }, []);
+
+  async function loadSavedConversations() {
+    try {
+      const { data } = await base44.functions.invoke('conversationList', {
+        agent_name: 'siteBuilder',
+        mode: 'brain'
+      });
+      if (data.success) {
+        setSavedConversations(data.conversations || []);
+      }
+    } catch (error) {
+      console.error('Failed to load conversations:', error);
+    }
+  }
+
+  async function saveConversation() {
+    if (!conversation) return;
+    
+    const title = prompt('Enter conversation title:', `Agent Brain - ${new Date().toLocaleString()}`);
+    if (!title) return;
+
+    setSavingConversation(true);
+    try {
+      const { data } = await base44.functions.invoke('conversationSave', {
+        conversation_id: conversation.id,
+        title,
+        agent_name: 'siteBuilder',
+        mode: 'brain',
+        mode_subtype: mode,
+        messages: safeMessages,
+        metadata: { mode }
+      });
+      
+      if (data.success) {
+        toast.success('Conversation saved!');
+        await loadSavedConversations();
+      }
+    } catch (error) {
+      console.error('Save failed:', error);
+      toast.error('Failed to save conversation');
+    } finally {
+      setSavingConversation(false);
+    }
+  }
+
+  async function loadConversation(storageId) {
+    try {
+      const { data } = await base44.functions.invoke('conversationLoad', { storage_id: storageId });
+      if (data.success && data.conversation) {
+        setMessages(data.conversation.messages || []);
+        setMode(data.conversation.mode_subtype || 'build');
+        setShowSaved(false);
+        toast.success('Conversation loaded!');
+      }
+    } catch (error) {
+      console.error('Load failed:', error);
+      toast.error('Failed to load conversation');
+    }
+  }
+
+  async function deleteConversation(storageId) {
+    if (!confirm('Delete this conversation?')) return;
+    
+    try {
+      const { data } = await base44.functions.invoke('conversationDelete', { storage_id: storageId });
+      if (data.success) {
+        toast.success('Conversation deleted');
+        await loadSavedConversations();
+      }
+    } catch (error) {
+      console.error('Delete failed:', error);
+      toast.error('Failed to delete conversation');
+    }
+  }
 
   useEffect(() => {
     // Auto-scroll to bottom when messages update
@@ -306,6 +385,46 @@ export default function AgentBrainPanel() {
         </CardHeader>
 
         <CardContent className="p-0 flex-1 flex flex-col overflow-hidden">
+          {/* Saved Conversations Panel */}
+          {showSaved && (
+            <div className="border-b border-blue-500/20 bg-white/5 p-4">
+              <h3 className="text-white font-bold mb-3 flex items-center gap-2">
+                <FolderOpen className="w-4 h-4" />
+                Saved Conversations ({savedConversations.length})
+              </h3>
+              <ScrollArea className="h-48">
+                <div className="space-y-2 pr-3">
+                  {savedConversations.map((conv) => (
+                    <div key={conv.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-blue-500/20 hover:bg-white/10 transition-colors">
+                      <button
+                        onClick={() => loadConversation(conv.id)}
+                        className="flex-1 text-left"
+                      >
+                        <div className="text-sm text-white font-semibold">{conv.title}</div>
+                        <div className="text-xs text-slate-400">
+                          {new Date(conv.last_message_at).toLocaleString()} • {conv.mode_subtype}
+                        </div>
+                      </button>
+                      <HoverTooltip content="Delete conversation">
+                        <Button
+                          onClick={() => deleteConversation(conv.id)}
+                          size="sm"
+                          variant="ghost"
+                          className="text-red-400 hover:text-red-300 h-8 w-8 p-0"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </HoverTooltip>
+                    </div>
+                  ))}
+                  {savedConversations.length === 0 && (
+                    <p className="text-center text-slate-400 py-8">No saved conversations</p>
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+          )}
+          
           {/* Messages */}
           <ScrollArea ref={scrollRef} className="flex-1">
             <div className="p-3 md:p-4 space-y-3 md:space-y-4 min-h-full">
