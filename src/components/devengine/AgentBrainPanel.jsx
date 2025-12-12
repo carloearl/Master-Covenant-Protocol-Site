@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { BrainCircuit, Send, Loader2, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
+import { BrainCircuit, Send, Loader2, CheckCircle2, AlertCircle, Clock, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 
@@ -159,50 +159,59 @@ export default function AgentBrainPanel() {
   const modeConfig = getModeConfig();
 
   return (
-    <div className="h-full flex gap-4">
+    <div className="h-full flex flex-col md:flex-row gap-3 md:gap-4 p-3 md:p-4 overflow-hidden">
       {/* Left: Mode Selector & Plan */}
-      <div className="w-80 flex flex-col gap-4">
+      <div className="w-full md:w-80 flex flex-col gap-3 md:gap-4 flex-shrink-0">
         {/* Mode Selector */}
         <Card className="bg-white/5 border-blue-500/20">
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-3 border-b border-blue-500/20">
             <CardTitle className="text-white text-sm flex items-center gap-2">
               <BrainCircuit className="w-5 h-5 text-blue-400" />
               Agent Mode
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
-            {['explain', 'build', 'refactor', 'debug'].map(m => (
-              <button
-                key={m}
-                onClick={() => setMode(m)}
-                className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                  mode === m
-                    ? `${getModeConfig().color} text-white shadow-lg`
-                    : 'bg-white/5 text-blue-300 hover:bg-white/10'
-                }`}
-              >
-                <span className="mr-2">{getModeConfig().icon}</span>
-                {m.charAt(0).toUpperCase() + m.slice(1)}
-              </button>
-            ))}
+          <CardContent className="grid grid-cols-2 md:grid-cols-1 gap-2 pt-3">
+            {['explain', 'build', 'refactor', 'debug'].map(m => {
+              const config = {
+                explain: { color: 'bg-cyan-500', icon: '💡' },
+                build: { color: 'bg-blue-500', icon: '🔨' },
+                refactor: { color: 'bg-indigo-500', icon: '♻️' },
+                debug: { color: 'bg-red-500', icon: '🐛' }
+              }[m];
+              return (
+                <button
+                  key={m}
+                  onClick={() => setMode(m)}
+                  className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all min-h-[48px] ${
+                    mode === m
+                      ? `${config.color} text-white shadow-[0_0_20px_rgba(59,130,246,0.4)]`
+                      : 'bg-white/5 text-blue-300 hover:bg-white/10'
+                  }`}
+                >
+                  <span className="mr-2">{config.icon}</span>
+                  {m.charAt(0).toUpperCase() + m.slice(1)}
+                </button>
+              );
+            })}
           </CardContent>
         </Card>
 
         {/* Plan Steps */}
         {safePlan.length > 0 && (
-          <Card className="bg-white/5 border-indigo-500/20 flex-1">
-            <CardHeader className="pb-3">
+          <Card className="bg-white/5 border-indigo-500/20 flex-1 hidden md:flex flex-col overflow-hidden">
+            <CardHeader className="pb-3 border-b border-indigo-500/20 flex-shrink-0">
               <CardTitle className="text-white text-sm flex items-center gap-2">
-                📋 Agent Plan
+                <span className="text-lg">📋</span>
+                Agent Plan
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[400px]">
-                <div className="space-y-2">
+            <CardContent className="p-3 flex-1 overflow-hidden">
+              <ScrollArea className="h-full">
+                <div className="space-y-2 pr-3">
                   {safePlan.map((step, idx) => (
                     <div
                       key={step.id}
-                      className="flex items-start gap-2 p-2 rounded-lg bg-white/5 border border-white/10"
+                      className="flex items-start gap-2 p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/30 hover:border-indigo-500/50 transition-colors"
                     >
                       <div className="flex-shrink-0 mt-0.5">
                         {step.status === 'done' && <CheckCircle2 className="w-4 h-4 text-green-400" />}
@@ -210,7 +219,7 @@ export default function AgentBrainPanel() {
                         {step.status === 'pending' && <Clock className="w-4 h-4 text-slate-400" />}
                       </div>
                       <div className="flex-1">
-                        <p className="text-xs text-slate-200 leading-relaxed">
+                        <p className="text-xs text-white/90 leading-relaxed">
                           {step.label}
                         </p>
                       </div>
@@ -224,38 +233,40 @@ export default function AgentBrainPanel() {
       </div>
 
       {/* Right: Chat Interface */}
-      <Card className="flex-1 bg-white/5 border-blue-500/20 flex flex-col">
-        <CardHeader className="border-b border-blue-500/20">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-white flex items-center gap-2">
-              <div className={`w-10 h-10 rounded-lg ${modeConfig.color}/30 flex items-center justify-center`}>
-                <BrainCircuit className="w-6 h-6 text-white" />
+      <Card className="flex-1 bg-white/5 border-blue-500/20 flex flex-col overflow-hidden">
+        <CardHeader className="border-b border-blue-500/20 flex-shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <CardTitle className="text-white flex items-center gap-2 md:gap-3">
+              <div className={`w-10 h-10 md:w-12 md:h-12 rounded-lg ${modeConfig.color}/30 flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.3)]`}>
+                <BrainCircuit className="w-5 h-5 md:w-6 md:h-6 text-white" />
               </div>
               <div>
-                <div className="text-base">GlyphLock Agent Brain</div>
+                <div className="text-base md:text-lg font-bold">Agent Brain</div>
                 <div className="text-xs text-blue-300 font-normal">
-                  Mode: {modeConfig.label} {modeConfig.icon}
+                  {modeConfig.icon} {modeConfig.label} Mode
                 </div>
               </div>
             </CardTitle>
-            <Badge className="bg-green-500/20 text-green-400 border-green-500/50">
+            <Badge className="bg-green-500/20 text-green-400 border-green-500/50 self-start md:self-center">
               <CheckCircle2 className="w-3 h-3 mr-1" />
               Active
             </Badge>
           </div>
         </CardHeader>
 
-        <CardContent className="p-0 flex-1 flex flex-col">
+        <CardContent className="p-0 flex-1 flex flex-col overflow-hidden">
           {/* Messages */}
-          <ScrollArea ref={scrollRef} className="flex-1 p-4 space-y-4">
-            {safeMessages.length === 0 ? (
-              <div className="text-center py-12">
-                <BrainCircuit className="w-16 h-16 text-blue-400 mx-auto mb-4 opacity-50" />
-                <h3 className="text-xl font-bold text-white mb-2">Agent Brain Ready</h3>
-                <p className="text-blue-300 mb-6">
-                  Current Mode: <span className="font-bold">{modeConfig.label}</span>
-                </p>
-                <div className="grid grid-cols-2 gap-3 max-w-2xl mx-auto text-left">
+          <ScrollArea ref={scrollRef} className="flex-1">
+            <div className="p-3 md:p-4 space-y-3 md:space-y-4 min-h-full">
+              {safeMessages.length === 0 ? (
+                <div className="flex items-center justify-center min-h-[400px]">
+                  <div className="text-center px-4 max-w-2xl">
+                    <BrainCircuit className="w-12 h-12 md:w-16 md:h-16 text-blue-400 mx-auto mb-4 opacity-50" />
+                    <h3 className="text-lg md:text-xl font-bold text-white mb-2">Agent Brain Ready</h3>
+                    <p className="text-sm md:text-base text-blue-300/80 mb-6">
+                      Current Mode: <span className="font-bold">{modeConfig.label}</span> {modeConfig.icon}
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-left">
                   <div className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
                     <div className="text-sm text-white font-semibold mb-1">💡 Explain</div>
                     <p className="text-xs text-cyan-300">
@@ -280,36 +291,38 @@ export default function AgentBrainPanel() {
                       Find and fix bugs, errors, and unexpected behavior
                     </p>
                   </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              safeMessages.map((msg, idx) => (
-                <MessageBubble key={idx} message={msg} />
-              ))
-            )}
-            {sending && (
-              <div className="flex items-center gap-2 text-blue-400">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm">Agent processing...</span>
-              </div>
-            )}
+              ) : (
+                safeMessages.map((msg, idx) => (
+                  <MessageBubble key={idx} message={msg} />
+                ))
+              )}
+              {sending && (
+                <div className="flex items-center gap-2 text-blue-400 p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span className="text-sm font-medium">Agent processing...</span>
+                </div>
+              )}
+            </div>
           </ScrollArea>
 
           {/* Input Area */}
-          <div className="border-t border-blue-500/20 p-4 bg-white/5">
-            <div className="flex gap-3">
+          <div className="border-t border-blue-500/20 p-3 md:p-4 bg-white/5 backdrop-blur-sm flex-shrink-0">
+            <div className="flex gap-2">
               <Textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder={`[${modeConfig.label} Mode] Describe what you want the agent to do...`}
-                className="flex-1 bg-white/5 border-blue-500/20 text-white placeholder:text-blue-300/50"
+                placeholder={`${modeConfig.icon} ${modeConfig.label}...`}
+                className="flex-1 bg-white/5 border-blue-500/20 text-white placeholder:text-blue-300/40 resize-none min-h-[80px] md:min-h-[60px] text-sm md:text-base"
                 disabled={sending}
               />
               <Button
                 onClick={sendMessage}
                 disabled={!input.trim() || sending}
-                className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-6"
+                className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-[0_0_20px_rgba(59,130,246,0.3)] min-w-[48px] min-h-[48px] px-4 md:px-6"
               >
                 {sending ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -318,8 +331,9 @@ export default function AgentBrainPanel() {
                 )}
               </Button>
             </div>
-            <p className="text-xs text-blue-300 mt-2">
-              Press Enter to send • Shift + Enter for new line
+            <p className="text-xs text-blue-300/50 mt-2">
+              <span className="hidden md:inline">Enter to send • Shift+Enter for new line</span>
+              <span className="md:hidden">Tap send to submit</span>
             </p>
           </div>
         </CardContent>
@@ -335,11 +349,16 @@ function MessageBubble({ message }) {
   const hasToolCalls = message.tool_calls && Array.isArray(message.tool_calls) && message.tool_calls.length > 0;
 
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-      <div className={`max-w-[85%] rounded-2xl p-4 ${
+    <div className={`flex gap-2 md:gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}>
+      {!isUser && (
+        <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+          <Zap className="w-4 h-4 text-white" />
+        </div>
+      )}
+      <div className={`max-w-[85%] md:max-w-[75%] rounded-xl p-3 md:p-4 ${
         isUser 
-          ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white' 
-          : 'bg-white/10 backdrop-blur-md border border-white/10 text-white'
+          ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-[0_0_20px_rgba(59,130,246,0.3)]' 
+          : 'bg-white/5 backdrop-blur-md border border-white/10 text-white shadow-lg'
       }`}>
         {message.content && (
           <ReactMarkdown
@@ -369,11 +388,16 @@ function MessageBubble({ message }) {
           </div>
         )}
 
-        <div className="flex items-center gap-1 mt-2 text-xs opacity-60">
+        <div className={`flex items-center gap-1 mt-2 text-xs ${isUser ? 'opacity-60' : 'opacity-40'}`}>
           <Clock className="w-3 h-3" />
-          {new Date().toLocaleTimeString()}
+          {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
       </div>
+      {isUser && (
+        <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.3)]">
+          <span className="text-sm">👤</span>
+        </div>
+      )}
     </div>
   );
 }
