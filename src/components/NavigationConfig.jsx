@@ -9,6 +9,7 @@ export const NAV = [
   { label: "Home", href: "/" },
   { label: "Dream Team", href: "/DreamTeam" },
   { label: "GlyphBot", href: "/GlyphBot" },
+  { label: "Media Hub", href: "/VideoUpload" },
   { label: "Command Center", href: "/CommandCenter" },
   { label: "Pricing", href: "/Pricing" },
   { label: "Consultation", href: "/Consultation" }
