@@ -28,6 +28,7 @@ import {
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import ReactMarkdown from 'react-markdown';
+import DevModeLayout from '@/components/devengine/DevModeLayout';
 
 export default function SiteBuilder() {
   const [user, setUser] = useState(null);
@@ -39,6 +40,7 @@ export default function SiteBuilder() {
   const [mode, setMode] = useState('chat'); // 'plan', 'chat', 'code'
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [viewMode, setViewMode] = useState('visual'); // 'visual' or 'dev'
   const fileInputRef = useRef(null);
   const scrollRef = useRef(null);
 
@@ -222,8 +224,36 @@ export default function SiteBuilder() {
                 </div>
                 </div>
                 <div className="flex items-center gap-3">
+                {/* View Mode Toggle - Admin Only */}
+                {isAdmin && (
+                  <div className="flex gap-2 bg-white/5 rounded-lg p-1">
+                    <button
+                      onClick={() => setViewMode('visual')}
+                      className={`px-4 py-2 rounded-md text-xs font-bold transition-all flex items-center gap-2 ${
+                        viewMode === 'visual'
+                          ? 'bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      <Sparkles className="w-4 h-4" />
+                      VISUAL
+                    </button>
+                    <button
+                      onClick={() => setViewMode('dev')}
+                      className={`px-4 py-2 rounded-md text-xs font-bold transition-all flex items-center gap-2 ${
+                        viewMode === 'dev'
+                          ? 'bg-indigo-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.5)]'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      <Code className="w-4 h-4" />
+                      DEV ENGINE
+                    </button>
+                  </div>
+                )}
                 {/* Mode Selector */}
-                <div className="flex gap-2 bg-white/5 rounded-lg p-1">
+                {viewMode === 'visual' && (
+                  <div className="flex gap-2 bg-white/5 rounded-lg p-1">
                   <button
                     onClick={() => setMode('chat')}
                     className={`px-4 py-2 rounded-md text-xs font-bold transition-all ${
@@ -255,6 +285,7 @@ export default function SiteBuilder() {
                     ⚡ CODE
                   </button>
                 </div>
+                )}
                 <Badge className="bg-green-500/20 text-green-400 border-green-500/50">
                   <CheckCircle2 className="w-3 h-3 mr-1" />
                   Active
@@ -264,8 +295,23 @@ export default function SiteBuilder() {
           </div>
         </div>
 
-        {/* Mode Info Banner - MOBILE RESPONSIVE */}
-        <div className="container mx-auto px-3 md:px-4 pt-4 md:pt-6">
+        {/* Render Dev Engine or Visual Builder */}
+        {viewMode === 'dev' && isAdmin ? (
+          <div className="h-[calc(100vh-120px)]">
+            <DevModeLayout />
+          </div>
+        ) : viewMode === 'dev' && !isAdmin ? (
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="text-center">
+              <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-white mb-2">Access Denied</h2>
+              <p className="text-slate-400">Dev Engine is admin-only.</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Mode Info Banner - MOBILE RESPONSIVE */}
+            <div className="container mx-auto px-3 md:px-4 pt-4 md:pt-6">
           <div className="mb-4 md:mb-6 p-3 md:p-4 rounded-xl border-2 transition-all" style={{
             background: mode === 'chat' ? 'rgba(59,130,246,0.1)' : mode === 'plan' ? 'rgba(99,102,241,0.1)' : 'rgba(139,92,246,0.1)',
             borderColor: mode === 'chat' ? 'rgba(59,130,246,0.3)' : mode === 'plan' ? 'rgba(99,102,241,0.3)' : 'rgba(139,92,246,0.3)'
@@ -526,6 +572,8 @@ export default function SiteBuilder() {
             </CardContent>
           </Card>
         </div>
+          </>
+        )}
       </div>
     </>
   );
