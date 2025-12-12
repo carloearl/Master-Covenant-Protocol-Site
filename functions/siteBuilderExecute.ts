@@ -11,95 +11,11 @@ const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY');
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
 
-// Fallback chain: Gemini 3 Pro → Gemini 2.0 Flash (free) → OpenAI → Claude → Together AI (free OSS)
+// DREAM TEAM FALLBACK CHAIN: Claude 3.5 Sonnet → GPT-4o → Gemini 2.0 Flash → Llama 3.3 (free OSS)
 async function generateWithFallback(prompt, options = {}) {
   const { type = 'text', thinking = 'low', grounding = false } = options;
   
-  // Try Gemini 3 Pro first
-  if (GEMINI_API_KEY) {
-    try {
-      const model = type === 'image' ? 'gemini-3-pro-image-preview' : 'gemini-3-pro-preview';
-      const response = await fetch(`${GEMINI_BASE_URL}/models/${model}:generateContent?key=${GEMINI_API_KEY}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 1.0,
-            ...(thinking && { thinkingConfig: { thinkingLevel: thinking } }),
-            ...(type === 'image' && options.imageConfig)
-          },
-          tools: grounding ? [{ googleSearch: {} }] : []
-        })
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        return { 
-          success: true, 
-          data: data.candidates?.[0]?.content?.parts?.[0],
-          model: model 
-        };
-      }
-    } catch (err) {
-      console.error('Gemini 3 Pro failed, trying fallback:', err.message);
-    }
-  }
-  
-  // Fallback to Gemini 2.0 Flash (free tier)
-  if (GEMINI_API_KEY) {
-    try {
-      const response = await fetch(`${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        return { 
-          success: true, 
-          data: data.candidates?.[0]?.content?.parts?.[0],
-          model: 'gemini-2.0-flash-exp (fallback)' 
-        };
-      }
-    } catch (err) {
-      console.error('Gemini 2.0 Flash failed, trying next fallback:', err.message);
-    }
-  }
-  
-  // Fallback to OpenAI GPT-4o
-  if (OPENAI_API_KEY) {
-    try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${OPENAI_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o',
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.7
-        })
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        return { 
-          success: true, 
-          data: { text: data.choices[0].message.content },
-          model: 'gpt-4o (fallback)' 
-        };
-      }
-    } catch (err) {
-      console.error('OpenAI failed, trying next fallback:', err.message);
-    }
-  }
-  
-  // Fallback to Claude
+  // 🥇 PRIMARY: Claude 3.5 Sonnet (Best reasoning + coding)
   if (ANTHROPIC_API_KEY) {
     try {
       const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -111,7 +27,8 @@ async function generateWithFallback(prompt, options = {}) {
         },
         body: JSON.stringify({
           model: 'claude-3-5-sonnet-20241022',
-          max_tokens: 4096,
+          max_tokens: 8192,
+          temperature: 0.7,
           messages: [{ role: 'user', content: prompt }]
         })
       });
@@ -121,23 +38,79 @@ async function generateWithFallback(prompt, options = {}) {
         return { 
           success: true, 
           data: { text: data.content[0].text },
-          model: 'claude-3.5-sonnet (fallback)' 
+          model: '🥇 Claude 3.5 Sonnet (DREAM TEAM)' 
         };
       }
     } catch (err) {
-      console.error('Claude failed, trying final fallback:', err.message);
+      console.error('Claude 3.5 Sonnet failed, trying GPT-4o:', err.message);
     }
   }
   
-  // Final fallback: Together AI with free open-source models
+  // 🥈 FALLBACK 1: GPT-4o (Multimodal powerhouse)
+  if (OPENAI_API_KEY) {
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${OPENAI_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.7,
+          max_tokens: 4096
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return { 
+          success: true, 
+          data: { text: data.choices[0].message.content },
+          model: '🥈 GPT-4o (DREAM TEAM)' 
+        };
+      }
+    } catch (err) {
+      console.error('GPT-4o failed, trying Gemini 2.0 Flash:', err.message);
+    }
+  }
+  
+  // 🥉 FALLBACK 2: Gemini 2.0 Flash (Free tier, fast)
+  if (GEMINI_API_KEY) {
+    try {
+      const response = await fetch(`${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7 }
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return { 
+          success: true, 
+          data: data.candidates?.[0]?.content?.parts?.[0],
+          model: '🥉 Gemini 2.0 Flash (DREAM TEAM)' 
+        };
+      }
+    } catch (err) {
+      console.error('Gemini 2.0 Flash failed, trying Llama 3.3:', err.message);
+    }
+  }
+  
+  // 🆓 FINAL FALLBACK: Llama 3.3 70B (Free OSS)
   try {
     const response = await fetch('https://api.together.xyz/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo', // Free tier
+        model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
         messages: [{ role: 'user', content: prompt }],
-        max_tokens: 4096
+        max_tokens: 4096,
+        temperature: 0.7
       })
     });
     
@@ -146,14 +119,14 @@ async function generateWithFallback(prompt, options = {}) {
       return { 
         success: true, 
         data: { text: data.choices[0].message.content },
-        model: 'llama-3.3-70b (free OSS fallback)' 
+        model: '🆓 Llama 3.3 70B (Free OSS Fallback)' 
       };
     }
   } catch (err) {
-    console.error('All models failed:', err.message);
+    console.error('All DREAM TEAM models failed:', err.message);
   }
   
-  return { success: false, error: 'All AI models unavailable' };
+  return { success: false, error: 'All DREAM TEAM models unavailable' };
 }
 
 Deno.serve(async (req) => {
