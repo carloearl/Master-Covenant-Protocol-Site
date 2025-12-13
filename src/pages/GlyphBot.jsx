@@ -7,6 +7,7 @@ import { base44 } from '@/api/base44Client';
 import { Activity, Zap, Shield, Bot, AlertTriangle, X, PanelRightOpen, PanelRightClose } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { toast } from 'sonner';
+import { injectSoftwareSchema } from '@/components/utils/seoHelpers';
 
 const { 
   useGlyphBotPersistence, 
@@ -150,6 +151,25 @@ export default function GlyphBotPage() {
         console.error('[GlyphBot] Auth check failed:', e);
       }
     })();
+  }, []);
+
+  useEffect(() => {
+    const cleanup = injectSoftwareSchema(
+      'GlyphBot AI Security Assistant',
+      '24/7 AI assistant for cybersecurity analysis, threat detection, code auditing, and real-time security monitoring',
+      '/glyphbot',
+      [
+        'AI Security Analysis',
+        'Code Auditing',
+        'Threat Detection',
+        'Real-Time Web Search',
+        'File Analysis',
+        'Security Reporting',
+        'Voice Synthesis',
+        'Multi-Provider LLM Chain'
+      ]
+    );
+    return cleanup;
   }, []);
 
   useEffect(() => {
@@ -602,6 +622,7 @@ export default function GlyphBotPage() {
       <SEOHead 
         title="GlyphBot - Elite AI Security Assistant | GlyphLock"
         description="Chat with GlyphBot, your elite AI security assistant for code auditing, blockchain analysis, threat detection, and debugging."
+        url="/glyphbot"
       />
       
       <div className="flex-1 flex flex-col max-w-7xl mx-auto w-full">

@@ -4,6 +4,7 @@ import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronRight, Shield, Lock, Eye, Zap, Server, Activity } from "lucide-react";
+import SEOHead from "@/components/SEOHead";
 
 export default function SecurityTools() {
   const tools = [
@@ -50,7 +51,13 @@ export default function SecurityTools() {
   ];
 
   return (
-    <div className="text-white min-h-screen" style={{ background: 'transparent' }}>
+    <>
+      <SEOHead
+        title="Security Tools | GlyphLock Cybersecurity Suite"
+        description="Professional cybersecurity toolkit: QR security, steganography, blockchain verification, AI threat detection, and secure POS systems for enterprise protection."
+        url="/security-tools"
+      />
+      <div className="text-white min-h-screen" style={{ background: 'transparent' }}>
       <section className="relative py-20 overflow-hidden" style={{ background: 'transparent' }}>
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: "linear-gradient(cyan 1px, transparent 1px), linear-gradient(90deg, cyan 1px, transparent 1px)",
@@ -176,5 +183,6 @@ export default function SecurityTools() {
         </div>
       </section>
     </div>
+    </>
   );
 }

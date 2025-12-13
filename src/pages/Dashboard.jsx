@@ -8,6 +8,7 @@ import KeyGenerator from "@/components/dashboard/KeyGenerator";
 import HashGenerator from "@/components/dashboard/HashGenerator";
 import EncoderDecoder from "@/components/dashboard/EncoderDecoder";
 import GlyphLoader from "@/components/GlyphLoader";
+import SEOHead from "@/components/SEOHead";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -61,7 +62,13 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen flex overflow-hidden relative" style={{ background: 'transparent' }}>
+    <>
+      <SEOHead
+        title="Dashboard | GlyphLock Security Portal"
+        description="Access all GlyphLock security tools. Manage QR codes, analyze threats, view security analytics, and control your enterprise security settings."
+        url="/dashboard"
+      />
+      <div className="min-h-screen flex overflow-hidden relative" style={{ background: 'transparent' }}>
       {/* Cosmic Background */}
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/30 via-cyan-900/10 to-transparent pointer-events-none z-0" />
       <div className="fixed inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDYsIDE4MiwgMjEyLCAwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20 pointer-events-none z-0" />
@@ -93,5 +100,6 @@ export default function Dashboard() {
         </div>
       </div>
     </div>
+    </>
   );
 }

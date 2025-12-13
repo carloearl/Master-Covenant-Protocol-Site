@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Shield, Target, Zap, Clock, CheckCircle2, Lock, AlertTriangle } from "lucide-react";
 import GlyphLoader from "@/components/GlyphLoader";
 import SEOHead from "@/components/SEOHead";
+import { injectServiceSchema } from "@/components/utils/seoHelpers";
 
 export default function Consultation() {
   const navigate = useNavigate();
@@ -31,6 +32,15 @@ export default function Consultation() {
     if (emailParam) {
       setFormData(prev => ({ ...prev, email: decodeURIComponent(emailParam) }));
     }
+  }, []);
+
+  useEffect(() => {
+    const cleanup = injectServiceSchema(
+      'Security Consultation',
+      '60-minute expert cybersecurity analysis with GlyphLock specialists - vulnerability assessment, architecture planning, and custom security solutions',
+      '/consultation'
+    );
+    return cleanup;
   }, []);
 
   const createConsultation = useMutation({
@@ -106,6 +116,7 @@ export default function Consultation() {
       <SEOHead 
         title="Book Security Consultation - $200 | GlyphLock"
         description="Schedule a tactical cybersecurity assessment with GlyphLock specialists. 60-minute expert analysis, threat overview, and custom solution roadmap."
+        url="/consultation"
       />
       
       <div className="container mx-auto px-4">

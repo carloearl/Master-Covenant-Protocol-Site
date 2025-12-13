@@ -7,6 +7,7 @@ import { Loader2, Sparkles, Layers, Image as ImageIcon, Database, Zap } from 'lu
 import { toast } from 'sonner';
 import PaywallGuard from '@/components/PaywallGuard';
 import SEOHead from '@/components/SEOHead';
+import { injectSoftwareSchema } from '@/components/utils/seoHelpers';
 import {
   GlyphImageCard,
   GlyphImageButton,
@@ -40,6 +41,23 @@ export default function ImageLab() {
         setLoading(false);
       }
     })();
+  }, []);
+
+  useEffect(() => {
+    const cleanup = injectSoftwareSchema(
+      'GlyphLock Image Lab',
+      'AI image generation with cryptographic security, interactive hotspots, and steganographic protection',
+      '/image-lab',
+      [
+        'AI Image Generation',
+        'Interactive Hotspot Editor',
+        'Blockchain Verification',
+        'Steganography Tools',
+        'Secure Media Storage',
+        'Copyright Protection'
+      ]
+    );
+    return cleanup;
   }, []);
 
   const handleImageGenerated = (image) => {

@@ -258,7 +258,8 @@ export default function DreamTeamPage() {
     <>
       <SEOHead
         title="GlyphLock Dream Team - AI Player Cards | Master Covenant Series"
-        description="Meet the GlyphLock Dream Team. Collectible AI player cards featuring Alfred, Claude, Copilot, Perplexity, and Cursor. Master Covenant Series."
+        description="Meet the GlyphLock Dream Team. Collectible AI player cards featuring Alfred, Claude, Copilot, Perplexity, and Cursor. Master Covenant Series with BPAA certification."
+        url="/dream-team"
       />
 
       {/* Introduction Section - The Dream Team Philosophy */}
