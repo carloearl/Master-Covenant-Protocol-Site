@@ -223,8 +223,8 @@ export default function GovernanceHub() {
         
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           {/* Header */}
-          <div className="mb-16">
-            <div className="flex flex-wrap items-center gap-3 mb-6">
+          <div className="mb-12 md:mb-16">
+            <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-6">
               <Badge className="bg-[#8C4BFF]/10 text-[#8C4BFF] border-[#8C4BFF]/30 px-3 py-1">
                 <Lock className="w-3 h-3 mr-2" /> Governance Framework
               </Badge>
@@ -236,20 +236,20 @@ export default function GovernanceHub() {
               </Badge>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter font-space leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black mb-4 md:mb-6 tracking-tighter font-space leading-tight">
               <span className="text-transparent bg-gradient-to-r from-[#00E4FF] to-[#8C4BFF] bg-clip-text">
                 MASTER COVENANT
               </span>
             </h1>
-            <p className="text-xl text-gray-400 max-w-2xl">
+            <p className="text-lg md:text-xl text-gray-400 max-w-2xl">
               Protocol Governance Framework
             </p>
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid lg:grid-cols-[300px_1fr] gap-8">
+          <div className="grid lg:grid-cols-[280px_1fr] gap-6 lg:gap-8">
             {/* Sidebar */}
-            <div className="glass-card rounded-2xl border border-white/10 p-4 h-fit sticky top-24">
+            <div className="glass-card rounded-2xl border border-white/10 p-3 md:p-4 h-fit lg:sticky lg:top-24">
               <div className="space-y-1">
                 {sections.map((section) => (
                   <button
@@ -279,13 +279,13 @@ export default function GovernanceHub() {
             </div>
 
             {/* Content Area */}
-            <div className="glass-card rounded-3xl border border-white/10 p-8 md:p-12 bg-black/40">
+            <div className="glass-card rounded-2xl md:rounded-3xl border border-white/10 p-6 md:p-8 lg:p-12 bg-black/40">
               {renderContent()}
             </div>
           </div>
 
           {/* Bottom CTA */}
-          <div className="mt-16 text-center glass-card rounded-2xl border border-[#00E4FF]/20 p-12">
+          <div className="mt-12 md:mt-16 text-center glass-card rounded-2xl border border-[#00E4FF]/20 p-6 md:p-8 lg:p-12">
             <h3 className="text-2xl font-bold text-white mb-4">
               Protocol Verification Required
             </h3>

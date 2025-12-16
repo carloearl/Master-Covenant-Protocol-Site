@@ -161,26 +161,26 @@ export default function Consultation() {
         <div className="max-w-7xl mx-auto">
           {/* Hero Header */}
           <div className="text-center mb-20">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight leading-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black mb-4 tracking-tight leading-tight">
               GlyphLock Protocol Verification
             </h1>
-            <p className="text-lg text-slate-400 tracking-wide mb-12">
+            <p className="text-base md:text-lg text-slate-400 tracking-wide mb-8 md:mb-12">
               Governed by the Master Covenant
             </p>
             
-            <div className="max-w-3xl mx-auto space-y-4 text-left mb-12">
-              <p className="text-xl text-white leading-relaxed">This is not a SaaS product.</p>
-              <p className="text-xl text-white leading-relaxed">This is not a consultation.</p>
-              <p className="text-xl text-white leading-relaxed">This is not a sales call.</p>
-              
-              <p className="text-xl text-white leading-relaxed mt-8">GlyphLock operates as a protocol authority.</p>
-              
-              <p className="text-lg text-slate-300 leading-relaxed mt-8">
+            <div className="max-w-3xl mx-auto space-y-3 md:space-y-4 text-left mb-8 md:mb-12 px-4">
+              <p className="text-lg md:text-xl text-white leading-relaxed">This is not a SaaS product.</p>
+              <p className="text-lg md:text-xl text-white leading-relaxed">This is not a consultation.</p>
+              <p className="text-lg md:text-xl text-white leading-relaxed">This is not a sales call.</p>
+
+              <p className="text-lg md:text-xl text-white leading-relaxed mt-6 md:mt-8">GlyphLock operates as a protocol authority.</p>
+
+              <p className="text-base md:text-lg text-slate-300 leading-relaxed mt-6 md:mt-8">
                 This engagement exists to determine whether your system qualifies for credentialed enforcement under the Master Covenant.
               </p>
             </div>
 
-            <div className="inline-block border-2 border-slate-700 bg-slate-950/80 px-12 py-6">
+            <div className="inline-block border-2 border-slate-700 bg-slate-950/80 px-6 md:px-12 py-6 w-full md:w-auto">
               <div className="text-sm text-slate-400 tracking-[0.2em] mb-2">ENGAGEMENT FEE</div>
               <div className="text-4xl font-black text-white mb-4">$12,000 USD</div>
               <div className="text-slate-400 space-y-1">
@@ -197,7 +197,7 @@ export default function Consultation() {
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 mb-12 lg:mb-16">
             {/* Form Section */}
             <div className="lg:col-span-2">
               <Card className="glyph-glass-card card-elevated-hover">

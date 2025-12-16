@@ -9,10 +9,10 @@ export default function HeroContent() {
   return (
     <section className="w-full max-w-7xl mx-auto px-4 py-16 relative" style={{ background: 'transparent', pointerEvents: 'auto' }}>
       <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 text-white tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] leading-tight">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-4 md:mb-6 text-white tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] leading-tight px-2">
           THE FUTURE OF SECURITY ISN'T COMING — <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-violet-600 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(139,92,246,0.9)] animate-pulse">IT'S ALREADY HERE.</span>
         </h1>
-        <p className="text-xl md:text-2xl text-white max-w-4xl mx-auto mb-6 font-medium leading-relaxed">
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white max-w-4xl mx-auto mb-4 md:mb-6 font-medium leading-relaxed px-4">
           Quantum-immune authentication, autonomous threat suppression, and AI-driven audit intelligence designed for infrastructures that cannot afford to fail.
         </p>
         <Badge className="mb-10 bg-blue-600/10 backdrop-blur-md border-2 border-cyan-400/40 text-white px-6 py-2 shadow-[0_0_30px_rgba(6,182,212,0.5)]">
@@ -30,22 +30,22 @@ export default function HeroContent() {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center px-4">
           <Link to={createPageUrl("Consultation")}>
-            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-lg px-8 font-black tracking-wide shadow-[0_0_35px_rgba(59,130,246,0.6)] hover:shadow-[0_0_55px_rgba(59,130,246,0.8)] transition-all duration-300">
+            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-base md:text-lg px-6 md:px-8 py-6 font-black tracking-wide shadow-[0_0_35px_rgba(59,130,246,0.6)] hover:shadow-[0_0_55px_rgba(59,130,246,0.8)] transition-all duration-300 w-full sm:w-auto">
               REQUEST CREDENTIALS
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </Link>
           <Link to={createPageUrl("SecurityTools")}>
-            <Button size="lg" variant="outline" className="border-2 border-cyan-400/60 text-white hover:bg-cyan-500/20 text-lg px-8 font-bold tracking-wide shadow-[0_0_25px_rgba(6,182,212,0.3)] hover:shadow-[0_0_40px_rgba(6,182,212,0.5)] transition-all duration-300">
+            <Button size="lg" variant="outline" className="border-2 border-cyan-400/60 text-white hover:bg-cyan-500/20 text-base md:text-lg px-6 md:px-8 py-6 font-bold tracking-wide shadow-[0_0_25px_rgba(6,182,212,0.3)] hover:shadow-[0_0_40px_rgba(6,182,212,0.5)] transition-all duration-300 w-full sm:w-auto">
               REQUEST MODULE ACCESS
             </Button>
           </Link>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 px-4">
         {[
           { label: "THREATS DETECTED", value: "500K+", icon: Shield },
           { label: "AI MONITORING", value: "24/7", icon: Lock },
