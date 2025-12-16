@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Shield, Twitter, Linkedin, Instagram, Github, Mail, Phone } from "lucide-react";
+import { Twitter, Linkedin, Instagram, Github, Mail, Phone } from "lucide-react";
 import { FOOTER_LINKS } from "@/components/NavigationConfig";
+import { SOC2Badge, ISO27001Badge, PCIDSSBadge, GDPRBadge, HIPAABadge } from "@/components/compliance/BadgeSVGs";
 
 /**
  * PHASE 3B FOOTER - FULLY CORRECTED
@@ -11,11 +12,11 @@ import { FOOTER_LINKS } from "@/components/NavigationConfig";
  */
 
 const certifications = [
-  { name: "SOC 2", subtitle: "PROGRAM IN PLACE" },
-  { name: "GDPR", subtitle: "COMPLIANT" },
-  { name: "ISO 27001", subtitle: "STANDARDS MET" },
-  { name: "PCI DSS", subtitle: "STANDARDS MET" },
-  { name: "HIPAA", subtitle: "COMPLIANT" }
+  { name: "SOC 2", subtitle: "PROGRAM IN PLACE", BadgeComponent: SOC2Badge },
+  { name: "ISO 27001", subtitle: "STANDARDS MET", BadgeComponent: ISO27001Badge },
+  { name: "PCI DSS", subtitle: "STANDARDS MET", BadgeComponent: PCIDSSBadge },
+  { name: "GDPR", subtitle: "COMPLIANT", BadgeComponent: GDPRBadge },
+  { name: "HIPAA", subtitle: "COMPLIANT", BadgeComponent: HIPAABadge }
 ];
 
 export default function Footer() {
@@ -139,15 +140,20 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-12 mb-12">
           <p className="text-center text-xs font-bold uppercase tracking-widest text-violet-300 mb-8">Security & Compliance Standards</p>
           <div className="flex flex-wrap justify-center gap-4 md:gap-8">
-            {certifications.map((cert, idx) => (
-              <Link key={idx} to={createPageUrl("Compliance")} className="group relative bg-white/5 border border-white/10 rounded-lg px-6 py-4 flex items-center gap-3 hover:border-[#00E4FF]/50 hover:bg-[#00E4FF]/5 transition-all duration-300 cursor-pointer">
-                <Shield className="w-6 h-6 text-gray-500 group-hover:text-[#00E4FF] transition-colors" />
-                <div className="text-left">
-                  <div className="text-white font-bold text-sm group-hover:text-[#00E4FF] transition-colors">{cert.name}</div>
-                  <div className="text-[10px] text-gray-500 tracking-wider group-hover:text-white/70">{cert.subtitle}</div>
-                </div>
-              </Link>
-            ))}
+            {certifications.map((cert, idx) => {
+              const BadgeComponent = cert.BadgeComponent;
+              return (
+                <Link key={idx} to={createPageUrl("Compliance")} className="group relative bg-white/5 border border-white/10 rounded-lg px-4 py-4 flex flex-col items-center gap-2 hover:border-[#00E4FF]/50 hover:bg-[#00E4FF]/5 transition-all duration-300 cursor-pointer min-w-[120px]">
+                  <div className="grayscale group-hover:grayscale-0 transition-all duration-500">
+                    <BadgeComponent className="w-16 h-16" />
+                  </div>
+                  <div className="text-center">
+                    <div className="text-white font-bold text-xs group-hover:text-[#00E4FF] transition-colors">{cert.name}</div>
+                    <div className="text-[9px] text-gray-500 tracking-wider group-hover:text-white/70">{cert.subtitle}</div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
           <div className="text-center mt-6">
             <Link to={createPageUrl("Compliance")} className="text-xs text-cyan-400 hover:text-cyan-300 font-semibold transition-colors">

@@ -1,6 +1,7 @@
 import React from "react";
-import { Shield, Lock, CheckCircle2, FileCheck, Award } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { SOC2Badge, ISO27001Badge, PCIDSSBadge, GDPRBadge, HIPAABadge } from "./BadgeSVGs";
 
 /**
  * GLYPHLOCK COMPLIANCE BADGES
@@ -16,10 +17,10 @@ import { Card } from "@/components/ui/card";
  * 3. Update certification_verified to true
  */
 
-const ComplianceBadge = ({ icon: Icon, title, subtitle, color, verified = false }) => (
-  <Card className="glyph-glass-card p-6 flex flex-col items-center gap-3 hover:scale-105 transition-transform">
-    <div className={`w-20 h-20 rounded-full ${color} flex items-center justify-center`}>
-      <Icon className="w-10 h-10 text-white" />
+const ComplianceBadge = ({ BadgeComponent, title, subtitle, verified = false }) => (
+  <Card className="glyph-glass-card p-6 flex flex-col items-center gap-3 hover:scale-105 transition-transform group">
+    <div className="grayscale group-hover:grayscale-0 transition-all duration-500">
+      <BadgeComponent className="w-24 h-24" />
     </div>
     <div className="text-center">
       <div className="text-sm font-black text-white uppercase tracking-wider">{title}</div>
@@ -78,46 +79,41 @@ export default function ComplianceBadges({ showVerificationWarning = true }) {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12">
           {/* SOC 2 Type II */}
           <ComplianceBadge
-            icon={FileCheck}
+            BadgeComponent={SOC2Badge}
             title="SOC 2"
             subtitle={certifications.soc2.verified ? "Type II Certified" : "Program In Place"}
-            color="bg-gradient-to-br from-blue-600 to-blue-800"
             verified={certifications.soc2.verified}
           />
 
           {/* ISO 27001 */}
           <ComplianceBadge
-            icon={Award}
+            BadgeComponent={ISO27001Badge}
             title="ISO 27001"
             subtitle={certifications.iso27001.verified ? "Certified" : "Standards Met"}
-            color="bg-gradient-to-br from-purple-600 to-purple-800"
             verified={certifications.iso27001.verified}
           />
 
           {/* PCI DSS */}
           <ComplianceBadge
-            icon={Lock}
+            BadgeComponent={PCIDSSBadge}
             title="PCI DSS"
             subtitle={certifications.pciDss.verified ? "Compliant" : "Standards Met"}
-            color="bg-gradient-to-br from-green-600 to-green-800"
             verified={certifications.pciDss.verified}
           />
 
           {/* GDPR - No official badge exists */}
           <ComplianceBadge
-            icon={Shield}
+            BadgeComponent={GDPRBadge}
             title="GDPR"
             subtitle="Compliant"
-            color="bg-gradient-to-br from-cyan-600 to-cyan-800"
             verified={certifications.gdpr.verified}
           />
 
           {/* HIPAA - No official badge exists */}
           <ComplianceBadge
-            icon={Lock}
+            BadgeComponent={HIPAABadge}
             title="HIPAA"
             subtitle="Compliant"
-            color="bg-gradient-to-br from-indigo-600 to-indigo-800"
             verified={certifications.hipaa.verified}
           />
         </div>
