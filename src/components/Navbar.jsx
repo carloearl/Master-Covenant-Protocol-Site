@@ -42,7 +42,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-8">
-          {NAV.map((section) => (
+          {NAV && NAV.map((section) => (
             <div 
               key={section.label} 
               className="relative group/nav"
@@ -133,16 +133,12 @@ export default function Navbar({ user, onLogin, onLogout }) {
 
         {/* Desktop Actions */}
         <div className="hidden lg:flex items-center gap-6">
-          <Link to={createPageUrl("Pricing")}>
-            <button className="text-violet-200 hover:text-indigo-300 hover:drop-shadow-[0_0_8px_rgba(87,61,255,0.8)] transition-all text-sm font-bold uppercase tracking-wide">Pricing</button>
-          </Link>
-
           <Link to={createPageUrl("Consultation")}>
             <button className="group relative px-6 py-2.5 rounded-full bg-transparent overflow-hidden transition-all hover:scale-105">
               <div className="absolute inset-0 border border-indigo-400 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-violet-500/10 group-hover:from-indigo-500/20 group-hover:to-violet-500/20 transition-all"></div>
               <span className="relative text-indigo-300 text-sm font-bold uppercase tracking-wide group-hover:text-white transition-colors">
-                Get Started
+                Request Credentials
               </span>
             </button>
           </Link>
@@ -275,9 +271,6 @@ export default function Navbar({ user, onLogin, onLogout }) {
                 </div>
               ))}
               <div className="pt-6 border-t border-white/10 flex flex-col gap-4">
-                <Link to={createPageUrl("Pricing")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white">Pricing</Button>
-                </Link>
                 {user ? (
                   <>
                     <Link to={createPageUrl("Dashboard")} onClick={() => setMobileMenuOpen(false)}>
@@ -291,7 +284,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
                   <div className="grid grid-cols-2 gap-4">
                     <Button onClick={onLogin} variant="ghost" className="text-white hover:bg-white/10">Sign In</Button>
                     <Link to={createPageUrl("Consultation")} onClick={() => setMobileMenuOpen(false)}>
-                      <Button className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white border-none">Get Started</Button>
+                      <Button className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white border-none">Request Credentials</Button>
                     </Link>
                   </div>
                 )}

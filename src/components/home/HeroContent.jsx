@@ -33,13 +33,13 @@ export default function HeroContent() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to={createPageUrl("Consultation")}>
             <Button size="lg" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-lg px-8 font-black tracking-wide shadow-[0_0_35px_rgba(59,130,246,0.6)] hover:shadow-[0_0_55px_rgba(59,130,246,0.8)] transition-all duration-300">
-              BOOK FREE CONSULTATION
+              REQUEST CREDENTIALS
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </Link>
           <Link to={createPageUrl("SecurityTools")}>
             <Button size="lg" variant="outline" className="border-2 border-cyan-400/60 text-white hover:bg-cyan-500/20 text-lg px-8 font-bold tracking-wide shadow-[0_0_25px_rgba(6,182,212,0.3)] hover:shadow-[0_0_40px_rgba(6,182,212,0.5)] transition-all duration-300">
-              EXPLORE SECURITY ECOSYSTEM
+              ACCESS VERIFICATION MODULES
             </Button>
           </Link>
         </div>

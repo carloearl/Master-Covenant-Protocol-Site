@@ -13,10 +13,10 @@ export default function CTASection() {
   };
 
   const benefits = [
-    "Free security assessment",
-    "Custom implementation plan",
-    "Enterprise-grade protection",
-    "24/7 support included"
+    "Protocol-governed access control",
+    "System-enforced verification",
+    "Credentialed integrity framework",
+    "Provisioned support channel"
   ];
 
   return (
@@ -47,7 +47,7 @@ export default function CTASection() {
               size="lg"
               className="bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] hover:from-[#2563EB] hover:to-[#60A5FA] text-white font-black tracking-wide shadow-[0_0_25px_rgba(59,130,246,0.5)] hover:shadow-[0_0_40px_rgba(30,64,175,0.7)] transition-all duration-300"
             >
-              GET STARTED
+              INITIATE VERIFICATION
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>

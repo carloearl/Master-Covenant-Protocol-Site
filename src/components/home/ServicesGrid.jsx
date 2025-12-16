@@ -12,42 +12,42 @@ import { Shield, Zap, Eye, Brain, Lock, FileCode, Image } from "lucide-react";
 const services = [
   {
     title: "NEXUS N.U.P.S.",
-    description: "AI-powered POS system with advanced analytics",
+    description: "Transaction verification module – governed by protocol, accessible only with provisioned credentials",
     link: "NUPSLogin",
     image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9184b512b_Whisk_b9fd7532ee1e87a9152439bac427f256dr.jpg",
     icon: Zap
   },
   {
     title: "Master Covenant",
-    description: "Smart contract platform with blockchain security",
+    description: "Binding protocol system – cryptographic governance restricted to authorized accounts",
     link: "MasterCovenant",
     image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/8f4e28351_Whisk_05f17d65a57cf59bf1a4fdd31ffd7d8edr.jpg",
     icon: FileCode
   },
   {
-    title: "QR Studio",
-    description: "Secure QR generation with steganography & anti-quishing",
+    title: "QR Verification Module",
+    description: "Cryptographic QR generation with steganographic encoding – protocol-enforced access control",
     link: "Qr",
     image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/ef8ed5e35_ee8d4930-e046-49b0-8beb-87745181d506.jpg",
     icon: Eye
   },
   {
-    title: "Blockchain Solutions",
-    description: "Decentralized security infrastructure",
+    title: "Blockchain Verification",
+    description: "Immutable ledger module – system-enforced capability restricted to credentialed operators",
     link: "Blockchain",
     image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b91660fea_Whisk_8fdb6d2b015dc9e846648880fcd03ca1dr.jpg",
     icon: Lock
   },
   {
-    title: "Image Lab",
-    description: "Advanced image processing and steganography tools",
+    title: "Image Processing Module",
+    description: "Steganographic encoding system – operating under protocol-governed authorization",
     link: "ImageLab",
     image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9167e5df2_08f33231-115f-4c95-9719-682f4e9679cc.jpg",
     icon: Image
   },
   {
-    title: "GlyphBot AI Assistant",
-    description: "Intelligent security automation",
+    title: "GlyphBot Intelligence Module",
+    description: "Autonomous security analysis – AI-driven threat suppression with credentialed access",
     link: "GlyphBot",
     image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/0e2155dc3_Whisk_df925aca34d95e09a3b4274e0bd16f08dr.jpg",
     icon: Brain
@@ -59,10 +59,10 @@ export default function ServicesGrid() {
     <div className="w-full max-w-7xl mx-auto px-4 pt-8 pb-16 relative" style={{ background: 'transparent', pointerEvents: 'auto' }}>
       <div className="text-center mb-12">
         <h2 className="text-3xl md:text-5xl font-black text-white mb-4 drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
-          Complete Security <span className="bg-gradient-to-r from-[#1E40AF] via-[#3B82F6] to-[#60A5FA] bg-clip-text text-transparent">Ecosystem</span>
+          Credentialed Integrity <span className="bg-gradient-to-r from-[#1E40AF] via-[#3B82F6] to-[#60A5FA] bg-clip-text text-transparent">System</span>
         </h2>
         <p className="text-lg text-white/90">
-          Integrated tools designed for enterprise-level protection
+          Protocol-governed modules restricted to provisioned access
         </p>
       </div>
 

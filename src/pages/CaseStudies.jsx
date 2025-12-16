@@ -40,6 +40,7 @@ export default function CaseStudies() {
         title="Case Studies & Research - GlyphLock Security"
         description="Explore GlyphLock's legal victories, technical validations, and federal evaluation outcomes in AI accountability and cybersecurity."
         keywords={['GlyphLock case studies', 'Master Covenant litigation', 'AI accountability research', 'legal tech victories', 'cybersecurity validation']}
+        url="/case-studies"
       />
 
       <div className="container mx-auto px-4">

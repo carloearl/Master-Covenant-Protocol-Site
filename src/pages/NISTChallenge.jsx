@@ -32,6 +32,7 @@ export default function NISTChallengePage() {
           'GlyphLock'
         ]}
         image="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/d92107808_glyphlock-3d-logo.png"
+        url="/nist-challenge"
       />
 
       {/* Hero Section */}

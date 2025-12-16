@@ -27,15 +27,15 @@ export const NAV_SECTIONS = [
     ]
   },
   {
-    label: "Products",
+    label: "Modules",
     items: [
-      { label: "QR Studio", page: "Qr" },
-      { label: "Image Lab", page: "ImageLab" },
-      { label: "GlyphBot AI", page: "GlyphBot" },
+      { label: "QR Verification", page: "Qr" },
+      { label: "Image Processing", page: "ImageLab" },
+      { label: "GlyphBot Intelligence", page: "GlyphBot" },
       { label: "Site Builder", page: "SiteBuilder" },
-      { label: "NUPS POS", page: "NUPSLogin" },
-      { label: "Security Tools", page: "SecurityTools" },
-      { label: "Media Upload Hub", page: "VideoUpload" }
+      { label: "NUPS Transaction Verification", page: "NUPSLogin" },
+      { label: "Security Modules", page: "SecurityTools" },
+      { label: "Media Processing Hub", page: "VideoUpload" }
     ]
   },
   {
@@ -46,10 +46,9 @@ export const NAV_SECTIONS = [
       { label: "NIST Challenge", page: "NISTChallenge" },
       { label: "Case Studies", page: "CaseStudies" },
       { label: "Dream Team", page: "DreamTeam" },
-      { label: "Pricing", page: "Pricing" },
       { label: "FAQ", page: "FAQ" },
       { label: "Roadmap", page: "Roadmap" },
-      { label: "Consultation", page: "Consultation" }
+      { label: "Request Credentials", page: "Consultation" }
     ]
   },
   {
@@ -69,12 +68,12 @@ export const FOOTER_LINKS = {
     { label: "Contact", page: "Contact" },
     { label: "Accessibility", page: "Accessibility" }
   ],
-  products: [
-    { label: "QR Studio", page: "Qr" },
-    { label: "Image Lab", page: "ImageLab" },
-    { label: "GlyphBot AI", page: "GlyphBot" },
-    { label: "NUPS POS", page: "NUPSLogin" },
-    { label: "Security Tools", page: "SecurityTools" }
+  modules: [
+    { label: "QR Verification", page: "Qr" },
+    { label: "Image Processing", page: "ImageLab" },
+    { label: "GlyphBot Intelligence", page: "GlyphBot" },
+    { label: "NUPS Transaction Verification", page: "NUPSLogin" },
+    { label: "Security Modules", page: "SecurityTools" }
   ],
   resources: [
     { label: "Documentation", page: "SecurityDocs" },
@@ -82,10 +81,9 @@ export const FOOTER_LINKS = {
     { label: "NIST Challenge", page: "NISTChallenge" },
     { label: "Case Studies", page: "CaseStudies" },
     { label: "Dream Team", page: "DreamTeam" },
-    { label: "Pricing", page: "Pricing" },
     { label: "FAQ", page: "FAQ" },
     { label: "Roadmap", page: "Roadmap" },
-    { label: "Consultation", page: "Consultation" }
+    { label: "Request Credentials", page: "Consultation" }
   ],
   legal: [
     { label: "Privacy Policy", page: "Privacy" },

@@ -74,7 +74,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Company</h4>
             <div className="flex flex-col gap-4">
-              {FOOTER_LINKS.company.map((link) => (
+              {FOOTER_LINKS.company && FOOTER_LINKS.company.map((link) => (
                 <Link key={link.page} to={createPageUrl(link.page)} className="text-white font-medium hover:text-cyan-400 hover:drop-shadow-[0_0_8px_rgba(6,182,212,0.8)] transition-all duration-300">
                   {link.label}
                 </Link>
@@ -82,11 +82,11 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Products Column */}
+          {/* Modules Column */}
           <div className="lg:col-span-2">
-            <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Products</h4>
+            <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">System Modules</h4>
             <div className="flex flex-col gap-4">
-              {FOOTER_LINKS.products.map((link) => (
+              {FOOTER_LINKS.modules && FOOTER_LINKS.modules.map((link) => (
                 <Link key={link.page} to={createPageUrl(link.page)} className="text-white font-medium hover:text-blue-400 hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] transition-all duration-300">
                   {link.label}
                 </Link>
@@ -98,7 +98,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Resources</h4>
             <div className="flex flex-col gap-4">
-              {FOOTER_LINKS.resources.map((link) => (
+              {FOOTER_LINKS.resources && FOOTER_LINKS.resources.map((link) => (
                 <Link key={link.page} to={createPageUrl(link.page)} className="text-white font-medium hover:text-indigo-400 hover:drop-shadow-[0_0_8px_rgba(129,140,248,0.8)] transition-all duration-300">
                   {link.label}
                 </Link>
@@ -110,7 +110,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Account</h4>
             <div className="flex flex-col gap-4">
-              {FOOTER_LINKS.account.map((link) => (
+              {FOOTER_LINKS.account && FOOTER_LINKS.account.map((link) => (
                 <Link key={link.page} to={createPageUrl(link.page)} className="text-white font-medium hover:text-purple-400 hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] transition-all duration-300">
                   {link.label}
                 </Link>
@@ -155,7 +155,7 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
           <p className="text-white font-medium">© {new Date().getFullYear()} GlyphLock Security LLC. All rights reserved.</p>
           <div className="flex items-center gap-8">
-            {FOOTER_LINKS.legal.map((link) => (
+            {FOOTER_LINKS.legal && FOOTER_LINKS.legal.map((link) => (
             <Link key={link.page} to={createPageUrl(link.page)} className="text-white font-medium hover:text-cyan-400 hover:drop-shadow-[0_0_8px_rgba(6,182,212,0.8)] transition-all duration-300">
               {link.label}
             </Link>
