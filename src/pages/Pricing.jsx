@@ -141,8 +141,8 @@ export default function Pricing() {
   return (
     <>
       <SEOHead
-        title="GlyphLock Pricing | Quantum-Grade Security Plans"
-        description="Professional and Enterprise cybersecurity plans featuring visual cryptography, blockchain security, and advanced AI threat tools."
+        title="Access Provisioning - Credentialed Verification Tiers | GlyphLock"
+        description="GlyphLock credential provisioning tiers – protocol-governed access to system-enforced verification modules."
         url="/pricing"
       />
 
@@ -165,10 +165,10 @@ export default function Pricing() {
               </span>
             </h1>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-4">
-              Zero free tiers. Zero compromises. <span className="text-[#00E4FF] font-bold">Zero games.</span>
+              No freemium. No dilution. <span className="text-[#00E4FF] font-bold">Protocol-governed only.</span>
             </p>
             <p className="text-sm text-gray-500 max-w-xl mx-auto">
-              Enterprise-grade quantum security built for professionals who refuse to settle.
+              Credentialed integrity system with quantum-resistant cryptographic governance.
             </p>
           </div>
 
@@ -300,7 +300,7 @@ export default function Pricing() {
                         </span>
                       ) : (
                         <>
-                          <span className="relative z-10">Get Started</span>
+                          <span className="relative z-10">Request Credentials</span>
                           <div className="absolute inset-0 bg-gradient-to-r from-[#00E4FF]/0 via-[#00E4FF]/20 to-[#00E4FF]/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700"></div>
                         </>
                       )}
@@ -318,13 +318,13 @@ export default function Pricing() {
                 Need <span className="text-transparent bg-gradient-to-r from-[#00E4FF] to-[#8C4BFF] bg-clip-text">Guidance?</span>
               </h2>
               <p className="text-gray-300 mb-8 text-lg max-w-xl mx-auto">
-                Talk to a GlyphLock security specialist to architect your perfect defense.
+                Initiate protocol verification with GlyphLock specialists for credentialed access.
               </p>
               <Link to={createPageUrl("Consultation")}>
                 <Button className="group relative bg-transparent border-2 border-[#00E4FF] text-[#00E4FF] hover:text-black transition-all px-10 py-7 text-lg font-bold uppercase tracking-wide shadow-[0_0_20px_rgba(0,228,255,0.3)] hover:shadow-[0_0_40px_rgba(0,228,255,0.5)] overflow-hidden">
                   <span className="relative z-10 flex items-center gap-3">
                     <Shield className="w-5 h-5" />
-                    Schedule Consultation ($200)
+                    Request Credentials ($200)
                   </span>
                   <div className="absolute inset-0 bg-[#00E4FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                 </Button>
