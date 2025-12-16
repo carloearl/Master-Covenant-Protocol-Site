@@ -3,7 +3,6 @@ import MasterCovenant from './pages/MasterCovenant';
 import Consultation from './pages/Consultation';
 import Blockchain from './pages/Blockchain';
 import SecurityTools from './pages/SecurityTools';
-import Pricing from './pages/Pricing';
 import Contact from './pages/Contact';
 import NUPSLogin from './pages/NUPSLogin';
 import NUPSStaff from './pages/NUPSStaff';
@@ -74,7 +73,6 @@ export const PAGES = {
     "Consultation": Consultation,
     "Blockchain": Blockchain,
     "SecurityTools": SecurityTools,
-    "Pricing": Pricing,
     "Contact": Contact,
     "NUPSLogin": NUPSLogin,
     "NUPSStaff": NUPSStaff,

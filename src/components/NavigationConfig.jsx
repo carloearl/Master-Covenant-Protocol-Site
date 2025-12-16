@@ -11,8 +11,7 @@ export const NAV = [
   { label: "GlyphBot", href: "/GlyphBot" },
   { label: "Media Hub", href: "/VideoUpload" },
   { label: "Command Center", href: "/CommandCenter" },
-  { label: "Pricing", href: "/Pricing" },
-  { label: "Consultation", href: "/Consultation" }
+  { label: "Protocol Verification", href: "/Consultation" }
 ];
 
 export const NAV_SECTIONS = [
