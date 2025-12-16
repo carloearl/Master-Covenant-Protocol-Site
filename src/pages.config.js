@@ -63,6 +63,7 @@ import CaseStudyCovenantVictory from './pages/CaseStudyCovenantVictory';
 import SiteBuilder from './pages/SiteBuilder';
 import SiteBuilderTest from './pages/SiteBuilderTest';
 import SiteAudit from './pages/SiteAudit';
+import PartnerPortal from './pages/PartnerPortal';
 import __Layout from './Layout.jsx';
 
 
@@ -132,6 +133,7 @@ export const PAGES = {
     "SiteBuilder": SiteBuilder,
     "SiteBuilderTest": SiteBuilderTest,
     "SiteAudit": SiteAudit,
+    "PartnerPortal": PartnerPortal,
 }
 
 export const pagesConfig = {
