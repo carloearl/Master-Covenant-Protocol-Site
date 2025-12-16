@@ -136,44 +136,14 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Certifications */}
-        <div className="border-t border-white/10 pt-16 mb-12">
-          <p className="text-center text-sm font-bold uppercase tracking-[0.2em] text-white/90 mb-12">
-            Security & Compliance Standards
+        {/* Compliance Disclosure */}
+        <div className="border-t border-white/10 pt-8 mb-12">
+          <p className="text-center text-xs text-slate-500 tracking-wide mb-3">
+            Compliance & Standards Disclosure
           </p>
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-            {certifications.map((cert, idx) => {
-              const BadgeComponent = cert.BadgeComponent;
-              return (
-                <Link 
-                  key={idx} 
-                  to={createPageUrl("Compliance")} 
-                  className="group relative bg-gradient-to-br from-slate-900/40 to-slate-950/60 border border-slate-700/50 rounded-2xl px-6 py-5 flex flex-col items-center gap-3 hover:border-[#3B82F6]/60 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)] transition-all duration-500 cursor-pointer min-w-[140px] backdrop-blur-sm"
-                >
-                  <div className="opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500">
-                    <BadgeComponent className="w-20 h-20" />
-                  </div>
-                  <div className="text-center">
-                    <div className="text-white font-bold text-sm tracking-wide group-hover:text-[#3B82F6] transition-colors duration-300">
-                      {cert.name}
-                    </div>
-                    <div className="text-[10px] text-slate-500 tracking-[0.1em] mt-1 group-hover:text-slate-300 transition-colors duration-300">
-                      {cert.subtitle}
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-          <div className="text-center mt-8">
-            <Link 
-              to={createPageUrl("Compliance")} 
-              className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors group"
-            >
-              View Detailed Compliance Documentation
-              <span className="group-hover:translate-x-1 transition-transform">→</span>
-            </Link>
-          </div>
+          <p className="text-center text-xs text-slate-400 max-w-3xl mx-auto leading-relaxed">
+            GlyphLock aligns its internal security controls with widely recognized industry frameworks, including SOC 2, ISO 27001, PCI DSS, GDPR, and HIPAA, where applicable. Compliance status is subject to ongoing assessment and does not constitute certification unless explicitly stated in a written agreement.
+          </p>
         </div>
 
         {/* Bottom Bar - Legal Links */}
