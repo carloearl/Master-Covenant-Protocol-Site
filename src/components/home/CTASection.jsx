@@ -26,14 +26,14 @@ export default function CTASection() {
         <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-cyan-500 to-indigo-600 rounded-2xl blur-xl opacity-30 animate-pulse pointer-events-none"></div>
         
         <div className="relative z-10">
-          <h2 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight drop-shadow-[0_0_25px_rgba(255,255,255,0.4)]">
+          <h2 className="text-2xl md:text-3xl lg:text-5xl font-black text-white mb-4 tracking-tight drop-shadow-[0_0_25px_rgba(255,255,255,0.4)]">
             READY TO SECURE YOUR <span className="bg-gradient-to-r from-[#3B82F6] to-[#60A5FA] bg-clip-text text-transparent">DIGITAL ASSETS?</span>
           </h2>
-          <p className="text-xl text-white mb-8 max-w-2xl mx-auto font-medium">
+          <p className="text-base md:text-xl text-white mb-6 md:mb-8 max-w-2xl mx-auto font-medium">
             Protocol-governed verification for credentialed operators
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto mb-8">
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 max-w-md mx-auto mb-6 md:mb-8">
             <Input
               type="email"
               required

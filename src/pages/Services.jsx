@@ -153,13 +153,13 @@ export default function Services() {
       <div className="min-h-screen bg-black text-white py-20">
         <div className="container mx-auto px-4 max-w-7xl">
           {/* Header */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          <div className="text-center mb-12 md:mb-16 px-4">
+            <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6">
               <span className="bg-gradient-to-r from-blue-400 via-violet-500 to-emerald-400 bg-clip-text text-transparent">
                 GlyphLock System Modules
               </span>
             </h1>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto mb-8">
+            <p className="text-base md:text-xl text-white/70 max-w-3xl mx-auto mb-6 md:mb-8">
               Protocol-governed verification modules – credentialed integrity system operating under cryptographic governance.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
@@ -172,9 +172,9 @@ export default function Services() {
           </div>
 
           {/* Services Grid */}
-          <div className="space-y-12 mb-16">
+          <div className="space-y-8 md:space-y-12 mb-12 md:mb-16">
             {services.map((service, idx) => (
-              <div key={service.id} className="glass-card-dark border border-blue-500/30 rounded-xl p-8" style={{ background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)' }}>
+              <div key={service.id} className="glass-card-dark border border-blue-500/30 rounded-xl p-6 md:p-8" style={{ background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)' }}>
                 <div className="flex items-start gap-4 mb-6">
                   <div className="p-3 rounded-xl bg-blue-500/20 border border-blue-500/50">
                     <service.icon className="w-8 h-8 text-blue-400" />

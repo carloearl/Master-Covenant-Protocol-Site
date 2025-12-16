@@ -129,21 +129,21 @@ export default function Solutions() {
       
       <div className="min-h-screen bg-black text-white py-20">
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          <div className="text-center mb-12 md:mb-16 px-4">
+            <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6">
               <span className="text-white">Verification Modules for </span>
               <span className="bg-gradient-to-r from-blue-400 to-violet-600 bg-clip-text text-transparent">
                 Credentialed Industries
               </span>
             </h1>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto mb-8">
+            <p className="text-base md:text-xl text-white/70 max-w-3xl mx-auto mb-6 md:mb-8">
               Protocol-governed verification modules restricted to provisioned operators with industry-specific credential frameworks.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 mb-16">
+          <div className="grid lg:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-16">
             {solutions.map((solution, idx) => (
-              <div key={idx} className="glass-card-dark border border-blue-500/30 hover:border-blue-500/50 transition-all rounded-xl p-8" style={{ background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)' }}>
+              <div key={idx} className="glass-card-dark border border-blue-500/30 hover:border-blue-500/50 transition-all rounded-xl p-6 md:p-8" style={{ background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)' }}>
                 <div className="flex items-start gap-4 mb-6">
                   <div className="p-3 rounded-xl bg-blue-500/20 border border-blue-500/50">
                     <solution.icon className="w-8 h-8 text-blue-400" />
