@@ -88,7 +88,7 @@ export const FOOTER_LINKS = {
     { label: "Privacy Policy", page: "Privacy" },
     { label: "Terms of Service", page: "Terms" },
     { label: "Cookie Policy", page: "Cookies" },
-    { label: "Compliance", page: "Compliance" },
+    { label: "Trust & Security", page: "TrustSecurity" },
     { label: "Master Covenant", page: "GovernanceHub" }
   ],
   account: [

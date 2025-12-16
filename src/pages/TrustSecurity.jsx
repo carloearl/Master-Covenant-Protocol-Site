@@ -1,0 +1,277 @@
+import React from "react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { Button } from "@/components/ui/button";
+import { Shield, Lock, FileText, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import SEOHead from "@/components/SEOHead";
+
+export default function TrustSecurity() {
+  const currentMeasures = [
+    {
+      title: "Secure Infrastructure",
+      status: "Active",
+      description: "Enterprise cloud infrastructure with leading providers. Encrypted communications using TLS 1.3. Secure session management. DDoS protection. Regular security updates."
+    },
+    {
+      title: "Intellectual Property Protection",
+      status: "Active",
+      description: "Patent pending (USPTO App. No. 18/584,961). Legal frameworks protecting cryptographic protocols, steganographic encryption methods, proprietary interfaces, and trade secrets."
+    },
+    {
+      title: "Privacy First Design",
+      status: "Active",
+      description: "Privacy by design principles. Minimal data collection. User consent management. Defined data retention policies. Transparent data handling practices."
+    },
+    {
+      title: "Development Security",
+      status: "Active",
+      description: "Secure development lifecycle. Mandatory code reviews. Dependency scanning. Version control protections. Role based access control."
+    }
+  ];
+
+  const roadmap = [
+    {
+      phase: "Completed — Security Foundation",
+      period: "Q1–Q2 2025",
+      items: [
+        "Firebase authentication",
+        "Encryption for sensitive data at rest",
+        "Logging and monitoring",
+        "Security policy documentation",
+        "Incident response procedures"
+      ]
+    },
+    {
+      phase: "Completed — SOC 2 Type II Preparation",
+      period: "Q3–Q4 2025",
+      items: [
+        "Control framework implementation",
+        "Risk assessment",
+        "Internal audits",
+        "Staff security training"
+      ]
+    },
+    {
+      phase: "Current Phase — SOC 2 Type II Audit Period",
+      period: "Q1 2026",
+      items: [
+        "Six month observation period",
+        "CPA firm audit engagement",
+        "Continuous monitoring",
+        "Control effectiveness validation",
+        "ISO 27001 framework alignment"
+      ]
+    },
+    {
+      phase: "Planned — Formal Certifications",
+      period: "Q2–Q3 2026",
+      items: [
+        "SOC 2 Type II audit completion",
+        "ISO 27001 certification audit",
+        "GDPR validation",
+        "Industry specific compliance as applicable"
+      ]
+    },
+    {
+      phase: "Planned — Advanced Security Posture",
+      period: "Q4 2026",
+      items: [
+        "Post quantum cryptography roadmap",
+        "24/7 security operations",
+        "Advanced threat detection",
+        "Continuous compliance monitoring",
+        "Annual penetration testing"
+      ]
+    }
+  ];
+
+  const controls = [
+    {
+      category: "Encryption",
+      items: [
+        "In transit: TLS 1.3",
+        "At rest: AES 256 roadmap",
+        "Key management and HSM integration planned"
+      ]
+    },
+    {
+      category: "Access Control",
+      items: [
+        "Firebase Authentication",
+        "Multi factor authentication",
+        "Role based access control",
+        "Session management"
+      ]
+    },
+    {
+      category: "Monitoring & Testing",
+      items: [
+        "Security event logging",
+        "Dependency vulnerability scanning",
+        "Scheduled penetration testing",
+        "Third party audits as applicable"
+      ]
+    },
+    {
+      category: "Infrastructure",
+      items: [
+        "Cloud native architecture",
+        "CDN and DDoS protection",
+        "Backup and disaster recovery planning"
+      ]
+    },
+    {
+      category: "Compliance Programs",
+      items: [
+        "Privacy policy and terms",
+        "Data processing agreements",
+        "User rights management",
+        "GDPR and CCPA programs active",
+        "PCI DSS and HIPAA applied only when feature scope requires"
+      ]
+    }
+  ];
+
+  return (
+    <>
+      <SEOHead 
+        title="Trust & Security Center - GlyphLock Security Controls & Compliance"
+        description="GlyphLock's security architecture, operational controls, and compliance roadmap. Transparent documentation of current security measures and certification progress."
+        keywords="security controls, compliance roadmap, data protection, encryption, SOC 2, ISO 27001, GDPR, security framework"
+        url="/trust-security"
+      />
+      
+      <div className="min-h-screen bg-black text-white py-32 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00E4FF]/5 rounded-full blur-[100px] pointer-events-none"></div>
+        
+        <div className="container mx-auto px-6 max-w-6xl relative z-10">
+          {/* Header */}
+          <div className="mb-16 text-center">
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <Shield className="w-8 h-8 text-[#00E4FF]" />
+              <h1 className="text-5xl md:text-6xl font-black tracking-tight">
+                Trust & Security Center
+              </h1>
+            </div>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              GlyphLock's commitment to security, privacy, and compliance
+            </p>
+          </div>
+
+          {/* Foundation Statement */}
+          <div className="glass-card rounded-2xl border border-white/10 p-8 md:p-12 mb-12">
+            <h2 className="text-2xl font-bold text-white mb-6">Security Built Into Our Foundation</h2>
+            <p className="text-gray-300 leading-relaxed text-lg">
+              Security is engineered into every layer of the GlyphLock credentialed integrity system. Our architecture and operational controls are designed for evaluation by enterprise customers and standards bodies, with a clear roadmap toward formal certification.
+            </p>
+          </div>
+
+          {/* Current Security Measures */}
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold text-white mb-8">Current Security Measures</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {currentMeasures.map((measure, idx) => (
+                <div key={idx} className="glass-card rounded-xl border border-[#00E4FF]/20 p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <h3 className="text-lg font-bold text-white">{measure.title}</h3>
+                    <span className="ml-auto text-xs text-green-400 font-semibold">{measure.status}</span>
+                  </div>
+                  <p className="text-sm text-gray-400 leading-relaxed">{measure.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Path to Enterprise Certification */}
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold text-white mb-4">Path to Enterprise Certification</h2>
+            
+            <div className="glass-card rounded-xl border border-orange-500/30 bg-orange-500/5 p-6 mb-8">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-bold text-orange-400 mb-2 text-sm uppercase tracking-wide">Transparency Notice</h3>
+                  <p className="text-sm text-gray-300 leading-relaxed">
+                    The milestones below reflect our compliance roadmap and ongoing audit activities. Official certification documentation is provided only under NDA once audits are formally completed.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {roadmap.map((phase, idx) => (
+                <div key={idx} className="glass-card rounded-xl border border-white/10 p-6">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="flex-shrink-0 mt-1">
+                      {phase.phase.startsWith("Completed") ? (
+                        <CheckCircle className="w-5 h-5 text-green-400" />
+                      ) : phase.phase.startsWith("Current") ? (
+                        <Clock className="w-5 h-5 text-[#00E4FF]" />
+                      ) : (
+                        <Clock className="w-5 h-5 text-gray-500" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-white mb-1">{phase.phase}</h3>
+                      <p className="text-sm text-gray-500 mb-4">{phase.period}</p>
+                      <ul className="space-y-2">
+                        {phase.items.map((item, i) => (
+                          <li key={i} className="flex items-start gap-2 text-sm text-gray-400">
+                            <span className="text-gray-600 mt-1">•</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Security Controls Summary */}
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold text-white mb-8">Security Controls Summary</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {controls.map((control, idx) => (
+                <div key={idx} className="glass-card rounded-xl border border-white/10 p-6">
+                  <h3 className="text-lg font-bold text-white mb-4">{control.category}</h3>
+                  <ul className="space-y-2">
+                    {control.items.map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-gray-400">
+                        <span className="text-gray-600 mt-1">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Security Inquiries */}
+          <div className="glass-card rounded-2xl border border-[#00E4FF]/30 p-8 md:p-12 text-center">
+            <Lock className="w-12 h-12 text-[#00E4FF] mx-auto mb-6" />
+            <h2 className="text-2xl font-bold text-white mb-4">Security Inquiries</h2>
+            <p className="text-gray-300 leading-relaxed mb-6 max-w-2xl mx-auto">
+              For security concerns, audit requests, or compliance documentation inquiries, contact the GlyphLock security team. Official certification documentation is provided under NDA once formal audits are complete.
+            </p>
+            
+            <div className="space-y-2 text-sm text-gray-400 mb-8">
+              <p><strong className="text-white">Contact:</strong> glyphlock@gmail.com</p>
+              <p><strong className="text-white">Entity:</strong> GlyphLock LLC</p>
+              <p><strong className="text-white">Status:</strong> Patent Pending (USPTO App. No. 18/584,961)</p>
+            </div>
+
+            <Link to={createPageUrl("Contact")}>
+              <Button className="bg-[#00E4FF] hover:bg-[#0099FF] text-black font-bold px-8 py-6 text-lg rounded-xl">
+                Contact Security Team
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

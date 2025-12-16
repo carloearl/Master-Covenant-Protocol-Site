@@ -63,7 +63,7 @@ import SiteBuilder from './pages/SiteBuilder';
 import SiteBuilderTest from './pages/SiteBuilderTest';
 import SiteAudit from './pages/SiteAudit';
 import PartnerPortal from './pages/PartnerPortal';
-import Compliance from './pages/Compliance';
+import TrustSecurity from './pages/TrustSecurity';
 import __Layout from './Layout.jsx';
 
 
@@ -133,7 +133,7 @@ export const PAGES = {
     "SiteBuilderTest": SiteBuilderTest,
     "SiteAudit": SiteAudit,
     "PartnerPortal": PartnerPortal,
-    "Compliance": Compliance,
+    "TrustSecurity": TrustSecurity,
 }
 
 export const pagesConfig = {
