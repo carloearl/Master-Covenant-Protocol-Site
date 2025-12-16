@@ -14,8 +14,8 @@ export default function Services() {
     {
       id: "visual-cryptography",
       icon: Eye,
-      title: "Visual Cryptography Suite",
-      description: "Advanced visual security tools including QR code generation, steganography, and blockchain verification for protecting digital assets and preventing fraud.",
+      title: "Visual Cryptography Module",
+      description: "QR verification and steganographic encoding module – governed by protocol, accessible only with provisioned credentials.",
       features: [
         "Quantum-resistant QR code generation with embedded encryption",
         "Steganographic encoding - hide encrypted data within images",
@@ -30,8 +30,8 @@ export default function Services() {
     {
       id: "glyphbot-ai",
       icon: Brain,
-      title: "GlyphBot AI Assistant",
-      description: "AI-powered cybersecurity assistant providing real-time threat analysis, code execution, security scanning, and automated audit generation with conversational interface.",
+      title: "GlyphBot Intelligence Module",
+      description: "Autonomous threat suppression module – AI-driven security analysis restricted to credentialed operators.",
       features: [
         "Real-time threat analysis and detection",
         "Secure code execution in isolated environments",
@@ -47,8 +47,8 @@ export default function Services() {
     {
       id: "nups-pos",
       icon: ShoppingCart,
-      title: "NUPS POS System",
-      description: "Next-Gen Unified POS System designed for hospitality venues with inventory management, customer loyalty, VIP tracking, and advanced security features.",
+      title: "NUPS Transaction Verification",
+      description: "Protocol-governed transaction module – system-enforced verification restricted to authorized venues.",
       features: [
         "Real-time inventory tracking with low-stock alerts",
         "Customer loyalty programs and rewards",
@@ -65,8 +65,8 @@ export default function Services() {
     {
       id: "hotzone-mapper",
       icon: Map,
-      title: "Hotzone Security Mapper",
-      description: "Visual security mapping tool for facilities and infrastructure. Upload layouts and mark security threats with real-time monitoring and incident tracking.",
+      title: "Hotzone Verification Module",
+      description: "Facility verification module – operating under protocol-governed authorization with credentialed access.",
       features: [
         "Interactive security map creation",
         "Threat hotspot marking with severity levels",
@@ -82,8 +82,8 @@ export default function Services() {
     {
       id: "security-operations",
       icon: Shield,
-      title: "Security Operations Center",
-      description: "Comprehensive security monitoring and threat intelligence platform with real-time alerts, vulnerability scanning, and incident response management.",
+      title: "Security Operations Module",
+      description: "System-enforced monitoring module – credentialed threat intelligence restricted to provisioned operators.",
       features: [
         "24/7 real-time threat monitoring",
         "Automated vulnerability scanning",
@@ -99,8 +99,8 @@ export default function Services() {
     {
       id: "blockchain-security",
       icon: Database,
-      title: "Blockchain Security Integration",
-      description: "Immutable transaction tracking and verification using blockchain technology to ensure data integrity and prevent tampering.",
+      title: "Blockchain Verification Module",
+      description: "Immutable ledger module – protocol-enforced integrity verification with cryptographic governance.",
       features: [
         "Immutable transaction records",
         "Smart contract integration",
@@ -156,22 +156,16 @@ export default function Services() {
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               <span className="bg-gradient-to-r from-blue-400 via-violet-500 to-emerald-400 bg-clip-text text-transparent">
-                GlyphLock Services
+                GlyphLock System Modules
               </span>
             </h1>
             <p className="text-xl text-white/70 max-w-3xl mx-auto mb-8">
-              Comprehensive cybersecurity solutions powered by quantum-resistant encryption, 
-              AI-driven threat detection, and blockchain verification technology.
+              Protocol-governed verification modules – credentialed integrity system operating under cryptographic governance.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to={createPageUrl("Consultation")}>
                 <Button className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white">
-                  Schedule Consultation
-                </Button>
-              </Link>
-              <Link to={createPageUrl("Pricing")}>
-                <Button variant="outline" className="glass-card-dark border-blue-500/50 text-white hover:bg-blue-500/20">
-                  View Pricing
+                  Request Credentials
                 </Button>
               </Link>
             </div>
@@ -226,12 +220,11 @@ export default function Services() {
           {/* Technology Stack */}
           <div className="glass-card-dark border border-blue-500/30 rounded-xl p-8 text-center" style={{ background: 'rgba(30, 58, 138, 0.2)', backdropFilter: 'blur(16px)' }}>
             <h2 className="text-3xl font-bold text-white mb-4">
-              Enterprise-Grade Technology
+              System-Enforced Verification Architecture
             </h2>
             <p className="text-white/70 mb-6 max-w-3xl mx-auto">
-              Our platform is built on quantum-resistant encryption standards, AI-powered threat detection, 
-              and blockchain verification technology. We maintain SOC 2, GDPR, ISO 27001, PCI DSS, 
-              and HIPAA compliance.
+              Quantum-resistant cryptographic governance with autonomous threat suppression. 
+              Protocol-enforced compliance with SOC 2, GDPR, ISO 27001, PCI DSS, and HIPAA.
             </p>
             <div className="flex flex-wrap justify-center gap-6 text-sm text-white/60">
               <div className="flex items-center gap-2">
@@ -260,15 +253,14 @@ export default function Services() {
           {/* CTA */}
           <div className="mt-16 text-center">
             <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to Secure Your Organization?
+              Ready to Deploy Protocol-Governed Verification?
             </h2>
             <p className="text-white/70 mb-8 max-w-2xl mx-auto">
-              Schedule a consultation with our cybersecurity experts to discuss your specific needs 
-              and receive a customized security solution proposal.
+              Initiate credentialed access verification with GlyphLock specialists to provision system-enforced capabilities.
             </p>
             <Link to={createPageUrl("Consultation")}>
               <Button size="lg" className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white">
-                Book Your Consultation
+                Request Credentials
               </Button>
             </Link>
           </div>

@@ -14,7 +14,7 @@ export default function Solutions() {
     {
       industry: "Hospitality & Entertainment",
       icon: Building2,
-      description: "Secure payment processing, customer tracking, VIP management, and fraud prevention for clubs, bars, restaurants, and hotels.",
+      description: "Transaction verification module – protocol-governed payment processing restricted to credentialed venues.",
       features: [
         "NUPS POS System with VIP room tracking",
         "Entertainer management and contracts",
@@ -30,7 +30,7 @@ export default function Solutions() {
     {
       industry: "Healthcare",
       icon: Heart,
-      description: "HIPAA-compliant security solutions protecting patient data with quantum-resistant encryption and audit trails.",
+      description: "HIPAA verification module – system-enforced data protection with cryptographic audit governance.",
       features: [
         "HIPAA-compliant data encryption",
         "Patient data protection with steganography",
@@ -46,7 +46,7 @@ export default function Solutions() {
     {
       industry: "Financial Services",
       icon: Lock,
-      description: "PCI DSS compliant payment security, fraud detection, and transaction verification for banks and fintech.",
+      description: "PCI DSS verification module – protocol-enforced transaction integrity with credentialed access control.",
       features: [
         "PCI DSS Level 1 compliance",
         "Real-time fraud detection",
@@ -62,7 +62,7 @@ export default function Solutions() {
     {
       industry: "Retail & E-commerce",
       icon: ShoppingBag,
-      description: "Secure checkout, inventory management, customer data protection, and fraud prevention for online and physical stores.",
+      description: "Transaction verification module – system-enforced checkout integrity restricted to provisioned merchants.",
       features: [
         "Secure payment gateway integration",
         "Customer data encryption",
@@ -78,7 +78,7 @@ export default function Solutions() {
     {
       industry: "Technology & Software",
       icon: Code,
-      description: "Intellectual property protection, secure development workflows, and AI security for tech companies and startups.",
+      description: "IP verification module – protocol-governed asset protection with cryptographic provenance enforcement.",
       features: [
         "IP protection with Master Covenant",
         "Secure code repository integration",
@@ -94,7 +94,7 @@ export default function Solutions() {
     {
       industry: "Enterprise & Government",
       icon: Globe,
-      description: "Comprehensive security operations centers, compliance management, and classified data protection.",
+      description: "Security operations module – system-enforced threat monitoring with credentialed command authority.",
       features: [
         "24/7 security operations center",
         "Threat intelligence monitoring",
@@ -131,14 +131,13 @@ export default function Solutions() {
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              <span className="text-white">Solutions for </span>
+              <span className="text-white">Verification Modules for </span>
               <span className="bg-gradient-to-r from-blue-400 to-violet-600 bg-clip-text text-transparent">
-                Every Industry
+                Credentialed Industries
               </span>
             </h1>
             <p className="text-xl text-white/70 max-w-3xl mx-auto mb-8">
-              Tailored cybersecurity solutions designed for your industry's specific needs, 
-              compliance requirements, and security challenges.
+              Protocol-governed verification modules restricted to provisioned operators with industry-specific credential frameworks.
             </p>
           </div>
 
@@ -190,15 +189,14 @@ export default function Solutions() {
 
           <div className="text-center">
             <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to Secure Your Industry?
+              Ready to Deploy Industry-Specific Verification?
             </h2>
             <p className="text-white/70 mb-8 max-w-2xl mx-auto">
-              Schedule a consultation to discuss your industry-specific security needs and 
-              receive a customized protection plan.
+              Initiate credential provisioning for protocol-governed access to industry-specific verification modules.
             </p>
             <Link to={createPageUrl("Consultation")}>
               <Button size="lg" className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white">
-                Schedule Your Consultation
+                Request Credentials
               </Button>
             </Link>
           </div>

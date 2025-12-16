@@ -246,14 +246,14 @@ export default function About() {
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
             <div className="relative z-10">
               <h2 className="text-4xl md:text-5xl font-black text-white mb-6 font-space">
-                READY TO PROTECT YOUR ORGANIZATION?
+                READY TO DEPLOY CREDENTIALED VERIFICATION?
               </h2>
               <p className="text-gray-400 mb-10 text-xl max-w-2xl mx-auto">
-                Schedule a consultation with our security specialists and deploy survival-grade protection.
+                Initiate protocol-governed access with GlyphLock security specialists.
               </p>
               <Link to={createPageUrl("Consultation")}>
                 <Button className="bg-gradient-to-r from-[#00E4FF] to-[#8C4BFF] hover:scale-105 transition-transform text-white text-lg font-bold uppercase tracking-wide px-10 py-6 shadow-[0_0_30px_rgba(0,228,255,0.3)] border-none">
-                  Schedule Consultation
+                  Request Credentials
                 </Button>
               </Link>
             </div>

@@ -9,41 +9,41 @@ import SEOHead from "@/components/SEOHead";
 export default function SecurityTools() {
   const tools = [
     {
-      title: "QR Studio & Visual Cryptography",
-      description: "Generate secure, threat-aware QR codes and hide encrypted data within images using LSB encoding.",
-      price: "$179.99",
+      title: "QR Verification Module",
+      description: "Cryptographic QR generation with steganographic encoding – governed by protocol, accessible only with provisioned credentials.",
+      price: "Credentialed",
       link: "Qr",
       icon: Eye,
       image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/584a72f27_quantum-encryption-visualization-with-glowing-part.jpg"
     },
     {
-      title: "Blockchain Security",
-      description: "SHA-256/512 hashing, Merkle trees, block mining simulation, and cryptographic verification tools.",
-      price: "$99.99",
+      title: "Blockchain Verification Module",
+      description: "Immutable ledger integrity – protocol-enforced verification with cryptographic governance.",
+      price: "Credentialed",
       link: "Blockchain",
       icon: Lock,
       image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9be80d6ca_Whisk_43831818b9d5e77953345c3626f3d976eg.jpg"
     },
     {
-      title: "Security Operations Center",
-      description: "Real-time threat monitoring, interactive mapping, and comprehensive security analytics.",
-      price: "Enterprise",
+      title: "Security Operations Module",
+      description: "System-enforced threat monitoring – credentialed access to real-time intelligence.",
+      price: "Credentialed",
       link: "SecurityOperationsCenter",
       icon: Activity,
       image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/7e319a981_Whisk_429a6543b81e30d9bab4065457f3b62ddr.jpg"
     },
     {
-      title: "GlyphBot AI",
-      description: "AI assistant with code execution, security scanning, and automated auditing capabilities.",
-      price: "$50/mo",
+      title: "GlyphBot Intelligence Module",
+      description: "Autonomous security analysis – AI-driven threat suppression restricted to credentialed operators.",
+      price: "Credentialed",
       link: "GlyphBot",
       icon: Zap,
       image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9774d266e_openai-logo-inspired-abstract.png"
     },
     {
-      title: "N.U.P.S. POS",
-      description: "Enterprise point-of-sale with three-tier access control and real-time analytics.",
-      price: "Enterprise",
+      title: "NUPS Transaction Verification",
+      description: "Protocol-governed transaction module – system-enforced verification restricted to authorized venues.",
+      price: "Credentialed",
       link: "NUPSLogin",
       icon: Server,
       image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/b6f63d51b_Whisk_b9fd7532ee1e87a9152439bac427f256dr.jpg"
@@ -70,10 +70,10 @@ export default function SecurityTools() {
               <Shield className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Complete Security <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Ecosystem</span>
+              Credentialed Verification <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">System</span>
             </h1>
             <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-              Professional-grade cybersecurity suites for visual cryptography, blockchain security, and real-time surveillance.
+              Protocol-governed modules for cryptographic verification, blockchain integrity, and system-enforced monitoring.
             </p>
           </div>
         </div>
@@ -125,10 +125,10 @@ export default function SecurityTools() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl font-bold mb-4 text-white">
-              Why Choose Our <span className="text-blue-400">Complete Security Ecosystem?</span>
+              Why Deploy <span className="text-blue-400">Protocol-Governed Verification?</span>
             </h2>
             <p className="text-gray-400 mb-12">
-              Enterprise-grade security features for modern threats
+              System-enforced capabilities restricted to credentialed operators
             </p>
 
             <div className="grid md:grid-cols-3 gap-8">
@@ -136,22 +136,22 @@ export default function SecurityTools() {
                 <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-emerald-700 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <Shield className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-white">Enterprise Security</h3>
-                <p className="text-gray-400">Military-grade encryption and security standards</p>
+                <h3 className="text-xl font-bold mb-2 text-white">System-Enforced Verification</h3>
+                <p className="text-gray-400">Quantum-resistant cryptographic governance</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <Eye className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-white">AI-Powered</h3>
-                <p className="text-gray-400">Real-time threat detection with machine learning</p>
+                <h3 className="text-xl font-bold mb-2 text-white">Autonomous Intelligence</h3>
+                <p className="text-gray-400">AI-driven threat suppression with protocol enforcement</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <Lock className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-white">Comprehensive Suites</h3>
-                <p className="text-gray-400">Integrated tools for complete protection</p>
+                <h3 className="text-xl font-bold mb-2 text-white">Credentialed Integrity</h3>
+                <p className="text-gray-400">Protocol-governed modules with provisioned access</p>
               </div>
             </div>
           </div>
@@ -162,20 +162,20 @@ export default function SecurityTools() {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-4xl font-bold mb-6 text-white">
-              Ready to Enhance Your Security?
+              Ready to Deploy Credentialed Verification?
             </h2>
             <p className="text-xl text-gray-400 mb-8">
-              Start using our professional security suites today
+              Initiate protocol-governed access to system-enforced modules
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to={createPageUrl("Qr")}>
                 <Button size="lg" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white">
-                  Try QR Studio
+                  Access QR Module
                 </Button>
               </Link>
               <Link to={createPageUrl("Consultation")}>
                 <Button size="lg" variant="outline" className="border-blue-500/50 hover:bg-blue-500/10 text-white">
-                  Get Expert Help
+                  Request Credentials
                 </Button>
               </Link>
             </div>
