@@ -98,10 +98,10 @@ export default function FaqSectionGlyphPanel() {
         <div className="mb-6 md:mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="space-y-2">
             <h2 className="text-2xl md:text-3xl font-semibold text-[#c7a7ff] tracking-tight">
-              GlyphLock Knowledge Base
+              Protocol Authority Documentation
             </h2>
             <p className="text-gray-400 text-sm md:text-base">
-              Straight answers. No fluff. Built for real security and real users.
+              Precise answers. No marketing. Protocol-governed verification only.
             </p>
           </div>
 

@@ -46,11 +46,11 @@ export default function FAQ() {
             <div className="inline-flex items-center justify-center w-16 h-16 glyph-glass border-2 border-cyan-500/40 rounded-2xl mb-6 glyph-glow">
               <HelpCircle className="w-8 h-8 text-cyan-400" />
             </div>
-            <h1 className="text-5xl md:text-6xl font-black mb-6 font-space tracking-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 md:mb-6 font-space tracking-tight">
               FREQUENTLY ASKED <span className="text-transparent bg-gradient-to-r from-[#00E4FF] to-[#8C4BFF] bg-clip-text">QUESTIONS</span>
             </h1>
-            <p className="text-xl text-gray-400">
-              Everything you need to know about the GlyphLock ecosystem.
+            <p className="text-base md:text-xl text-gray-400 px-4">
+              Protocol authority governance, credentialed access, and verification modules.
             </p>
           </div>
 
