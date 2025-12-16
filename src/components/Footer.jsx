@@ -137,27 +137,41 @@ export default function Footer() {
         </div>
 
         {/* Certifications */}
-        <div className="border-t border-white/10 pt-12 mb-12">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-violet-300 mb-8">Security & Compliance Standards</p>
-          <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+        <div className="border-t border-white/10 pt-16 mb-12">
+          <p className="text-center text-sm font-bold uppercase tracking-[0.2em] text-white/90 mb-12">
+            Security & Compliance Standards
+          </p>
+          <div className="flex flex-wrap justify-center gap-6 md:gap-10">
             {certifications.map((cert, idx) => {
               const BadgeComponent = cert.BadgeComponent;
               return (
-                <Link key={idx} to={createPageUrl("Compliance")} className="group relative bg-white/5 border border-white/10 rounded-lg px-4 py-4 flex flex-col items-center gap-2 hover:border-[#00E4FF]/50 hover:bg-[#00E4FF]/5 transition-all duration-300 cursor-pointer min-w-[120px]">
-                  <div className="grayscale group-hover:grayscale-0 transition-all duration-500">
-                    <BadgeComponent className="w-16 h-16" />
+                <Link 
+                  key={idx} 
+                  to={createPageUrl("Compliance")} 
+                  className="group relative bg-gradient-to-br from-slate-900/40 to-slate-950/60 border border-slate-700/50 rounded-2xl px-6 py-5 flex flex-col items-center gap-3 hover:border-[#3B82F6]/60 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)] transition-all duration-500 cursor-pointer min-w-[140px] backdrop-blur-sm"
+                >
+                  <div className="opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500">
+                    <BadgeComponent className="w-20 h-20" />
                   </div>
                   <div className="text-center">
-                    <div className="text-white font-bold text-xs group-hover:text-[#00E4FF] transition-colors">{cert.name}</div>
-                    <div className="text-[9px] text-gray-500 tracking-wider group-hover:text-white/70">{cert.subtitle}</div>
+                    <div className="text-white font-bold text-sm tracking-wide group-hover:text-[#3B82F6] transition-colors duration-300">
+                      {cert.name}
+                    </div>
+                    <div className="text-[10px] text-slate-500 tracking-[0.1em] mt-1 group-hover:text-slate-300 transition-colors duration-300">
+                      {cert.subtitle}
+                    </div>
                   </div>
                 </Link>
               );
             })}
           </div>
-          <div className="text-center mt-6">
-            <Link to={createPageUrl("Compliance")} className="text-xs text-cyan-400 hover:text-cyan-300 font-semibold transition-colors">
-              View Detailed Compliance Documentation →
+          <div className="text-center mt-8">
+            <Link 
+              to={createPageUrl("Compliance")} 
+              className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors group"
+            >
+              View Detailed Compliance Documentation
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
           </div>
         </div>
