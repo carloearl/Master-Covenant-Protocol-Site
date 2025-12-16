@@ -11,10 +11,10 @@ import { FOOTER_LINKS } from "@/components/NavigationConfig";
  */
 
 const certifications = [
-  { name: "SOC 2", subtitle: "TYPE II" },
+  { name: "SOC 2", subtitle: "PROGRAM IN PLACE" },
   { name: "GDPR", subtitle: "COMPLIANT" },
-  { name: "ISO 27001", subtitle: "CERTIFIED" },
-  { name: "PCI DSS", subtitle: "COMPLIANT" },
+  { name: "ISO 27001", subtitle: "STANDARDS MET" },
+  { name: "PCI DSS", subtitle: "STANDARDS MET" },
   { name: "HIPAA", subtitle: "COMPLIANT" }
 ];
 
@@ -140,14 +140,19 @@ export default function Footer() {
           <p className="text-center text-xs font-bold uppercase tracking-widest text-violet-300 mb-8">Security & Compliance Standards</p>
           <div className="flex flex-wrap justify-center gap-4 md:gap-8">
             {certifications.map((cert, idx) => (
-              <div key={idx} className="group relative bg-white/5 border border-white/10 rounded-lg px-6 py-4 flex items-center gap-3 hover:border-[#00E4FF]/50 hover:bg-[#00E4FF]/5 transition-all duration-300">
+              <Link key={idx} to={createPageUrl("Compliance")} className="group relative bg-white/5 border border-white/10 rounded-lg px-6 py-4 flex items-center gap-3 hover:border-[#00E4FF]/50 hover:bg-[#00E4FF]/5 transition-all duration-300 cursor-pointer">
                 <Shield className="w-6 h-6 text-gray-500 group-hover:text-[#00E4FF] transition-colors" />
                 <div className="text-left">
                   <div className="text-white font-bold text-sm group-hover:text-[#00E4FF] transition-colors">{cert.name}</div>
                   <div className="text-[10px] text-gray-500 tracking-wider group-hover:text-white/70">{cert.subtitle}</div>
                 </div>
-              </div>
+              </Link>
             ))}
+          </div>
+          <div className="text-center mt-6">
+            <Link to={createPageUrl("Compliance")} className="text-xs text-cyan-400 hover:text-cyan-300 font-semibold transition-colors">
+              View Detailed Compliance Documentation →
+            </Link>
           </div>
         </div>
 
