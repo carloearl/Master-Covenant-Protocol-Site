@@ -194,7 +194,7 @@ export default function Services() {
                 </div>
                 <Link to={createPageUrl(service.page)}>
                   <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                    Learn More & Try Demo
+                    Access Module
                   </Button>
                 </Link>
               </div>

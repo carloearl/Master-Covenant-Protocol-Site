@@ -39,7 +39,7 @@ export default function HeroContent() {
           </Link>
           <Link to={createPageUrl("SecurityTools")}>
             <Button size="lg" variant="outline" className="border-2 border-cyan-400/60 text-white hover:bg-cyan-500/20 text-lg px-8 font-bold tracking-wide shadow-[0_0_25px_rgba(6,182,212,0.3)] hover:shadow-[0_0_40px_rgba(6,182,212,0.5)] transition-all duration-300">
-              ACCESS VERIFICATION MODULES
+              REQUEST MODULE ACCESS
             </Button>
           </Link>
         </div>

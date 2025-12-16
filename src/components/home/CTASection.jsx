@@ -30,7 +30,7 @@ export default function CTASection() {
             READY TO SECURE YOUR <span className="bg-gradient-to-r from-[#3B82F6] to-[#60A5FA] bg-clip-text text-transparent">DIGITAL ASSETS?</span>
           </h2>
           <p className="text-xl text-white mb-8 max-w-2xl mx-auto font-medium">
-            Join hundreds of enterprises protecting their infrastructure with GlyphLock
+            Protocol-governed verification for credentialed operators
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto mb-8">

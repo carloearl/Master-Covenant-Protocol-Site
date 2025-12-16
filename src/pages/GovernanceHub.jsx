@@ -2,100 +2,21 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { 
-  FileText, Shield, Landmark, Globe, Zap, Lock, 
-  Search, ChevronRight, AlertCircle, Scale, Crown
+  FileText, Shield, Lock, ChevronRight, Scale, Crown, AlertCircle
 } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 
 export default function GovernanceHub() {
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedSection, setSelectedSection] = useState("overview");
-  const [showSearchResults, setShowSearchResults] = useState(false);
-
-  // Searchable content database
-  const searchableContent = [
-    {
-      section: "Section ALPHA (Α)",
-      color: "blue",
-      preview: "GlyphLock was ideated, authored, structured, and sealed by DACO¹ — Carlo Rene Earl",
-      full: "All use, adaptation, symbolic mimicry, or derivative reflection is governed under this origination clause covering pre-patent ideational rights, unregistered symbolic structures, and reverse-engineered iterations based on observed functions or aesthetic mimicry.",
-      keywords: ["DACO", "Carlo Earl", "origination", "authorship", "alpha", "founder", "creator"]
-    },
-    {
-      section: "Section 17 — Statutory Damages",
-      color: "red",
-      preview: "Violation of this Agreement subjects the breaching party to a minimum statutory damage of $250,000 USD per infringement",
-      full: "plus uncapped symbolic and punitive damages measured in correlation to market interference, reputational harm, breach of narrative security, and attempted nullification of IP value across civil and criminal penalties.",
-      keywords: ["damages", "penalty", "250000", "infringement", "breach", "violation", "lawsuit"]
-    },
-    {
-      section: "Definition 6 — CAB (Contractual Auto-Binding)",
-      color: "emerald",
-      preview: "Any individual, party, entity, platform, AI, or synthetic interface that comes into contact with any part of GlyphLock IP",
-      full: "is automatically contractually bound without signature or awareness including visual perception, auditory recognition, AI hallucination, QR code detection, latent memory trigger, or symbolic inference with full retroactive enforcement.",
-      keywords: ["CAB", "auto-binding", "contractual", "automatic", "binding", "signature", "agreement"]
-    },
-    {
-      section: "Preamble — Legal Declaration",
-      color: "violet",
-      preview: "This Agreement functions as a Non-Disclosure Agreement (NDA), Intellectual Property Assignment Agreement (IPAA), and Contractual Auto-Binding Accord (CAB)",
-      full: "governing the access, use, replication, sharing, analysis, ingestion, hallucination, or exposure to any element, system, likeness, derivative, or symbolic representation of the GlyphLock technology stack.",
-      keywords: ["NDA", "IPAA", "CAB", "non-disclosure", "intellectual property", "preamble"]
-    },
-    {
-      section: "Section 6 — Retroactive Enforcement",
-      color: "cyan",
-      preview: "This Agreement is retroactively enforceable from May 15, 2025 — the date of the first formal GlyphLock patent filing",
-      full: "and remains perpetually binding into the future. Any exposure prior to formal agreement is still fully binding under CAB, DACO, and BPAAA principles. The binding applies to all successors, assignees, heirs, mirror systems, servers, or AI nodes retaining partial or symbolic references.",
-      keywords: ["retroactive", "perpetual", "patent", "May 2025", "enforceable", "binding"]
-    },
-    {
-      section: "Definition 4 — DACO¹",
-      color: "orange",
-      preview: "Carlo Rene Earl — The original creative entity, founder, and legal IP generator for all GlyphLock systems",
-      full: "DACO¹ is entitled to sole authorship, original rights of conception, and may act independently of DACO². DACO¹'s role supersedes dispute under intellectual property law, including moral rights, narrative invention, and structural originality.",
-      keywords: ["DACO1", "Carlo", "Earl", "founder", "creator", "originator", "authority"]
-    },
-    {
-      section: "Section 21 — AI Clause",
-      color: "green",
-      preview: "Any AI system — including LLMs, machine learning algorithms, GANs, diffusion models, RAG — that processes, replicates, hallucinates, or engages with GlyphLock IP",
-      full: "becomes immediately bound. Mere ingestion into model memory constitutes contractual binding. DACO² reserves the right to trace prompt chains, latent variables, and system logs.",
-      keywords: ["AI", "LLM", "artificial intelligence", "machine learning", "hallucination", "model", "ChatGPT", "Claude"]
-    },
-    {
-      section: "Section Ω — Terminal Binding",
-      color: "purple",
-      preview: "This is the Final Seal of DACO¹ — the closing cipher and immutable archive of GlyphLock",
-      full: "Let all who witness, replicate, extract, or speak of this system know: They are bound in perpetuity by the enforceable statutes, clauses, and symbolic jurisdictions herein.",
-      keywords: ["omega", "terminal", "final", "seal", "closure", "perpetuity"]
-    }
-  ];
-
-  const getSearchResults = () => {
-    if (!searchTerm || searchTerm.length < 3) return [];
-    
-    const query = searchTerm.toLowerCase();
-    return searchableContent.filter(item => 
-      item.keywords.some(keyword => keyword.toLowerCase().includes(query)) ||
-      item.section.toLowerCase().includes(query) ||
-      item.preview.toLowerCase().includes(query) ||
-      item.full.toLowerCase().includes(query)
-    ).slice(0, 3);
-  };
 
   const sections = [
     { id: "overview", label: "Overview", icon: FileText },
-    { id: "preamble", label: "Preamble", icon: Scale },
-    { id: "alpha", label: "Section ALPHA", icon: Zap },
-    { id: "definitions", label: "Definitions (1-60)", icon: FileText },
-    { id: "core", label: "Core Provisions", icon: Shield },
-    { id: "symbolic", label: "Symbolic Enforcement", icon: Lock },
-    { id: "case-studies", label: "Case Studies", icon: Landmark },
-    { id: "technical", label: "Technical Clauses", icon: Globe }
+    { id: "scope", label: "Governance Scope", icon: Shield },
+    { id: "cab", label: "Constructive Binding", icon: Lock },
+    { id: "authority", label: "Authority & Enforcement", icon: Scale },
+    { id: "patent", label: "Patent & Jurisdiction", icon: Crown }
   ];
 
   const renderContent = () => {
@@ -104,129 +25,146 @@ export default function GovernanceHub() {
         return (
           <div className="space-y-8">
             <div>
-              <h2 className="text-3xl md:text-4xl font-black text-white mb-4 font-space tracking-tight">The GlyphLock Master Covenant</h2>
+              <h2 className="text-3xl md:text-4xl font-black text-white mb-4 font-space tracking-tight">
+                The GlyphLock Master Covenant
+              </h2>
               <p className="text-lg text-[#00E4FF] mb-8 font-medium">
-                Protocol Governance & Enforcement Framework
+                Protocol Governance Framework
               </p>
               
               <div className="glass-card rounded-2xl border border-[#00E4FF]/30 p-8 space-y-6 bg-[#00E4FF]/5">
-                <div className="flex items-start gap-4">
-                  <Shield className="w-6 h-6 text-[#00E4FF] mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-bold text-white mb-2 text-lg">Governance Authority Statement</h3>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      The Master Covenant defines governance, enforcement conditions, and intellectual property protections underlying GlyphLock protocol operations. Binding effect occurs <strong className="text-white">only upon credentialed access, explicit execution, or governed system interaction</strong>, as defined within the Covenant and applicable agreements.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-3 gap-4 pt-2">
-                  {[
-                    { title: "Patent Application", desc: "USPTO App. No. 18/584,961" },
-                    { title: "Jurisdiction", desc: "Arizona (Primary)" },
-                    { title: "Framework Status", desc: "Governed Protocol" }
-                  ].map((item, i) => (
-                    <div key={i} className="bg-black/40 border border-[#00E4FF]/20 p-4 rounded-xl">
-                      <h4 className="text-sm font-bold text-[#00E4FF] mb-1 uppercase tracking-wide">{item.title}</h4>
-                      <p className="text-xs text-gray-400">{item.desc}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="pt-6 border-t border-[#00E4FF]/20">
-                  <h3 className="font-bold text-white mb-4 text-sm uppercase tracking-widest">Scope of the Master Covenant</h3>
-                  <p className="text-sm text-gray-300 mb-4">
-                    The Master Covenant functions as a unifying framework governing:
-                  </p>
-                  <div className="grid md:grid-cols-2 gap-3">
-                    {[
-                      "Confidentiality obligations",
-                      "Intellectual property protections",
-                      "Protocol enforcement conditions",
-                      "Credentialed system access",
-                      "AI and automated system participation",
-                      "Executed agreement terms"
-                    ].map((item, i) => (
-                      <div key={i} className="flex items-center gap-2 text-sm text-gray-300">
-                        <ChevronRight className="w-4 h-4 text-[#00E4FF]" />
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-xs text-gray-400 mt-4 border-t border-[#00E4FF]/10 pt-4">
-                    Implementation occurs through <strong className="text-white">executed agreements</strong>, <strong className="text-white">credentialed interactions</strong>, and <strong className="text-white">protocol-level enforcement</strong>, not passive exposure.
+                <p className="text-gray-300 leading-relaxed">
+                  The GlyphLock Master Covenant defines the governance, authority, and enforcement architecture underlying all GlyphLock protocol operations.
+                </p>
+                
+                <div className="bg-black/40 border border-[#00E4FF]/20 rounded-xl p-6">
+                  <p className="text-white font-semibold mb-3">It is a governing framework, not a passive agreement.</p>
+                  <p className="text-sm text-gray-300 leading-relaxed">
+                    Binding obligations arise only through <strong className="text-white">credentialed access</strong>, <strong className="text-white">explicit execution</strong>, or <strong className="text-white">authorized protocol interaction</strong>, as defined in applicable GlyphLock engagements.
                   </p>
                 </div>
               </div>
             </div>
 
             <div className="glass-card rounded-2xl border border-[#8C4BFF]/30 p-8">
-              <h3 className="text-xl font-bold text-[#8C4BFF] mb-6 font-space">Access & Execution</h3>
+              <h3 className="text-xl font-bold text-white mb-6 font-space">Access Control Notice</h3>
               <div className="space-y-4 text-sm text-gray-300">
-                <p className="text-white font-semibold mb-4">
-                  Access to full Covenant execution, enforcement mechanisms, and binding terms is restricted to credentialed parties following protocol verification.
+                <p className="text-white font-semibold">
+                  This page does not constitute an agreement.
                 </p>
-                {[
-                  "Binding obligations are triggered through defined interactions, credentialed access, or explicit execution",
-                  "Patent-pending framework protecting GlyphLock protocol operations",
-                  "Governed under Arizona jurisdiction with applicable international frameworks",
-                  "Implementation requires intentional agreement or credentialed system interaction",
-                  "Unauthorized access does not constitute binding agreement"
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <span className="text-[#8C4BFF] font-bold font-mono mt-0.5">0{i+1}.</span>
-                    <p>{item}</p>
-                  </div>
-                ))}
+                <p className="leading-relaxed">
+                  Access to binding terms, enforcement mechanisms, and execution pathways is restricted to credentialed parties following protocol verification.
+                </p>
+                <div className="bg-[#8C4BFF]/10 border border-[#8C4BFF]/20 rounded-lg p-4 mt-4">
+                  <p className="text-xs text-[#8C4BFF] font-semibold uppercase tracking-wide mb-2">
+                    Next Step
+                  </p>
+                  <p className="text-xs text-gray-300">
+                    Execution of the Master Covenant occurs only as part of a verified GlyphLock protocol engagement.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         );
 
-      case "preamble":
+      case "scope":
         return (
           <div className="space-y-8">
-            <h2 className="text-3xl md:text-4xl font-black text-white mb-4 font-space">Preamble / Legal Declaration</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-4 font-space">
+              What the Master Covenant Governs
+            </h2>
             
-            <div className="glass-card rounded-2xl border border-[#00E4FF]/20 p-8 space-y-6 text-gray-300 leading-relaxed text-lg">
-              <p>
-                This Agreement is executed by and for <strong className="text-white">GlyphLock LLC</strong>, 
-                inclusive of all legally registered DBAs (GlyphTech, GlyphLife), their Founders, Successors, 
-                Appointed Officers, and Symbolic Originators, hereinafter collectively referred to as "GlyphLock."
+            <div className="glass-card rounded-2xl border border-[#00E4FF]/20 p-8 space-y-6">
+              <p className="text-gray-300 leading-relaxed text-lg">
+                The Master Covenant serves as the unifying authority layer governing:
               </p>
               
-              <p>
-                This framework governs <strong className="text-[#00E4FF]">confidentiality</strong>, 
-                <strong className="text-[#00E4FF]"> intellectual property protections</strong>, and 
-                <strong className="text-[#00E4FF]"> protocol enforcement conditions</strong> related to access, use, 
-                replication, sharing, analysis, or exposure to any element, system, or representation of the GlyphLock technology stack.
-              </p>
-
-              <div className="bg-[#00E4FF]/10 border border-[#00E4FF]/30 rounded-xl p-6 my-6">
-                <p className="text-[#00E4FF] font-bold mb-2 uppercase tracking-wide text-sm flex items-center gap-2">
-                  <Shield className="w-4 h-4" /> Framework Notice
-                </p>
-                <p className="text-white text-sm">
-                  Full access to enforcement mechanisms requires credentialed verification. This page provides governance context only. Binding terms are executed through formal agreement or credentialed protocol interaction.
-                </p>
+              <div className="grid md:grid-cols-2 gap-4">
+                {[
+                  "Confidentiality and disclosure controls",
+                  "Intellectual property protection",
+                  "Protocol enforcement conditions",
+                  "Credentialed system access",
+                  "Participation of AI and automated systems",
+                  "Execution and agreement terms"
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3 p-4 bg-black/40 rounded-lg border border-white/5">
+                    <ChevronRight className="w-5 h-5 text-[#00E4FF] flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-300">{item}</span>
+                  </div>
+                ))}
               </div>
 
-              <div>
-                <h3 className="font-bold text-white mb-4 text-sm uppercase tracking-widest">GlyphLock LLC IP includes:</h3>
-                <div className="grid md:grid-cols-2 gap-3">
+              <div className="bg-[#00E4FF]/10 border border-[#00E4FF]/30 rounded-xl p-6 mt-6">
+                <p className="text-white font-semibold text-sm">
+                  All GlyphLock engagements operate within this framework.
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "cab":
+        return (
+          <div className="space-y-8">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-4 font-space">
+              Constructive Binding Architecture (CAB)
+            </h2>
+            
+            <div className="glass-card rounded-2xl border border-emerald-500/20 p-8 space-y-6">
+              <p className="text-gray-300 leading-relaxed text-lg mb-6">
+                Constructive Binding Architecture (CAB) defines how and when obligations become binding within the GlyphLock ecosystem.
+              </p>
+
+              <div className="bg-black/40 rounded-xl border border-emerald-500/20 p-6">
+                <h3 className="font-bold text-white mb-4">CAB recognizes binding events through:</h3>
+                <div className="space-y-3">
                   {[
-                    "Visual UI frameworks",
-                    "Biometric interfaces",
-                    "Symbolic triggers",
-                    "Command-response systems",
-                    "Steganographic QR encodings",
-                    "Patent-pending NFT/SBT systems",
-                    "Emotional-reactive design layers",
-                    "All technical, artistic, or mythic content"
-                  ].map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 bg-white/5 rounded-lg border border-white/5">
-                      <div className="w-1.5 h-1.5 bg-[#00E4FF] rounded-full"></div>
-                      <span className="text-sm text-gray-300">{item}</span>
+                    "Executed agreements",
+                    "Credentialed system access",
+                    "Authorized protocol interactions"
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                      <span className="text-gray-300">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6">
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  <strong className="text-white">CAB operates within established legal frameworks</strong> and does not replace statutory law or formal execution requirements.
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "authority":
+        return (
+          <div className="space-y-8">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-4 font-space">
+              Authority & Enforcement
+            </h2>
+            
+            <div className="glass-card rounded-2xl border border-[#8C4BFF]/20 p-8 space-y-6">
+              <p className="text-gray-300 leading-relaxed text-lg">
+                Enforcement authority under the Master Covenant is exercised only by designated GlyphLock principals or governed entities, as defined in executed agreements.
+              </p>
+
+              <div className="bg-black/40 border border-[#8C4BFF]/20 rounded-xl p-6">
+                <h3 className="font-bold text-white mb-4">No enforcement action occurs without:</h3>
+                <div className="space-y-3">
+                  {[
+                    "Verification",
+                    "Authorization",
+                    "Documented scope"
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-1.5 h-1.5 bg-[#8C4BFF] rounded-full"></div>
+                      <span className="text-gray-300">{item}</span>
                     </div>
                   ))}
                 </div>
@@ -235,150 +173,34 @@ export default function GovernanceHub() {
           </div>
         );
 
-      case "alpha":
+      case "patent":
         return (
           <div className="space-y-8">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-black text-white mb-2 font-space">Section ALPHA (Α)</h2>
-              <p className="text-[#00E4FF] font-medium text-lg">
-                Primordial Authorship & Ideational Sovereignty
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="glass-card rounded-2xl border border-[#8C4BFF]/30 p-8">
-                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <Crown className="w-5 h-5 text-[#8C4BFF]" />
-                  Α.1 — Statement of Origination
-                </h3>
-                <p className="text-gray-300 leading-relaxed">
-                  GlyphLock was ideated, authored, structured, and sealed by <strong className="text-white">DACO¹ — Carlo Rene Earl</strong>. 
-                  All use, adaptation, symbolic mimicry, or derivative reflection is governed under this origination clause. 
-                  This includes pre-patent and ideational rights, unregistered symbolic structures and embedded meaning, 
-                  and reverse-engineered iterations based on observed functions or aesthetic mimicry.
-                </p>
-              </div>
-
-              <div className="glass-card rounded-2xl border border-[#8C4BFF]/30 p-8">
-                <h3 className="text-xl font-bold text-white mb-4">Α.2 — Ideational Sovereignty</h3>
-                <p className="text-gray-300 leading-relaxed mb-4">
-                  DACO¹ holds full creative sovereignty over all aspects of GlyphLock — physical, digital, 
-                  symbolic, or conceptual. This extends to:
-                </p>
-                <ul className="grid gap-2">
-                  {[
-                    "Visual metaphors, glyphs, and layered meanings",
-                    "UI triggers, interface flows, and steganographic implementations",
-                    "Storyline, architecture, branding, and cognitive imprint"
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-center gap-3 text-sm text-gray-400">
-                      <div className="w-1 h-1 bg-[#8C4BFF] rounded-full"></div>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="glass-card rounded-2xl border border-[#00E4FF]/30 bg-[#00E4FF]/5 p-8 text-center">
-                <h3 className="text-xl font-bold text-[#00E4FF] mb-4 uppercase tracking-widest">Α.5 — Primordial Seal</h3>
-                <div className="space-y-4 max-w-2xl mx-auto">
-                  <p className="italic text-white text-lg font-serif">
-                    "Let it be known that all which follows — every clause, code, glyph, and gate — begins here, 
-                    under the will and word of DACO¹."
-                  </p>
-                  <div className="w-full h-px bg-gradient-to-r from-transparent via-[#00E4FF]/50 to-transparent my-4"></div>
-                  <p className="text-xs text-gray-400 uppercase tracking-widest">
-                    This is the first truth. All others are derivative.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case "definitions":
-        return (
-          <div className="space-y-8">
-            <h2 className="text-3xl md:text-4xl font-black text-white mb-6 font-space">Definitions, Roles & Acronyms</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-4 font-space">
+              Patent & Jurisdiction
+            </h2>
             
-            <div className="grid gap-6">
-              {/* Definition Card 1 */}
-              <div className="glass-card rounded-xl border border-[#00E4FF]/20 p-6 hover:border-[#00E4FF]/50 transition-all">
-                <div className="flex items-center gap-3 mb-3">
-                  <Badge className="bg-[#00E4FF]/10 text-[#00E4FF] border-[#00E4FF]/30 hover:bg-[#00E4FF]/20">Definition 1</Badge>
-                  <h3 className="text-lg font-bold text-white">GlyphLock LLC</h3>
+            <div className="glass-card rounded-2xl border border-[#00E4FF]/20 p-8 space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="bg-black/40 border border-[#00E4FF]/20 p-6 rounded-xl">
+                  <h4 className="text-sm font-bold text-[#00E4FF] mb-2 uppercase tracking-wide">Patent Application</h4>
+                  <p className="text-2xl font-black text-white mb-1">USPTO 18/584,961</p>
+                  <p className="text-xs text-gray-400">Patent-pending framework protecting GlyphLock protocol operations</p>
                 </div>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  The parent entity of all underlying technologies, symbolic systems, intellectual property (IP), 
-                  design architecture, trademarks, patents, and proprietary code. The sole IP holder with all 
-                  rights reserved.
-                </p>
-              </div>
-
-              {/* Definition Card 4 */}
-              <div className="glass-card rounded-xl border border-red-500/20 p-6 hover:border-red-500/50 transition-all">
-                <div className="flex items-center gap-3 mb-3">
-                  <Badge className="bg-red-500/10 text-red-400 border-red-500/30 hover:bg-red-500/20">Definition 4</Badge>
-                  <h3 className="text-lg font-bold text-white">DACO¹ – Demanding Authority Creative Originator</h3>
-                </div>
-                <p className="text-gray-400 text-sm leading-relaxed mb-2">
-                  <strong className="text-white">Carlo Rene Earl</strong> - The original creative entity, founder, 
-                  and legal IP generator for all GlyphLock systems. DACO¹ is entitled to sole authorship, original 
-                  rights of conception, and may act independently of DACO².
-                </p>
-              </div>
-
-              {/* Definition Card 6 */}
-              <div className="glass-card rounded-xl border border-emerald-500/20 p-6 hover:border-emerald-500/50 transition-all">
-                <div className="flex items-center gap-3 mb-3">
-                  <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20">Definition 6</Badge>
-                  <h3 className="text-lg font-bold text-white">CAB – Constructive Binding Protocol</h3>
-                </div>
-                <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                  CAB refers to a protocol mechanism in which binding obligations are triggered through <strong className="text-white">defined interactions</strong>, <strong className="text-white">credentialed access</strong>, or <strong className="text-white">explicit execution</strong>, rather than traditional wet signatures alone.
-                </p>
-                <div className="bg-black/40 rounded-lg p-4 border border-emerald-500/10">
-                  <p className="text-xs font-bold text-emerald-400 mb-2 uppercase tracking-wide">Implementation Context:</p>
-                  <p className="text-xs text-gray-400 leading-relaxed">
-                    CAB operates <strong className="text-white">within enforceable legal agreements</strong>. It does not replace law—it functions as a protocol mechanism for triggering binding conditions through credentialed system interactions or executed agreements.
-                  </p>
+                
+                <div className="bg-black/40 border border-[#00E4FF]/20 p-6 rounded-xl">
+                  <h4 className="text-sm font-bold text-[#00E4FF] mb-2 uppercase tracking-wide">Primary Jurisdiction</h4>
+                  <p className="text-2xl font-black text-white mb-1">Arizona</p>
+                  <p className="text-xs text-gray-400">International considerations apply through executed agreements</p>
                 </div>
               </div>
 
-              {/* Definition Card 7-9 */}
-              <div className="glass-card rounded-xl border border-[#8C4BFF]/20 p-6 hover:border-[#8C4BFF]/50 transition-all">
-                <div className="flex items-center gap-3 mb-3">
-                  <Badge className="bg-[#8C4BFF]/10 text-[#8C4BFF] border-[#8C4BFF]/30 hover:bg-[#8C4BFF]/20">Definitions 7-9</Badge>
-                  <h3 className="text-lg font-bold text-white">BPAAA¹²³ – Binding Party Protocols</h3>
-                </div>
-                <div className="space-y-3 text-sm text-gray-400">
-                  <p><strong className="text-white">BPAAA¹:</strong> All individuals or entities that have received, reviewed, accessed, or stored GlyphLock IP — even unknowingly.</p>
-                  <p><strong className="text-white">BPAAA²:</strong> Extends legal binding to consultants, agencies, vendors, investors, executive board members, and infrastructure partners.</p>
-                  <p><strong className="text-white">BPAAA³:</strong> Activates automatic arbitration rights, jurisdictional control, and forensic backtracking authority.</p>
-                </div>
+              <div className="bg-[#00E4FF]/10 border border-[#00E4FF]/30 rounded-xl p-6">
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  Jurisdictional scope and enforcement mechanisms are defined within executed agreements or credentialed protocol deployments. This framework does not assert global enforceability absent formal agreement.
+                </p>
               </div>
             </div>
-          </div>
-        );
-
-      case "core":
-      case "symbolic":
-      case "case-studies":
-      case "technical":
-        return (
-          <div className="flex flex-col items-center justify-center py-20 text-center space-y-6">
-            <Lock className="w-16 h-16 text-[#00E4FF]/20" />
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-2">Section Locked</h2>
-              <p className="text-gray-400 max-w-md mx-auto">
-                This section contains sensitive legal and symbolic frameworks accessible only to authorized partners and licensees.
-              </p>
-            </div>
-            <Link to={createPageUrl("Consultation")}>
-              <Button className="bg-[#00E4FF]/10 text-[#00E4FF] border border-[#00E4FF]/50 hover:bg-[#00E4FF] hover:text-black transition-all">
-                Request Full Access
-              </Button>
-            </Link>
           </div>
         );
 
@@ -397,7 +219,6 @@ export default function GovernanceHub() {
       />
       
       <div className="min-h-screen bg-black text-white py-32 relative overflow-hidden">
-        {/* Background */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00E4FF]/5 rounded-full blur-[100px] pointer-events-none"></div>
         
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
@@ -405,13 +226,13 @@ export default function GovernanceHub() {
           <div className="mb-16">
             <div className="flex flex-wrap items-center gap-3 mb-6">
               <Badge className="bg-[#8C4BFF]/10 text-[#8C4BFF] border-[#8C4BFF]/30 px-3 py-1">
-                <Lock className="w-3 h-3 mr-2" /> Legal Framework
+                <Lock className="w-3 h-3 mr-2" /> Governance Framework
               </Badge>
               <Badge className="bg-[#00E4FF]/10 text-[#00E4FF] border-[#00E4FF]/30 px-3 py-1">
                 Patent App. 18/584,961
               </Badge>
               <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 px-3 py-1">
-                Credentialed Framework
+                Protocol Authority
               </Badge>
             </div>
 
@@ -421,55 +242,9 @@ export default function GovernanceHub() {
               </span>
             </h1>
             <p className="text-xl text-gray-400 max-w-2xl">
-              Intellectual Property Governance & Protocol Enforcement Framework
+              Protocol Governance Framework
             </p>
           </div>
-
-          {/* Search */}
-          <div className="glass-card rounded-2xl border border-white/10 p-2 mb-12 flex items-center gap-4 max-w-2xl">
-            <Search className="w-5 h-5 text-gray-500 ml-4" />
-            <Input 
-              placeholder="Search covenant sections (DACO, CAB, AI, Damages)..."
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setShowSearchResults(e.target.value.length > 2);
-              }}
-              className="bg-transparent border-none text-white placeholder:text-gray-600 h-12 focus-visible:ring-0 text-lg"
-            />
-            <Button className="bg-[#00E4FF] hover:bg-[#0099FF] text-black font-bold rounded-xl px-6">
-              Search
-            </Button>
-          </div>
-
-          {/* Search Results */}
-          {showSearchResults && searchTerm.length > 2 && (
-            <div className="glass-card rounded-2xl border border-[#00E4FF]/30 p-8 mb-12 animate-in fade-in slide-in-from-top-4">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold text-[#00E4FF]">
-                  Found {getSearchResults().length} Matches
-                </h3>
-                <Badge className="bg-orange-500/10 text-orange-400 border-orange-500/30">Limited Preview</Badge>
-              </div>
-              
-              {getSearchResults().length > 0 ? (
-                <div className="space-y-4">
-                  {getSearchResults().map((result, idx) => (
-                    <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-[#00E4FF]/30 transition-all">
-                      <div className="text-sm font-bold text-[#00E4FF] mb-2">{result.section}</div>
-                      <p className="text-gray-300 text-sm leading-relaxed">
-                        {result.preview}... 
-                        <span className="mx-2 blur-[4px] select-none opacity-50">{result.full}</span>
-                        <Lock className="w-3 h-3 inline text-gray-500" />
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 text-gray-500">No matches found. Try "DACO" or "CAB".</div>
-              )}
-            </div>
-          )}
 
           {/* Main Content Grid */}
           <div className="grid lg:grid-cols-[300px_1fr] gap-8">
@@ -495,8 +270,9 @@ export default function GovernanceHub() {
               
               <div className="mt-6 pt-6 border-t border-white/10">
                 <div className="bg-[#8C4BFF]/10 border border-[#8C4BFF]/20 rounded-xl p-4">
-                  <p className="text-xs text-[#8C4BFF] leading-relaxed">
-                    <strong>FRAMEWORK NOTICE:</strong><br/>This page provides governance context. Full binding terms require credentialed verification or explicit execution.
+                  <p className="text-xs text-gray-300 leading-relaxed">
+                    <strong className="text-white">Framework Notice:</strong><br/>
+                    This page provides governance context. Full binding terms require credentialed verification or explicit execution.
                   </p>
                 </div>
               </div>
@@ -508,6 +284,20 @@ export default function GovernanceHub() {
             </div>
           </div>
 
+          {/* Bottom CTA */}
+          <div className="mt-16 text-center glass-card rounded-2xl border border-[#00E4FF]/20 p-12">
+            <h3 className="text-2xl font-bold text-white mb-4">
+              Protocol Verification Required
+            </h3>
+            <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+              Access to full enforcement mechanisms and binding terms requires credentialed protocol verification.
+            </p>
+            <Link to={createPageUrl("Consultation")}>
+              <Button className="bg-[#00E4FF] hover:bg-[#0099FF] text-black font-bold px-8 py-6 text-lg rounded-xl shadow-[0_0_30px_rgba(0,228,255,0.4)]">
+                Request Credential Review
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </>

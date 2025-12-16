@@ -94,12 +94,12 @@ export default function Roadmap() {
       status: "planned",
       icon: Trophy,
       items: [
-        { title: "Market Leadership in AI Cybersecurity", status: "planned" },
-        { title: "Global Enterprise Network (500+ Clients)", status: "planned" },
-        { title: "$1B+ Valuation Milestone", status: "planned" },
+        { title: "Protocol Authority Recognition", status: "planned" },
+        { title: "Global Credentialed Operator Network", status: "planned" },
         { title: "Quantum Security Standard Certification", status: "planned" },
         { title: "International Patent Portfolio Expansion", status: "planned" },
-        { title: "Strategic Acquisitions & Partnerships", status: "planned" }
+        { title: "Strategic Protocol Partnerships", status: "planned" },
+        { title: "Master Covenant Framework Adoption", status: "planned" }
       ]
     }
   ];
@@ -130,7 +130,7 @@ export default function Roadmap() {
               PRODUCT <span className="text-transparent bg-gradient-to-r from-[#00E4FF] to-[#8C4BFF] bg-clip-text">ROADMAP</span>
             </h1>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              From bootstrap to billion-dollar enterprise infrastructure.
+              Protocol expansion milestones and enforcement authority maturity.
             </p>
           </div>
 
