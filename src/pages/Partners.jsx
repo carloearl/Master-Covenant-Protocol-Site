@@ -106,12 +106,11 @@ export default function Partners() {
               PARTNERSHIP <span className="text-transparent bg-gradient-to-r from-[#00E4FF] to-[#8C4BFF] bg-clip-text">OVERVIEW</span>
             </h1>
             <p className="text-lg text-[#00E4FF] font-bold mb-4">
-              Secured Access For Smarter World Powered by GlyphLock
+              Credentialed Integrity System – Protocol-Governed Access Control
             </p>
             <p className="text-gray-300 text-lg mb-8 leading-relaxed">
-              Revolutionizing cybersecurity through AI-powered QR code technology and interactive security solutions 
-              that address the $283 billion IP theft crisis. Below is a transparent view of our technology, market 
-              opportunity, and partnership framework.
+              System-enforced verification modules addressing the $283 billion IP theft crisis. 
+              Below is protocol architecture, credential provisioning framework, and licensing structure.
             </p>
 
             <div className="grid gap-4 sm:grid-cols-3 mb-8">
@@ -185,8 +184,8 @@ export default function Partners() {
               <div>
                 <h3 className="text-xs font-bold text-[#00E4FF] mb-2 uppercase tracking-widest">Mission</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  Revolutionizing cybersecurity through AI-powered QR code technology and interactive security solutions 
-                  that address the $283 billion IP theft crisis.
+                  Deploy credentialed integrity system with protocol-governed verification modules addressing 
+                  the $283 billion IP theft crisis through cryptographic governance.
                 </p>
               </div>
               <div>
@@ -319,23 +318,23 @@ export default function Partners() {
         <section className="mb-12 glass-card rounded-3xl border border-[#8C4BFF]/50 p-8 bg-gradient-to-r from-[#8C4BFF]/10 to-[#00E4FF]/10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div>
-              <h2 className="text-2xl font-bold text-white mb-2 font-space">Partnership & Licensing Only</h2>
+              <h2 className="text-2xl font-bold text-white mb-2 font-space">Protocol Licensing Only</h2>
               <p className="text-gray-300 text-sm max-w-xl mb-4">
-                <strong>We are not selling equity.</strong> We form strategic partnerships with operators who can deploy our technology at scale.
+                <strong>Equity is not available.</strong> GlyphLock provisions protocol access to credentialed operators with verified deployment capability.
               </p>
               <p className="text-xs text-gray-500 italic">
-                No outside equity. No dilution. No investor pressure.
+                No equity. No dilution. Protocol-governed licensing only.
               </p>
             </div>
             <div className="flex gap-4">
               <Link to={createPageUrl("Consultation")}>
                 <Button className="bg-[#00E4FF] text-black hover:bg-white font-bold shadow-lg shadow-[#00E4FF]/20">
-                  Request Licensing Packet
+                  Request Credentials
                 </Button>
               </Link>
               <Link to={createPageUrl("Contact")}>
                 <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                  Contact Founder
+                  Contact Authority
                 </Button>
               </Link>
             </div>

@@ -361,7 +361,7 @@ export default function DreamTeamPage() {
             to={createPageUrl("GlyphBot")}
             className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-lg font-bold bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-[0_0_50px_rgba(87,61,255,0.5)] hover:shadow-[0_0_80px_rgba(87,61,255,0.7)] transition-all"
           >
-            Enter the Console
+            Access Intelligence Module
             <ChevronRight className="w-6 h-6" />
           </Link>
         </div>

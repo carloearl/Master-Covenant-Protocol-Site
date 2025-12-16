@@ -55,10 +55,10 @@ export default function Contact() {
           {/* Hero */}
           <div className="text-center mb-20">
             <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter">
-              GET IN <span className="text-transparent bg-gradient-to-r from-[#7C3AED] to-[#3B82F6] bg-clip-text drop-shadow-[0_0_30px_rgba(124,58,237,0.5)]">TOUCH</span>
+              INITIATE <span className="text-transparent bg-gradient-to-r from-[#7C3AED] to-[#3B82F6] bg-clip-text drop-shadow-[0_0_30px_rgba(124,58,237,0.5)]">VERIFICATION</span>
             </h1>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Secure your digital sovereignty. Initiate a secure channel with GlyphLock.
+              Establish credentialed communication channel with GlyphLock.
             </p>
           </div>
 
@@ -154,7 +154,7 @@ export default function Contact() {
                   </div>
 
                   <GlyphButton type="submit" variant="mixed" className="w-full">
-                    {sendEmail.isPending ? "Encrypting & Sending..." : "Initiate Transmission"}
+                    {sendEmail.isPending ? "Encrypting Transmission..." : "Initiate Secure Transmission"}
                   </GlyphButton>
                 </form>
               </div>

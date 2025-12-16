@@ -128,16 +128,16 @@ export default function Consultation() {
               <span className="text-sm font-bold text-white uppercase tracking-wider">Tactical Security Assessment</span>
             </div>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-6 tracking-tight">
-              Book Your <span className="bg-gradient-to-r from-[#1E40AF] via-[#3B82F6] to-[#60A5FA] bg-clip-text text-transparent">Consultation</span>
+              Request <span className="bg-gradient-to-r from-[#1E40AF] via-[#3B82F6] to-[#60A5FA] bg-clip-text text-transparent">Credentials</span>
             </h1>
             <p className="text-xl md:text-2xl text-white/80 mb-6 max-w-3xl mx-auto font-medium">
-              Tactical Security Assessment by GlyphLock Specialists
+              Protocol Verification Assessment by GlyphLock Specialists
             </p>
             <div className="inline-flex items-center gap-3 bg-gradient-to-r from-[#1E40AF]/20 to-[#3B82F6]/20 border-2 border-[#3B82F6]/50 rounded-xl px-8 py-4">
               <Target className="w-6 h-6 text-[#3B82F6]" />
-              <span className="text-2xl font-black text-white">$200 Consultation Fee</span>
+              <span className="text-2xl font-black text-white">$200 Verification Assessment</span>
               <span className="text-slate-400">•</span>
-              <span className="text-lg text-[#3B82F6] font-semibold">Credited Toward Your Final Project</span>
+              <span className="text-lg text-[#3B82F6] font-semibold">Credited Toward System Deployment</span>
             </div>
           </div>
 
@@ -147,7 +147,7 @@ export default function Consultation() {
             <div className="lg:col-span-2">
               <Card className="glyph-glass-card card-elevated-hover">
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-white">Consultation Request Form</CardTitle>
+                  <CardTitle className="text-2xl font-bold text-white">Credential Request Form</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
@@ -254,7 +254,7 @@ export default function Consultation() {
                       disabled={createConsultation.isPending}
                       className="w-full bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] hover:from-[#2563EB] hover:to-[#60A5FA] text-white font-black text-lg py-6 shadow-[0_0_30px_rgba(59,130,246,0.4)] hover:shadow-[0_0_50px_rgba(30,64,175,0.6)] transition-all"
                     >
-                      {createConsultation.isPending ? "Processing..." : "Continue to Payment →"}
+                      {createConsultation.isPending ? "Processing..." : "Continue to Verification →"}
                     </Button>
                   </form>
                 </CardContent>
@@ -291,16 +291,16 @@ export default function Consultation() {
                 <CardHeader>
                   <CardTitle className="text-xl font-bold text-white flex items-center gap-2">
                     <Clock className="w-5 h-5 text-[#3B82F6]" />
-                    Consultation Details
+                    Verification Details
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex justify-between items-center py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400 font-medium">Consultation Fee:</span>
+                    <span className="text-slate-400 font-medium">Assessment Fee:</span>
                     <span className="font-bold text-[#3B82F6] text-lg">$200</span>
                   </div>
                   <p className="text-xs text-slate-400 italic">
-                    Credited toward your final project cost if you move forward.
+                    Credited toward system deployment upon authorization.
                   </p>
                   <div className="flex justify-between items-center py-2 border-b border-slate-700/50">
                     <span className="text-slate-400 font-medium">Response Time:</span>
@@ -324,9 +324,9 @@ export default function Consultation() {
               <Card className="glyph-glass-card border-emerald-500/40 shadow-[0_0_25px_rgba(16,185,129,0.15)]">
                 <CardContent className="p-6 text-center">
                   <Shield className="w-12 h-12 text-emerald-400 mx-auto mb-4 drop-shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
-                  <h3 className="font-black text-white text-lg mb-3">Satisfaction Guarantee</h3>
+                  <h3 className="font-black text-white text-lg mb-3">Verification Guarantee</h3>
                   <p className="text-sm text-slate-300 leading-relaxed">
-                    If you aren't satisfied with the strategic value provided in your session, GlyphLock issues a <span className="font-bold text-emerald-400">full refund within 48 hours</span> — no questions asked.
+                    If protocol verification assessment fails to meet credentialing standards, GlyphLock issues a <span className="font-bold text-emerald-400">full refund within 48 hours</span> — no questions asked.
                   </p>
                 </CardContent>
               </Card>
@@ -341,7 +341,7 @@ export default function Consultation() {
                 Why GlyphLock?
               </CardTitle>
               <p className="text-lg text-slate-300 mt-2 font-medium">
-                Because attackers evolve daily. Most security solutions don't.
+                Because threats evolve daily. Protocol-governed systems adapt autonomously.
               </p>
             </CardHeader>
             <CardContent>
@@ -358,10 +358,10 @@ export default function Consultation() {
               </div>
               <div className="mt-8 p-6 bg-slate-950/60 border-2 border-[#3B82F6]/40 rounded-xl text-center">
                 <p className="text-xl font-black text-white mb-2">
-                  We don't sell "consultations."
+                  We don't provision access arbitrarily.
                 </p>
                 <p className="text-lg text-[#3B82F6] font-bold">
-                  We sell clarity, strategy, and survival.
+                  We verify. We credential. We enforce.
                 </p>
               </div>
             </CardContent>
