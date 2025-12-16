@@ -62,6 +62,6 @@ export default function HeroContent() {
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }

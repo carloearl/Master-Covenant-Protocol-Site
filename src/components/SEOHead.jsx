@@ -97,6 +97,17 @@ export default function SEOHead({
     updateMetaTag('description', resolvedDescription);
     updateMetaTag('keywords', resolvedKeywords);
 
+    // Character set
+    let charset = document.querySelector('meta[charset]');
+    if (!charset) {
+      charset = document.createElement('meta');
+      charset.setAttribute('charset', 'utf-8');
+      document.head.insertBefore(charset, document.head.firstChild);
+    }
+
+    // Language
+    document.documentElement.setAttribute('lang', 'en');
+
     // GLYPHLOCK: Enhanced SEO & Security Meta Tags
     updateMetaTag('robots', 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1');
     updateMetaTag('googlebot', 'index, follow, max-snippet:-1, max-image-preview:large');
