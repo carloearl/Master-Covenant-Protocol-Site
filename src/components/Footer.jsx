@@ -85,10 +85,22 @@ export default function Footer() {
 
           {/* Modules Column */}
           <div className="lg:col-span-2">
-            <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">System Modules</h4>
+            <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Modules</h4>
             <div className="flex flex-col gap-4">
               {FOOTER_LINKS.modules && FOOTER_LINKS.modules.map((link) => (
                 <Link key={link.page} to={createPageUrl(link.page)} className="text-white font-medium hover:text-blue-400 hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] transition-all duration-300">
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Protocols Column */}
+          <div className="lg:col-span-2">
+            <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Protocols</h4>
+            <div className="flex flex-col gap-4">
+              {FOOTER_LINKS.protocols && FOOTER_LINKS.protocols.map((link) => (
+                <Link key={link.page} to={createPageUrl(link.page)} className="text-white font-medium hover:text-amber-400 hover:drop-shadow-[0_0_8px_rgba(251,191,36,0.8)] transition-all duration-300">
                   {link.label}
                 </Link>
               ))}
