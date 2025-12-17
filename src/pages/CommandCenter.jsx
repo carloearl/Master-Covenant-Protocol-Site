@@ -488,6 +488,13 @@ function OverviewTab({ user, threatDetection }) {
         </Card>
       </div>
 
+      {/* Threat Detection Widget */}
+      <ThreatSummaryWidget 
+        threats={threatDetection.threats}
+        isScanning={threatDetection.isScanning}
+        onViewAll={() => {}}
+      />
+
       {/* Activity & Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Activity Chart - REAL DATA */}
