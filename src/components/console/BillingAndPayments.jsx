@@ -30,75 +30,8 @@ const isCredentialedUser = (user) => {
   return false;
 };
 
-const productCatalog = [
-  {
-    product: {
-      id: "prod_TRecvO5HfpAWvl",
-      name: "Pro",
-      description: "All Visual Cryptography Tools, Blockchain Security Suite, GlyphBot AI Assistant, Up to 1,000 QR codes/month, Standard Support, Data Dashboard Access"
-    },
-    prices: [{
-      id: "price_1SUlImAOe9xXPv0na5BmMKKY",
-      type: "recurring",
-      unit_amount: 20000,
-      currency: "usd",
-      recurring: { interval: "month" }
-    }]
-  },
-  {
-    product: {
-      id: "prod_TRekwPtbRKWuMl",
-      name: "Enterprise",
-      description: "Everything in Pro, Unlimited QR Generation, Priority AI Processing, Security Operations Center, N.U.P.S. POS System, 24/7 Premium Support, Custom Integrations, Dedicated Account Manager"
-    },
-    prices: [{
-      id: "price_1SUlRKAOe9xXPv0nW0uH1IQl",
-      type: "recurring",
-      unit_amount: 200000,
-      currency: "usd",
-      recurring: { interval: "month" }
-    }]
-  },
-  {
-    product: {
-      id: "prod_Sx7YM5pcBfBwPW",
-      name: "GlyphLock Voucher",
-      description: "Secure digital voucher, Fraud-proof cryptographic protection, Redeemable at partner locations, Available in multiple denominations"
-    },
-    prices: [{
-      id: "price_1S1DIvAOe9xXPv0nQ9Twkqar",
-      type: "one_time",
-      unit_amount: 100,
-      currency: "usd"
-    }]
-  },
-  {
-    product: {
-      id: "prod_Sx7bODyLES1aqB",
-      name: "Vouchers Bundle",
-      description: "Bulk secure vouchers, Enterprise fraud prevention, Instant traceability, Partner network access"
-    },
-    prices: [{
-      id: "price_1S1DLyAOe9xXPv0nuUfZTu9S",
-      type: "one_time",
-      unit_amount: 100,
-      currency: "usd"
-    }]
-  },
-  {
-    product: {
-      id: "prod_Sx7g6cB08UxB3D",
-      name: "Enterprise Vouchers",
-      description: "Enterprise-grade voucher package, Ongoing authentication, Advanced reporting, Continuous monitoring, Bulk management"
-    },
-    prices: [{
-      id: "price_1S1E4uAOe9xXPv0nByLqrpFg",
-      type: "one_time",
-      unit_amount: 200000,
-      currency: "usd"
-    }]
-  }
-];
+// Product catalog removed - all access is now credential-gated via Protocol Verification
+const productCatalog = [];
 
 const featureIcons = {
   "Visual Cryptography": <Eye className="h-4 w-4 mr-2 text-cyan-400" />,
@@ -517,57 +450,21 @@ export default function BillingAndPayments({ user: propUser }) {
         </div>
       )}
 
-      <h2 className="text-3xl font-bold text-white mb-6 text-center">Available Plans</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {productCatalog.map((item) => (
-          <Card key={item.product.id} className="bg-[#0A0F24]/80 border-[#00E4FF]/20 backdrop-blur-xl hover:border-[#00E4FF]/50 transition-all flex flex-col justify-between">
-            <CardHeader>
-              <CardTitle className="text-3xl font-bold text-[#00E4FF] mb-2">{item.product.name}</CardTitle>
-              <CardDescription className="text-white/60 min-h-[80px]">{item.product.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {item.prices.map(price => (
-                <div key={price.id} className="mb-4">
-                  <p className="text-4xl font-extrabold text-white">
-                    ${(price.unit_amount / 100).toFixed(2)}
-                    {price.recurring && <span className="text-lg font-normal text-white/60"> / {price.recurring.interval}</span>}
-                  </p>
-                  <p className="text-sm text-white/50 mb-4">
-                    {price.type === "recurring" ? "Recurring subscription" : "One-time purchase"}
-                  </p>
-                  <ul className="space-y-2 text-white/80">
-                    {getFeaturesList(item.product.description).slice(0, 4).map((feature, idx) => {
-                      const iconKey = Object.keys(featureIcons).find(key => feature.includes(key));
-                      return (
-                        <li key={idx} className="flex items-center text-sm">
-                          {iconKey ? featureIcons[iconKey] : <Check className="h-4 w-4 mr-2 text-[#8C4BFF]" />}
-                          <span>{feature}</span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              ))}
-            </CardContent>
-            <CardFooter className="flex flex-col gap-2">
-              {item.prices.map(price => (
-                <Button
-                  key={price.id}
-                  onClick={() => handleCheckout(item.product.id, price.id, price.type === "recurring" ? "subscription" : "payment")}
-                  className="w-full bg-gradient-to-r from-[#8C4BFF] to-[#00E4FF] hover:opacity-90 text-white font-bold"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                  ) : (
-                    price.type === "recurring" ? "Subscribe Now" : "Purchase"
-                  )}
-                </Button>
-              ))}
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+      {/* No pricing modules - all access is credential-gated */}
+      <Card className="bg-slate-900/80 border-cyan-500/30 backdrop-blur-xl">
+        <CardContent className="p-8 text-center">
+          <Shield className="w-12 h-12 mx-auto mb-4 text-cyan-400" />
+          <h3 className="text-xl font-bold text-white mb-2">Credential-Based Access</h3>
+          <p className="text-slate-400 mb-4">
+            All GlyphLock modules are provisioned through Protocol Verification under the Master Covenant.
+          </p>
+          <Link to={createPageUrl('Consultation')}>
+            <Button className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:opacity-90 text-white font-bold">
+              Request Protocol Verification
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
     </div>
   );
 }

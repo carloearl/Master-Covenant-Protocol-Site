@@ -34,20 +34,27 @@ export const NAV_SECTIONS = [
       { label: "Site Builder", page: "SiteBuilder" },
       { label: "NUPS Transaction Verification", page: "NUPSLogin" },
       { label: "Security Modules", page: "SecurityTools" },
-      { label: "Media Processing Hub", page: "VideoUpload" }
+      { label: "Media Processing Hub", page: "VideoUpload" },
+      { label: "SDK Documentation", page: "SDKDocs" }
+    ]
+  },
+  {
+    label: "Protocols",
+    items: [
+      { label: "Master Covenant", page: "GovernanceHub" },
+      { label: "Protocol Verification", page: "Consultation" },
+      { label: "Trust & Security", page: "TrustSecurity" },
+      { label: "NIST Challenge", page: "NISTChallenge" },
+      { label: "Case Studies", page: "CaseStudies" }
     ]
   },
   {
     label: "Resources",
     items: [
       { label: "Documentation", page: "SecurityDocs" },
-      { label: "SDK Docs", page: "SDKDocs" },
-      { label: "NIST Challenge", page: "NISTChallenge" },
-      { label: "Case Studies", page: "CaseStudies" },
       { label: "Dream Team", page: "DreamTeam" },
       { label: "FAQ", page: "FAQ" },
-      { label: "Roadmap", page: "Roadmap" },
-      { label: "Request Credentials", page: "Consultation" }
+      { label: "Roadmap", page: "Roadmap" }
     ]
   },
   {
@@ -72,24 +79,26 @@ export const FOOTER_LINKS = {
     { label: "Image Processing", page: "ImageLab" },
     { label: "GlyphBot Intelligence", page: "GlyphBot" },
     { label: "NUPS Transaction Verification", page: "NUPSLogin" },
-    { label: "Security Modules", page: "SecurityTools" }
+    { label: "Security Modules", page: "SecurityTools" },
+    { label: "SDK Documentation", page: "SDKDocs" }
+  ],
+  protocols: [
+    { label: "Master Covenant", page: "GovernanceHub" },
+    { label: "Protocol Verification", page: "Consultation" },
+    { label: "Trust & Security", page: "TrustSecurity" },
+    { label: "NIST Challenge", page: "NISTChallenge" },
+    { label: "Case Studies", page: "CaseStudies" }
   ],
   resources: [
     { label: "Documentation", page: "SecurityDocs" },
-    { label: "SDK Docs", page: "SDKDocs" },
-    { label: "NIST Challenge", page: "NISTChallenge" },
-    { label: "Case Studies", page: "CaseStudies" },
     { label: "Dream Team", page: "DreamTeam" },
     { label: "FAQ", page: "FAQ" },
-    { label: "Roadmap", page: "Roadmap" },
-    { label: "Request Credentials", page: "Consultation" }
+    { label: "Roadmap", page: "Roadmap" }
   ],
   legal: [
     { label: "Privacy Policy", page: "Privacy" },
     { label: "Terms of Service", page: "Terms" },
-    { label: "Cookie Policy", page: "Cookies" },
-    { label: "Trust & Security", page: "TrustSecurity" },
-    { label: "Master Covenant", page: "GovernanceHub" }
+    { label: "Cookie Policy", page: "Cookies" }
   ],
   account: [
     { label: "Security Settings", page: "AccountSecurity" },
