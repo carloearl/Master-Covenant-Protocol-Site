@@ -741,7 +741,7 @@ function ResourcesTab({ user }) {
 }
 
 // Security Status Tab - NO FAKE THREATS
-function SecurityTab() {
+function SecurityTab({ threatDetection }) {
   const { data: apiKeys = [] } = useQuery({
     queryKey: ['apiKeys'],
     queryFn: () => base44.entities.APIKey.list()
@@ -769,6 +769,9 @@ function SecurityTab() {
   const securityScore = calculateScore();
   const scoreColor = securityScore >= 80 ? 'green' : securityScore >= 50 ? 'yellow' : 'red';
 
+  const threatCount = threatDetection?.threatCount || 0;
+  const criticalCount = threatDetection?.criticalCount || 0;
+
   const checks = [
     { 
       label: "API Key Rotation", 
@@ -779,6 +782,11 @@ function SecurityTab() {
         return rotatedDate >= ninetyDaysAgo;
       }), 
       desc: apiKeys.length === 0 ? "No API keys created" : "Keys rotated within 90 days" 
+    },
+    { 
+      label: "Threat Detection", 
+      status: criticalCount === 0, 
+      desc: threatCount === 0 ? "No active threats" : `${threatCount} threat(s) detected` 
     },
     { label: "HTTPS Enforced", status: true, desc: "All connections use TLS 1.3" },
     { label: "Authentication", status: true, desc: "OAuth 2.0 authentication active" },
