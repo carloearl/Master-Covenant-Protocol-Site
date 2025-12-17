@@ -618,7 +618,8 @@ export default function GlyphBotPage() {
     error: p.stats?.failureCount > 0 && p.stats?.successCount === 0
   })) || [];
 
-  const currentProviderLabel = providers.find(p => p.id === (lastMeta?.providerUsed || provider))?.label || 'Gemini (Primary)';
+  // CRITICAL: Use actual lastMeta.providerLabel if available, otherwise fallback
+  const currentProviderLabel = lastMeta?.providerLabel || providers.find(p => p.id === (lastMeta?.providerUsed || provider))?.label || 'Awaiting Response...';
 
   return (
     <div className="min-h-screen text-white flex flex-col pt-16 pb-0 relative" style={{ color: '#ffffff', background: 'transparent', zIndex: 200, position: 'relative', pointerEvents: 'auto' }}>
