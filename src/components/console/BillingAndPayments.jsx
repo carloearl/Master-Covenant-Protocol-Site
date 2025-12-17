@@ -1,11 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, XCircle, Loader2, Eye, FileCode, Brain, Lock, Shield, Zap, Check, Download, AlertCircle, CreditCard, RefreshCw } from 'lucide-react';
+import { CheckCircle, XCircle, Loader2, Eye, FileCode, Brain, Lock, Shield, Zap, Check, Download, AlertCircle, CreditCard, RefreshCw, ShieldAlert, KeyRound } from 'lucide-react';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 import glyphLockAPI from '@/components/api/glyphLockAPI';
+import { base44 } from '@/api/base44Client';
+import { createPageUrl } from '@/utils';
+
+// Test/Admin emails that bypass credential gate
+const BYPASS_EMAILS = [
+  'admin@glyphlock.io',
+  'test@glyphlock.io',
+  'carloearl@gmail.com',
+  'glyphlock@gmail.com',
+];
+
+const isCredentialedUser = (user) => {
+  if (!user) return false;
+  // Admins always have access
+  if (user.role === 'admin') return true;
+  // Test users bypass
+  if (BYPASS_EMAILS.includes(user.email?.toLowerCase())) return true;
+  // Check if user has completed protocol verification
+  if (user.credentialed === true || user.verified === true || user.protocol_verified === true) return true;
+  // Check subscription status
+  if (user.subscription_status === 'active' || user.subscription_tier) return true;
+  return false;
+};
 
 const productCatalog = [
   {
@@ -90,7 +113,7 @@ const getFeaturesList = (description) => {
   return description.split(',').map(f => f.trim()).filter(Boolean);
 };
 
-export default function BillingAndPayments({ user }) {
+export default function BillingAndPayments({ user: propUser }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [paymentStatus, setPaymentStatus] = useState(null);
@@ -100,6 +123,22 @@ export default function BillingAndPayments({ user }) {
   const [loadingBillingData, setLoadingBillingData] = useState(true);
   const [retryingPayment, setRetryingPayment] = useState(false);
   const [updatingPayment, setUpdatingPayment] = useState(false);
+  const [currentUser, setCurrentUser] = useState(propUser || null);
+  const [checkingAuth, setCheckingAuth] = useState(!propUser);
+
+  // Fetch current user if not provided
+  useEffect(() => {
+    if (!propUser) {
+      setCheckingAuth(true);
+      base44.auth.me()
+        .then(userData => setCurrentUser(userData))
+        .catch(() => setCurrentUser(null))
+        .finally(() => setCheckingAuth(false));
+    }
+  }, [propUser]);
+
+  const user = currentUser;
+  const hasCredentialAccess = isCredentialedUser(user);
 
   const fetchBillingData = async () => {
     setLoadingBillingData(true);
@@ -219,6 +258,69 @@ export default function BillingAndPayments({ user }) {
       setUpdatingPayment(false);
     }
   };
+
+  // Loading state
+  if (checkingAuth) {
+    return (
+      <div className="container mx-auto p-4 md:p-8 flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="h-12 w-12 animate-spin text-cyan-400" />
+      </div>
+    );
+  }
+
+  // Credential Gate - Non-credentialed users see this
+  if (!hasCredentialAccess) {
+    return (
+      <div className="container mx-auto p-4 md:p-8">
+        <div className="max-w-2xl mx-auto">
+          <Card className="bg-slate-900/90 border-2 border-amber-500/40 backdrop-blur-xl">
+            <CardHeader className="text-center pb-2">
+              <div className="mx-auto w-20 h-20 rounded-full bg-amber-500/20 flex items-center justify-center mb-4">
+                <ShieldAlert className="w-10 h-10 text-amber-400" />
+              </div>
+              <CardTitle className="text-3xl font-black text-white">Credential Required</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center space-y-6 pt-4">
+              <p className="text-slate-300 text-lg leading-relaxed">
+                Access to billing and subscription modules requires <span className="text-amber-400 font-semibold">Protocol Verification</span> under the Master Covenant.
+              </p>
+              
+              <div className="bg-slate-950/60 border border-slate-700/50 rounded-xl p-6 text-left space-y-3">
+                <h3 className="text-white font-bold flex items-center gap-2">
+                  <KeyRound className="w-5 h-5 text-cyan-400" />
+                  What is Protocol Verification?
+                </h3>
+                <ul className="text-slate-400 text-sm space-y-2">
+                  <li>• A controlled verification engagement ($12,000 USD)</li>
+                  <li>• Determines credential eligibility under Covenant governance</li>
+                  <li>• Required before accessing enterprise modules or subscriptions</li>
+                  <li>• Produces proof-based determination, not opinions</li>
+                </ul>
+              </div>
+
+              <div className="pt-4 space-y-3">
+                <Link to={createPageUrl('Consultation')}>
+                  <Button className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold py-6 text-lg">
+                    <Shield className="w-5 h-5 mr-2" />
+                    Request Protocol Verification
+                  </Button>
+                </Link>
+                <Link to={createPageUrl('GovernanceHub')}>
+                  <Button variant="outline" className="w-full border-slate-600 text-slate-300 hover:bg-slate-800 py-5">
+                    Learn About the Master Covenant
+                  </Button>
+                </Link>
+              </div>
+
+              <p className="text-slate-500 text-xs pt-4">
+                Already credentialed? Contact <a href="mailto:glyphlock@gmail.com" className="text-cyan-400 hover:underline">glyphlock@gmail.com</a> for account verification.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4 md:p-8">
