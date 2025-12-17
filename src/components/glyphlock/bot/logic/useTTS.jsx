@@ -265,47 +265,83 @@ export default function useTTS(options = {}) {
         // CRITICAL: Voice selection based on voiceProfile
         let voice = null;
         const profile = settings.voiceProfile || 'neutral_female';
+        const isMaleProfile = profile.includes('male') && !profile.includes('female');
+        
+        // Log all available voices for debugging
+        console.log('[TTS WebSpeech] All available voices:', availableVoices.map(v => ({ name: v.name, lang: v.lang, local: v.localService })));
         
         if (availableVoices.length > 0) {
-          // Map voice profiles to voice characteristics
-          const profileToVoice = {
-            'neutral_female': { gender: 'female', keywords: ['zira', 'samantha', 'google uk english female', 'female'] },
-            'neutral_male': { gender: 'male', keywords: ['david', 'google uk english male', 'alex', 'daniel', 'male'] },
-            'warm_female': { gender: 'female', keywords: ['samantha', 'karen', 'google us english', 'female'] },
-            'warm_male': { gender: 'male', keywords: ['daniel', 'alex', 'mark', 'male'] },
-            'professional_female': { gender: 'female', keywords: ['zira', 'victoria', 'female'] },
-            'professional_male': { gender: 'male', keywords: ['david', 'mark', 'male'] }
-          };
+          // Get all English voices first
+          const englishVoices = availableVoices.filter(v => v.lang.startsWith('en'));
+          console.log('[TTS WebSpeech] English voices:', englishVoices.map(v => v.name));
           
-          const profileConfig = profileToVoice[profile] || profileToVoice['neutral_female'];
+          // Categorize voices by apparent gender based on common voice names
+          const maleKeywords = ['david', 'james', 'daniel', 'alex', 'tom', 'fred', 'mark', 'george', 'guy', 'male', 'onyx', 'echo'];
+          const femaleKeywords = ['zira', 'samantha', 'karen', 'victoria', 'susan', 'fiona', 'moira', 'veena', 'female', 'nova', 'shimmer', 'alloy'];
           
-          // Try to find voice matching profile keywords
-          for (const keyword of profileConfig.keywords) {
-            voice = availableVoices.find(v => 
-              v.lang.startsWith('en') && 
-              v.name.toLowerCase().includes(keyword)
-            );
-            if (voice) break;
+          const maleVoices = englishVoices.filter(v => 
+            maleKeywords.some(k => v.name.toLowerCase().includes(k)) ||
+            (!femaleKeywords.some(k => v.name.toLowerCase().includes(k)) && v.name.toLowerCase().includes('male'))
+          );
+          
+          const femaleVoices = englishVoices.filter(v => 
+            femaleKeywords.some(k => v.name.toLowerCase().includes(k)) ||
+            (!maleKeywords.some(k => v.name.toLowerCase().includes(k)) && v.name.toLowerCase().includes('female'))
+          );
+          
+          console.log('[TTS WebSpeech] Male voices found:', maleVoices.map(v => v.name));
+          console.log('[TTS WebSpeech] Female voices found:', femaleVoices.map(v => v.name));
+          
+          // Select based on profile gender
+          if (isMaleProfile) {
+            // Try to get a male voice
+            if (maleVoices.length > 0) {
+              // Pick based on profile type for variety
+              if (profile === 'warm_male') {
+                voice = maleVoices.find(v => v.name.toLowerCase().includes('daniel') || v.name.toLowerCase().includes('alex')) || maleVoices[0];
+              } else if (profile === 'professional_male') {
+                voice = maleVoices.find(v => v.name.toLowerCase().includes('david') || v.name.toLowerCase().includes('mark')) || maleVoices[0];
+              } else {
+                voice = maleVoices[0];
+              }
+            } else {
+              // No male voices, use any English but adjust pitch lower
+              voice = englishVoices[0];
+              console.log('[TTS WebSpeech] No male voices, will use pitch adjustment');
+            }
+          } else {
+            // Female profile
+            if (femaleVoices.length > 0) {
+              if (profile === 'warm_female') {
+                voice = femaleVoices.find(v => v.name.toLowerCase().includes('samantha') || v.name.toLowerCase().includes('karen')) || femaleVoices[0];
+              } else if (profile === 'professional_female') {
+                voice = femaleVoices.find(v => v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('victoria')) || femaleVoices[0];
+              } else {
+                voice = femaleVoices[0];
+              }
+            } else {
+              // No female voices, use any English but adjust pitch higher
+              voice = englishVoices[0];
+              console.log('[TTS WebSpeech] No female voices, will use pitch adjustment');
+            }
           }
           
-          // Override based on emotion if strong emotion selected
+          // Override based on emotion if strong emotion selected (emotion > profile)
           if (settings.emotion === 'authoritative' || settings.emotion === 'intense') {
-            const maleVoice = availableVoices.find(v => 
-              v.lang.startsWith('en') && 
-              (v.name.toLowerCase().includes('david') || v.name.toLowerCase().includes('alex') || v.name.toLowerCase().includes('male'))
-            );
-            if (maleVoice) voice = maleVoice;
-          } else if (settings.emotion === 'friendly' || settings.emotion === 'calm') {
-            const femaleVoice = availableVoices.find(v => 
-              v.lang.startsWith('en') && 
-              (v.name.toLowerCase().includes('samantha') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('female'))
-            );
-            if (femaleVoice) voice = femaleVoice;
+            if (maleVoices.length > 0) {
+              voice = maleVoices[0];
+              console.log('[TTS WebSpeech] Emotion override: using male voice for authoritative/intense');
+            }
+          } else if (settings.emotion === 'friendly' || settings.emotion === 'calm' || settings.emotion === 'whisper') {
+            if (femaleVoices.length > 0) {
+              voice = femaleVoices[0];
+              console.log('[TTS WebSpeech] Emotion override: using female voice for friendly/calm/whisper');
+            }
           }
           
-          // Fallback to any English voice
+          // Final fallback
           if (!voice) {
-            voice = availableVoices.find(v => v.lang.startsWith('en')) || availableVoices[0];
+            voice = englishVoices[0] || availableVoices[0];
           }
         }
         
