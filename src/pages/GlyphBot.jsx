@@ -703,8 +703,11 @@ export default function GlyphBotPage() {
               onVoiceSettingsChange={{
                 playText: (text, settings) => {
                   console.log('[GlyphBot] Testing voice with settings:', settings);
+                  // CRITICAL: Pass the actual settings, not voiceSettings state
+                  const testSettings = settings || voiceSettings;
+                  console.log('[GlyphBot] Actual test settings being used:', testSettings);
                   try {
-                    playText(text, settings);
+                    playText(text, testSettings);
                   } catch (e) {
                     console.warn('[TTS Test]', e);
                   }
@@ -712,8 +715,13 @@ export default function GlyphBotPage() {
                 setVoiceSettings: (updater) => {
                   setVoiceSettings(prev => {
                     const updated = typeof updater === 'function' ? updater(prev) : updater;
-                    console.log('[GlyphBot] Voice settings updated:', updated);
-                    localStorage.setItem('glyphbot_voice_settings', JSON.stringify(updated));
+                    console.log('[GlyphBot] Voice settings updated:', JSON.stringify(updated, null, 2));
+                    // Save immediately to localStorage
+                    try {
+                      localStorage.setItem('glyphbot_voice_settings', JSON.stringify(updated));
+                    } catch (e) {
+                      console.warn('[GlyphBot] Failed to save voice settings:', e);
+                    }
                     return updated;
                   });
                 }
