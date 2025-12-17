@@ -305,16 +305,23 @@ export default function GlyphBotPage() {
         return newCount;
       });
 
+      // CRITICAL: Extract actual provider from response
+      const actualProvider = response.providerUsed || response.data?.providerUsed || response.meta?.providerUsed || 'unknown';
+      const actualProviderLabel = response.providerLabel || response.data?.providerLabel || response.meta?.providerLabel || actualProvider;
+      
+      console.log('[GlyphBot] Provider used:', actualProvider, actualProviderLabel);
+      
       setLastMeta({
-        model: response.model,
-        providerUsed: response.providerUsed,
-        providerLabel: response.providerLabel,
+        model: response.model || actualProviderLabel,
+        providerUsed: actualProvider,
+        providerLabel: actualProviderLabel,
         realTimeUsed: response.realTimeUsed,
         shouldSpeak: response.shouldSpeak
       });
 
       if (modes.voice && botText) {
         try {
+          console.log('[GlyphBot] Auto-speaking with voice settings:', voiceSettings);
           playText(botText, voiceSettings);
         } catch (e) {
           console.warn('[TTS Auto-speak]', e);
@@ -322,8 +329,14 @@ export default function GlyphBotPage() {
       }
 
       if (response.meta) {
-        setProviderMeta(response.meta);
-        sessionStorage.setItem('glyphbot_provider_meta', JSON.stringify(response.meta));
+        // Update providerMeta with actual provider info
+        const updatedMeta = {
+          ...response.meta,
+          providerUsed: actualProvider,
+          providerLabel: actualProviderLabel
+        };
+        setProviderMeta(updatedMeta);
+        sessionStorage.setItem('glyphbot_provider_meta', JSON.stringify(updatedMeta));
       }
 
     } catch (err) {
