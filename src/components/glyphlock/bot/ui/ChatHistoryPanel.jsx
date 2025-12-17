@@ -272,19 +272,22 @@ export default function ChatHistoryPanel({
           ) : (
             <div className="space-y-1">
               {savedChats.map(chat => {
-                const realId = chat.id || chat._id || chat.entity_id;
-                if (!realId) return null;
-                
-                return (
+              const realId = chat.id || chat._id || chat.entity_id;
+              if (!realId) return null;
+
+              return (
+                <div
+                  key={realId}
+                  className={`w-full p-2 rounded-lg transition-all text-xs ${
+                    realId === currentChatId
+                      ? 'bg-cyan-500/20 border border-cyan-400/50 text-cyan-200'
+                      : 'bg-slate-900/40 border border-slate-700/50 text-slate-300 hover:bg-slate-800/60 hover:border-slate-600'
+                  }`}
+                >
                   <button
-                    key={realId}
                     onClick={() => onLoadChat?.(realId)}
-                    style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', minHeight: '44px' }}
-                    className={`w-full text-left p-2 rounded-lg transition-all text-xs ${
-                      realId === currentChatId
-                        ? 'bg-cyan-500/20 border border-cyan-400/50 text-cyan-200'
-                        : 'bg-slate-900/40 border border-slate-700/50 text-slate-300 hover:bg-slate-800/60 hover:border-slate-600'
-                    }`}
+                    style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', minHeight: '36px' }}
+                    className="w-full text-left"
                   >
                     <div className="font-medium truncate">{chat.title || 'Untitled'}</div>
                     <div className="flex items-center gap-2 mt-1 text-[10px] text-slate-500">
@@ -293,7 +296,18 @@ export default function ChatHistoryPanel({
                       <span className="ml-auto">{chat.messageCount || 0} msgs</span>
                     </div>
                   </button>
-                );
+                  <div className="flex items-center gap-1 mt-2 pt-2 border-t border-slate-700/50">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleDelete(realId); }}
+                      style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', minHeight: '32px' }}
+                      className="flex items-center gap-1 px-2 py-1 rounded bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px]"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              );
               })}
             </div>
           )}

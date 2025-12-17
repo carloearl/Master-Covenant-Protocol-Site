@@ -55,14 +55,24 @@ export function useGlyphBotPersistence(currentUser) {
 
     setFullHistory(prev => {
       const updated = [...prev, message];
-      // Auto-save to backend immediately
-      if (currentUser?.email && currentChatId) {
+      // AUTOSAVE: Always save to backend after each message
+      if (currentUser?.email) {
+        const chatIdToUse = currentChatId;
         base44.functions.invoke('saveGlyphBotChat', {
-          chatId: currentChatId,
+          chatId: chatIdToUse || null, // null creates new chat
           messages: updated,
           title: generateChatTitle(updated),
           provider: 'AUTO',
           persona: 'GENERAL'
+        }).then(response => {
+          if (response.data?.success && response.data?.chatId && !chatIdToUse) {
+            // Set the new chat ID if this was a new chat
+            setCurrentChatId(response.data.chatId);
+            localStorage.setItem(STORAGE_KEYS.CURRENT_CHAT_ID, response.data.chatId);
+            console.log('[AutoSave] New chat created:', response.data.chatId);
+          } else {
+            console.log('[AutoSave] Chat updated:', chatIdToUse);
+          }
         }).catch(e => console.error('[AutoSave]', e));
       }
       return updated;

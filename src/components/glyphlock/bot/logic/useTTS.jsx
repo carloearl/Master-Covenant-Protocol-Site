@@ -230,27 +230,57 @@ export default function useTTS(options = {}) {
         throw new Error('Web Speech not available');
       }
 
+      // Cancel any ongoing speech first
+      window.speechSynthesis.cancel();
+      
+      // Wait for voices to load if not available
+      let availableVoices = voices;
+      if (availableVoices.length === 0) {
+        availableVoices = window.speechSynthesis.getVoices();
+        if (availableVoices.length === 0) {
+          // Wait a bit for voices to load
+          await new Promise(resolve => {
+            const checkVoices = () => {
+              availableVoices = window.speechSynthesis.getVoices();
+              if (availableVoices.length > 0) {
+                resolve();
+              } else {
+                setTimeout(checkVoices, 100);
+              }
+            };
+            setTimeout(checkVoices, 100);
+            // Timeout after 2 seconds
+            setTimeout(resolve, 2000);
+          });
+          availableVoices = window.speechSynthesis.getVoices();
+        }
+      }
+
       const utterance = new SpeechSynthesisUtterance(text);
       utteranceRef.current = utterance;
       
       // Select voice based on profile and emotion
-      let voice = getBestVoice();
+      let voice = null;
       
-      // If bass/clarity/emotion affect voice selection, do it here
-      if (settings.bass > 0.5 || settings.emotion === 'aggressive' || settings.emotion === 'intense') {
-        // Prefer deeper/male voices for bass/aggressive
-        const deepVoice = voices.find(v => 
-          v.lang.startsWith('en') && 
-          (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('david') || v.name.toLowerCase().includes('alex'))
-        );
-        if (deepVoice) voice = deepVoice;
-      } else if (settings.clarity > 0.5 || settings.emotion === 'calm' || settings.emotion === 'whisper') {
-        // Prefer clearer/female voices for clarity/calm
-        const clearVoice = voices.find(v => 
-          v.lang.startsWith('en') && 
-          (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('samantha'))
-        );
-        if (clearVoice) voice = clearVoice;
+      // Try to find the best voice from available voices
+      if (availableVoices.length > 0) {
+        // If bass/clarity/emotion affect voice selection, do it here
+        if (settings.bass > 0.5 || settings.emotion === 'aggressive' || settings.emotion === 'intense') {
+          voice = availableVoices.find(v => 
+            v.lang.startsWith('en') && 
+            (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('david') || v.name.toLowerCase().includes('alex'))
+          );
+        } else if (settings.clarity > 0.5 || settings.emotion === 'calm' || settings.emotion === 'whisper') {
+          voice = availableVoices.find(v => 
+            v.lang.startsWith('en') && 
+            (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('samantha'))
+          );
+        }
+        
+        // Fallback to any English voice
+        if (!voice) {
+          voice = availableVoices.find(v => v.lang.startsWith('en')) || availableVoices[0];
+        }
       }
       
       if (voice) {
@@ -260,9 +290,12 @@ export default function useTTS(options = {}) {
       // Apply normalized settings - CRITICAL FIX
       utterance.rate = normalizeSpeed(settings.speed);
       utterance.pitch = normalizePitch(settings.pitch);
-      utterance.volume = Math.max(0, Math.min(1, settings.volume));
+      utterance.volume = Math.max(0, Math.min(1, settings.volume || 1));
+
+      console.log('[TTS WebSpeech] Speaking with rate:', utterance.rate, 'pitch:', utterance.pitch, 'voice:', voice?.name);
 
       utterance.onstart = () => {
+        console.log('[TTS WebSpeech] Started speaking');
         setIsLoading(false);
         setIsSpeaking(true);
         setMetadata({
@@ -276,30 +309,37 @@ export default function useTTS(options = {}) {
       };
 
       utterance.onend = () => {
+        console.log('[TTS WebSpeech] Finished speaking');
         setIsSpeaking(false);
         utteranceRef.current = null;
       };
 
       utterance.onerror = (e) => {
-        console.error('[TTS] Web Speech error:', e);
+        console.error('[TTS WebSpeech] Error:', e.error, e);
         setIsSpeaking(false);
         setIsLoading(false);
         setLastError(e.error || 'Speech error');
         utteranceRef.current = null;
       };
 
-      window.speechSynthesis.cancel();
-      await new Promise(r => setTimeout(r, 50));
+      // Small delay before speaking
+      await new Promise(r => setTimeout(r, 100));
       window.speechSynthesis.speak(utterance);
+      
+      // Chrome bug workaround - resume if paused
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+      
       return true;
 
     } catch (error) {
-      console.error('[TTS] Web Speech failed:', error);
+      console.error('[TTS WebSpeech] Failed:', error);
       setLastError(error.message);
       setIsLoading(false);
       return false;
     }
-  }, [getBestVoice]);
+  }, [voices]);
 
   const playText = useCallback(async (text, customSettings = {}) => {
     if (!text || typeof text !== 'string') return false;
@@ -361,32 +401,30 @@ export default function useTTS(options = {}) {
     const voiceProfile = VOICE_PROFILES[settings.voiceProfile] || VOICE_PROFILES.neutral_female;
     const voiceId = voiceProfile.id;
 
-    // GLYPHLOCK: Optimized provider fallback chain
-    if (provider === 'auto' || provider === 'openai') {
+    // GLYPHLOCK: Always use Web Speech first for reliability (OpenAI TTS requires backend setup)
+    // Web Speech is built into the browser and always works
+    console.log('[TTS] Using Web Speech API (most reliable)');
+    const webSpeechResult = await playWithWebSpeech(cleanText, settings);
+    
+    if (webSpeechResult) {
+      return true;
+    }
+    
+    // If Web Speech fails and we want OpenAI, try that
+    if (provider === 'openai') {
       try {
-        console.log('[TTS] Attempting OpenAI TTS...');
-        const success = await playWithOpenAI(cleanText, settings, settings.voiceProfile);
-        if (success) return true;
-        
-        console.warn('[TTS] OpenAI failed, falling back to Web Speech');
-        if (provider === 'auto') {
-          return await playWithWebSpeech(cleanText, settings);
-        }
-        return false;
+        console.log('[TTS] Web Speech failed, trying OpenAI...');
+        return await playWithOpenAI(cleanText, settings, settings.voiceProfile);
       } catch (err) {
-        console.error('[TTS] OpenAI TTS error:', err);
-        if (provider === 'auto') {
-          console.log('[TTS] Auto-fallback to Web Speech');
-          return await playWithWebSpeech(cleanText, settings);
-        }
+        console.error('[TTS] OpenAI TTS also failed:', err);
         setLastError(err.message);
         setIsLoading(false);
         return false;
       }
     }
-
-    // GLYPHLOCK: Direct Web Speech for 'webspeech' provider
-    return await playWithWebSpeech(cleanText, settings);
+    
+    setIsLoading(false);
+    return false;
   }, [provider, stop, playWithOpenAI, playWithWebSpeech, currentSettings]);
 
   const testTTS = useCallback(async () => {
