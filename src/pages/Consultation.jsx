@@ -139,19 +139,26 @@ export default function Consultation() {
   ];
 
   const verificationScope = [
-    "System integrity and threat exposure analysis",
-    "Enforceability assessment under Covenant governance",
-    "Visual, QR, and protocol authenticity validation",
-    "Credential eligibility determination",
-    "Definitive enforcement roadmap"
+    { icon: Shield, text: "System integrity and threat exposure analysis" },
+    { icon: Lock, text: "Enforceability assessment under Covenant governance" },
+    { icon: Target, text: "Visual, QR, and protocol authenticity validation" },
+    { icon: CheckCircle2, text: "Credential eligibility determination" },
+    { icon: Zap, text: "Definitive enforcement roadmap" }
   ];
 
   const protocolCapabilities = [
-    "Zero forge visual authentication",
-    "AI driven protocol verification",
-    "Autonomous audit pathways",
-    "Post quantum readiness",
-    "Enforcement grade architecture"
+    { icon: Shield, text: "Zero-forge visual authentication", desc: "Cryptographic proof that cannot be replicated" },
+    { icon: Zap, text: "AI-driven protocol verification", desc: "Intelligent analysis of security posture" },
+    { icon: Target, text: "Autonomous audit pathways", desc: "Self-executing compliance validation" },
+    { icon: Lock, text: "Post-quantum readiness", desc: "Future-proof cryptographic standards" },
+    { icon: CheckCircle2, text: "Enforcement-grade architecture", desc: "Military-level security infrastructure" }
+  ];
+
+  const engagementFeatures = [
+    { label: "Duration", value: "Up to 90 minutes", icon: Clock },
+    { label: "Format", value: "Secure video or audio", icon: Shield },
+    { label: "Recording", value: "Mutual authorization only", icon: Lock },
+    { label: "Software", value: "No installs required", icon: CheckCircle2 }
   ];
 
   if (createConsultation.isPending) {
