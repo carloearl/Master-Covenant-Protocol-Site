@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Upload, Square, Save, Lock, Trash2, Hand } from 'lucide-react';
+import { Loader2, Upload, Save, Lock, Trash2, Sparkles, MousePointer, Link2, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   GlyphImageCard,
@@ -22,11 +22,11 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
   const [imageAsset, setImageAsset] = useState(selectedImage);
   const [hotspots, setHotspots] = useState([]);
   const [selectedHotspot, setSelectedHotspot] = useState(null);
-  const [activeTool, setActiveTool] = useState('select');
   const [loading, setLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [pendingClick, setPendingClick] = useState(null);
   const canvasRef = useRef(null);
-  const [isDrawing, setIsDrawing] = useState(false);
-  const [drawStart, setDrawStart] = useState(null);
+  const imageRef = useRef(null);
 
   useEffect(() => {
     if (selectedImage) {
@@ -48,7 +48,7 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
         fileUrl: uploadResult.file_url,
         source: 'uploaded',
         status: 'draft',
-        ownerEmail: user.email,
+        ownerEmail: user?.email || 'guest',
       });
 
       setImageAsset(image);
@@ -62,43 +62,111 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
     }
   };
 
-  const handleCanvasMouseDown = (e) => {
-    if (activeTool !== 'rectangle') return;
+  // AI-powered click detection
+  const handleCanvasClick = async (e) => {
+    if (!imageAsset?.fileUrl || analyzing) return;
 
     const rect = canvasRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    const clickX = ((e.clientX - rect.left) / rect.width) * 100;
+    const clickY = ((e.clientY - rect.top) / rect.height) * 100;
 
-    setIsDrawing(true);
-    setDrawStart({ x, y });
-  };
+    // Check if clicking on existing hotspot
+    const clickedHotspot = hotspots.find(h => 
+      clickX >= h.x && clickX <= h.x + h.width &&
+      clickY >= h.y && clickY <= h.y + h.height
+    );
 
-  const handleCanvasMouseUp = (e) => {
-    if (!isDrawing || activeTool !== 'rectangle' || !drawStart) return;
+    if (clickedHotspot) {
+      setSelectedHotspot(clickedHotspot);
+      setPendingClick(null);
+      return;
+    }
 
-    const rect = canvasRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    // New click - analyze with AI
+    setPendingClick({ x: clickX, y: clickY });
+    setAnalyzing(true);
 
-    const newHotspot = {
-      id: Date.now().toString(),
-      x: Math.min(drawStart.x, x),
-      y: Math.min(drawStart.y, y),
-      width: Math.abs(x - drawStart.x),
-      height: Math.abs(y - drawStart.y),
-      shape: 'rect',
-      label: `Hotspot ${hotspots.length + 1}`,
-      description: '',
-      actionType: 'openUrl',
-      actionValue: '',
-    };
+    try {
+      // Use AI to detect what's at the click location
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyze this image and identify what object or element is located at approximately ${Math.round(clickX)}% from the left and ${Math.round(clickY)}% from the top.
 
-    setHotspots([...hotspots, newHotspot]);
-    setSelectedHotspot(newHotspot);
-    setIsDrawing(false);
-    setDrawStart(null);
-    setActiveTool('select');
-    toast.success('Hotspot created');
+Return a JSON object with:
+- "detected_object": what the user likely clicked on (be specific: "red button", "company logo", "person's face", "product image", etc.)
+- "suggested_label": a short label for this hotspot (2-4 words max)
+- "bounding_box": estimate the object's bounds as percentages {x, y, width, height} - x/y is top-left corner
+- "confidence": 0-100 how confident you are
+- "suggested_action": what action makes sense ("openUrl", "showModal", "playAudio")
+
+Be precise with the bounding box - make it fit the detected object tightly but include the whole object.`,
+        file_urls: [imageAsset.fileUrl],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            detected_object: { type: "string" },
+            suggested_label: { type: "string" },
+            bounding_box: {
+              type: "object",
+              properties: {
+                x: { type: "number" },
+                y: { type: "number" },
+                width: { type: "number" },
+                height: { type: "number" }
+              }
+            },
+            confidence: { type: "number" },
+            suggested_action: { type: "string" }
+          }
+        }
+      });
+
+      const aiResult = response;
+      
+      // Create hotspot from AI detection
+      const newHotspot = {
+        id: Date.now().toString(),
+        x: aiResult.bounding_box?.x ?? Math.max(0, clickX - 5),
+        y: aiResult.bounding_box?.y ?? Math.max(0, clickY - 5),
+        width: aiResult.bounding_box?.width ?? 10,
+        height: aiResult.bounding_box?.height ?? 10,
+        shape: 'rect',
+        label: aiResult.suggested_label || `Hotspot ${hotspots.length + 1}`,
+        description: aiResult.detected_object || '',
+        actionType: aiResult.suggested_action || 'openUrl',
+        actionValue: '',
+        aiDetected: true,
+        confidence: aiResult.confidence || 0
+      };
+
+      setHotspots([...hotspots, newHotspot]);
+      setSelectedHotspot(newHotspot);
+      toast.success(`Detected: ${aiResult.detected_object || 'Object'}`);
+
+    } catch (error) {
+      console.error('AI detection error:', error);
+      
+      // Fallback: create a simple hotspot at click location
+      const fallbackHotspot = {
+        id: Date.now().toString(),
+        x: Math.max(0, clickX - 5),
+        y: Math.max(0, clickY - 5),
+        width: 10,
+        height: 10,
+        shape: 'rect',
+        label: `Hotspot ${hotspots.length + 1}`,
+        description: '',
+        actionType: 'openUrl',
+        actionValue: '',
+        aiDetected: false
+      };
+
+      setHotspots([...hotspots, fallbackHotspot]);
+      setSelectedHotspot(fallbackHotspot);
+      toast.info('Created hotspot (AI detection unavailable)');
+    } finally {
+      setAnalyzing(false);
+      setPendingClick(null);
+    }
   };
 
   const handleUpdateHotspot = (field, value) => {
@@ -115,6 +183,31 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
     setHotspots(hotspots.filter((h) => h.id !== selectedHotspot.id));
     setSelectedHotspot(null);
     toast.success('Hotspot deleted');
+  };
+
+  // Execute hotspot action (for preview/testing)
+  const handleHotspotAction = (hotspot, e) => {
+    e.stopPropagation();
+    
+    if (!hotspot.actionValue) {
+      toast.info('No action URL set for this hotspot');
+      return;
+    }
+
+    switch (hotspot.actionType) {
+      case 'openUrl':
+        window.open(hotspot.actionValue, '_blank', 'noopener,noreferrer');
+        break;
+      case 'showModal':
+        toast.info(`Modal content: ${hotspot.actionValue}`);
+        break;
+      case 'playAudio':
+        const audio = new Audio(hotspot.actionValue);
+        audio.play().catch(() => toast.error('Failed to play audio'));
+        break;
+      default:
+        window.open(hotspot.actionValue, '_blank', 'noopener,noreferrer');
+    }
   };
 
   const handleSave = async () => {
@@ -142,7 +235,6 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
     try {
       setLoading(true);
 
-      // Compute hash via backend
       const response = await base44.functions.invoke('finalizeInteractiveImage', {
         imageId: imageAsset.id,
       });
@@ -169,7 +261,7 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
     return (
       <Card className={`${GlyphImageCard.glass} p-12 text-center`}>
         <Upload className="w-16 h-16 mx-auto mb-4 text-gray-600" />
-        <p className="text-gray-400 text-lg mb-4">Upload an image or select from Gallery to add hotspots</p>
+        <p className="text-gray-400 text-lg mb-4">Upload an image or select from Gallery to add interactive hotspots</p>
         <input
           type="file"
           accept="image/*"
@@ -189,32 +281,39 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* Left - Toolbar */}
+      {/* Left - Instructions & Properties */}
       <div className="lg:col-span-1 space-y-6">
-        <Card className={`${GlyphImageCard.premium}`}>
-          <CardHeader className="border-b border-purple-500/20">
-            <CardTitle className={`${GlyphImageTypography.heading.md} text-white`}>Tools</CardTitle>
+        {/* AI Click Instructions */}
+        <Card className={`${GlyphImageCard.premium} border-cyan-500/30`}>
+          <CardHeader className="border-b border-cyan-500/20 pb-3">
+            <CardTitle className={`${GlyphImageTypography.heading.md} text-white flex items-center gap-2`}>
+              <Sparkles className="w-5 h-5 text-cyan-400" />
+              AI-Powered Hotspots
+            </CardTitle>
           </CardHeader>
-          <CardContent className={GlyphImagePanel.compact}>
-            <div className="space-y-2">
-              <Button
-                onClick={() => setActiveTool('select')}
-                className={`w-full justify-start ${
-                  activeTool === 'select' ? GlyphImageButton.primary : GlyphImageButton.ghost
-                }`}
-              >
-                <Hand className="w-4 h-4 mr-2" />
-                Select
-              </Button>
-              <Button
-                onClick={() => setActiveTool('rectangle')}
-                className={`w-full justify-start ${
-                  activeTool === 'rectangle' ? GlyphImageButton.primary : GlyphImageButton.ghost
-                }`}
-              >
-                <Square className="w-4 h-4 mr-2" />
-                Draw Rectangle
-              </Button>
+          <CardContent className="pt-4">
+            <div className="space-y-3 text-sm">
+              <div className="flex items-start gap-3 p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/30">
+                <MousePointer className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-white font-medium">Click anywhere on the image</p>
+                  <p className="text-gray-400 text-xs mt-1">AI will detect what you clicked and create a zone around it</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-3 bg-purple-500/10 rounded-lg border border-purple-500/30">
+                <Link2 className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-white font-medium">Add your URL/payload</p>
+                  <p className="text-gray-400 text-xs mt-1">Set the action that triggers when users click/tap the zone</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                <ExternalLink className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-white font-medium">Test it live</p>
+                  <p className="text-gray-400 text-xs mt-1">Click hotspots to trigger the action instantly</p>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -223,28 +322,38 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
         {selectedHotspot && (
           <Card className={`${GlyphImageCard.premium}`}>
             <CardHeader className="border-b border-purple-500/20">
-              <CardTitle className={`${GlyphImageTypography.heading.md} text-white`}>Hotspot Properties</CardTitle>
+              <CardTitle className={`${GlyphImageTypography.heading.md} text-white flex items-center justify-between`}>
+                <span>Hotspot Settings</span>
+                {selectedHotspot.aiDetected && (
+                  <span className="text-xs px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded-full">
+                    AI Detected
+                  </span>
+                )}
+              </CardTitle>
             </CardHeader>
             <CardContent className={GlyphImagePanel.compact}>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div>
-                  <Label className="text-gray-300">Label</Label>
+                  <Label className="text-gray-300 text-sm">Label</Label>
                   <Input
                     value={selectedHotspot.label}
                     onChange={(e) => handleUpdateHotspot('label', e.target.value)}
                     className={GlyphImageInput.base}
+                    placeholder="Button, Logo, Product..."
                   />
                 </div>
                 <div>
-                  <Label className="text-gray-300">Description</Label>
+                  <Label className="text-gray-300 text-sm">Description</Label>
                   <Textarea
                     value={selectedHotspot.description}
                     onChange={(e) => handleUpdateHotspot('description', e.target.value)}
                     className={GlyphImageInput.base}
+                    rows={2}
+                    placeholder="What AI detected..."
                   />
                 </div>
                 <div>
-                  <Label className="text-gray-300">Action Type</Label>
+                  <Label className="text-gray-300 text-sm">Action Type</Label>
                   <Select
                     value={selectedHotspot.actionType}
                     onValueChange={(val) => handleUpdateHotspot('actionType', val)}
@@ -252,7 +361,7 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
                     <SelectTrigger className={GlyphImageInput.base}>
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-slate-900 border-slate-700">
                       <SelectItem value="openUrl">Open URL</SelectItem>
                       <SelectItem value="playAudio">Play Audio</SelectItem>
                       <SelectItem value="showModal">Show Modal</SelectItem>
@@ -262,14 +371,30 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
                   </Select>
                 </div>
                 <div>
-                  <Label className="text-gray-300">Action Value</Label>
+                  <Label className="text-gray-300 text-sm font-semibold flex items-center gap-2">
+                    <Link2 className="w-4 h-4 text-cyan-400" />
+                    Action URL / Payload
+                  </Label>
                   <Input
                     value={selectedHotspot.actionValue}
                     onChange={(e) => handleUpdateHotspot('actionValue', e.target.value)}
-                    placeholder="https://example.com"
-                    className={GlyphImageInput.base}
+                    placeholder="https://example.com or payload"
+                    className={`${GlyphImageInput.base} mt-1`}
                   />
+                  <p className="text-xs text-gray-500 mt-1">This URL opens when users click/tap this zone</p>
                 </div>
+                
+                {/* Test Button */}
+                {selectedHotspot.actionValue && (
+                  <Button 
+                    onClick={(e) => handleHotspotAction(selectedHotspot, e)}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    Test Action
+                  </Button>
+                )}
+
                 <Button onClick={handleDeleteHotspot} className={`${GlyphImageButton.danger} w-full`}>
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete Hotspot
@@ -308,34 +433,99 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
             )}
           </CardContent>
         </Card>
+
+        {/* Hotspot List */}
+        {hotspots.length > 0 && (
+          <Card className={`${GlyphImageCard.glass}`}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-gray-400">
+                {hotspots.length} Hotspot{hotspots.length !== 1 ? 's' : ''}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {hotspots.map((h) => (
+                  <div
+                    key={h.id}
+                    onClick={() => setSelectedHotspot(h)}
+                    className={`p-2 rounded-lg cursor-pointer transition-all text-sm ${
+                      selectedHotspot?.id === h.id
+                        ? 'bg-cyan-500/20 border border-cyan-500/50'
+                        : 'bg-slate-800/50 hover:bg-slate-700/50 border border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-white font-medium truncate">{h.label}</span>
+                      {h.actionValue && (
+                        <Link2 className="w-3 h-3 text-green-400 flex-shrink-0" />
+                      )}
+                    </div>
+                    {h.actionValue && (
+                      <p className="text-xs text-gray-500 truncate mt-1">{h.actionValue}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Right - Canvas */}
       <div className="lg:col-span-2">
         <Card className={`${GlyphImageCard.premium} ${GlyphImageShadows.depth.lg}`}>
           <CardHeader className="border-b border-purple-500/20">
-            <CardTitle className={`${GlyphImageTypography.heading.md} text-white`}>
-              {imageAsset.name}
+            <CardTitle className={`${GlyphImageTypography.heading.md} text-white flex items-center justify-between`}>
+              <span>{imageAsset.name}</span>
+              {analyzing && (
+                <span className="flex items-center gap-2 text-sm text-cyan-400">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  AI analyzing...
+                </span>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent className={GlyphImagePanel.primary}>
             <div
               ref={canvasRef}
-              className="relative w-full aspect-video bg-gray-900 rounded-lg overflow-hidden cursor-crosshair"
-              onMouseDown={handleCanvasMouseDown}
-              onMouseUp={handleCanvasMouseUp}
+              className={`relative w-full aspect-video bg-gray-900 rounded-lg overflow-hidden ${
+                analyzing ? 'cursor-wait' : 'cursor-crosshair'
+              }`}
+              onClick={handleCanvasClick}
             >
-              <img src={imageAsset.fileUrl} alt={imageAsset.name} className="w-full h-full object-contain" />
+              <img 
+                ref={imageRef}
+                src={imageAsset.fileUrl} 
+                alt={imageAsset.name} 
+                className="w-full h-full object-contain pointer-events-none" 
+              />
+
+              {/* Pending click indicator */}
+              {pendingClick && (
+                <div
+                  className="absolute w-8 h-8 -ml-4 -mt-4 border-2 border-cyan-400 rounded-full animate-ping"
+                  style={{ left: `${pendingClick.x}%`, top: `${pendingClick.y}%` }}
+                />
+              )}
 
               {/* Render hotspots */}
               {hotspots.map((hotspot) => (
                 <div
                   key={hotspot.id}
-                  onClick={() => setSelectedHotspot(hotspot)}
-                  className={`absolute border-2 cursor-pointer transition-all ${
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (hotspot.actionValue) {
+                      handleHotspotAction(hotspot, e);
+                    } else {
+                      setSelectedHotspot(hotspot);
+                    }
+                  }}
+                  className={`absolute border-2 cursor-pointer transition-all group ${
                     selectedHotspot?.id === hotspot.id
-                      ? 'border-cyan-400 bg-cyan-400/20'
-                      : 'border-purple-400 bg-purple-400/10 hover:bg-purple-400/20'
+                      ? 'border-cyan-400 bg-cyan-400/20 shadow-[0_0_15px_rgba(6,182,212,0.5)]'
+                      : hotspot.actionValue
+                        ? 'border-green-400 bg-green-400/10 hover:bg-green-400/30 hover:shadow-[0_0_15px_rgba(74,222,128,0.5)]'
+                        : 'border-purple-400 bg-purple-400/10 hover:bg-purple-400/20'
                   }`}
                   style={{
                     left: `${hotspot.x}%`,
@@ -344,15 +534,40 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
                     height: `${hotspot.height}%`,
                   }}
                 >
-                  <div className="absolute -top-6 left-0 text-xs font-semibold text-white bg-black/70 px-2 py-1 rounded">
+                  {/* Label */}
+                  <div className="absolute -top-7 left-0 text-xs font-semibold text-white bg-black/80 px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
                     {hotspot.label}
+                    {hotspot.actionValue && (
+                      <ExternalLink className="w-3 h-3 inline ml-1 text-green-400" />
+                    )}
                   </div>
+
+                  {/* Action indicator */}
+                  {hotspot.actionValue && (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="bg-green-500/90 rounded-full p-2">
+                        <ExternalLink className="w-4 h-4 text-white" />
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
 
-            <div className="mt-4 text-sm text-gray-400">
-              {activeTool === 'rectangle' ? 'Click and drag to create a hotspot' : 'Click a hotspot to edit it'}
+            <div className="mt-4 flex items-center justify-between text-sm">
+              <span className="text-gray-400">
+                {analyzing ? 'AI is detecting the object you clicked...' : 'Click anywhere to create an AI-detected hotspot'}
+              </span>
+              <div className="flex items-center gap-4 text-xs">
+                <span className="flex items-center gap-1">
+                  <div className="w-3 h-3 border-2 border-green-400 rounded-sm" />
+                  <span className="text-gray-500">Has URL</span>
+                </span>
+                <span className="flex items-center gap-1">
+                  <div className="w-3 h-3 border-2 border-purple-400 rounded-sm" />
+                  <span className="text-gray-500">No URL</span>
+                </span>
+              </div>
             </div>
           </CardContent>
         </Card>
