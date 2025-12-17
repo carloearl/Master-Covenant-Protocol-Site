@@ -25,72 +25,91 @@ export default function AgentBrainPanel() {
   const [generatedCode, setGeneratedCode] = useState(null);
   const [isExecuting, setIsExecuting] = useState(false);
   const [executionPlan, setExecutionPlan] = useState(null);
+  const [activeChangeSetId, setActiveChangeSetId] = useState(null);
   const scrollRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Execute code generation via backend
-  const executeCodeGeneration = async (userRequest) => {
+  // OMEGA: Full execution pipeline
+  const executeFullPipeline = async (userRequest) => {
     setIsExecuting(true);
     try {
-      // Step 1: Analyze the request
-      toast.info('🧠 Analyzing request...');
-      const analysisRes = await base44.functions.invoke('agentExecuteCode', {
-        action: 'analyze_request',
-        payload: { userRequest, context: 'GlyphLock.io security platform' }
+      // OMEGA PIPELINE: Plan → Generate → Show Patch Bundle
+      
+      // Step 1: Create execution plan
+      toast.info('🧠 Creating execution plan...');
+      const planRes = await base44.functions.invoke('agentPlan', {
+        userRequest,
+        context: 'GlyphLock.io security platform',
+        mode
       });
 
-      if (!analysisRes.data?.success) {
-        throw new Error(analysisRes.data?.error || 'Analysis failed');
+      if (!planRes.data?.success) {
+        throw new Error(planRes.data?.error || 'Planning failed');
       }
 
-      setExecutionPlan(analysisRes.data);
+      const changeSetId = planRes.data.changeSetId;
+      setActiveChangeSetId(changeSetId);
       
-      // Add plan to messages
       const planMessage = {
         role: 'assistant',
-        content: `## 📋 Execution Plan\n\n${analysisRes.data.summary}\n\n**Steps:**\n${analysisRes.data.plan?.map((p, i) => `${i + 1}. **${p.action}** \`${p.filePath}\` - ${p.description}`).join('\n') || 'No specific file changes needed.'}\n\n*Model: ${analysisRes.data.model}*`
+        content: `Okay so here's the plan. ${planRes.data.plan.summary}\n\nRisk level is ${planRes.data.plan.riskLevel}.\n\nHere's what I'll do:\n${planRes.data.plan.executionPlan?.map((p, i) => `${i + 1}. ${p.description} in ${p.target}`).join('\n') || 'No file changes needed'}\n\n${planRes.data.plan.warnings?.length > 0 ? `Heads up: ${planRes.data.plan.warnings.join('. ')}` : ''}`
       };
       setMessages(prev => [...prev, planMessage]);
 
-      // Step 2: Generate code for each file in the plan
-      if (analysisRes.data.plan && analysisRes.data.plan.length > 0) {
-        for (const step of analysisRes.data.plan) {
-          toast.info(`⚡ Generating ${step.filePath}...`);
-          
-          const codeRes = await base44.functions.invoke('agentExecuteCode', {
-            action: 'generate_code',
-            payload: {
-              filePath: step.filePath,
-              description: step.description,
-              mode: step.action
-            }
-          });
+      // Step 2: Generate code
+      toast.info('⚡ Generating code...');
+      const genRes = await base44.functions.invoke('agentGenerate', { changeSetId });
 
-          if (codeRes.data?.success) {
-            setGeneratedCode({
-              filePath: step.filePath,
-              code: codeRes.data.code,
-              model: codeRes.data.model
-            });
-
-            // Add code to messages
-            const codeMessage = {
-              role: 'assistant',
-              content: `## 📄 Generated: \`${step.filePath}\`\n\n\`\`\`jsx\n${codeRes.data.code.slice(0, 2000)}${codeRes.data.code.length > 2000 ? '\n// ... (truncated)' : ''}\n\`\`\`\n\n*Model: ${codeRes.data.model}*\n\n⚠️ **Code generated but NOT deployed.** To deploy, copy this code and paste it in the chat with me (Base44 AI) and say "write this to ${step.filePath}".`
-            };
-            setMessages(prev => [...prev, codeMessage]);
-          }
-        }
+      if (!genRes.data?.success) {
+        throw new Error(genRes.data?.error || 'Code generation failed');
       }
 
-      toast.success('✅ Code generation complete!');
+      const genMessage = {
+        role: 'assistant',
+        content: `Alright generated ${genRes.data.totalGenerated} files for you. They're ready to deploy.\n\nNext step: I'll create the deployment patch. This will show you exactly what needs to be done.`
+      };
+      setMessages(prev => [...prev, genMessage]);
+
+      // Step 3: Apply (generates patch bundle)
+      toast.info('📦 Creating deployment package...');
+      const applyRes = await base44.functions.invoke('agentApply', {
+        changeSetId,
+        autoApprove: true
+      });
+
+      if (!applyRes.data?.success) {
+        throw new Error(applyRes.data?.error || 'Apply failed');
+      }
+
+      if (applyRes.data.patchBundleRequired) {
+        const patchMessage = {
+          role: 'assistant',
+          content: `Got it. So the platform can't auto deploy frontend files, but I've created everything you need.\n\nHere's your deployment patch bundle. Copy this entire thing and paste it to the main Base44 AI (the one you're talking to now), then just say apply these changes.\n\n\`\`\`\n${applyRes.data.patchBundleText}\n\`\`\``
+        };
+        setMessages(prev => [...prev, patchMessage]);
+        
+        // Also set for easy copy
+        setGeneratedCode({
+          filePath: 'PATCH_BUNDLE',
+          code: applyRes.data.patchBundleText,
+          model: 'deployment-patch'
+        });
+      } else {
+        const successMessage = {
+          role: 'assistant',
+          content: `Done. All changes applied successfully. ${applyRes.data.appliedCount} files deployed.`
+        };
+        setMessages(prev => [...prev, successMessage]);
+      }
+
+      toast.success('✅ Ready to deploy!');
 
     } catch (error) {
       console.error('Execution error:', error);
-      toast.error('Execution failed: ' + error.message);
+      toast.error('Failed: ' + error.message);
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: `❌ **Execution Error:** ${error.message}\n\nTry rephrasing your request or contact admin.`
+        content: `Ran into an error: ${error.message}. Try again or let me know if you need help.`
       }]);
     } finally {
       setIsExecuting(false);
@@ -358,10 +377,10 @@ export default function AgentBrainPanel() {
     setSending(true);
 
     try {
-      // For BUILD/REFACTOR modes, use the code execution backend
+      // For BUILD/REFACTOR modes, use OMEGA pipeline
       if (mode === 'build' || mode === 'refactor') {
         setSending(false);
-        await executeCodeGeneration(userInput);
+        await executeFullPipeline(userInput);
         return;
       }
 
