@@ -123,19 +123,25 @@ export default function ControlBar({
                   <ChevronDown className="w-3 h-3" />
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-80 bg-slate-900 border-purple-500/50 p-4 space-y-4" style={{ zIndex: 10000 }}>
-                <div className="space-y-3">
+              <PopoverContent 
+                className="w-80 bg-slate-900 border-purple-500/50 p-4 max-h-[70vh] overflow-y-auto" 
+                style={{ zIndex: 99999 }}
+                sideOffset={8}
+              >
+                <div className="space-y-4">
                   <div className="text-xs font-bold text-cyan-300 uppercase tracking-wider">Voice Controls</div>
                   
+                  {/* Emotion Preset - Native Select */}
                   <div className="space-y-2">
-                    <Label className="text-xs text-slate-400 flex items-center justify-between">
+                    <label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Emotion Preset</span>
                       <span className="text-[9px] text-cyan-400 font-mono">{voiceSettings?.emotion || 'neutral'}</span>
-                    </Label>
-                    <Select 
+                    </label>
+                    <select 
                       value={voiceSettings?.emotion || 'neutral'} 
-                      onValueChange={(val) => {
-                        const preset = emotionPresets?.find(e => e.id === val);
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const preset = emotionPresets?.find(ep => ep.id === val);
                         if (preset && onVoiceSettingsChange?.setVoiceSettings) {
                           console.log('[Voice] Applying emotion preset:', preset);
                           onVoiceSettingsChange.setVoiceSettings(prev => ({
@@ -151,61 +157,55 @@ export default function ControlBar({
                           handleVoiceChange('emotion', val);
                         }
                       }}
+                      className="w-full bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                      style={{ pointerEvents: 'auto', touchAction: 'manipulation' }}
                     >
-                      <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
-                        {emotionPresets && emotionPresets.length > 0 ? emotionPresets.filter(e => e && e.id).map(e => (
-                          <SelectItem key={e.id} value={e.id} className="text-white">
-                            {e.label}
-                          </SelectItem>
-                        )) : (
-                          <>
-                            <SelectItem value="neutral">Neutral</SelectItem>
-                            <SelectItem value="energetic">Energetic</SelectItem>
-                            <SelectItem value="calm">Calm</SelectItem>
-                            <SelectItem value="authoritative">Authoritative</SelectItem>
-                            <SelectItem value="friendly">Friendly</SelectItem>
-                            <SelectItem value="whisper">Whisper</SelectItem>
-                            <SelectItem value="intense">Intense</SelectItem>
-                          </>
-                        )}
-                      </SelectContent>
-                    </Select>
+                      {emotionPresets && emotionPresets.length > 0 ? emotionPresets.filter(e => e && e.id).map(e => (
+                        <option key={e.id} value={e.id}>{e.label}</option>
+                      )) : (
+                        <>
+                          <option value="neutral">Neutral</option>
+                          <option value="energetic">Energetic</option>
+                          <option value="calm">Calm</option>
+                          <option value="authoritative">Authoritative</option>
+                          <option value="friendly">Friendly</option>
+                          <option value="whisper">Whisper</option>
+                          <option value="intense">Intense</option>
+                        </>
+                      )}
+                    </select>
                   </div>
 
+                  {/* Voice Profile - Native Select */}
                   <div className="space-y-2">
-                    <Label className="text-xs text-slate-400">Voice Profile</Label>
-                    <Select 
+                    <label className="text-xs text-slate-400">Voice Profile</label>
+                    <select 
                       value={voiceSettings?.voiceProfile || 'neutral_female'} 
-                      onValueChange={(val) => handleVoiceChange('voiceProfile', val)}
+                      onChange={(e) => handleVoiceChange('voiceProfile', e.target.value)}
+                      className="w-full bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                      style={{ pointerEvents: 'auto', touchAction: 'manipulation' }}
                     >
-                      <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
-                        {Array.isArray(voiceProfiles) && voiceProfiles.length > 0 ? voiceProfiles.filter(v => v && v.id).map(v => (
-                          <SelectItem key={v.id} value={v.id} className="text-white">
-                            {v.label}
-                          </SelectItem>
-                        )) : <SelectItem value="neutral_female">Neutral Female</SelectItem>}
-                      </SelectContent>
-                    </Select>
+                      {Array.isArray(voiceProfiles) && voiceProfiles.length > 0 ? voiceProfiles.filter(v => v && v.id).map(v => (
+                        <option key={v.id} value={v.id}>{v.label}</option>
+                      )) : <option value="neutral_female">Neutral Female</option>}
+                    </select>
                   </div>
 
+                  {/* Pitch - Native Input Range */}
                   <div className="space-y-2">
-                    <Label className="text-xs text-slate-400 flex items-center justify-between">
+                    <label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Pitch</span>
                       <span className="text-cyan-400 font-mono">{voiceSettings?.pitch?.toFixed(2) || '1.00'}x</span>
-                    </Label>
-                    <Slider
-                      value={[voiceSettings?.pitch || 1.0]}
-                      onValueChange={([val]) => handleVoiceChange('pitch', val)}
+                    </label>
+                    <input
+                      type="range"
+                      value={voiceSettings?.pitch || 1.0}
+                      onChange={(e) => handleVoiceChange('pitch', parseFloat(e.target.value))}
                       min={0.5}
                       max={2.0}
                       step={0.05}
-                      className="w-full"
+                      className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+                      style={{ pointerEvents: 'auto', touchAction: 'manipulation' }}
                     />
                     <div className="flex justify-between text-[9px] text-slate-600">
                       <span>Deep</span>
@@ -213,18 +213,21 @@ export default function ControlBar({
                     </div>
                   </div>
 
+                  {/* Speed - Native Input Range */}
                   <div className="space-y-2">
-                    <Label className="text-xs text-slate-400 flex items-center justify-between">
+                    <label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Speed</span>
                       <span className="text-cyan-400 font-mono">{voiceSettings?.speed?.toFixed(2) || '1.00'}x</span>
-                    </Label>
-                    <Slider
-                      value={[voiceSettings?.speed || 1.0]}
-                      onValueChange={([val]) => handleVoiceChange('speed', val)}
-                      min={0.8}
-                      max={1.4}
+                    </label>
+                    <input
+                      type="range"
+                      value={voiceSettings?.speed || 1.0}
+                      onChange={(e) => handleVoiceChange('speed', parseFloat(e.target.value))}
+                      min={0.5}
+                      max={2.0}
                       step={0.05}
-                      className="w-full"
+                      className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+                      style={{ pointerEvents: 'auto', touchAction: 'manipulation' }}
                     />
                     <div className="flex justify-between text-[9px] text-slate-600">
                       <span>Slower</span>
@@ -232,33 +235,39 @@ export default function ControlBar({
                     </div>
                   </div>
 
+                  {/* Volume - Native Input Range */}
                   <div className="space-y-2">
-                    <Label className="text-xs text-slate-400 flex items-center justify-between">
+                    <label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Volume</span>
                       <span className="text-cyan-400 font-mono">{((voiceSettings?.volume || 1.0) * 100).toFixed(0)}%</span>
-                    </Label>
-                    <Slider
-                      value={[voiceSettings?.volume || 1.0]}
-                      onValueChange={([val]) => handleVoiceChange('volume', val)}
+                    </label>
+                    <input
+                      type="range"
+                      value={voiceSettings?.volume || 1.0}
+                      onChange={(e) => handleVoiceChange('volume', parseFloat(e.target.value))}
                       min={0.0}
                       max={1.0}
                       step={0.05}
-                      className="w-full"
+                      className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+                      style={{ pointerEvents: 'auto', touchAction: 'manipulation' }}
                     />
                   </div>
 
+                  {/* Bass - Native Input Range */}
                   <div className="space-y-2">
-                    <Label className="text-xs text-slate-400 flex items-center justify-between">
+                    <label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Bass</span>
                       <span className="text-purple-400 font-mono">{((voiceSettings?.bass || 0) * 100).toFixed(0)}%</span>
-                    </Label>
-                    <Slider
-                      value={[voiceSettings?.bass || 0]}
-                      onValueChange={([val]) => handleVoiceChange('bass', val)}
+                    </label>
+                    <input
+                      type="range"
+                      value={voiceSettings?.bass || 0}
+                      onChange={(e) => handleVoiceChange('bass', parseFloat(e.target.value))}
                       min={-1.0}
                       max={1.0}
                       step={0.1}
-                      className="w-full"
+                      className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                      style={{ pointerEvents: 'auto', touchAction: 'manipulation' }}
                     />
                     <div className="flex justify-between text-[9px] text-slate-600">
                       <span>Thin</span>
@@ -266,18 +275,21 @@ export default function ControlBar({
                     </div>
                   </div>
 
+                  {/* Clarity - Native Input Range */}
                   <div className="space-y-2">
-                    <Label className="text-xs text-slate-400 flex items-center justify-between">
+                    <label className="text-xs text-slate-400 flex items-center justify-between">
                       <span>Clarity</span>
                       <span className="text-purple-400 font-mono">{((voiceSettings?.clarity || 0) * 100).toFixed(0)}%</span>
-                    </Label>
-                    <Slider
-                      value={[voiceSettings?.clarity || 0]}
-                      onValueChange={([val]) => handleVoiceChange('clarity', val)}
+                    </label>
+                    <input
+                      type="range"
+                      value={voiceSettings?.clarity || 0}
+                      onChange={(e) => handleVoiceChange('clarity', parseFloat(e.target.value))}
                       min={-1.0}
                       max={1.0}
                       step={0.1}
-                      className="w-full"
+                      className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                      style={{ pointerEvents: 'auto', touchAction: 'manipulation' }}
                     />
                     <div className="flex justify-between text-[9px] text-slate-600">
                       <span>Muffled</span>
@@ -285,7 +297,7 @@ export default function ControlBar({
                     </div>
                   </div>
 
-                  <div className="flex gap-2 pt-2 border-t border-slate-700">
+                  <div className="flex gap-2 pt-3 border-t border-slate-700">
                     <button
                       type="button"
                       onClick={() => {
@@ -294,20 +306,21 @@ export default function ControlBar({
                         }
                       }}
                       style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', pointerEvents: 'auto', minHeight: '44px' }}
-                      className="flex-1 px-3 py-2 rounded-lg text-xs bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 hover:bg-cyan-500/30 transition-all flex items-center justify-center gap-1.5"
+                      className="flex-1 px-3 py-2.5 rounded-lg text-xs bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 hover:bg-cyan-500/30 transition-all flex items-center justify-center gap-1.5"
                     >
-                      <Volume2 className="w-3 h-3" />
+                      <Volume2 className="w-3.5 h-3.5" />
                       Test Voice
                     </button>
                     <button
                       type="button"
                       onClick={() => {
                         localStorage.setItem('glyphbot_voice_settings', JSON.stringify(voiceSettings));
+                        console.log('[Voice] Settings saved:', voiceSettings);
                       }}
                       style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', pointerEvents: 'auto', minHeight: '44px' }}
-                      className="flex-1 px-3 py-2 rounded-lg text-xs bg-purple-500/20 border border-purple-500/50 text-purple-300 hover:bg-purple-500/30 transition-all flex items-center justify-center gap-1.5"
+                      className="flex-1 px-3 py-2.5 rounded-lg text-xs bg-purple-500/20 border border-purple-500/50 text-purple-300 hover:bg-purple-500/30 transition-all flex items-center justify-center gap-1.5"
                     >
-                      <Settings2 className="w-3 h-3" />
+                      <Settings2 className="w-3.5 h-3.5" />
                       Save
                     </button>
                   </div>
