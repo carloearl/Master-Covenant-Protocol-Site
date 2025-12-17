@@ -1510,21 +1510,25 @@ export default function CommandCenter() {
     navigate("/");
   };
 
+  // Initialize threat detection
+  const threatDetection = useThreatDetection(user);
+
   if (loading) {
     return <GlyphLoader text="Initializing Command Center..." />;
   }
 
   const renderTab = () => {
     switch (activeTab) {
-      case "overview": return <OverviewTab user={user} />;
+      case "overview": return <OverviewTab user={user} threatDetection={threatDetection} />;
+      case "threats": return <ThreatDetectionTab user={user} threatDetection={threatDetection} />;
       case "resources": return <ResourcesTab user={user} />;
-      case "security": return <SecurityTab />;
+      case "security": return <SecurityTab threatDetection={threatDetection} />;
       case "api-keys": return <APIKeysTab user={user} />;
       case "analytics": return <AnalyticsTab />;
       case "tools": return <ToolsTab />;
       case "logs": return <LogsTab />;
       case "settings": return <SettingsTab user={user} />;
-      default: return <OverviewTab user={user} />;
+      default: return <OverviewTab user={user} threatDetection={threatDetection} />;
     }
   };
 
