@@ -25,9 +25,6 @@ Disallow: /api/
 Disallow: /functions/
 Disallow: /admin/
 
-# Primary Sitemap Index
-Sitemap: https://glyphlock.io/sitemap.xml
-
 # Crawl-delay for politeness
 Crawl-delay: 1
 
