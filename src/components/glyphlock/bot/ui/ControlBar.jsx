@@ -64,8 +64,13 @@ export default function ControlBar({
   const [showVoiceControls, setShowVoiceControls] = useState(false);
 
   const handleVoiceChange = (key, value) => {
+    console.log('[ControlBar] Voice setting changed:', key, '=', value);
     if (onVoiceSettingsChange?.setVoiceSettings) {
-      onVoiceSettingsChange.setVoiceSettings(prev => ({ ...prev, [key]: value }));
+      onVoiceSettingsChange.setVoiceSettings(prev => {
+        const updated = { ...prev, [key]: value };
+        console.log('[ControlBar] Updated voice settings:', updated);
+        return updated;
+      });
     }
   };
 
