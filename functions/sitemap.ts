@@ -171,7 +171,17 @@ Deno.serve(async (req) => {
     let xml = '';
     
     // Route to specific sitemap
-    if (path === '/' || path === '/sitemap.xml') {
+    // Default: return flat combined sitemap for maximum compatibility
+    if (path === '/' || path === '' || path === '/sitemap.xml') {
+      const allRoutes = [
+        ...STATIC_ROUTES,
+        ...QR_ROUTES.filter(r => !STATIC_ROUTES.find(s => s.path === r.path)),
+        ...IMAGE_ROUTES.filter(r => !STATIC_ROUTES.find(s => s.path === r.path)),
+        ...INTERACTIVE_ROUTES.filter(r => !STATIC_ROUTES.find(s => s.path === r.path)),
+        ...DYNAMIC_ROUTES.filter(r => !STATIC_ROUTES.find(s => s.path === r.path))
+      ];
+      xml = generateSitemapXML(allRoutes);
+    } else if (path === '/index.xml') {
       xml = generateSitemapIndex();
     } else if (path === '/sitemap-app.xml') {
       xml = generateSitemapXML(STATIC_ROUTES);
