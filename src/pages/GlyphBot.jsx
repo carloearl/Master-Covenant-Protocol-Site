@@ -172,18 +172,8 @@ export default function GlyphBotPage() {
     return cleanup;
   }, []);
 
-  useEffect(() => {
-    if (!currentUser?.email || !currentChatId) return;
-
-    loadChat(currentChatId).then(result => {
-      if (result?.messages) {
-        const msgs = result.messages.filter(m => m.id !== 'welcome-1');
-        setMessages([WELCOME_MESSAGE, ...msgs]);
-        if (result.persona) setPersona(result.persona);
-        if (result.provider) setProvider(result.provider);
-      }
-    });
-  }, [currentChatId, currentUser?.email, loadChat]);
+  // Only load chat if user explicitly selects one from history
+  // Don't auto-load - always start fresh
 
 
 
