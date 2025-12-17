@@ -164,8 +164,179 @@ function SidebarContent({ activeTab, setActiveTab, user, onLogout, threatCount =
   );
 }
 
+// Threat Detection Tab
+function ThreatDetectionTab({ user, threatDetection }) {
+  const { 
+    threats, 
+    config, 
+    setConfig, 
+    isScanning, 
+    runAnalysis, 
+    dismissThreat, 
+    handleAction 
+  } = threatDetection;
+
+  const [showConfig, setShowConfig] = useState(false);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <ShieldAlert className="w-5 h-5 text-cyan-400" />
+            AI Threat Detection
+          </h2>
+          <p className="text-sm text-slate-400">Real-time anomaly detection and threat analysis</p>
+        </div>
+        <div className="flex items-center gap-3">
+          {isScanning && (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30">
+              <Radio className="w-3 h-3 text-cyan-400 animate-pulse" />
+              <span className="text-xs text-cyan-400">Scanning</span>
+            </div>
+          )}
+          <Button 
+            onClick={runAnalysis}
+            variant="outline" 
+            size="sm"
+            className="border-slate-700"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Scan Now
+          </Button>
+          <Button 
+            onClick={() => setShowConfig(!showConfig)}
+            variant="outline" 
+            size="sm"
+            className="border-slate-700"
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            Configure
+          </Button>
+        </div>
+      </div>
+
+      {/* Configuration Panel */}
+      {showConfig && (
+        <ThreatConfigPanel config={config} onConfigChange={setConfig} />
+      )}
+
+      {/* Threat Status Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="bg-slate-900/50 border-slate-800">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-red-500/10">
+                <AlertTriangle className="w-5 h-5 text-red-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">
+                  {threats.filter(t => THREAT_TYPES[t.type]?.severity === 'critical').length}
+                </p>
+                <p className="text-xs text-slate-400">Critical</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-slate-900/50 border-slate-800">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-orange-500/10">
+                <AlertTriangle className="w-5 h-5 text-orange-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">
+                  {threats.filter(t => THREAT_TYPES[t.type]?.severity === 'high').length}
+                </p>
+                <p className="text-xs text-slate-400">High</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-slate-900/50 border-slate-800">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-yellow-500/10">
+                <AlertTriangle className="w-5 h-5 text-yellow-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">
+                  {threats.filter(t => THREAT_TYPES[t.type]?.severity === 'medium').length}
+                </p>
+                <p className="text-xs text-slate-400">Medium</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-slate-900/50 border-slate-800">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-green-500/10">
+                <CheckCircle className="w-5 h-5 text-green-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">{config.sensitivityLevel}%</p>
+                <p className="text-xs text-slate-400">Sensitivity</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Active Threats */}
+      <Card className="bg-slate-900/50 border-slate-800">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm text-white">Active Threats ({threats.length})</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {threats.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12">
+              <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mb-4">
+                <CheckCircle className="w-8 h-8 text-green-400" />
+              </div>
+              <p className="text-white font-medium">No Active Threats</p>
+              <p className="text-sm text-slate-500 mt-1">Your system is secure</p>
+            </div>
+          ) : (
+            <div className="space-y-3 max-h-[500px] overflow-y-auto">
+              {threats.map((threat, idx) => (
+                <ThreatAlert 
+                  key={`${threat.type}-${idx}`}
+                  threat={threat}
+                  onDismiss={dismissThreat}
+                  onAction={handleAction}
+                />
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Detection Capabilities */}
+      <Card className="bg-slate-900/50 border-slate-800">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm text-white">Detection Capabilities</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {Object.entries(THREAT_TYPES).map(([key, val]) => (
+              <div key={key} className="flex items-center gap-3 p-3 rounded-lg bg-slate-800/30">
+                <val.icon className="w-4 h-4 text-cyan-400" />
+                <div>
+                  <p className="text-sm text-white">{val.label}</p>
+                  <p className="text-[10px] text-slate-500">Severity: {val.severity}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 // Overview Dashboard Tab - REAL DATA ONLY
-function OverviewTab({ user }) {
+function OverviewTab({ user, threatDetection }) {
   const queryClient = useQueryClient();
   
   // Fetch REAL data only
