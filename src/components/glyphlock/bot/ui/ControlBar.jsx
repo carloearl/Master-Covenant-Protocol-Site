@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Volume2, Wifi, FileSearch, Braces, Layout, Trash2, Settings2, ChevronDown } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+// Using native HTML inputs for reliability
 import { PERSONAS, MODEL_OPTIONS } from '../config';
 
 function ModeToggle({ active, icon: Icon, label, onClick, color = 'cyan' }) {
