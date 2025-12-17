@@ -80,9 +80,9 @@ export default function CaseStudies() {
 
         {/* Stats Bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-4xl mx-auto">
-          <StatCard number="1" label="Legal Victories" />
-          <StatCard number="0" label="Defeats" />
-          <StatCard number="100%" label="Success Rate" />
+          <StatCard number="2" label="Case Studies" />
+          <StatCard number="1" label="Active Investigation" />
+          <StatCard number="1" label="Legal Victory" />
           <StatCard number="2025" label="Active Year" />
         </div>
 
