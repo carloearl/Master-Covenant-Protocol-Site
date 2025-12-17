@@ -8,14 +8,6 @@ export function useGlyphBotPersistence(currentUser) {
   const [isLoading, setIsLoading] = useState(false);
   const [fullHistory, setFullHistory] = useState([]);
 
-  // Don't auto-load last chat - always start fresh
-  useEffect(() => {
-    if (currentUser?.email) {
-      // Just load the list, don't auto-select
-      loadSavedChats();
-    }
-  }, [currentUser?.email, loadSavedChats]);
-
   const loadSavedChats = useCallback(async () => {
     if (!currentUser?.email) return;
 
