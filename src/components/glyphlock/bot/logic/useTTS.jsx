@@ -356,7 +356,6 @@ export default function useTTS(options = {}) {
         const volume = Math.max(0, Math.min(1, settings.volume || 1));
         
         // Additional pitch adjustment if we couldn't find the right gender voice
-        const isMaleProfile = profile.includes('male') && !profile.includes('female');
         const selectedVoiceIsMale = maleKeywords.some(k => voice?.name?.toLowerCase().includes(k));
         const selectedVoiceIsFemale = femaleKeywords.some(k => voice?.name?.toLowerCase().includes(k));
         
