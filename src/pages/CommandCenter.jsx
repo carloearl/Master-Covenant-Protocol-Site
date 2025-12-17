@@ -763,6 +763,9 @@ function SecurityTab({ threatDetection }) {
       return rotatedDate < ninetyDaysAgo;
     });
     if (staleKeys.length > 0) score -= staleKeys.length * 5;
+    // Deduct for active threats
+    if (criticalCount > 0) score -= criticalCount * 15;
+    if (threatCount > criticalCount) score -= (threatCount - criticalCount) * 5;
     return Math.max(0, Math.min(100, score));
   };
 
