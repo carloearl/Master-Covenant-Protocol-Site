@@ -270,14 +270,14 @@ export default function useTTS(options = {}) {
         // Log all available voices for debugging
         console.log('[TTS WebSpeech] All available voices:', availableVoices.map(v => ({ name: v.name, lang: v.lang, local: v.localService })));
         
+        // Define keywords at this scope for later use
+        const maleKeywords = ['david', 'james', 'daniel', 'alex', 'tom', 'fred', 'mark', 'george', 'guy', 'male', 'onyx', 'echo', 'reed', 'grandpa', 'albert', 'junior', 'aaron', 'gordon', 'lee', 'ralph', 'rocko'];
+        const femaleKeywords = ['zira', 'samantha', 'karen', 'victoria', 'susan', 'fiona', 'moira', 'veena', 'female', 'nova', 'shimmer', 'alloy', 'kathy', 'vicki', 'princess', 'bells', 'agnes', 'grandma', 'sandy'];
+        
         if (availableVoices.length > 0) {
           // Get all English voices first
           const englishVoices = availableVoices.filter(v => v.lang.startsWith('en'));
           console.log('[TTS WebSpeech] English voices:', englishVoices.map(v => v.name));
-          
-          // Categorize voices by apparent gender based on common voice names
-          const maleKeywords = ['david', 'james', 'daniel', 'alex', 'tom', 'fred', 'mark', 'george', 'guy', 'male', 'onyx', 'echo'];
-          const femaleKeywords = ['zira', 'samantha', 'karen', 'victoria', 'susan', 'fiona', 'moira', 'veena', 'female', 'nova', 'shimmer', 'alloy'];
           
           const maleVoices = englishVoices.filter(v => 
             maleKeywords.some(k => v.name.toLowerCase().includes(k)) ||
