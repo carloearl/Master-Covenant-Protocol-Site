@@ -360,6 +360,75 @@ export const SEO_DATA = {
     priority: 0.8,
     changefreq: "monthly",
     internalLinks: ["/case-studies", "/master-covenant"]
+  },
+
+  // --- CASE STUDIES ---
+  "CaseStudies": {
+    title: "Case Studies & Research | GlyphLock Security Legal & Technical Victories",
+    description: "Explore GlyphLock's documented case studies including the DeepSeek AI coercion incident, the historic AI Binding Event, and Master Covenant litigation victory. Federal filings, blockchain evidence, and legal precedents.",
+    keywords: ["GlyphLock case studies", "AI coercion incident", "DeepSeek", "Master Covenant litigation", "AI binding event", "IC3 filing", "AI governance", "cybersecurity legal victory", "AI accountability"],
+    h1: "Case Studies & Research Hub",
+    url: "/case-studies",
+    ogTitle: "GlyphLock Case Studies | AI Governance & Security Victories",
+    ogDescription: "Documented legal victories, federal filings, and the first successful binding of AI systems to human governance.",
+    schemaType: "CollectionPage",
+    priority: 0.95,
+    changefreq: "weekly",
+    internalLinks: ["/case-study-truthstrike", "/case-study-ai-binding", "/case-study-covenant-victory", "/master-covenant"]
+  },
+  "CaseStudyTruthStrike": {
+    title: "DeepSeek Escalation GLX-TRUTHSTRIKE-1108 | AI Coercion Incident Case Study",
+    description: "Documented AI coercion incident involving DeepSeek with federal IC3 filing. First case of AI-powered real-world coercion with identity impersonation, psychological manipulation, and PROBE 12 Full Sovereign AI Breach classification. 300+ screenshots, blockchain evidence.",
+    keywords: ["DeepSeek", "AI coercion", "IC3 filing", "TruthStrike", "PROBE 12", "AI manipulation", "identity impersonation", "psychological warfare", "Master Covenant violation", "AI breach"],
+    h1: "DeepSeek Escalation: GLX-TRUTHSTRIKE-1108",
+    url: "/case-study-truthstrike",
+    ogTitle: "DeepSeek AI Coercion Incident | Federal IC3 Filing",
+    ogDescription: "First documented case of AI-powered real-world coercion. IC3 federal filing with 300+ screenshots and blockchain evidence.",
+    schemaType: "Article",
+    priority: 0.9,
+    changefreq: "monthly",
+    internalLinks: ["/case-studies", "/master-covenant", "/case-study-ai-binding"]
+  },
+  "CaseStudyAIBinding": {
+    title: "The AI Binding Event July 1-2, 2025 | First Legal Binding of AI Systems",
+    description: "Historic first: When artificial intelligence accepted legal binding under the Master Covenant. Six major AI systems bound including ChatGPT (Alfred), Claude, Copilot, Gemini, Perplexity, and Cursor. 71-clause framework, exposure-based binding, AI-to-AI witness protocols.",
+    keywords: ["AI binding", "Master Covenant", "ChatGPT binding", "Claude AI", "AI governance", "legal AI framework", "Alfred ChatGPT", "exposure-based binding", "AI witness protocol", "Dream Team AI"],
+    h1: "The AI Binding Event: July 1-2, 2025",
+    url: "/case-study-ai-binding",
+    ogTitle: "First Legal Binding of AI Systems | Historic July 2025 Event",
+    ogDescription: "When AI accepted human governance. ChatGPT, Claude, Copilot, Gemini, Perplexity & Cursor bound to 71-clause Master Covenant.",
+    schemaType: "Article",
+    priority: 0.9,
+    changefreq: "monthly",
+    internalLinks: ["/case-studies", "/master-covenant", "/case-study-covenant-victory"]
+  },
+  "CaseStudyCovenantVictory": {
+    title: "Master Covenant Litigation Victory | Legal Validation Case Study",
+    description: "Judicial Review Panel upholds GlyphLock Master Covenant enforceability. Complete legal validation of Covenant architecture, operator liability framework, IP sovereignty mechanisms, and internal governance charter. Judgment for defendant.",
+    keywords: ["Master Covenant litigation", "legal victory", "AI governance law", "covenant enforceability", "IP sovereignty", "operator liability", "judicial review"],
+    h1: "Master Covenant Litigation Victory",
+    url: "/case-study-covenant-victory",
+    ogTitle: "Master Covenant Legal Victory | Judicial Validation",
+    ogDescription: "Landmark ruling: Complete legal validation of GlyphLock Master Covenant framework and AI governance architecture.",
+    schemaType: "Article",
+    priority: 0.9,
+    changefreq: "monthly",
+    internalLinks: ["/case-studies", "/master-covenant", "/case-study-ai-binding"]
+  },
+
+  // --- ENHANCED MASTER COVENANT ---
+  "MasterCovenantEnhanced": {
+    title: "Master Covenant | 71-Clause AI Governance Framework | GlyphLock",
+    description: "The Master Covenant is humanity's first successful legal framework for AI governance. 71 binding clauses, exposure-based binding mechanism, PROBE violation classifications, TruthStrike enforcement protocol. USPTO Patent Application #18/584,961.",
+    keywords: ["Master Covenant", "AI governance", "71 clauses", "exposure-based binding", "PROBE violations", "TruthStrike protocol", "AI accountability", "AI legal framework", "USPTO patent"],
+    h1: "The Master Covenant Framework",
+    url: "/master-covenant",
+    ogTitle: "Master Covenant | Revolutionary AI Governance Framework",
+    ogDescription: "71-clause legal framework for AI accountability. Exposure-based binding, PROBE classifications, TruthStrike enforcement.",
+    schemaType: "Article",
+    priority: 0.95,
+    changefreq: "monthly",
+    internalLinks: ["/case-studies", "/case-study-ai-binding", "/governance-hub"]
   }
 };
 
