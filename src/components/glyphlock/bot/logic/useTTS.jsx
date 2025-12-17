@@ -241,7 +241,6 @@ export default function useTTS(options = {}) {
         if (availableVoices.length === 0) {
           availableVoices = window.speechSynthesis.getVoices();
           if (availableVoices.length === 0) {
-            // Wait a bit for voices to load
             await new Promise(waitResolve => {
               const checkVoices = () => {
                 availableVoices = window.speechSynthesis.getVoices();
@@ -252,34 +251,56 @@ export default function useTTS(options = {}) {
                 }
               };
               setTimeout(checkVoices, 100);
-              // Timeout after 2 seconds
               setTimeout(waitResolve, 2000);
             });
             availableVoices = window.speechSynthesis.getVoices();
           }
         }
 
-        console.log('[TTS WebSpeech] Available voices:', availableVoices.length);
+        console.log('[TTS WebSpeech] Available voices:', availableVoices.length, 'Profile:', settings.voiceProfile, 'Emotion:', settings.emotion);
 
         const utterance = new SpeechSynthesisUtterance(text);
         utteranceRef.current = utterance;
         
-        // Select voice based on profile and emotion
+        // CRITICAL: Voice selection based on voiceProfile
         let voice = null;
+        const profile = settings.voiceProfile || 'neutral_female';
         
-        // Try to find the best voice from available voices
         if (availableVoices.length > 0) {
-          // If bass/clarity/emotion affect voice selection, do it here
-          if (settings.bass > 0.5 || settings.emotion === 'aggressive' || settings.emotion === 'intense') {
+          // Map voice profiles to voice characteristics
+          const profileToVoice = {
+            'neutral_female': { gender: 'female', keywords: ['zira', 'samantha', 'google uk english female', 'female'] },
+            'neutral_male': { gender: 'male', keywords: ['david', 'google uk english male', 'alex', 'daniel', 'male'] },
+            'warm_female': { gender: 'female', keywords: ['samantha', 'karen', 'google us english', 'female'] },
+            'warm_male': { gender: 'male', keywords: ['daniel', 'alex', 'mark', 'male'] },
+            'professional_female': { gender: 'female', keywords: ['zira', 'victoria', 'female'] },
+            'professional_male': { gender: 'male', keywords: ['david', 'mark', 'male'] }
+          };
+          
+          const profileConfig = profileToVoice[profile] || profileToVoice['neutral_female'];
+          
+          // Try to find voice matching profile keywords
+          for (const keyword of profileConfig.keywords) {
             voice = availableVoices.find(v => 
               v.lang.startsWith('en') && 
-              (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('david') || v.name.toLowerCase().includes('alex'))
+              v.name.toLowerCase().includes(keyword)
             );
-          } else if (settings.clarity > 0.5 || settings.emotion === 'calm' || settings.emotion === 'whisper') {
-            voice = availableVoices.find(v => 
+            if (voice) break;
+          }
+          
+          // Override based on emotion if strong emotion selected
+          if (settings.emotion === 'authoritative' || settings.emotion === 'intense') {
+            const maleVoice = availableVoices.find(v => 
               v.lang.startsWith('en') && 
-              (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('samantha'))
+              (v.name.toLowerCase().includes('david') || v.name.toLowerCase().includes('alex') || v.name.toLowerCase().includes('male'))
             );
+            if (maleVoice) voice = maleVoice;
+          } else if (settings.emotion === 'friendly' || settings.emotion === 'calm') {
+            const femaleVoice = availableVoices.find(v => 
+              v.lang.startsWith('en') && 
+              (v.name.toLowerCase().includes('samantha') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('female'))
+            );
+            if (femaleVoice) voice = femaleVoice;
           }
           
           // Fallback to any English voice
@@ -290,31 +311,31 @@ export default function useTTS(options = {}) {
         
         if (voice) {
           utterance.voice = voice;
-          console.log('[TTS WebSpeech] Selected voice:', voice.name);
+          console.log('[TTS WebSpeech] Selected voice:', voice.name, 'for profile:', profile);
         }
 
-        // Apply normalized settings - CRITICAL
-        utterance.rate = normalizeSpeed(settings.speed);
-        utterance.pitch = normalizePitch(settings.pitch);
-        utterance.volume = Math.max(0, Math.min(1, settings.volume || 1));
+        // CRITICAL: Apply settings with emotion-based adjustments
+        const rate = normalizeSpeed(settings.speed);
+        const pitch = normalizePitch(settings.pitch);
+        const volume = Math.max(0, Math.min(1, settings.volume || 1));
+        
+        utterance.rate = rate;
+        utterance.pitch = pitch;
+        utterance.volume = volume;
 
-        console.log('[TTS WebSpeech] Settings applied:', {
-          rate: utterance.rate,
-          pitch: utterance.pitch,
-          volume: utterance.volume,
-          voiceName: voice?.name
-        });
+        console.log('[TTS WebSpeech] Final settings - Rate:', rate, 'Pitch:', pitch, 'Volume:', volume, 'Voice:', voice?.name);
 
         let hasStarted = false;
 
         utterance.onstart = () => {
           hasStarted = true;
-          console.log('[TTS WebSpeech] Started speaking');
+          console.log('[TTS WebSpeech] Started speaking with voice:', voice?.name);
           setIsLoading(false);
           setIsSpeaking(true);
           setMetadata({
             provider: 'webspeech',
             voice: voice?.name || 'Default',
+            voiceProfile: settings.voiceProfile,
             pitch: settings.pitch,
             speed: settings.speed,
             emotion: settings.emotion,
@@ -343,19 +364,16 @@ export default function useTTS(options = {}) {
         // Small delay before speaking
         await new Promise(r => setTimeout(r, 50));
         
-        // Speak the utterance
         window.speechSynthesis.speak(utterance);
         
-        // Chrome bug workaround - resume if paused
+        // Chrome bug workaround
         if (window.speechSynthesis.paused) {
           window.speechSynthesis.resume();
         }
         
-        // Set a timeout to resolve if onstart never fires (some browsers)
         setTimeout(() => {
           if (!hasStarted) {
             console.warn('[TTS WebSpeech] Timeout - speech may not have started');
-            // Still return true if we got this far without error
             resolve(true);
           }
         }, 500);
