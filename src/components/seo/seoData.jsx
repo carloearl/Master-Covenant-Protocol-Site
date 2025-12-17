@@ -296,19 +296,6 @@ export const SEO_DATA = {
     changefreq: "weekly",
     internalLinks: ["/qr", "/interactive-image-studio"]
   },
-  "GlyphBot": {
-    title: "GlyphBot AI Assistant | Cybersecurity Chatbot & Code Analysis",
-    description: "AI-powered security assistant for threat detection, code analysis, file scanning, and security auditing. Available 24/7.",
-    keywords: ["AI security assistant", "GlyphBot", "cybersecurity chatbot", "code analysis AI", "threat detection bot"],
-    h1: "GlyphBot AI Security Assistant",
-    url: "/glyphbot",
-    ogTitle: "GlyphBot - Your AI Security Analyst",
-    ogDescription: "24/7 AI assistant for security analysis, code review, and threat detection.",
-    schemaType: "SoftwareApplication",
-    priority: 0.9,
-    changefreq: "daily",
-    internalLinks: ["/dashboard", "/site-audit"]
-  },
   "Dashboard": {
     title: "Dashboard | GlyphLock User Portal",
     description: "Access all GlyphLock tools and services from your centralized dashboard. Manage QR codes, images, security settings, and more.",
