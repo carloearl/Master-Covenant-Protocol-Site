@@ -155,15 +155,9 @@ export default function Footer() {
           </h4>
           <nav aria-label="Sitemap Discovery" className="p-4 bg-slate-900/50 rounded-xl border border-slate-800">
             <p className="text-xs text-slate-400 mb-4 text-center">Machine-readable discovery endpoints for search engines and AI crawlers</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-              <a href="https://app.base44.com/api/apps/U5jDzdts3bd4p19I5hID/sitemap" target="_blank" rel="noopener" className="text-cyan-400 hover:text-cyan-300 underline">sitemap.xml</a>
+            <div className="flex justify-center gap-6 text-xs">
               <a href="https://app.base44.com/api/apps/U5jDzdts3bd4p19I5hID/robotsTxt" target="_blank" rel="noopener" className="text-cyan-400 hover:text-cyan-300 underline">robots.txt</a>
               <a href="https://app.base44.com/api/apps/U5jDzdts3bd4p19I5hID/llmsTxt" target="_blank" rel="noopener" className="text-cyan-400 hover:text-cyan-300 underline">llms.txt</a>
-              <a href="https://app.base44.com/api/apps/U5jDzdts3bd4p19I5hID/aiTxtEnhanced" target="_blank" rel="noopener" className="text-cyan-400 hover:text-cyan-300 underline">ai.txt</a>
-
-              <Link to={createPageUrl('Sitemap')} className="text-cyan-400 hover:text-cyan-300 underline">HTML Sitemap</Link>
-              <Link to={createPageUrl('CaseStudies')} className="text-cyan-400 hover:text-cyan-300 underline">Case Studies</Link>
-              <Link to={createPageUrl('MasterCovenant')} className="text-cyan-400 hover:text-cyan-300 underline">Master Covenant</Link>
             </div>
           </nav>
         </div>
