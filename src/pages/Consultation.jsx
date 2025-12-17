@@ -26,6 +26,7 @@ export default function Consultation() {
     description: ""
   });
   const [verificationToken, setVerificationToken] = useState(null);
+  const [activeFeature, setActiveFeature] = useState(0);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -42,6 +43,14 @@ export default function Consultation() {
       '/consultation'
     );
     return cleanup;
+  }, []);
+
+  // Rotate featured capability
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveFeature(prev => (prev + 1) % 5);
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   const createConsultation = useMutation({
