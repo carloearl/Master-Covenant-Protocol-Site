@@ -141,6 +141,54 @@ export default function DeployPanel() {
     toast.success('Patch Bundle copied! Paste to Base44 AI chat to deploy.');
   };
 
+  // EXPORT ALL - Download entire codebase for offline independence
+  const handleExportAll = async () => {
+    toast.info('Exporting all code...');
+    try {
+      const { data } = await base44.functions.invoke('exportProject', {});
+      
+      if (!data.success) {
+        throw new Error(data.error);
+      }
+
+      // Create downloadable file
+      const blob = new Blob([JSON.stringify(data.export, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `glyphlock-export-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      // Also create a human-readable version with all code files
+      let readableExport = `# GLYPHLOCK CODE EXPORT\n`;
+      readableExport += `# Exported: ${data.export.exportedAt}\n`;
+      readableExport += `# Total Files: ${data.export.modules.length}\n\n`;
+      readableExport += data.export.readme + '\n\n';
+      readableExport += `${'='.repeat(80)}\n\n`;
+
+      for (const mod of data.export.modules) {
+        readableExport += `## FILE: ${mod.path}\n`;
+        readableExport += `## Type: ${mod.type} | Version: ${mod.version}\n`;
+        readableExport += `${'─'.repeat(60)}\n\n`;
+        readableExport += mod.code + '\n\n';
+        readableExport += `${'='.repeat(80)}\n\n`;
+      }
+
+      const textBlob = new Blob([readableExport], { type: 'text/plain' });
+      const textUrl = URL.createObjectURL(textBlob);
+      const textLink = document.createElement('a');
+      textLink.href = textUrl;
+      textLink.download = `glyphlock-code-${Date.now()}.txt`;
+      textLink.click();
+      URL.revokeObjectURL(textUrl);
+
+      toast.success(`Exported ${data.stats.totalModules} files! Check downloads.`);
+    } catch (error) {
+      toast.error('Export failed: ' + error.message);
+    }
+  };
+
   const getStatusColor = (status) => {
     const colors = {
       planned: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
@@ -174,7 +222,7 @@ export default function DeployPanel() {
   return (
     <div className="h-full flex flex-col gap-4 p-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.4)]">
             <Rocket className="w-6 h-6 text-white" />
@@ -184,10 +232,16 @@ export default function DeployPanel() {
             <p className="text-sm text-blue-300">Manage agent-generated changes</p>
           </div>
         </div>
-        <Button onClick={loadChangeSets} size="sm" variant="outline" className="border-blue-500/30">
-          <RotateCcw className="w-4 h-4 mr-2" />
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button onClick={handleExportAll} size="sm" className="bg-green-600 hover:bg-green-700">
+            <Download className="w-4 h-4 mr-2" />
+            Export All Code
+          </Button>
+          <Button onClick={loadChangeSets} size="sm" variant="outline" className="border-blue-500/30">
+            <RotateCcw className="w-4 h-4 mr-2" />
+            Refresh
+          </Button>
+        </div>
       </div>
 
       {/* Change Sets List */}
