@@ -1562,7 +1562,7 @@ export default function CommandCenter() {
               </div>
             </div>
           </div>
-          <SidebarContent activeTab={activeTab} setActiveTab={setActiveTab} user={user} onLogout={handleLogout} />
+          <SidebarContent activeTab={activeTab} setActiveTab={setActiveTab} user={user} onLogout={handleLogout} threatCount={threatDetection.threatCount} />
         </aside>
 
         <div className="flex-1 flex flex-col min-w-0">
