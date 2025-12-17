@@ -401,29 +401,39 @@ export default function useTTS(options = {}) {
     const voiceProfile = VOICE_PROFILES[settings.voiceProfile] || VOICE_PROFILES.neutral_female;
     const voiceId = voiceProfile.id;
 
-    // GLYPHLOCK: Always use Web Speech first for reliability (OpenAI TTS requires backend setup)
-    // Web Speech is built into the browser and always works
-    console.log('[TTS] Using Web Speech API (most reliable)');
-    const webSpeechResult = await playWithWebSpeech(cleanText, settings);
+    // GLYPHLOCK: Try Web Speech API first (built-in, most reliable)
+    console.log('[TTS] Attempting Web Speech API with settings:', {
+      speed: settings.speed,
+      pitch: settings.pitch,
+      volume: settings.volume,
+      voiceProfile: settings.voiceProfile,
+      emotion: settings.emotion
+    });
     
-    if (webSpeechResult) {
-      return true;
+    try {
+      const webSpeechResult = await playWithWebSpeech(cleanText, settings);
+      
+      if (webSpeechResult) {
+        console.log('[TTS] Web Speech succeeded');
+        return true;
+      }
+    } catch (webErr) {
+      console.warn('[TTS] Web Speech failed:', webErr);
     }
     
-    // If Web Speech fails and we want OpenAI, try that
+    // If Web Speech fails and OpenAI provider is requested, try that
     if (provider === 'openai') {
       try {
-        console.log('[TTS] Web Speech failed, trying OpenAI...');
+        console.log('[TTS] Trying OpenAI TTS as fallback...');
         return await playWithOpenAI(cleanText, settings, settings.voiceProfile);
       } catch (err) {
         console.error('[TTS] OpenAI TTS also failed:', err);
         setLastError(err.message);
-        setIsLoading(false);
-        return false;
       }
     }
     
     setIsLoading(false);
+    console.warn('[TTS] All TTS methods failed');
     return false;
   }, [provider, stop, playWithOpenAI, playWithWebSpeech, currentSettings]);
 
