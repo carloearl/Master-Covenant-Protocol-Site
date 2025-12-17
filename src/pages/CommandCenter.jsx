@@ -1107,16 +1107,64 @@ function LogsTab() {
 
 // Settings Tab
 function SettingsTab({ user }) {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [notifications, setNotifications] = useState(true);
-  const [twoFactor, setTwoFactor] = useState(false);
+
+  const handleDeleteAllKeys = async () => {
+    if (!confirm("Are you sure you want to delete ALL API keys? This cannot be undone.")) return;
+    try {
+      const keys = await base44.entities.APIKey.list();
+      for (const key of keys) {
+        await base44.entities.APIKey.delete(key.id);
+      }
+      queryClient.invalidateQueries(['apiKeys']);
+      toast.success("All API keys deleted");
+    } catch (err) {
+      toast.error("Failed to delete keys");
+    }
+  };
 
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-white">Settings</h2>
 
+      {/* Quick Links */}
       <Card className="bg-slate-900/50 border-slate-800">
         <CardHeader>
-          <CardTitle className="text-white">Account Settings</CardTitle>
+          <CardTitle className="text-white">Quick Links</CardTitle>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <Link to={createPageUrl('AccountSecurity')}>
+            <Button variant="outline" className="w-full justify-start border-slate-700 hover:border-cyan-500/50">
+              <Lock className="w-4 h-4 mr-2 text-cyan-400" />
+              Account Security & MFA
+            </Button>
+          </Link>
+          <Link to={createPageUrl('SDKDocs')}>
+            <Button variant="outline" className="w-full justify-start border-slate-700 hover:border-blue-500/50">
+              <Code className="w-4 h-4 mr-2 text-blue-400" />
+              SDK Documentation
+            </Button>
+          </Link>
+          <Link to={createPageUrl('Consultation')}>
+            <Button variant="outline" className="w-full justify-start border-slate-700 hover:border-purple-500/50">
+              <CreditCard className="w-4 h-4 mr-2 text-purple-400" />
+              Protocol Verification
+            </Button>
+          </Link>
+          <Link to={createPageUrl('Contact')}>
+            <Button variant="outline" className="w-full justify-start border-slate-700 hover:border-green-500/50">
+              <Bell className="w-4 h-4 mr-2 text-green-400" />
+              Contact Support
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-slate-900/50 border-slate-800">
+        <CardHeader>
+          <CardTitle className="text-white">Preferences</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex items-center justify-between">
@@ -1125,13 +1173,6 @@ function SettingsTab({ user }) {
               <p className="text-sm text-slate-500">Receive security alerts via email</p>
             </div>
             <Switch checked={notifications} onCheckedChange={setNotifications} />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-white font-medium">Two-Factor Authentication</p>
-              <p className="text-sm text-slate-500">Add an extra layer of security</p>
-            </div>
-            <Switch checked={twoFactor} onCheckedChange={setTwoFactor} />
           </div>
         </CardContent>
       </Card>
@@ -1153,6 +1194,14 @@ function SettingsTab({ user }) {
             <Label className="text-slate-400">Account Created</Label>
             <p className="text-white">{user?.created_date ? new Date(user.created_date).toLocaleDateString() : 'N/A'}</p>
           </div>
+          <div className="pt-4">
+            <Link to={createPageUrl('AccountSecurity')}>
+              <Button className="bg-gradient-to-r from-cyan-500 to-blue-600">
+                <Settings className="w-4 h-4 mr-2" />
+                Manage Account Security
+              </Button>
+            </Link>
+          </div>
         </CardContent>
       </Card>
 
@@ -1163,11 +1212,12 @@ function SettingsTab({ user }) {
         <CardContent>
           <p className="text-slate-400 mb-4">These actions are irreversible. Please proceed with caution.</p>
           <div className="flex flex-wrap gap-3">
-            <Button variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10">
+            <Button 
+              variant="outline" 
+              className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+              onClick={handleDeleteAllKeys}
+            >
               Delete All API Keys
-            </Button>
-            <Button variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10">
-              Clear Activity Logs
             </Button>
           </div>
         </CardContent>

@@ -159,16 +159,16 @@ export default function Navbar({ user, onLogin, onLogout }) {
                   <p className="text-xs text-violet-200">Signed in as</p>
                   <p className="text-sm font-bold text-white truncate">{user.email}</p>
                 </div>
-                <DropdownMenuItem asChild className="text-violet-200 focus:bg-indigo-500/20 focus:text-white rounded-lg cursor-pointer mb-1">
-                  <Link to={createPageUrl("Dashboard")}>
-                    <User className="w-4 h-4 mr-2 text-indigo-400" />
-                    Dashboard
-                  </Link>
-                </DropdownMenuItem>
                 <DropdownMenuItem asChild className="text-violet-200 focus:bg-violet-500/20 focus:text-white rounded-lg cursor-pointer mb-1">
                   <Link to={createPageUrl("CommandCenter")}>
                     <Terminal className="w-4 h-4 mr-2 text-violet-400" />
                     Command Center
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="text-violet-200 focus:bg-indigo-500/20 focus:text-white rounded-lg cursor-pointer mb-1">
+                  <Link to={createPageUrl("AccountSecurity")}>
+                    <User className="w-4 h-4 mr-2 text-indigo-400" />
+                    Account Settings
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-white/10 my-1" />
@@ -273,8 +273,8 @@ export default function Navbar({ user, onLogin, onLogout }) {
               <div className="pt-6 border-t border-white/10 flex flex-col gap-4">
                 {user ? (
                   <>
-                    <Link to={createPageUrl("Dashboard")} onClick={() => setMobileMenuOpen(false)}>
-                      <Button className="w-full bg-indigo-500/15 text-indigo-300 border border-indigo-400/40">Dashboard</Button>
+                    <Link to={createPageUrl("CommandCenter")} onClick={() => setMobileMenuOpen(false)}>
+                      <Button className="w-full bg-indigo-500/15 text-indigo-300 border border-indigo-400/40">Command Center</Button>
                     </Link>
                     <Button onClick={onLogout} variant="ghost" className="text-red-400 hover:text-red-300 hover:bg-red-500/10">
                       Sign Out
