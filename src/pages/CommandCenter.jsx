@@ -30,7 +30,8 @@ import {
   Globe, Code, Terminal, BarChart3, Bell, Search, Filter,
   QrCode, Image, Bot, CreditCard, ExternalLink, Loader2,
   HardDrive, Cpu, Wifi, Cloud, Package, Layers, GitBranch,
-  Monitor, Smartphone, ArrowUpRight, ArrowDownRight, Circle
+  Monitor, Smartphone, ArrowUpRight, ArrowDownRight, Circle,
+  ShieldAlert, Radio
 } from "lucide-react";
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, 
@@ -102,9 +103,10 @@ function MobileSidebar({ isOpen, onClose, activeTab, setActiveTab, user, onLogou
 }
 
 // Sidebar content
-function SidebarContent({ activeTab, setActiveTab, user, onLogout }) {
+function SidebarContent({ activeTab, setActiveTab, user, onLogout, threatCount = 0 }) {
   const navItems = [
     { id: "overview", label: "Overview", icon: Home },
+    { id: "threats", label: "Threat Detection", icon: ShieldAlert, badge: threatCount },
     { id: "resources", label: "Resources", icon: Layers },
     { id: "api-keys", label: "API Keys", icon: Key },
     { id: "security", label: "Security", icon: Shield },
