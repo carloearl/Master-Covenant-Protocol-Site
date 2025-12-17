@@ -82,6 +82,7 @@ export default function Layout({ children, currentPageName }) {
       <GoogleAnalytics />
       <StructuredDataOrg />
       <SecurityHeaders />
+      <CrawlerFallback />
       
       {/* SITE-WIDE NEBULA - Absolute bottom layer */}
       <div 
