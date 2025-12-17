@@ -132,7 +132,12 @@ function SidebarContent({ activeTab, setActiveTab, user, onLogout, threatCount =
             }`}
           >
             <Icon className="w-4 h-4" />
-            <span className="font-medium">{item.label}</span>
+            <span className="font-medium flex-1 text-left">{item.label}</span>
+            {item.badge > 0 && (
+              <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-[10px] px-1.5 py-0">
+                {item.badge}
+              </Badge>
+            )}
           </button>
         );
       })}
