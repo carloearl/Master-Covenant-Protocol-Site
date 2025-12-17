@@ -232,60 +232,72 @@ export default function Consultation() {
           <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 mb-12 lg:mb-16">
             {/* Form Section */}
             <div className="lg:col-span-2">
-              <Card className="glyph-glass-card card-elevated-hover">
-                <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-white tracking-wide">Credential Review Request</CardTitle>
+              <Card className="bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+                <CardHeader className="pb-2">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-500/30">
+                      <Shield className="w-5 h-5 text-cyan-400" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-xl font-bold text-white">Request Verification</CardTitle>
+                      <p className="text-sm text-slate-400">Complete the form to begin your credential review</p>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div>
-                        <Label htmlFor="full_name" className="text-white font-semibold">Full Name *</Label>
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="full_name" className="text-slate-300 text-sm">Full Name</Label>
                         <Input
                           id="full_name"
                           required
+                          placeholder="Enter your full name"
                           value={formData.full_name}
                           onChange={(e) => setFormData({...formData, full_name: e.target.value})}
-                          className="input-glow-blue"
+                          className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-cyan-500/50 focus:ring-cyan-500/20"
                         />
                       </div>
-                      <div>
-                        <Label htmlFor="email" className="text-white font-semibold">Email *</Label>
+                      <div className="space-y-2">
+                        <Label htmlFor="email" className="text-slate-300 text-sm">Email Address</Label>
                         <Input
                           id="email"
                           type="email"
                           required
+                          placeholder="you@company.com"
                           value={formData.email}
                           onChange={(e) => setFormData({...formData, email: e.target.value})}
-                          className="input-glow-blue"
+                          className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-cyan-500/50 focus:ring-cyan-500/20"
                         />
                       </div>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div>
-                        <Label htmlFor="organization" className="text-white font-semibold">Organization *</Label>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="organization" className="text-slate-300 text-sm">Organization</Label>
                         <Input
                           id="organization"
                           required
+                          placeholder="Your company name"
                           value={formData.organization}
                           onChange={(e) => setFormData({...formData, organization: e.target.value})}
-                          className="input-glow-blue"
+                          className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-cyan-500/50 focus:ring-cyan-500/20"
                         />
                       </div>
-                      <div>
-                        <Label htmlFor="system_type" className="text-white font-semibold">System Type *</Label>
+                      <div className="space-y-2">
+                        <Label htmlFor="system_type" className="text-slate-300 text-sm">System Type</Label>
                         <Select
                           required
                           value={formData.system_type}
                           onValueChange={(value) => setFormData({...formData, system_type: value})}
                         >
-                          <SelectTrigger className="bg-slate-950/60 border-2 border-slate-700/50 text-white focus:border-[#3B82F6]">
-                            <SelectValue />
+                          <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white focus:border-cyan-500/50">
+                            <SelectValue placeholder="Select your infrastructure" />
                           </SelectTrigger>
-                          <SelectContent className="bg-slate-900 border-2 border-slate-700">
+                          <SelectContent className="bg-slate-900 border-slate-700">
                             {systemTypes.map((type) => (
-                              <SelectItem key={type} value={type} className="text-white hover:bg-slate-800">
+                              <SelectItem key={type} value={type} className="text-white hover:bg-slate-800 focus:bg-slate-800">
                                 {type}
                               </SelectItem>
                             ))}
@@ -294,19 +306,20 @@ export default function Consultation() {
                       </div>
                     </div>
 
-                    <div>
-                      <Label htmlFor="description" className="text-white font-semibold">What Needs Verification *</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="description" className="text-slate-300 text-sm">What Needs Verification</Label>
                       <Textarea
                         id="description"
-                        rows={5}
+                        rows={4}
                         required
+                        placeholder="Describe your security requirements and what you need verified..."
                         value={formData.description}
                         onChange={(e) => setFormData({...formData, description: e.target.value})}
-                        className="bg-slate-950/60 border-2 border-slate-700/50 text-white focus:border-[#3B82F6] transition-colors resize-none"
+                        className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-cyan-500/50 focus:ring-cyan-500/20 resize-none"
                       />
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="pt-2 space-y-4">
                       <VerificationGate 
                         onVerified={(token) => setVerificationToken(token)}
                         disabled={createConsultation.isPending}
@@ -316,9 +329,19 @@ export default function Consultation() {
                         type="submit"
                         size="lg"
                         disabled={createConsultation.isPending || !verificationToken}
-                        className="w-full bg-slate-800 border-2 border-slate-700 hover:bg-slate-700 text-white font-bold text-lg py-6 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold py-6 rounded-xl shadow-lg shadow-cyan-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {createConsultation.isPending ? "Processing Request" : "Request Credential Review"}
+                        {createConsultation.isPending ? (
+                          <span className="flex items-center gap-2">
+                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            Processing Request...
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-2">
+                            <Shield className="w-5 h-5" />
+                            Submit Verification Request
+                          </span>
+                        )}
                       </Button>
                     </div>
                   </form>
@@ -327,67 +350,59 @@ export default function Consultation() {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
-              {/* What This Engagement Is */}
-              <Card className="glyph-glass-card">
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold text-white">What This Engagement Is</CardTitle>
+            <div className="space-y-5">
+              {/* Engagement Format */}
+              <Card className="bg-slate-900/60 backdrop-blur-xl border border-slate-700/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg font-semibold text-white flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-cyan-400" />
+                    Engagement Format
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-0">
+                  {engagementFeatures.map((feature, idx) => (
+                    <div key={idx} className={`flex items-center justify-between py-3 ${idx !== engagementFeatures.length - 1 ? 'border-b border-slate-700/50' : ''}`}>
+                      <div className="flex items-center gap-2">
+                        <feature.icon className="w-4 h-4 text-slate-500" />
+                        <span className="text-slate-400 text-sm">{feature.label}</span>
+                      </div>
+                      <span className="font-medium text-white text-sm">{feature.value}</span>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              {/* What You'll Receive */}
+              <Card className="bg-slate-900/60 backdrop-blur-xl border border-slate-700/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg font-semibold text-white flex items-center gap-2">
+                    <Target className="w-4 h-4 text-cyan-400" />
+                    What You'll Receive
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-slate-300 mb-4 text-sm">
-                    A controlled protocol verification conducted to:
-                  </p>
-                  <div className="space-y-2">
-                    {verificationScope.map((item, index) => (
-                      <div key={index} className="flex items-start gap-3">
-                        <div className="w-1 h-1 bg-slate-600 mt-2 flex-shrink-0"></div>
-                        <span className="text-white text-sm leading-relaxed">{item}</span>
-                      </div>
+                  <ul className="space-y-3">
+                    {['Comprehensive security assessment', 'Threat exposure analysis', 'Protocol compliance report', 'Credential eligibility determination', 'Enforcement roadmap'].map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-3">
+                        <CheckCircle2 className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                        <span className="text-slate-300 text-sm">{item}</span>
+                      </li>
                     ))}
-                  </div>
-                  <div className="mt-6 pt-4 border-t border-slate-700/50">
-                    <p className="text-white font-semibold text-sm">This engagement produces proof, not opinions.</p>
-                  </div>
+                  </ul>
                 </CardContent>
               </Card>
 
-              {/* Engagement Format */}
-              <Card className="glyph-glass-card">
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold text-white">Engagement Format</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex justify-between items-center py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Duration:</span>
-                    <span className="font-bold text-white">Up to 90 minutes</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Format:</span>
-                    <span className="font-bold text-white">Secure video or audio</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Recording:</span>
-                    <span className="font-bold text-white">Mutual authorization only</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-slate-400">Software:</span>
-                    <span className="font-bold text-white">No installs required</span>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Credentialing Policy */}
-              <Card className="glyph-glass-card border-red-900/40">
-                <CardContent className="p-6">
-                  <h3 className="font-black text-white text-lg mb-4">Credentialing Policy</h3>
-                  <div className="space-y-3 text-sm text-slate-300">
-                    <p>GlyphLock does not provision access arbitrarily.</p>
-                    <p>Passing verification does not guarantee deployment.</p>
-                    <p>Failure halts progression immediately.</p>
-                    <p>Enforcement proceeds only upon credential approval.</p>
-                    <p className="pt-3 border-t border-slate-700/50 text-white font-semibold">
-                      All determinations are governed by the Master Covenant.
-                    </p>
+              {/* Important Notice */}
+              <Card className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20">
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-white text-sm mb-2">Important Notice</h3>
+                      <p className="text-slate-300 text-xs leading-relaxed">
+                        Passing verification does not guarantee deployment. All determinations are governed by the Master Covenant.
+                      </p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
