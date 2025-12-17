@@ -15,6 +15,7 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import StructuredDataOrg from "@/components/StructuredDataOrg";
 import SecurityHeaders from "@/components/security/SecurityHeaders";
 import CrawlerFallback from "@/components/seo/CrawlerFallback";
+import PrerenderHints from "@/components/seo/PrerenderHints";
 
 const { GlyphBotJr } = UI;
 
@@ -83,6 +84,7 @@ export default function Layout({ children, currentPageName }) {
       <StructuredDataOrg />
       <SecurityHeaders />
       <CrawlerFallback />
+      <PrerenderHints />
       
       {/* SITE-WIDE NEBULA - Absolute bottom layer */}
       <div 
