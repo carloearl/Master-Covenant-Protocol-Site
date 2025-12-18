@@ -1088,9 +1088,13 @@ function APIKeysTab({ user }) {
 
 // Analytics Tab - REAL DATA ONLY
 function AnalyticsTab() {
+  const [dateRange, setDateRange] = useState("30");
+  const [eventTypeFilter, setEventTypeFilter] = useState("all");
+  const [selectedMetric, setSelectedMetric] = useState("combined");
+
   const { data: auditLogs = [] } = useQuery({
     queryKey: ['auditLogs'],
-    queryFn: () => base44.entities.SystemAuditLog.list('-created_date', 200)
+    queryFn: () => base44.entities.SystemAuditLog.list('-created_date', 500)
   });
 
   const { data: qrAssets = [] } = useQuery({
@@ -1100,74 +1104,387 @@ function AnalyticsTab() {
 
   const { data: scanEvents = [] } = useQuery({
     queryKey: ['scanEvents'],
-    queryFn: () => base44.entities.QrScanEvent.list('-created_date', 200)
+    queryFn: () => base44.entities.QrScanEvent.list('-created_date', 500)
   });
 
-  // Real chart data
-  const last30Days = Array.from({ length: 30 }, (_, i) => {
+  const { data: apiKeys = [] } = useQuery({
+    queryKey: ['apiKeys'],
+    queryFn: () => base44.entities.APIKey.list()
+  });
+
+  // Filter by date range
+  const daysToShow = parseInt(dateRange);
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - daysToShow);
+
+  const filteredLogs = auditLogs.filter(log => {
+    const logDate = new Date(log.created_date);
+    const matchesDate = logDate >= startDate;
+    const matchesType = eventTypeFilter === "all" || log.event_type === eventTypeFilter;
+    return matchesDate && matchesType;
+  });
+
+  const filteredScans = scanEvents.filter(e => new Date(e.created_date) >= startDate);
+
+  // Get unique event types
+  const eventTypes = ["all", ...new Set(auditLogs.map(l => l.event_type).filter(Boolean))];
+
+  // Chart data
+  const chartData = Array.from({ length: daysToShow }, (_, i) => {
     const date = new Date();
-    date.setDate(date.getDate() - (29 - i));
+    date.setDate(date.getDate() - (daysToShow - 1 - i));
+    const dateStr = date.toDateString();
     return {
       date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      scans: scanEvents.filter(e => new Date(e.created_date).toDateString() === date.toDateString()).length,
-      events: auditLogs.filter(l => new Date(l.created_date).toDateString() === date.toDateString()).length
+      scans: scanEvents.filter(e => new Date(e.created_date).toDateString() === dateStr).length,
+      events: filteredLogs.filter(l => new Date(l.created_date).toDateString() === dateStr).length,
+      qrCreated: qrAssets.filter(q => new Date(q.created_date).toDateString() === dateStr).length
     };
   });
 
+  // API Key usage data (by key)
+  const apiKeyUsage = apiKeys.map(key => ({
+    name: key.name || 'Unnamed',
+    created: new Date(key.created_date).toLocaleDateString(),
+    lastUsed: key.last_used ? new Date(key.last_used).toLocaleDateString() : 'Never',
+    status: key.status,
+    environment: key.environment
+  }));
+
+  // QR Code type distribution
+  const qrTypeData = qrAssets.reduce((acc, qr) => {
+    const type = qr.type || 'url';
+    acc[type] = (acc[type] || 0) + 1;
+    return acc;
+  }, {});
+
+  const qrPieData = Object.entries(qrTypeData).map(([name, value]) => ({ name, value }));
+  const COLORS = ['#06b6d4', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
+
+  // Event type distribution
+  const eventTypeData = filteredLogs.reduce((acc, log) => {
+    const type = log.event_type || 'unknown';
+    acc[type] = (acc[type] || 0) + 1;
+    return acc;
+  }, {});
+
+  const eventPieData = Object.entries(eventTypeData).map(([name, value]) => ({ name, value }));
+
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-bold text-white">Analytics</h2>
-        <p className="text-sm text-slate-400">Real usage data from your account</p>
+      {/* Header with filters */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-bold text-white">Analytics Dashboard</h2>
+          <p className="text-sm text-slate-400">Interactive insights from your data</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Select value={dateRange} onValueChange={setDateRange}>
+            <SelectTrigger className="w-32 bg-slate-800 border-slate-700 text-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="7">Last 7 days</SelectItem>
+              <SelectItem value="14">Last 14 days</SelectItem>
+              <SelectItem value="30">Last 30 days</SelectItem>
+              <SelectItem value="60">Last 60 days</SelectItem>
+              <SelectItem value="90">Last 90 days</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={eventTypeFilter} onValueChange={setEventTypeFilter}>
+            <SelectTrigger className="w-40 bg-slate-800 border-slate-700 text-white">
+              <SelectValue placeholder="Event Type" />
+            </SelectTrigger>
+            <SelectContent>
+              {eventTypes.map(type => (
+                <SelectItem key={type} value={type}>
+                  {type === "all" ? "All Events" : type}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
+      {/* Summary Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="bg-slate-900/50 border-slate-800">
           <CardContent className="p-4">
-            <p className="text-slate-400 text-xs">Total QR Codes</p>
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-slate-400 text-xs">QR Codes</p>
+              <QrCode className="w-4 h-4 text-cyan-400" />
+            </div>
             <p className="text-2xl font-bold text-white">{qrAssets.length}</p>
+            <p className="text-xs text-green-400 mt-1">+{qrAssets.filter(q => new Date(q.created_date) >= startDate).length} this period</p>
           </CardContent>
         </Card>
         <Card className="bg-slate-900/50 border-slate-800">
           <CardContent className="p-4">
-            <p className="text-slate-400 text-xs">Total Scans</p>
-            <p className="text-2xl font-bold text-white">{scanEvents.length}</p>
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-slate-400 text-xs">Scans</p>
+              <Activity className="w-4 h-4 text-purple-400" />
+            </div>
+            <p className="text-2xl font-bold text-white">{filteredScans.length}</p>
+            <p className="text-xs text-purple-400 mt-1">{filteredScans.length > 0 ? Math.round(filteredScans.length / daysToShow) : 0} daily avg</p>
           </CardContent>
         </Card>
         <Card className="bg-slate-900/50 border-slate-800">
           <CardContent className="p-4">
-            <p className="text-slate-400 text-xs">System Events</p>
-            <p className="text-2xl font-bold text-white">{auditLogs.length}</p>
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-slate-400 text-xs">Events</p>
+              <Database className="w-4 h-4 text-blue-400" />
+            </div>
+            <p className="text-2xl font-bold text-white">{filteredLogs.length}</p>
+            <p className="text-xs text-blue-400 mt-1">{filteredLogs.length > 0 ? Math.round(filteredLogs.length / daysToShow) : 0} daily avg</p>
           </CardContent>
         </Card>
         <Card className="bg-slate-900/50 border-slate-800">
           <CardContent className="p-4">
-            <p className="text-slate-400 text-xs">Avg Daily</p>
-            <p className="text-2xl font-bold text-white">{auditLogs.length > 0 ? Math.round(auditLogs.length / 30) : 0}</p>
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-slate-400 text-xs">API Keys</p>
+              <Key className="w-4 h-4 text-green-400" />
+            </div>
+            <p className="text-2xl font-bold text-white">{apiKeys.length}</p>
+            <p className="text-xs text-green-400 mt-1">{apiKeys.filter(k => k.status === 'active').length} active</p>
           </CardContent>
         </Card>
       </div>
 
+      {/* Metric Selector */}
+      <Card className="bg-slate-900/50 border-slate-800">
+        <CardContent className="p-4">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-sm text-slate-400">Show:</span>
+            {[
+              { id: 'combined', label: 'All Metrics', color: 'cyan' },
+              { id: 'scans', label: 'Scans Only', color: 'purple' },
+              { id: 'events', label: 'Events Only', color: 'blue' },
+              { id: 'qr', label: 'QR Created', color: 'green' }
+            ].map(metric => (
+              <Button
+                key={metric.id}
+                size="sm"
+                variant={selectedMetric === metric.id ? "default" : "outline"}
+                onClick={() => setSelectedMetric(metric.id)}
+                className={selectedMetric === metric.id ? `bg-${metric.color}-600` : 'border-slate-700'}
+              >
+                {metric.label}
+              </Button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Main Activity Chart */}
       <Card className="bg-slate-900/50 border-slate-800">
         <CardHeader>
-          <CardTitle className="text-white text-sm">Activity Over Time (30 Days)</CardTitle>
+          <CardTitle className="text-white text-sm flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-cyan-400" />
+            Activity Trends ({dateRange} days)
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-64">
+          <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={last30Days}>
+              <AreaChart data={chartData}>
+                <defs>
+                  <linearGradient id="colorScans" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorEvents" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorQR" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="date" stroke="#64748b" tick={{ fontSize: 10 }} />
+                <XAxis dataKey="date" stroke="#64748b" tick={{ fontSize: 11 }} />
                 <YAxis stroke="#64748b" />
-                <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '8px' }} />
-                <Line type="monotone" dataKey="events" stroke="#06b6d4" strokeWidth={2} dot={false} name="Events" />
-                <Line type="monotone" dataKey="scans" stroke="#8b5cf6" strokeWidth={2} dot={false} name="Scans" />
-              </LineChart>
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '8px' }}
+                  labelStyle={{ color: '#fff', marginBottom: '8px' }}
+                />
+                {(selectedMetric === 'combined' || selectedMetric === 'scans') && (
+                  <Area type="monotone" dataKey="scans" stroke="#8b5cf6" strokeWidth={2} fill="url(#colorScans)" name="QR Scans" />
+                )}
+                {(selectedMetric === 'combined' || selectedMetric === 'events') && (
+                  <Area type="monotone" dataKey="events" stroke="#06b6d4" strokeWidth={2} fill="url(#colorEvents)" name="System Events" />
+                )}
+                {(selectedMetric === 'combined' || selectedMetric === 'qr') && (
+                  <Area type="monotone" dataKey="qrCreated" stroke="#10b981" strokeWidth={2} fill="url(#colorQR)" name="QR Created" />
+                )}
+              </AreaChart>
             </ResponsiveContainer>
           </div>
-          {auditLogs.length === 0 && scanEvents.length === 0 && (
-            <p className="text-center text-slate-500 text-sm mt-4">No data to display yet</p>
-          )}
+        </CardContent>
+      </Card>
+
+      {/* Distribution Charts */}
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* QR Type Distribution */}
+        <Card className="bg-slate-900/50 border-slate-800">
+          <CardHeader>
+            <CardTitle className="text-white text-sm flex items-center gap-2">
+              <QrCode className="w-4 h-4 text-cyan-400" />
+              QR Code Distribution
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {qrPieData.length > 0 ? (
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={qrPieData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {qrPieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '8px', color: '#fff' }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <p className="text-center text-slate-500 py-12">No QR codes created yet</p>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Event Type Distribution */}
+        <Card className="bg-slate-900/50 border-slate-800">
+          <CardHeader>
+            <CardTitle className="text-white text-sm flex items-center gap-2">
+              <Activity className="w-4 h-4 text-purple-400" />
+              Event Type Distribution
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {eventPieData.length > 0 ? (
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={eventPieData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {eventPieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '8px', color: '#fff' }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <p className="text-center text-slate-500 py-12">No events recorded yet</p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* API Key Activity Table */}
+      {apiKeys.length > 0 && (
+        <Card className="bg-slate-900/50 border-slate-800">
+          <CardHeader>
+            <CardTitle className="text-white text-sm flex items-center gap-2">
+              <Key className="w-4 h-4 text-green-400" />
+              API Key Activity
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-slate-800">
+                    <th className="text-left text-xs text-slate-400 pb-3 font-medium">Key Name</th>
+                    <th className="text-left text-xs text-slate-400 pb-3 font-medium">Environment</th>
+                    <th className="text-left text-xs text-slate-400 pb-3 font-medium">Status</th>
+                    <th className="text-left text-xs text-slate-400 pb-3 font-medium">Created</th>
+                    <th className="text-left text-xs text-slate-400 pb-3 font-medium">Last Used</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/50">
+                  {apiKeyUsage.map((key, idx) => (
+                    <tr key={idx} className="hover:bg-slate-800/30 transition-colors">
+                      <td className="py-3 text-sm text-white">{key.name}</td>
+                      <td className="py-3">
+                        <Badge className={key.environment === 'live' ? 'bg-green-500/20 text-green-400 text-xs' : 'bg-blue-500/20 text-blue-400 text-xs'}>
+                          {key.environment}
+                        </Badge>
+                      </td>
+                      <td className="py-3">
+                        <Badge className={key.status === 'active' ? 'bg-green-500/20 text-green-400 text-xs' : 'bg-slate-500/20 text-slate-400 text-xs'}>
+                          {key.status}
+                        </Badge>
+                      </td>
+                      <td className="py-3 text-sm text-slate-400">{key.created}</td>
+                      <td className="py-3 text-sm text-slate-400">{key.lastUsed}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Recent Activity with Filters */}
+      <Card className="bg-slate-900/50 border-slate-800">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-white text-sm flex items-center gap-2">
+              <FileText className="w-4 h-4 text-slate-400" />
+              Recent Activity
+            </CardTitle>
+            <Badge variant="outline" className="text-xs text-slate-400">
+              {filteredLogs.length} events
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2 max-h-80 overflow-y-auto">
+            {filteredLogs.length > 0 ? filteredLogs.slice(0, 20).map((log) => (
+              <div key={log.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-800/30 hover:bg-slate-800/50 transition-all">
+                <div className="flex items-center gap-3">
+                  <div className={`w-2 h-2 rounded-full ${log.status === 'failure' ? 'bg-red-400' : 'bg-green-400'}`} />
+                  <div>
+                    <p className="text-sm text-white">{log.event_type || 'System Event'}</p>
+                    <p className="text-xs text-slate-500">{log.description?.substring(0, 60) || 'No description'}...</p>
+                  </div>
+                </div>
+                <span className="text-xs text-slate-500 whitespace-nowrap ml-4">
+                  {new Date(log.created_date).toLocaleDateString()} {new Date(log.created_date).toLocaleTimeString()}
+                </span>
+              </div>
+            )) : (
+              <div className="text-center py-12">
+                <FileText className="w-12 h-12 text-slate-700 mx-auto mb-3" />
+                <p className="text-slate-500 text-sm">No activity for selected filters</p>
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
