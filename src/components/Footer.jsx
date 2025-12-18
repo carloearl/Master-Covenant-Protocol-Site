@@ -12,11 +12,11 @@ import { SOC2Badge, ISO27001Badge, PCIDSSBadge, GDPRBadge, HIPAABadge } from "@/
  */
 
 const certifications = [
-  { name: "SOC 2", subtitle: "PROGRAM IN PLACE", BadgeComponent: SOC2Badge },
-  { name: "ISO 27001", subtitle: "STANDARDS MET", BadgeComponent: ISO27001Badge },
-  { name: "PCI DSS", subtitle: "STANDARDS MET", BadgeComponent: PCIDSSBadge },
-  { name: "GDPR", subtitle: "COMPLIANT", BadgeComponent: GDPRBadge },
-  { name: "HIPAA", subtitle: "COMPLIANT", BadgeComponent: HIPAABadge }
+  { name: "SOC 2", subtitle: "PROGRAM IN PLACE", BadgeComponent: SOC2Badge, page: "TrustSecurity" },
+  { name: "ISO 27001", subtitle: "STANDARDS MET", BadgeComponent: ISO27001Badge, page: "TrustSecurity" },
+  { name: "PCI DSS", subtitle: "STANDARDS MET", BadgeComponent: PCIDSSBadge, page: "TrustSecurity" },
+  { name: "GDPR", subtitle: "COMPLIANT", BadgeComponent: GDPRBadge, page: "Privacy" },
+  { name: "HIPAA", subtitle: "COMPLIANT", BadgeComponent: HIPAABadge, page: "TrustSecurity" }
 ];
 
 export default function Footer() {
