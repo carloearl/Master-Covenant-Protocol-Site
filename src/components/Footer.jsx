@@ -148,6 +148,88 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* SEO Keywords & Meta Tags Section - Crawler Optimized */}
+        <div className="border-t border-white/10 pt-8 mb-12">
+          <details className="group" open>
+            <summary className="cursor-pointer text-center text-xs text-slate-500 tracking-wide mb-3 hover:text-cyan-400 transition-colors list-none">
+              <span className="inline-flex items-center gap-2">
+                🏷️ Keywords & SEO Metadata
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </span>
+            </summary>
+            <div className="mt-4 p-6 bg-slate-900/50 rounded-xl border border-slate-800 space-y-6">
+              {/* Primary Keywords */}
+              <div>
+                <h5 className="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-3">Primary Keywords</h5>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  quantum-resistant encryption, post-quantum cryptography, AI cybersecurity, enterprise security platform, 
+                  visual cryptography, secure QR codes, blockchain security, AI governance framework, Master Covenant, 
+                  GlyphLock Security, threat detection AI, zero-trust architecture, identity verification, fraud prevention
+                </p>
+              </div>
+              
+              {/* Secondary Keywords */}
+              <div>
+                <h5 className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-3">Secondary Keywords</h5>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  steganography tools, QR code generator secure, image encryption, NIST post-quantum standards, 
+                  AI binding protocol, exposure-based binding, PROBE violation classification, TruthStrike protocol, 
+                  GlyphBot AI assistant, N.U.P.S. POS system, hotzone mapper, security operations center, 
+                  SOC 2 compliant, ISO 27001, GDPR compliant, HIPAA compliant, PCI DSS
+                </p>
+              </div>
+
+              {/* Long-tail Keywords */}
+              <div>
+                <h5 className="text-xs font-bold text-purple-400 uppercase tracking-wider mb-3">Long-tail Keywords</h5>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  quantum-immune security for enterprises, AI-powered threat detection platform, 
+                  visual authentication that can't be forged, autonomous defense engine for cybersecurity,
+                  first legal framework for AI accountability, legally binding AI governance,
+                  secure QR code generation with blockchain verification, enterprise-grade steganography tools,
+                  real-time security monitoring dashboard, multi-provider LLM security assistant
+                </p>
+              </div>
+
+              {/* Meta Description */}
+              <div>
+                <h5 className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-3">Meta Description</h5>
+                <p className="text-xs text-slate-300 leading-relaxed italic">
+                  "GlyphLock Security LLC delivers enterprise-grade quantum-resistant cybersecurity with AI-powered threat detection, 
+                  visual cryptography, blockchain security, and the revolutionary Master Covenant AI governance framework. 
+                  Protect your organization with post-quantum encryption, secure QR codes, and autonomous defense systems."
+                </p>
+              </div>
+
+              {/* Schema.org Types */}
+              <div>
+                <h5 className="text-xs font-bold text-green-400 uppercase tracking-wider mb-3">Schema.org Structured Data</h5>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                  <span className="text-slate-400">Organization</span>
+                  <span className="text-slate-400">SoftwareApplication</span>
+                  <span className="text-slate-400">WebApplication</span>
+                  <span className="text-slate-400">SecurityService</span>
+                  <span className="text-slate-400">CreativeWork</span>
+                  <span className="text-slate-400">Article</span>
+                  <span className="text-slate-400">FAQPage</span>
+                  <span className="text-slate-400">HowTo</span>
+                </div>
+              </div>
+
+              {/* Open Graph Tags */}
+              <div>
+                <h5 className="text-xs font-bold text-pink-400 uppercase tracking-wider mb-3">Open Graph & Social</h5>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-400">
+                  <span>og:type: website</span>
+                  <span>og:site_name: GlyphLock Security</span>
+                  <span>twitter:card: summary_large_image</span>
+                  <span>twitter:site: @glyphlock</span>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
         {/* Crawler Discovery Section - Static HTML for SEO */}
         <div className="border-t border-white/10 pt-8 mb-12">
           <details className="group">
