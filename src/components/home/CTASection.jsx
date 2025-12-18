@@ -173,9 +173,11 @@ export default function CTASection() {
             />
             
             <div className="relative z-10 text-center">
-              {/* Badge - Royal Blue */}
+              {/* Badge - Royal Blue with scale pop */}
               <motion.div
-                variants={itemVariants}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.2, type: "spring", stiffness: 200 }}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/15 border border-blue-400/30 mb-6"
               >
                 <motion.div
@@ -187,14 +189,16 @@ export default function CTASection() {
                 <span className="text-blue-300 text-sm font-medium tracking-wide">Quantum-Grade Security</span>
               </motion.div>
 
-              {/* Title with slide animations */}
+              {/* Title - Slide from LEFT */}
               <motion.h2
-                variants={slideLeftVariants}
+                initial={{ opacity: 0, x: -100 }}
+                animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -100 }}
+                transition={{ duration: 0.7, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
                 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 tracking-tight drop-shadow-[0_0_25px_rgba(255,255,255,0.4)]"
               >
                 READY TO SECURE YOUR{' '}
                 <motion.span 
-                  className="bg-gradient-to-r from-[#3B82F6] via-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent"
+                  className="bg-gradient-to-r from-[#3B82F6] via-[#60A5FA] to-[#3B82F6] bg-clip-text text-transparent"
                   animate={{
                     backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
                   }}
@@ -207,16 +211,21 @@ export default function CTASection() {
                 </motion.span>
               </motion.h2>
 
+              {/* Subtitle - Slide from RIGHT */}
               <motion.p
-                variants={slideRightVariants}
+                initial={{ opacity: 0, x: 100 }}
+                animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 100 }}
+                transition={{ duration: 0.7, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
                 className="text-base md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto font-medium"
               >
                 Protocol-governed verification for credentialed operators
               </motion.p>
 
-              {/* Email form with animations */}
+              {/* Email form - Scale up with bounce */}
               <motion.div
-                variants={itemVariants}
+                initial={{ opacity: 0, y: 40, scale: 0.9 }}
+                animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 40, scale: 0.9 }}
+                transition={{ duration: 0.6, delay: 0.5, type: "spring", stiffness: 150 }}
                 className="flex flex-col sm:flex-row gap-3 md:gap-4 max-w-lg mx-auto mb-10"
               >
                 <div className="flex-1 relative group">
@@ -261,32 +270,36 @@ export default function CTASection() {
                 </motion.div>
               </motion.div>
 
-              {/* Benefits grid with stagger - Royal Blue theme */}
-              <motion.div
-                variants={containerVariants}
-                className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto"
-              >
+              {/* Benefits grid - Alternating slide from LEFT and RIGHT */}
+              <div className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
                 {benefits.map((benefit, idx) => {
                   const Icon = benefit.icon;
+                  const isLeft = idx % 2 === 0;
                   return (
                     <motion.div
                       key={idx}
-                      variants={idx % 2 === 0 ? slideLeftVariants : slideRightVariants}
-                      whileHover={{ scale: 1.02, x: 5 }}
-                      className="flex items-center gap-3 text-white font-medium p-3 rounded-xl bg-white/5 border border-white/10 hover:border-blue-400/40 hover:bg-white/10 transition-all cursor-default"
+                      initial={{ opacity: 0, x: isLeft ? -80 : 80 }}
+                      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: isLeft ? -80 : 80 }}
+                      transition={{ 
+                        duration: 0.6, 
+                        delay: 0.6 + (idx * 0.1), 
+                        ease: [0.25, 0.46, 0.45, 0.94] 
+                      }}
+                      whileHover={{ scale: 1.03, x: isLeft ? 8 : -8 }}
+                      className="flex items-center gap-3 text-white font-medium p-3 rounded-xl bg-white/5 border border-white/10 hover:border-blue-400/50 hover:bg-blue-500/10 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all cursor-default"
                     >
                       <motion.div
-                        whileHover={{ rotate: 360 }}
+                        whileHover={{ rotate: 360, scale: 1.1 }}
                         transition={{ duration: 0.5 }}
-                        className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center"
+                        className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/25 to-blue-600/25 flex items-center justify-center"
                       >
-                        <Icon className="w-4 h-4 text-[#3B82F6]" style={{ filter: 'drop-shadow(0 0 8px rgba(59,130,246,0.8))' }} />
+                        <Icon className="w-4 h-4 text-[#3B82F6]" style={{ filter: 'drop-shadow(0 0 8px rgba(59,130,246,0.9))' }} />
                       </motion.div>
                       <span className="text-sm tracking-wide">{benefit.text}</span>
                     </motion.div>
                   );
                 })}
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>
