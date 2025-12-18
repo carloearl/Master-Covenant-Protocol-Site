@@ -77,13 +77,13 @@ export default function CTASection() {
       className="w-full max-w-6xl mx-auto px-4 py-20 relative"
       style={{ background: 'transparent', pointerEvents: 'auto', scale }}
     >
-      {/* Animated background orbs */}
+      {/* Animated background orbs - Royal Blue/Indigo */}
       <motion.div
         className="absolute inset-0 pointer-events-none overflow-hidden"
         style={{ y: backgroundY }}
       >
         <motion.div
-          className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-[120px]"
+          className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/25 rounded-full blur-[120px]"
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.3, 0.5, 0.3]
@@ -91,7 +91,7 @@ export default function CTASection() {
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-0 right-1/4 w-96 h-96 bg-violet-500/20 rounded-full blur-[120px]"
+          className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/25 rounded-full blur-[120px]"
           animate={{
             scale: [1.2, 1, 1.2],
             opacity: [0.4, 0.3, 0.4]
@@ -110,11 +110,11 @@ export default function CTASection() {
       >
         {/* Main card with animated border */}
         <div className="relative rounded-3xl overflow-hidden">
-          {/* Animated gradient border */}
+          {/* Animated gradient border - Royal Blue/Indigo */}
           <motion.div
             className="absolute inset-0 rounded-3xl p-[2px]"
             style={{
-              background: 'linear-gradient(90deg, #00E4FF, #3B82F6, #8B5CF6, #00E4FF)',
+              background: 'linear-gradient(90deg, #3B82F6, #6366F1, #8B5CF6, #3B82F6)',
               backgroundSize: '300% 100%'
             }}
             animate={{
@@ -122,64 +122,64 @@ export default function CTASection() {
             }}
             transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
           >
-            <div className="absolute inset-[2px] rounded-3xl bg-slate-950/95 backdrop-blur-2xl" />
+            <div className="absolute inset-[2px] rounded-3xl bg-gradient-to-br from-blue-950/95 via-indigo-950/95 to-violet-950/95 backdrop-blur-2xl" />
           </motion.div>
 
-          {/* Pulsing glow overlay */}
+          {/* Pulsing glow overlay - Royal Blue */}
           <motion.div
-            className="absolute -inset-2 bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-600 rounded-3xl blur-2xl"
+            className="absolute -inset-2 bg-gradient-to-r from-blue-600 via-indigo-500 to-violet-600 rounded-3xl blur-2xl"
             style={{ opacity: glowOpacity }}
             animate={{
-              opacity: isHovered ? 0.4 : 0.2
+              opacity: isHovered ? 0.5 : 0.3
             }}
             transition={{ duration: 0.3 }}
           />
           
-          {/* Content container */}
-          <div className="relative bg-gradient-to-br from-slate-900/90 via-slate-900/95 to-slate-950/90 backdrop-blur-2xl rounded-3xl p-8 md:p-14 overflow-hidden">
-            {/* Grid pattern overlay */}
-            <div className="absolute inset-0 opacity-5" style={{
+          {/* Content container - Royal Blue theme */}
+          <div className="relative bg-gradient-to-br from-blue-900/40 via-indigo-900/50 to-violet-900/40 backdrop-blur-2xl rounded-3xl p-8 md:p-14 overflow-hidden border border-indigo-500/30">
+            {/* Grid pattern overlay - Purple/Blue */}
+            <div className="absolute inset-0 opacity-10" style={{
               backgroundImage: `
-                linear-gradient(rgba(0,228,255,0.5) 1px, transparent 1px),
+                linear-gradient(rgba(59,130,246,0.5) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(139,92,246,0.5) 1px, transparent 1px)
               `,
               backgroundSize: '40px 40px'
             }} />
 
-            {/* Top accent line */}
+            {/* Top accent line - Royal Blue */}
             <motion.div
               className="absolute top-0 left-0 right-0 h-[2px]"
               initial={{ scaleX: 0 }}
               animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
               style={{
-                background: 'linear-gradient(90deg, transparent, #00E4FF 30%, #8B5CF6 70%, transparent)'
+                background: 'linear-gradient(90deg, transparent, #3B82F6 30%, #8B5CF6 70%, transparent)'
               }}
             />
             
             <div className="relative z-10 text-center">
-              {/* Badge */}
+              {/* Badge - Royal Blue */}
               <motion.div
                 variants={itemVariants}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/15 border border-blue-400/30 mb-6"
               >
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                 >
-                  <Sparkles size={14} className="text-cyan-400" />
+                  <Sparkles size={14} className="text-blue-400" />
                 </motion.div>
-                <span className="text-cyan-400 text-sm font-medium tracking-wide">Quantum-Grade Security</span>
+                <span className="text-blue-300 text-sm font-medium tracking-wide">Quantum-Grade Security</span>
               </motion.div>
 
               {/* Title with slide animations */}
               <motion.h2
                 variants={slideLeftVariants}
-                className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 tracking-tight"
+                className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 tracking-tight drop-shadow-[0_0_25px_rgba(255,255,255,0.4)]"
               >
                 READY TO SECURE YOUR{' '}
                 <motion.span 
-                  className="bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-500 bg-clip-text text-transparent"
+                  className="bg-gradient-to-r from-[#3B82F6] via-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent"
                   animate={{
                     backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
                   }}
@@ -211,10 +211,10 @@ export default function CTASection() {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-white/5 backdrop-blur-md border-2 border-white/10 text-white placeholder:text-white/40 focus:border-cyan-400/50 focus:shadow-[0_0_30px_rgba(0,228,255,0.3)] transition-all h-14 rounded-xl text-base"
+                    className="bg-white/8 backdrop-blur-md border-2 border-white/20 text-white placeholder:text-white/50 focus:border-indigo-400 focus:shadow-[0_0_30px_rgba(87,61,255,0.5)] transition-all h-14 rounded-xl text-base"
                   />
                   {/* Focus glow */}
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/20 to-violet-500/20 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity pointer-events-none" />
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/20 to-indigo-500/20 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity pointer-events-none" />
                 </div>
                 
                 <motion.div
@@ -224,7 +224,7 @@ export default function CTASection() {
                   <Button 
                     onClick={handleGetStarted}
                     size="lg"
-                    className="relative overflow-hidden h-14 px-8 bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-500 hover:from-cyan-400 hover:via-blue-400 hover:to-violet-400 text-white font-bold tracking-wide shadow-[0_0_30px_rgba(0,228,255,0.4)] hover:shadow-[0_0_50px_rgba(0,228,255,0.6)] transition-all duration-300 rounded-xl"
+                    className="relative overflow-hidden h-14 px-8 bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] hover:from-[#2563EB] hover:to-[#60A5FA] text-white font-black tracking-wide shadow-[0_0_25px_rgba(59,130,246,0.5)] hover:shadow-[0_0_40px_rgba(30,64,175,0.7)] transition-all duration-300 rounded-xl"
                   >
                     {/* Shine effect */}
                     <motion.div
@@ -234,7 +234,6 @@ export default function CTASection() {
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", repeatDelay: 1 }}
                     />
                     <span className="relative flex items-center gap-2">
-                      <Zap size={18} />
                       INITIATE VERIFICATION
                       <motion.span
                         animate={{ x: [0, 4, 0] }}
@@ -247,7 +246,7 @@ export default function CTASection() {
                 </motion.div>
               </motion.div>
 
-              {/* Benefits grid with stagger */}
+              {/* Benefits grid with stagger - Royal Blue theme */}
               <motion.div
                 variants={containerVariants}
                 className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto"
@@ -259,14 +258,14 @@ export default function CTASection() {
                       key={idx}
                       variants={idx % 2 === 0 ? slideLeftVariants : slideRightVariants}
                       whileHover={{ scale: 1.02, x: 5 }}
-                      className="flex items-center gap-3 text-white font-medium p-3 rounded-xl bg-white/5 border border-white/5 hover:border-cyan-500/30 hover:bg-white/10 transition-all cursor-default"
+                      className="flex items-center gap-3 text-white font-medium p-3 rounded-xl bg-white/5 border border-white/10 hover:border-blue-400/40 hover:bg-white/10 transition-all cursor-default"
                     >
                       <motion.div
                         whileHover={{ rotate: 360 }}
                         transition={{ duration: 0.5 }}
-                        className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/20 to-violet-500/20 flex items-center justify-center"
+                        className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center"
                       >
-                        <Icon className="w-4 h-4 text-cyan-400" style={{ filter: 'drop-shadow(0 0 6px rgba(0,228,255,0.6))' }} />
+                        <Icon className="w-4 h-4 text-[#3B82F6]" style={{ filter: 'drop-shadow(0 0 8px rgba(59,130,246,0.8))' }} />
                       </motion.div>
                       <span className="text-sm tracking-wide">{benefit.text}</span>
                     </motion.div>
