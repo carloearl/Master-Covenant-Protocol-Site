@@ -245,16 +245,16 @@ export default function DreamTeamCards() {
           {/* Top Row - 2 cards */}
           <div className="grid grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6 max-w-3xl mx-auto">
             <motion.div
-              initial={{ opacity: 0, x: -80, rotateY: -20 }}
+              initial={{ opacity: 0, x: -40, rotateY: -10 }}
               animate={isInView ? { opacity: 1, x: 0, rotateY: 0 } : {}}
-              transition={{ duration: 1, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.7, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <DreamTeamFlipCard card={DREAM_TEAM[0]} />
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, x: 80, rotateY: 20 }}
+              initial={{ opacity: 0, x: 40, rotateY: 10 }}
               animate={isInView ? { opacity: 1, x: 0, rotateY: 0 } : {}}
-              transition={{ duration: 1, delay: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.7, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <DreamTeamFlipCard card={DREAM_TEAM[1]} />
             </motion.div>
@@ -263,16 +263,16 @@ export default function DreamTeamCards() {
           {/* Middle Row - 2 cards */}
           <div className="grid grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6 max-w-3xl mx-auto">
             <motion.div
-              initial={{ opacity: 0, y: 60, scale: 0.8 }}
+              initial={{ opacity: 0, y: 35, scale: 0.9 }}
               animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-              transition={{ duration: 1, delay: 1.2, type: "spring", stiffness: 100 }}
+              transition={{ duration: 0.7, delay: 0.6, type: "spring", stiffness: 150 }}
             >
               <DreamTeamFlipCard card={DREAM_TEAM[2]} />
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, y: 60, scale: 0.8 }}
+              initial={{ opacity: 0, y: 35, scale: 0.9 }}
               animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-              transition={{ duration: 1, delay: 1.4, type: "spring", stiffness: 100 }}
+              transition={{ duration: 0.7, delay: 0.7, type: "spring", stiffness: 150 }}
             >
               <DreamTeamFlipCard card={DREAM_TEAM[3]} />
             </motion.div>
