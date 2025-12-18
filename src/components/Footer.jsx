@@ -265,14 +265,14 @@ export default function Footer() {
               <Link 
                 key={cert.name} 
                 to={createPageUrl(cert.page)}
-                className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-slate-900/30 border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-800/50 transition-all duration-300"
+                className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300"
               >
-                <div className="w-12 h-12 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
-                  <cert.BadgeComponent />
+                <div className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+                  <cert.BadgeComponent className="w-full h-full" />
                 </div>
                 <div className="text-center">
-                  <p className="text-xs font-bold text-white">{cert.name}</p>
-                  <p className="text-[10px] text-slate-400">{cert.subtitle}</p>
+                  <p className="text-xs font-bold text-white group-hover:text-cyan-400 transition-colors">{cert.name}</p>
+                  <p className="text-[10px] text-slate-500">{cert.subtitle}</p>
                 </div>
               </Link>
             ))}
