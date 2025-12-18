@@ -268,7 +268,7 @@ const NavItem = ({ section, isOpen, onToggle, index }) => {
                     </motion.div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
         )}
