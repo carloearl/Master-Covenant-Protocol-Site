@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 
 export default function TechnologyMarquee() {
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, amount: 0.2 });
   const row1Logos = [
     { name: "AWS", logo: "https://www.vectorlogo.zone/logos/amazon_aws/amazon_aws-ar21.svg" },
     { name: "Google Cloud", logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" },
@@ -185,17 +188,35 @@ export default function TechnologyMarquee() {
   const repeatedRow3 = [...row3Logos, ...row3Logos, ...row3Logos, ...row3Logos, ...row3Logos, ...row3Logos];
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-16 relative" style={{ background: 'transparent', pointerEvents: 'auto' }}>
+    <div ref={containerRef} className="w-full max-w-7xl mx-auto px-4 py-16 relative" style={{ background: 'transparent', pointerEvents: 'auto' }}>
       <div className="text-center mb-12">
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+        {/* Title - Slide from left */}
+        <motion.h2 
+          initial={{ opacity: 0, x: -80, filter: "blur(15px)" }}
+          animate={isInView ? { opacity: 1, x: 0, filter: "blur(0px)" } : {}}
+          transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="text-2xl md:text-3xl font-bold text-white mb-4"
+        >
           Enterprise Engineering Excellence
-        </h2>
-        <p className="text-lg md:text-xl text-white/90 max-w-4xl mx-auto">
+        </motion.h2>
+        
+        {/* Subtitle - Slide from right */}
+        <motion.p 
+          initial={{ opacity: 0, x: 80, filter: "blur(15px)" }}
+          animate={isInView ? { opacity: 1, x: 0, filter: "blur(0px)" } : {}}
+          transition={{ duration: 1.2, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="text-lg md:text-xl text-white/90 max-w-4xl mx-auto"
+        >
           Engineered under the Triple-E Standard — enterprise best practices amplified and aligned with the same high-integrity benchmarks that leading global platforms refuse to compromise on.
-        </p>
+        </motion.p>
       </div>
 
-      <div className="space-y-1 relative overflow-hidden">
+      <motion.div 
+        initial={{ opacity: 0, y: 40 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="space-y-1 relative overflow-hidden"
+      >
         {/* Row 1: 107 logos - scroll left */}
         <div className="marquee-container">
           <div className="marquee-content marquee-row-1">
@@ -246,7 +267,7 @@ export default function TechnologyMarquee() {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <style>{`
         .marquee-container {
