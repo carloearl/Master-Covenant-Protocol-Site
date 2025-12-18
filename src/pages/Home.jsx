@@ -93,10 +93,10 @@ export default function Home() {
       document.body.style.scrollSnapType = 'none';
     }
     
-    // Simulate initial load
+    // Faster initial load - just check if DOM is ready
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 800);
+    }, 300);
 
     return () => {
       document.documentElement.style.scrollBehavior = '';
@@ -106,17 +106,39 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black">
+      <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-gradient-to-br from-blue-950 via-indigo-950 to-blue-900">
         <div className="text-center space-y-6">
-          <div className="relative w-24 h-24 mx-auto">
-            <div className="absolute inset-0 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
-            <div className="absolute inset-3 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" 
-              style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} 
+          <div className="relative w-20 h-20 mx-auto">
+            {/* Outer ring */}
+            <motion.div 
+              className="absolute inset-0 border-[3px] border-blue-500/20 border-t-blue-400 rounded-full"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+              style={{ boxShadow: '0 0 20px rgba(59,130,246,0.5)' }}
+            />
+            {/* Middle ring */}
+            <motion.div 
+              className="absolute inset-2 border-[3px] border-indigo-500/20 border-t-indigo-400 rounded-full"
+              animate={{ rotate: -360 }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: "linear" }}
+              style={{ boxShadow: '0 0 15px rgba(99,102,241,0.5)' }}
+            />
+            {/* Inner pulse */}
+            <motion.div 
+              className="absolute inset-6 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full"
+              animate={{ scale: [0.8, 1, 0.8], opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              style={{ boxShadow: '0 0 25px rgba(59,130,246,0.8)' }}
             />
           </div>
-          <h2 className="text-2xl font-black text-white animate-pulse">
-            Initializing Security...
-          </h2>
+          <motion.h2 
+            animate={{ opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            className="text-xl font-black text-white tracking-wide"
+          >
+            GLYPHLOCK
+          </motion.h2>
+          <p className="text-sm text-blue-300 font-medium">Initializing Protocol...</p>
         </div>
       </div>
     );

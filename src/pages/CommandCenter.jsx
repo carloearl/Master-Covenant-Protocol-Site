@@ -5,6 +5,7 @@ import { createPageUrl } from "@/utils";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import SEOHead from "@/components/SEOHead";
 import GlyphLoader from "@/components/GlyphLoader";
+import VioletLoader from "@/components/shared/VioletLoader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1543,7 +1544,11 @@ export default function CommandCenter() {
   const threatDetection = useThreatDetection(user);
 
   if (loading) {
-    return <GlyphLoader text="Initializing Command Center..." />;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-950 via-purple-950 to-indigo-950">
+        <VioletLoader text="Initializing Command Center..." />
+      </div>
+    );
   }
 
   const renderTab = () => {

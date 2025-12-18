@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import SEOHead from "@/components/SEOHead";
 import { GlyphInput, GlyphButton, GlyphFormPanel } from "@/components/ui/GlyphForm";
 import { motion, useInView } from "framer-motion";
+import CyanLoader from "@/components/shared/CyanLoader";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -183,8 +184,19 @@ export default function Contact() {
                     />
                   </div>
 
-                  <GlyphButton type="submit" variant="mixed" className="w-full">
-                    {sendEmail.isPending ? "Encrypting Transmission..." : "Initiate Secure Transmission"}
+                  <GlyphButton type="submit" variant="mixed" className="w-full" disabled={sendEmail.isPending}>
+                    {sendEmail.isPending ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <motion.div 
+                          className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        />
+                        Encrypting Transmission...
+                      </div>
+                    ) : (
+                      "Initiate Secure Transmission"
+                    )}
                   </GlyphButton>
                 </form>
               </div>

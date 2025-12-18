@@ -1,9 +1,10 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 
 export default function HeroSection() {
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.4 });
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   return (
     <div ref={containerRef} className="w-full flex justify-center px-4 sm:px-6 py-8" style={{ background: 'transparent', pointerEvents: 'auto' }}>
@@ -24,15 +25,38 @@ export default function HeroSection() {
         <div className="absolute -inset-1 bg-gradient-to-r from-[#1E3A8A] to-[#3B82F6] rounded-2xl blur opacity-30" style={{ transform: 'translateZ(0)' }}></div>
         
         <div className="relative w-full rounded-2xl overflow-hidden border-2 border-[#3B82F6]/50 shadow-[0_0_60px_rgba(59,130,246,0.4)] hover:shadow-[0_0_80px_rgba(30,58,138,0.5)] transition-all duration-500" style={{ aspectRatio: '16/9', transform: 'translateZ(0)', willChange: 'box-shadow' }}>
+          
+          {/* Loading placeholder - Royal Blue gradient */}
+          {!videoLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-950 via-indigo-950 to-blue-900 z-20">
+              <div className="text-center space-y-4">
+                <div className="relative w-16 h-16 mx-auto">
+                  <motion.div 
+                    className="absolute inset-0 border-4 border-blue-500/30 border-t-blue-400 rounded-full"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+                  />
+                  <motion.div 
+                    className="absolute inset-2 border-4 border-indigo-500/30 border-t-indigo-400 rounded-full"
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
+                  />
+                </div>
+                <p className="text-sm text-blue-300 font-semibold tracking-wide">Loading Security Feed...</p>
+              </div>
+            </div>
+          )}
+
           <video
             autoPlay
             loop
             muted
             playsInline
-            preload="metadata"
-            loading="lazy"
+            preload="auto"
             className="absolute inset-0 w-full h-full object-cover z-0"
             style={{ filter: 'brightness(1.1) contrast(1.1)', transform: 'translateZ(0)' }}
+            onLoadedData={() => setVideoLoaded(true)}
+            onCanPlay={() => setVideoLoaded(true)}
           >
             <source src="https://base44.app/api/apps/6902128ac3c5c94a82446585/files/public/6902128ac3c5c94a82446585/643dc9ba3_Dec_05__2220_13s_202512052257_lc8rw.mp4" type="video/mp4" />
           </video>

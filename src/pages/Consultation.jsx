@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Shield, Target, Zap, Clock, CheckCircle2, Lock, AlertTriangle } from "lucide-react";
 import GlyphLoader from "@/components/GlyphLoader";
+import RoyalLoader from "@/components/shared/RoyalLoader";
 import SEOHead from "@/components/SEOHead";
 import { injectServiceSchema } from "@/components/utils/seoHelpers";
 import DOMPurify from "dompurify";
@@ -162,7 +163,11 @@ export default function Consultation() {
   ];
 
   if (createConsultation.isPending) {
-    return <GlyphLoader text="Processing Credential Request..." />;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-950 via-indigo-950 to-blue-900">
+        <RoyalLoader text="Processing Credential Request..." />
+      </div>
+    );
   }
 
   return (
