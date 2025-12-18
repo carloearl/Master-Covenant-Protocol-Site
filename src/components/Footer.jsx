@@ -255,11 +255,28 @@ export default function Footer() {
           </details>
         </div>
 
-        {/* Compliance Disclosure */}
+        {/* Compliance Badges - Clickable */}
         <div className="border-t border-white/10 pt-8 mb-12">
-          <p className="text-center text-xs text-slate-500 tracking-wide mb-3">
-            Compliance & Standards Disclosure
+          <p className="text-center text-xs text-slate-500 tracking-wide mb-6">
+            Compliance & Standards
           </p>
+          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 mb-6">
+            {certifications.map((cert) => (
+              <Link 
+                key={cert.name} 
+                to={createPageUrl(cert.page)}
+                className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-slate-900/30 border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-800/50 transition-all duration-300"
+              >
+                <div className="w-12 h-12 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+                  <cert.BadgeComponent />
+                </div>
+                <div className="text-center">
+                  <p className="text-xs font-bold text-white">{cert.name}</p>
+                  <p className="text-[10px] text-slate-400">{cert.subtitle}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
           <p className="text-center text-xs text-slate-400 max-w-3xl mx-auto leading-relaxed">
             GlyphLock aligns its internal security controls with widely recognized industry frameworks, including SOC 2, ISO 27001, PCI DSS, GDPR, and HIPAA, where applicable. Compliance status is subject to ongoing assessment and does not constitute certification unless explicitly stated in a written agreement.
           </p>
