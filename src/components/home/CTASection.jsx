@@ -152,11 +152,11 @@ export default function CTASection() {
           
           {/* Content container - Deep Royal Blue glassmorphism */}
           <div className="relative bg-gradient-to-br from-blue-900/30 via-slate-900/40 to-indigo-900/30 backdrop-blur-2xl rounded-3xl p-8 md:p-14 overflow-hidden border-2 border-blue-500/40 shadow-[inset_0_1px_0_rgba(59,130,246,0.3)]">
-            {/* Grid pattern overlay - Vivid Royal Blue */}
-            <div className="absolute inset-0 opacity-15" style={{
+            {/* Grid pattern overlay - Purple/Violet */}
+            <div className="absolute inset-0 opacity-20" style={{
               backgroundImage: `
-                linear-gradient(rgba(59,130,246,0.6) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(37,99,235,0.6) 1px, transparent 1px)
+                linear-gradient(rgba(168,85,247,0.7) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139,92,246,0.7) 1px, transparent 1px)
               `,
               backgroundSize: '30px 30px'
             }} />
@@ -278,11 +278,11 @@ export default function CTASection() {
                   return (
                     <motion.div
                       key={idx}
-                      initial={{ opacity: 0, y: 40, scale: 0.9 }}
-                      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 40, scale: 0.9 }}
+                      initial={{ opacity: 0, x: isLeft ? -80 : 80, scale: 0.9 }}
+                      animate={isInView ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: isLeft ? -80 : 80, scale: 0.9 }}
                       transition={{ 
-                        duration: 0.9, 
-                        delay: 0.9 + (idx * 0.12), 
+                        duration: 1, 
+                        delay: 0.9 + (idx * 0.15), 
                         ease: [0.16, 1, 0.3, 1] 
                       }}
                       whileHover={{ scale: 1.03, x: isLeft ? 8 : -8 }}
