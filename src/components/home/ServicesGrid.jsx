@@ -76,7 +76,7 @@ export default function ServicesGrid() {
         <motion.h2 
           initial={{ opacity: 0, x: -100, filter: "blur(20px)" }}
           animate={isInView ? { opacity: 1, x: 0, filter: "blur(0px)" } : {}}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+          transition={{ duration: 1.4, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="text-3xl md:text-5xl font-black text-white mb-4 drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]"
         >
           Credentialed Integrity <span className="bg-gradient-to-r from-[#1E40AF] via-[#3B82F6] to-[#60A5FA] bg-clip-text text-transparent">System</span>
@@ -86,7 +86,7 @@ export default function ServicesGrid() {
         <motion.p 
           initial={{ opacity: 0, x: 100, filter: "blur(15px)" }}
           animate={isInView ? { opacity: 1, x: 0, filter: "blur(0px)" } : {}}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+          transition={{ duration: 1.4, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="text-lg text-white/90"
         >
           Protocol-governed modules restricted to provisioned access
@@ -102,10 +102,10 @@ export default function ServicesGrid() {
               initial={{ opacity: 0, x: anim.x, y: anim.y, rotate: anim.rotate, scale: 0.8 }}
               animate={isInView ? { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 } : {}}
               transition={{ 
-                duration: 0.7, 
-                delay: 0.2 + (idx * 0.1),
+                duration: 1, 
+                delay: 0.4 + (idx * 0.15),
                 type: "spring",
-                stiffness: 120,
+                stiffness: 80,
                 damping: 15
               }}
               whileHover={{ y: -10, scale: 1.03 }}
