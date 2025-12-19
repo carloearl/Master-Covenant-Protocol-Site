@@ -242,6 +242,34 @@ export default function Privacy() {
               </div>
             </section>
 
+            {/* Compliance Frameworks */}
+            <section className="mb-12">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-3 glyph-glass border border-blue-500/40 rounded-xl">
+                  <Shield className="w-6 h-6 text-blue-400" />
+                </div>
+                <h2 className="text-2xl font-bold text-white font-space">Compliance Frameworks</h2>
+              </div>
+              <div className="pl-4 border-l-2 border-white/10 ml-6 space-y-6">
+                <p className="text-gray-300">GlyphLock adheres to major international privacy and security frameworks to ensure your data is protected according to the highest standards.</p>
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
+                  {[
+                    { name: "GDPR", desc: "General Data Protection Regulation", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/db009bbe8_1766062456894.jpg" },
+                    { name: "CCPA", desc: "California Consumer Privacy Act", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/0dfb7aa86_1766061731969.jpg" }, // Using ISO image as placeholder or generic shield if CCPA specific not avail, but here reusing relevant ones or generic
+                    { name: "HIPAA", desc: "Health Insurance Portability and Accountability Act", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/c848fdb95_1766062491421.jpg" },
+                    { name: "SOC 2", desc: "Service Organization Control 2", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/ec8675dc5_1766064945798.jpg" }
+                  ].map((framework, i) => (
+                    <div key={i} className="bg-white/5 p-4 rounded-xl border border-white/10 flex flex-col items-center text-center hover:bg-white/10 transition-colors">
+                      <img src={framework.image} alt={framework.name} className="w-16 h-16 object-contain mb-3 drop-shadow-lg" />
+                      <h3 className="text-white font-bold text-sm mb-1">{framework.name}</h3>
+                      <p className="text-gray-400 text-xs">{framework.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
             {/* Contact */}
             <section className="mt-16 p-8 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-2 border-cyan-500/30 rounded-2xl text-center glyph-glow">
               <h2 className="text-3xl font-bold text-white mb-4 font-space">Contact Privacy Officer</h2>

@@ -166,6 +166,47 @@ export default function TrustSecurity() {
             </p>
           </div>
 
+          {/* Compliance & Standards - NEW SECTION */}
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold text-white mb-8 text-center">Compliance & Standards</h2>
+            <div className="glass-card rounded-2xl border border-white/10 p-8 md:p-12 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8 items-center justify-center">
+                {[
+                  { name: "ISO 27001", subtitle: "STANDARDS MET", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/0dfb7aa86_1766061731969.jpg" },
+                  { name: "SOC 2", subtitle: "PROGRAM IN PLACE", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/ec8675dc5_1766064945798.jpg" },
+                  { name: "GDPR", subtitle: "COMPLIANT", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/db009bbe8_1766062456894.jpg" },
+                  { name: "HIPAA", subtitle: "COMPLIANT", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/c848fdb95_1766062491421.jpg" },
+                  { name: "Post-Quantum", subtitle: "SECURED", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/717da1754_1766062231110.jpg" }
+                ].map((cert, idx) => (
+                  <div key={idx} className="flex flex-col items-center gap-4 group">
+                    <div className="w-24 h-24 md:w-28 md:h-28 relative flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_25px_rgba(6,182,212,0.5)]">
+                      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      <img 
+                        src={cert.image} 
+                        alt={cert.name} 
+                        className="w-full h-full object-contain filter drop-shadow-[0_0_10px_rgba(0,0,0,0.5)] relative z-10" 
+                      />
+                    </div>
+                    <div className="text-center">
+                      <h3 className="text-white font-bold text-sm md:text-base mb-1 group-hover:text-cyan-400 transition-colors">{cert.name}</h3>
+                      <div className="inline-block px-2 py-0.5 rounded-full bg-white/5 border border-white/10 group-hover:border-cyan-500/30 transition-colors">
+                        <span className="text-[10px] md:text-xs text-slate-400 font-semibold tracking-wide uppercase group-hover:text-cyan-300 transition-colors">{cert.subtitle}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-10 pt-8 border-t border-white/10 text-center">
+                <p className="text-slate-400 max-w-3xl mx-auto leading-relaxed">
+                  GlyphLock aligns its internal security controls with widely recognized industry frameworks. While we operate in alignment with these standards, specific certifications are subject to audit cycles and formal attestation timelines.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Current Security Measures */}
           <div className="mb-12 md:mb-16">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 md:mb-8">Current Security Measures</h2>
