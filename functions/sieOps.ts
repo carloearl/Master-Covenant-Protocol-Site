@@ -15,10 +15,16 @@ export default async function sieOps(req) {
         
         if (action === "get_dashboard") {
             // Fetch history and config in parallel
-            const [historyRes, configRes] = await Promise.all([
-                adminBase44.entities.ScanRun.list({ sort: { started_at: -1 }, limit: 20 }),
-                adminBase44.entities.ScanConfig.list({ limit: 1 })
+            const [history, configList] = await Promise.all([
+                adminBase44.entities.ScanRun.list('-started_at', 20),
+                adminBase44.entities.ScanConfig.list('-created_date', 1)
             ]);
+            
+            // Standardize response format (SDK returns array directly, not {data: []})
+            // NOTE: Newer SDK versions might return {data, count} or just array. 
+            // Based on prompt "base44.entities.Todo.list() will return the list of entities." it returns array.
+            const historyRes = { data: Array.isArray(history) ? history : history.data || [] };
+            const configRes = { data: Array.isArray(configList) ? configList : configList.data || [] };
 
             let config = configRes.data?.[0] || {
                 schedule_type: "manual",
@@ -38,19 +44,22 @@ export default async function sieOps(req) {
             const { scan_id } = payload;
             if (!scan_id) return Response.json({ error: "Missing scan_id" }, { status: 400 });
 
-            // Fetch all audit rows for this scan
+            // Fetch all audit rows for this scan (using filter, not list)
             const [nav, routes, sitemaps, backend] = await Promise.all([
-                adminBase44.entities.NavAuditRow.list({ filter: { scan_run_id: scan_id } }),
-                adminBase44.entities.RouteAuditRow.list({ filter: { scan_run_id: scan_id } }),
-                adminBase44.entities.SitemapAuditRow.list({ filter: { scan_run_id: scan_id } }),
-                adminBase44.entities.BackendAuditRow.list({ filter: { scan_run_id: scan_id } })
+                adminBase44.entities.NavAuditRow.filter({ scan_run_id: scan_id }, '-created_date', 100),
+                adminBase44.entities.RouteAuditRow.filter({ scan_run_id: scan_id }, '-created_date', 100),
+                adminBase44.entities.SitemapAuditRow.filter({ scan_run_id: scan_id }, '-created_date', 100),
+                adminBase44.entities.BackendAuditRow.filter({ scan_run_id: scan_id }, '-created_date', 100)
             ]);
 
+            // Handle SDK return types (Array or {data: Array})
+            const getItems = (res) => Array.isArray(res) ? res : (res.data || []);
+
             return Response.json({
-                nav: nav.data || [],
-                routes: routes.data || [],
-                sitemaps: sitemaps.data || [],
-                backend: backend.data || []
+                nav: getItems(nav),
+                routes: getItems(routes),
+                sitemaps: getItems(sitemaps),
+                backend: getItems(backend)
             });
         }
 
