@@ -39,10 +39,14 @@ export default function Sie() {
   const runScan = async () => {
     setLoading(true);
     try {
-      await base44.functions.invoke("runFullScan");
+      const res = await base44.functions.invoke("runFullScan");
+      console.log("Scan started:", res);
+
+      // Allow backend writes to begin
+      await new Promise(r => setTimeout(r, 1500));
       await fetchLatestScan();
     } catch (e) {
-      console.error(e);
+      console.error("Scan error", e);
     } finally {
       setLoading(false);
     }
@@ -63,8 +67,20 @@ export default function Sie() {
                 <p className="font-mono">{new Date(scanRun.started_at).toLocaleString()}</p>
               </div>
             )}
-            <Button onClick={runScan} disabled={loading} className="bg-blue-600 hover:bg-blue-700">
-              {loading ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+            {scanRun?.status === 'running' && (
+              <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 animate-pulse">
+                Running...
+              </Badge>
+            )}
+            <Button 
+              onClick={runScan} 
+              disabled={loading || scanRun?.status === 'running'} 
+              className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading || scanRun?.status === 'running' ? 
+                <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : 
+                <RefreshCw className="mr-2 h-4 w-4" />
+              }
               Run Full Scan
             </Button>
           </div>
