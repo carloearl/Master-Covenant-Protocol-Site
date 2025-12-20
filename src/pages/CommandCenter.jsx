@@ -1751,6 +1751,84 @@ function LogsTab() {
   );
 }
 
+function DomainHealthCheck() {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
+
+  const checkDomain = async () => {
+    setLoading(true);
+    try {
+      const { data } = await base44.functions.invoke('checkDNS', { domain: 'glyphlock.io' });
+      setResult(data);
+    } catch (e) {
+      toast.error("Failed to check DNS: " + e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-white font-medium">Domain Connection Status</h3>
+          <p className="text-xs text-slate-400">Verify your DNS records for glyphlock.io</p>
+        </div>
+        <Button onClick={checkDomain} disabled={loading} size="sm" variant="outline" className="border-slate-700">
+          {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+          Check DNS
+        </Button>
+      </div>
+
+      {result && (
+        <div className="p-4 rounded-lg bg-slate-900 border border-slate-800 space-y-3">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Globe className="w-4 h-4 text-cyan-400" />
+              <p className="text-xs font-bold text-white uppercase">Current A Record (@)</p>
+            </div>
+            {result.a_records && result.a_records.length > 0 ? (
+               result.a_records.map(ip => (
+                 <div key={ip} className="flex items-center gap-2 font-mono text-sm text-slate-300 ml-6">
+                   <span>{ip}</span>
+                   {ip === "198.12.238.234" && (
+                     <Badge variant="destructive" className="ml-2 text-[10px] h-5">Potentially Incorrect (GoDaddy Parking?)</Badge>
+                   )}
+                 </div>
+               ))
+            ) : (
+              <p className="text-xs text-red-400 ml-6">No A records found</p>
+            )}
+          </div>
+          
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Globe className="w-4 h-4 text-purple-400" />
+              <p className="text-xs font-bold text-white uppercase">Current CNAME (www)</p>
+            </div>
+             {result.www_records && result.www_records.length > 0 ? (
+               result.www_records.map(ip => (
+                 <div key={ip} className="flex items-center gap-2 font-mono text-sm text-slate-300 ml-6">
+                   <span>{ip}</span>
+                 </div>
+               ))
+            ) : (
+              <p className="text-xs text-slate-500 ml-6">No records found for www</p>
+            )}
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-slate-800">
+            <p className="text-xs text-amber-400 flex items-center gap-2">
+              <AlertTriangle className="w-3 h-3" />
+              Action Required: Ensure the A record matches the IP provided in your Base44 Dashboard (Settings -&gt; Domains).
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Settings Tab
 function SettingsTab({ user }) {
   const queryClient = useQueryClient();
@@ -1761,6 +1839,12 @@ function SettingsTab({ user }) {
         <h2 className="text-xl font-bold text-white">Settings</h2>
         <p className="text-sm text-slate-400">Manage your account</p>
       </div>
+
+      <Card className="bg-slate-900/50 border-slate-800">
+        <CardContent className="p-6">
+          <DomainHealthCheck />
+        </CardContent>
+      </Card>
 
       <Card className="bg-slate-900/50 border-slate-800">
         <CardHeader>
