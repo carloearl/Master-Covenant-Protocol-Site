@@ -90,8 +90,8 @@ async function runNavScan(scan_id, adminBase44) {
     }));
 
     results.forEach(sev => {
-        if (severity === "ok") counts.ok++;
-        else if (severity === "warning") counts.warning++;
+        if (sev === "ok") counts.ok++;
+        else if (sev === "warning") counts.warning++;
         else counts.critical++;
     });
 
@@ -132,8 +132,8 @@ async function runRouteScan(scan_id, adminBase44) {
     }));
 
     results.forEach(sev => {
-        if (severity === "ok") counts.ok++;
-        else if (severity === "warning") counts.warning++;
+        if (sev === "ok") counts.ok++;
+        else if (sev === "warning") counts.warning++;
         else counts.critical++;
     });
 
