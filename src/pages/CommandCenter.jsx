@@ -743,6 +743,9 @@ function ResourcesTab({ user }) {
 
 // Security Status Tab - NO FAKE THREATS
 function SecurityTab({ threatDetection }) {
+  const threatCount = threatDetection?.threatCount || 0;
+  const criticalCount = threatDetection?.criticalCount || 0;
+
   const { data: apiKeys = [] } = useQuery({
     queryKey: ['apiKeys'],
     queryFn: () => base44.entities.APIKey.list()
@@ -772,9 +775,6 @@ function SecurityTab({ threatDetection }) {
 
   const securityScore = calculateScore();
   const scoreColor = securityScore >= 80 ? 'green' : securityScore >= 50 ? 'yellow' : 'red';
-
-  const threatCount = threatDetection?.threatCount || 0;
-  const criticalCount = threatDetection?.criticalCount || 0;
 
   const checks = [
     { 
