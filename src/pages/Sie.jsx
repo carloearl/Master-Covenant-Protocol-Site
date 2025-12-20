@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AlertCircle, CheckCircle2, AlertTriangle, RefreshCw, History, Settings, Bot, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, AlertTriangle, RefreshCw, History, Settings, Bot, Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import ScanHistory from "@/components/sie/ScanHistory";
 import ScanAutomation from "@/components/sie/ScanAutomation";
+import AIRemediationPanel from "@/components/sie/AIRemediationPanel";
 
 export default function Sie() {
   const [scanRun, setScanRun] = useState(null);
@@ -153,6 +154,7 @@ export default function Sie() {
               <TabsTrigger value="routes">Routes</TabsTrigger>
               <TabsTrigger value="sitemaps">Sitemaps</TabsTrigger>
               <TabsTrigger value="backend">Backend</TabsTrigger>
+              <TabsTrigger value="ai-fixes" className="gap-2"><Sparkles className="w-4 h-4" /> AI Fixes</TabsTrigger>
               <TabsTrigger value="history" className="ml-auto"><History className="w-4 h-4 mr-2" /> History</TabsTrigger>
               <TabsTrigger value="automation"><Settings className="w-4 h-4 mr-2" /> Automation</TabsTrigger>
             </TabsList>
@@ -246,6 +248,17 @@ export default function Sie() {
                   </TableRow>
                 )}
               />
+            </TabsContent>
+
+            <TabsContent value="ai-fixes" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <AIRemediationPanel findings={navRows} scanType="navigation" />
+                <AIRemediationPanel findings={routeRows} scanType="routes" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <AIRemediationPanel findings={sitemapRows} scanType="sitemaps" />
+                <AIRemediationPanel findings={backendRows} scanType="backend" />
+              </div>
             </TabsContent>
 
             <TabsContent value="history">
