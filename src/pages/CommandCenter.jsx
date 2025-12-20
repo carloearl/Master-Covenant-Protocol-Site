@@ -1851,19 +1851,76 @@ function DomainHealthCheck() {
             </div>
             </div>
 
-            {/* SSL & Proxy Diagnostic */}
-            {result.detected_proxy && (
-              <div className="mt-4 p-3 bg-orange-950/30 border border-orange-500/30 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <AlertTriangle className="w-5 h-5 text-orange-400" />
-                  <span className="font-bold text-orange-400 text-sm">Cloudflare Proxy Detected</span>
-                </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  Your domain is resolving to Cloudflare IPs (Orange Cloud). This often causes <code className="bg-black/30 px-1 rounded text-orange-300">ERR_SSL_VERSION_OR_CIPHER_MISMATCH</code> because Render cannot provision an SSL certificate through the proxy.
-                </p>
-                <div className="mt-3 text-xs bg-black/30 p-2 rounded border border-orange-500/20">
-                  <span className="text-orange-300 font-bold">FIX:</span> Go to Cloudflare DNS and toggle the "Proxy Status" from <span className="text-orange-400">Proxied</span> to <span className="text-slate-400">DNS Only</span> (Grey Cloud) for your A/CNAME records.
-                </div>
+            {/* GoDaddy Deep Diagnostic */}
+            {result.godaddy_issues && (
+              <div className="mt-4 space-y-3">
+                {!result.godaddy_issues.correct_ip && (
+                  <div className="p-3 bg-red-950/30 border border-red-500/30 rounded-lg animate-pulse">
+                    <div className="flex items-center gap-2 mb-2">
+                      <AlertTriangle className="w-5 h-5 text-red-400" />
+                      <span className="font-bold text-red-400 text-sm">Critical: Incorrect IP Address</span>
+                    </div>
+                    <p className="text-xs text-slate-300">
+                      Your domain is NOT pointing to the required Render IP <code>216.24.57.1</code>. 
+                      You must delete ALL other <strong>A Records</strong> and keep only this one.
+                    </p>
+                  </div>
+                )}
+
+                {result.godaddy_issues.multiple_a && (
+                  <div className="p-3 bg-orange-950/30 border border-orange-500/30 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <AlertTriangle className="w-5 h-5 text-orange-400" />
+                      <span className="font-bold text-orange-400 text-sm">Conflict: Multiple A Records</span>
+                    </div>
+                    <p className="text-xs text-slate-300">
+                      We detected {result.a_records?.length} A Records. GoDaddy often keeps a "Parked" IP by default. 
+                      <strong>You must DELETE all other A Records</strong> except <code>216.24.57.1</code>.
+                      Conflicting records prevent SSL certificate issuance.
+                    </p>
+                  </div>
+                )}
+
+                {result.godaddy_issues.parked && (
+                  <div className="p-3 bg-red-950/30 border border-red-500/30 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <AlertTriangle className="w-5 h-5 text-red-400" />
+                      <span className="font-bold text-red-400 text-sm">GoDaddy Parking Detected</span>
+                    </div>
+                    <p className="text-xs text-slate-300">
+                      Your domain is pointing to a GoDaddy parking page. Delete the A record with value "Parked" or the IP starting with 34/15/3.
+                    </p>
+                  </div>
+                )}
+
+                {result.godaddy_issues.ipv6_conflict && (
+                  <div className="p-3 bg-yellow-950/30 border border-yellow-500/30 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <AlertTriangle className="w-5 h-5 text-yellow-400" />
+                      <span className="font-bold text-yellow-400 text-sm">IPv6 Conflict (AAAA Records)</span>
+                    </div>
+                    <p className="text-xs text-slate-300">
+                      We detected AAAA (IPv6) records. Render's SSL provisioner can fail if AAAA records exist but aren't supported. 
+                      <strong>Please DELETE all AAAA records</strong> in GoDaddy.
+                    </p>
+                  </div>
+                )}
+
+                {result.godaddy_issues.caa_block && (
+                  <div className="p-3 bg-red-950/30 border border-red-500/30 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <ShieldAlert className="w-5 h-5 text-red-400" />
+                      <span className="font-bold text-red-400 text-sm">CAA Record Blocking SSL</span>
+                    </div>
+                    <p className="text-xs text-slate-300">
+                      You have CAA records that might be blocking Let's Encrypt (Render's SSL provider). 
+                      Unless you know exactly what you are doing, <strong>DELETE all CAA records</strong>.
+                    </p>
+                    <div className="mt-2 text-xs font-mono text-slate-400">
+                      Found: {JSON.stringify(result.caa_records)}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
