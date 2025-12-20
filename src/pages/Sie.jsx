@@ -71,20 +71,25 @@ export default function Sie() {
   const runScan = async () => {
     setLoading(true);
     try {
+      // 1. Trigger the unified scan
       const res = await base44.functions.invoke("runFullScan");
       
+      // 2. Handle immediate completion (Unified scan is now awaited backend-side)
       if (res.data?.status === "success" || res.data?.status === "warning" || res.data?.status === "critical") {
-        toast.success("Scan completed successfully");
-        await loadDashboardData(); // Refresh everything
-      } else if (res.data?.status === "failed") {
-        toast.error("Scan failed to complete");
+        toast.success(`Scan completed: ${res.data.status.toUpperCase()}`);
+        
+        // 3. Immediately fetch the fresh data for this specific run to update UI
+        // We use the run_id from the response to be precise
+        if (res.data?.run_id) {
+            // First update the history list
+            await loadDashboardData(); 
+        }
       } else {
-        toast.warning("Scan started but status is unknown");
-        await loadDashboardData();
+        toast.error("Scan failed or timed out");
       }
     } catch (e) {
       console.error("Scan execution failed:", e);
-      toast.error("Scan execution failed");
+      toast.error("Scan failed. Check console for details.");
     } finally {
       setLoading(false);
     }
