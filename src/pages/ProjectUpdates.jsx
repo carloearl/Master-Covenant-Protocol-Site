@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, FileText, CheckCircle2, AlertCircle, RefreshCw } from "lucide-react";
+import { Loader2, FileText, CheckCircle2, AlertCircle, RefreshCw, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import RoyalLoader from "@/components/shared/RoyalLoader";
 
@@ -17,6 +17,7 @@ export default function ProjectUpdates() {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [sending, setSending] = useState(false);
+    const [generating, setGenerating] = useState(false);
 
     const fetchNotionStatus = async () => {
         setLoading(true);
@@ -44,6 +45,23 @@ export default function ProjectUpdates() {
     useEffect(() => {
         fetchNotionStatus();
     }, []);
+
+    const handleGenerate = async () => {
+        setGenerating(true);
+        try {
+            const { data } = await base44.functions.invoke("notionOps", { action: "generate_draft" });
+            if (data) {
+                if (data.title) setTitle(data.title);
+                if (data.content) setContent(data.content);
+                toast.success("Draft generated from system data!");
+            }
+        } catch (error) {
+            console.error("Generation failed:", error);
+            toast.error("Failed to generate draft: " + error.message);
+        } finally {
+            setGenerating(false);
+        }
+    };
 
     const handleSend = async () => {
         if (!selectedPage || !content) {
@@ -134,8 +152,18 @@ export default function ProjectUpdates() {
 
                         {/* Editor */}
                         <Card className="bg-white/5 border-white/10 md:col-span-2">
-                            <CardHeader>
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
                                 <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-400">Compose Update</CardTitle>
+                                <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    onClick={handleGenerate}
+                                    disabled={generating}
+                                    className="border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10 h-8"
+                                >
+                                    {generating ? <Loader2 className="w-3 h-3 animate-spin mr-2" /> : <Sparkles className="w-3 h-3 mr-2" />}
+                                    Auto-Draft
+                                </Button>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
