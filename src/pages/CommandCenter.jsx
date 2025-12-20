@@ -1817,11 +1817,39 @@ function DomainHealthCheck() {
             )}
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-800">
-            <p className="text-xs text-amber-400 flex items-center gap-2">
+          <div className="mt-4 pt-3 border-t border-slate-800 bg-slate-900/50 p-3 rounded-md">
+            <h4 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+              <Settings className="w-4 h-4 text-cyan-400" />
+              How to Fix Connection
+            </h4>
+            
+            {result.suggested_ip && (
+              <div className="mb-3 p-2 bg-green-900/20 border border-green-500/30 rounded flex items-center justify-between">
+                <div>
+                  <span className="text-xs text-slate-400 block">Suggested A Record (Detected)</span>
+                  <code className="text-sm font-mono text-green-400">{result.suggested_ip}</code>
+                </div>
+                <Button size="sm" variant="ghost" onClick={() => { navigator.clipboard.writeText(result.suggested_ip); toast.success("IP copied"); }}>
+                  <Copy className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
+
+            <ol className="text-xs text-slate-300 space-y-2 list-decimal list-inside">
+              <li>Go to your <strong>GoDaddy DNS Management</strong> page for {result.domain}.</li>
+              <li>Locate the <strong>A</strong> record with name <strong>@</strong> (currently 198.12.238.234).</li>
+              <li>Click <strong>Edit</strong> (pencil icon).</li>
+              <li>Change the <strong>Value</strong> to the IP Address shown in your Base44 Dashboard (Settings &rarr; Domains).
+                {result.suggested_ip && <span className="text-green-400"> (Likely: {result.suggested_ip})</span>}
+              </li>
+              <li>Set TTL to <strong>600 seconds</strong> (or shortest available) for faster propagation.</li>
+              <li>Click <strong>Save</strong>.</li>
+            </ol>
+            
+            <div className="mt-3 flex items-center gap-2 text-[10px] text-slate-500">
               <AlertTriangle className="w-3 h-3" />
-              Action Required: Ensure the A record matches the IP provided in your Base44 Dashboard (Settings -&gt; Domains).
-            </p>
+              <span>DNS propagation can take up to 48 hours, but usually happens within minutes.</span>
+            </div>
           </div>
         </div>
       )}

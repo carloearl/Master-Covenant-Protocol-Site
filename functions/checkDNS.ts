@@ -28,10 +28,27 @@ Deno.serve(async (req) => {
         const wwwData = await wwwResponse.json();
         const wwwRecords = wwwData.Answer ? wwwData.Answer.map(r => r.data) : [];
 
+        // Attempt to find correct IP from current Origin (if running on base44.app domain)
+        let suggestedIP = null;
+        const origin = req.headers.get("origin");
+        if (origin && origin.includes("base44.app")) {
+            try {
+                const originHost = new URL(origin).hostname;
+                const originRes = await fetch(`https://dns.google/resolve?name=${originHost}&type=A`);
+                const originData = await originRes.json();
+                if (originData.Answer && originData.Answer.length > 0) {
+                    suggestedIP = originData.Answer[0].data;
+                }
+            } catch (e) {
+                console.error("Failed to resolve origin IP:", e);
+            }
+        }
+
         return Response.json({
             domain,
             a_records: aRecords,
             www_records: wwwRecords,
+            suggested_ip: suggestedIP,
             status: "success",
             timestamp: new Date().toISOString(),
             provider: "Google DNS"
