@@ -109,9 +109,14 @@ export default function SEOHead({
     document.documentElement.setAttribute('lang', 'en');
 
     // GLYPHLOCK: Enhanced SEO & Security Meta Tags
-    updateMetaTag('robots', 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1');
-    updateMetaTag('googlebot', 'index, follow, max-snippet:-1, max-image-preview:large');
-    updateMetaTag('bingbot', 'index, follow');
+    const isAdminPath = /^\/(admin|dashboard|editor|apps|modules|console|sie)/i.test(location.pathname);
+    const robotsContent = isAdminPath 
+      ? 'noindex, nofollow' 
+      : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
+    
+    updateMetaTag('robots', robotsContent);
+    updateMetaTag('googlebot', robotsContent);
+    updateMetaTag('bingbot', robotsContent);
     updateMetaTag('author', 'GlyphLock Security LLC');
     updateMetaTag('viewport', 'width=device-width, initial-scale=1.0, maximum-scale=5.0');
     updateMetaTag('theme-color', '#000000');

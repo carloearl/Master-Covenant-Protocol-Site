@@ -6,104 +6,112 @@
  */
 
 export const NAV = [
-  { label: "Home", href: "/" },
-  { label: "Dream Team", href: "/DreamTeam" },
-  { label: "GlyphBot", href: "/GlyphBot" },
-  { label: "Media Hub", href: "/VideoUpload" },
-  { label: "Command Center", href: "/CommandCenter" },
-  { label: "Protocol Verification", href: "/Consultation" }
+  { label: "Home", href: "/", visibility: "public" },
+  { label: "Dream Team", href: "/DreamTeam", visibility: "public" },
+  { label: "GlyphBot", href: "/GlyphBot", visibility: "public" },
+  { label: "Media Hub", href: "/VideoUpload", visibility: "public" },
+  { label: "Command Center", href: "/CommandCenter", visibility: "public" }, // Accessible to users, but protected
+  { label: "Protocol Verification", href: "/Consultation", visibility: "public" }
 ];
 
 export const NAV_SECTIONS = [
   {
     label: "Company",
+    visibility: "public",
     items: [
-      { label: "About Us", page: "About" },
-      { label: "Founder Story", page: "AboutCarlo" },
-      { label: "Partners", page: "Partners" },
-      { label: "Contact", page: "Contact" },
-      { label: "Accessibility", page: "Accessibility" }
+      { label: "About Us", page: "About", visibility: "public" },
+      { label: "Founder Story", page: "AboutCarlo", visibility: "public" },
+      { label: "Partners", page: "Partners", visibility: "public" },
+      { label: "Contact", page: "Contact", visibility: "public" },
+      { label: "Accessibility", page: "Accessibility", visibility: "public" }
     ]
   },
   {
     label: "Modules",
+    visibility: "public",
     items: [
-      { label: "QR Verification", page: "Qr" },
-      { label: "Image Processing", page: "ImageLab" },
-      { label: "GlyphBot Intelligence", page: "GlyphBot" },
-      { label: "Site Builder", page: "SiteBuilder" },
-      { label: "NUPS Transaction Verification", page: "NUPSLogin" },
-      { label: "Security Modules", page: "SecurityTools" },
-      { label: "Media Processing Hub", page: "VideoUpload" },
-      { label: "QR Sitemap", page: "sitemap-qr" },
-      { label: "SDK Documentation", page: "SDKDocs" }
+      { label: "QR Verification", page: "Qr", visibility: "public" },
+      { label: "Image Processing", page: "ImageLab", visibility: "public" },
+      { label: "GlyphBot Intelligence", page: "GlyphBot", visibility: "public" },
+      { label: "Site Builder", page: "SiteBuilder", visibility: "admin" }, // Admin only
+      { label: "NUPS Transaction Verification", page: "NUPSLogin", visibility: "public" },
+      { label: "Security Modules", page: "SecurityTools", visibility: "public" },
+      { label: "Media Processing Hub", page: "VideoUpload", visibility: "public" },
+      { label: "QR Sitemap", page: "sitemap-qr", visibility: "public" },
+      { label: "SDK Documentation", page: "SDKDocs", visibility: "public" },
+      { label: "Site Intelligence", page: "Sie", visibility: "admin" } // New SIE module
     ]
   },
   {
     label: "Protocols",
+    visibility: "public",
     items: [
-      { label: "Master Covenant", page: "GovernanceHub" },
-      { label: "Protocol Verification", page: "Consultation" },
-      { label: "Trust & Security", page: "TrustSecurity" },
-      { label: "NIST Challenge", page: "NISTChallenge" },
-      { label: "Case Studies", page: "CaseStudies" }
+      { label: "Master Covenant", page: "GovernanceHub", visibility: "public" },
+      { label: "Protocol Verification", page: "Consultation", visibility: "public" },
+      { label: "Trust & Security", page: "TrustSecurity", visibility: "public" },
+      { label: "NIST Challenge", page: "NISTChallenge", visibility: "public" },
+      { label: "Case Studies", page: "CaseStudies", visibility: "public" }
     ]
   },
   {
     label: "Resources",
+    visibility: "public",
     items: [
-      { label: "Documentation", page: "SecurityDocs" },
-      { label: "Dream Team", page: "DreamTeam" },
-      { label: "FAQ", page: "FAQ" },
-      { label: "Roadmap", page: "Roadmap" }
+      { label: "Documentation", page: "SecurityDocs", visibility: "public" },
+      { label: "Dream Team", page: "DreamTeam", visibility: "public" },
+      { label: "FAQ", page: "FAQ", visibility: "public" },
+      { label: "Roadmap", page: "Roadmap", visibility: "public" },
+      { label: "Sitemap Index", page: "SitemapXml", visibility: "public" } // Added
     ]
   },
   {
     label: "Account",
+    visibility: "public",
     items: [
-      { label: "Security Settings", page: "AccountSecurity" },
-      { label: "Command Center", page: "CommandCenter" }
+      { label: "Security Settings", page: "AccountSecurity", visibility: "public" },
+      { label: "Command Center", page: "CommandCenter", visibility: "public" }
     ]
   }
 ];
 
 export const FOOTER_LINKS = {
   company: [
-    { label: "About Us", page: "About" },
-    { label: "Founder Story", page: "AboutCarlo" },
-    { label: "Partners", page: "Partners" },
-    { label: "Contact", page: "Contact" },
-    { label: "Accessibility", page: "Accessibility" }
+    { label: "About Us", page: "About", visibility: "public" },
+    { label: "Founder Story", page: "AboutCarlo", visibility: "public" },
+    { label: "Partners", page: "Partners", visibility: "public" },
+    { label: "Contact", page: "Contact", visibility: "public" },
+    { label: "Accessibility", page: "Accessibility", visibility: "public" }
   ],
   modules: [
-    { label: "QR Verification", page: "Qr" },
-    { label: "Image Processing", page: "ImageLab" },
-    { label: "GlyphBot Intelligence", page: "GlyphBot" },
-    { label: "NUPS Transaction Verification", page: "NUPSLogin" },
-    { label: "Security Modules", page: "SecurityTools" },
-    { label: "SDK Documentation", page: "SDKDocs" }
+    { label: "QR Verification", page: "Qr", visibility: "public" },
+    { label: "Image Processing", page: "ImageLab", visibility: "public" },
+    { label: "GlyphBot Intelligence", page: "GlyphBot", visibility: "public" },
+    { label: "NUPS Transaction Verification", page: "NUPSLogin", visibility: "public" },
+    { label: "Security Modules", page: "SecurityTools", visibility: "public" },
+    { label: "SDK Documentation", page: "SDKDocs", visibility: "public" }
   ],
   protocols: [
-    { label: "Master Covenant", page: "GovernanceHub" },
-    { label: "Protocol Verification", page: "Consultation" },
-    { label: "Trust & Security", page: "TrustSecurity" },
-    { label: "NIST Challenge", page: "NISTChallenge" },
-    { label: "Case Studies", page: "CaseStudies" }
+    { label: "Master Covenant", page: "GovernanceHub", visibility: "public" },
+    { label: "Protocol Verification", page: "Consultation", visibility: "public" },
+    { label: "Trust & Security", page: "TrustSecurity", visibility: "public" },
+    { label: "NIST Challenge", page: "NISTChallenge", visibility: "public" },
+    { label: "Case Studies", page: "CaseStudies", visibility: "public" }
   ],
   resources: [
-    { label: "Documentation", page: "SecurityDocs" },
-    { label: "Dream Team", page: "DreamTeam" },
-    { label: "FAQ", page: "FAQ" },
-    { label: "Roadmap", page: "Roadmap" }
+    { label: "Documentation", page: "SecurityDocs", visibility: "public" },
+    { label: "Dream Team", page: "DreamTeam", visibility: "public" },
+    { label: "FAQ", page: "FAQ", visibility: "public" },
+    { label: "Roadmap", page: "Roadmap", visibility: "public" },
+    { label: "Sitemap Index", page: "SitemapXml", visibility: "public" }
   ],
   legal: [
-    { label: "Privacy Policy", page: "Privacy" },
-    { label: "Terms of Service", page: "Terms" },
-    { label: "Cookie Policy", page: "Cookies" }
+    { label: "Privacy Policy", page: "Privacy", visibility: "public" },
+    { label: "Terms of Service", page: "Terms", visibility: "public" },
+    { label: "Cookie Policy", page: "Cookies", visibility: "public" }
   ],
   account: [
-    { label: "Security Settings", page: "AccountSecurity" },
-    { label: "Command Center", page: "CommandCenter" }
+    { label: "Security Settings", page: "AccountSecurity", visibility: "public" },
+    { label: "Command Center", page: "CommandCenter", visibility: "public" }
   ]
 };
 
