@@ -7,7 +7,7 @@ import { Download, Play, CheckCircle2, AlertCircle, Shield, Activity, Search, La
 import RoyalLoader from "@/components/shared/RoyalLoader";
 
 export default function SiteAudit() {
-  const [activeTab, setActiveTab] = useState('phase1'); // phase1, phase2, phase3
+  const [activeTab, setActiveTab] = useState('overview'); // overview, phase1, phase2, phase3
   
   // Phase 1 State
   const [scanning, setScanning] = useState(false);
@@ -157,6 +157,12 @@ export default function SiteAudit() {
       {/* Tabs */}
       <div className="flex border-b border-white/10 mb-8">
         <button 
+          onClick={() => setActiveTab('overview')}
+          className={`px-6 py-3 text-xs font-bold uppercase tracking-widest border-b-2 transition-all ${activeTab === 'overview' ? 'border-indigo-500 text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+        >
+          Overview
+        </button>
+        <button 
           onClick={() => setActiveTab('phase1')}
           className={`px-6 py-3 text-xs font-bold uppercase tracking-widest border-b-2 transition-all ${activeTab === 'phase1' ? 'border-indigo-500 text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
         >
@@ -180,6 +186,41 @@ export default function SiteAudit() {
 
       {/* CONTENT AREA */}
       <div className="min-h-[400px]">
+
+        {/* OVERVIEW VIEW */}
+        {activeTab === 'overview' && (
+          <div className="space-y-12 animate-in fade-in duration-500">
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-white/5 border border-white/10 p-8 flex flex-col items-center justify-center text-center">
+                <div className="text-[100px] font-black leading-none text-white tracking-tighter">
+                  {scoreResult?.globalScore || '--'}
+                </div>
+                <div className="text-xs font-bold text-indigo-400 uppercase tracking-[0.2em] mt-2">Current Global Site Score</div>
+                <p className="text-slate-500 text-xs mt-4 max-w-xs">Run a full scan to update this score. It reflects structure, security, performance, and compliance.</p>
+              </div>
+              <div className="space-y-4">
+                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest border-l-2 border-red-500 pl-3">Critical Findings</h3>
+                {securityResult?.findings?.filter(f => f.severity === 'critical').length > 0 ? (
+                  <div className="space-y-2">
+                    {securityResult.findings.filter(f => f.severity === 'critical').slice(0, 5).map((f, i) => (
+                      <div key={i} className="bg-red-500/10 border border-red-500/20 p-3 rounded">
+                        <div className="flex justify-between items-start">
+                          <span className="text-red-400 font-bold text-xs uppercase">{f.category}</span>
+                          <span className="text-red-500 text-[10px] uppercase">Critical</span>
+                        </div>
+                        <p className="text-white text-sm mt-1">{f.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-6 border border-white/10 text-center text-slate-500 text-xs uppercase tracking-widest">
+                    No critical findings detected (or scan not run).
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* PHASE 1 VIEW */}
         {activeTab === 'phase1' && (

@@ -40,7 +40,6 @@ import IntegrationTests from './pages/IntegrationTests';
 import ImageLab from './pages/ImageLab';
 import SitemapXml from './pages/SitemapXml';
 import SitemapApp from './pages/SitemapApp';
-import SitemapQr from './pages/SitemapQr';
 import SitemapImages from './pages/SitemapImages';
 import SitemapInteractive from './pages/SitemapInteractive';
 import SitemapDynamic from './pages/SitemapDynamic';
@@ -68,6 +67,7 @@ import FullExport from './pages/FullExport';
 import EmergencyBackup from './pages/EmergencyBackup';
 import CaseStudyTruthStrike from './pages/CaseStudyTruthStrike';
 import CaseStudyAIBinding from './pages/CaseStudyAIBinding';
+import sitemapQr from './pages/sitemap-qr';
 import __Layout from './Layout.jsx';
 
 
@@ -114,7 +114,6 @@ export const PAGES = {
     "ImageLab": ImageLab,
     "SitemapXml": SitemapXml,
     "SitemapApp": SitemapApp,
-    "SitemapQr": SitemapQr,
     "SitemapImages": SitemapImages,
     "SitemapInteractive": SitemapInteractive,
     "SitemapDynamic": SitemapDynamic,
@@ -142,6 +141,7 @@ export const PAGES = {
     "EmergencyBackup": EmergencyBackup,
     "CaseStudyTruthStrike": CaseStudyTruthStrike,
     "CaseStudyAIBinding": CaseStudyAIBinding,
+    "sitemap-qr": sitemapQr,
 }
 
 export const pagesConfig = {

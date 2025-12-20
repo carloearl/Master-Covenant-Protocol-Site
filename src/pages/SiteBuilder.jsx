@@ -16,6 +16,7 @@ import {
   Database,
   Layout as LayoutIcon,
   Sparkles,
+  Shield,
   CheckCircle2,
   AlertCircle,
   Clock,
@@ -397,6 +398,31 @@ export default function SiteBuilder() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Modules Panel */}
+        <div className="container mx-auto px-3 md:px-4 mb-6">
+          <h2 className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-4">Modules</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* SIE Module */}
+            <Card className="bg-white/5 border-indigo-500/30 hover:border-indigo-500/60 transition-all cursor-pointer group" onClick={() => window.location.href = '/SiteAudit'}>
+              <CardContent className="p-5">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center group-hover:bg-indigo-500/30 transition-colors">
+                    <Shield className="w-6 h-6 text-indigo-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-lg">Site Intelligence</h3>
+                    <p className="text-xs text-indigo-300">SIE • Audit & Security</p>
+                  </div>
+                </div>
+                <p className="text-slate-400 text-sm mb-4">System-wide auditor for structure, performance, security, SEO, and feature readiness.</p>
+                <div className="flex items-center text-xs font-bold text-indigo-400 uppercase tracking-wider group-hover:underline">
+                  Open Module <span className="ml-1">→</span>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
 

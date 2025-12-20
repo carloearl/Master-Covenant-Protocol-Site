@@ -35,6 +35,7 @@ export const NAV_SECTIONS = [
       { label: "NUPS Transaction Verification", page: "NUPSLogin" },
       { label: "Security Modules", page: "SecurityTools" },
       { label: "Media Processing Hub", page: "VideoUpload" },
+      { label: "QR Sitemap", page: "sitemap-qr" },
       { label: "SDK Documentation", page: "SDKDocs" }
     ]
   },
