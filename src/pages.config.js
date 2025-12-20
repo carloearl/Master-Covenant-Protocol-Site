@@ -68,6 +68,8 @@ import EmergencyBackup from './pages/EmergencyBackup';
 import CaseStudyTruthStrike from './pages/CaseStudyTruthStrike';
 import CaseStudyAIBinding from './pages/CaseStudyAIBinding';
 import sitemapQr from './pages/sitemap-qr';
+import SitemapQr from './pages/SitemapQr';
+import Sie from './pages/Sie';
 import __Layout from './Layout.jsx';
 
 
@@ -142,6 +144,8 @@ export const PAGES = {
     "CaseStudyTruthStrike": CaseStudyTruthStrike,
     "CaseStudyAIBinding": CaseStudyAIBinding,
     "sitemap-qr": sitemapQr,
+    "SitemapQr": SitemapQr,
+    "Sie": Sie,
 }
 
 export const pagesConfig = {

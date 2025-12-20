@@ -1,26 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function SitemapInteractive() {
-  const [xml, setXml] = useState('Loading...');
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await base44.functions.invoke('sitemapInteractive');
-        setXml(response.data);
-      } catch (error) {
-        setXml('Error loading sitemap');
-      }
-    })();
-  }, []);
-
   return (
-    <div className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-2xl font-bold mb-4 text-cyan-400">Interactive Sitemap</h1>
-      <pre className="bg-gray-900 p-6 rounded-lg text-sm text-gray-300 overflow-x-auto whitespace-pre-wrap">
-        {xml}
-      </pre>
+    <div className="container mx-auto p-8">
+      <Card>
+        <CardHeader>
+          <CardTitle>Interactive Sitemap</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="mb-4">Interactive components sitemap.</p>
+          <a href="/api/apps/functions/sitemapInteractive" className="text-blue-500 hover:underline">View XML</a>
+        </CardContent>
+      </Card>
     </div>
   );
 }
