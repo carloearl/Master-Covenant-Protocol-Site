@@ -87,15 +87,21 @@ export default function AIRemediationPanel({ findings, scanType, onRemediationGe
 
       if (res.data?.success) {
         const newRemediations = new Map(remediations);
-        res.data.remediations.forEach(r => {
-          newRemediations.set(r.finding_id, r);
-        });
-        setRemediations(newRemediations);
-        toast.success(`Generated ${res.data.remediations.length} AI fixes!`);
+        if (res.data.remediations && Array.isArray(res.data.remediations)) {
+            res.data.remediations.forEach(r => {
+              newRemediations.set(r.finding_id, r);
+            });
+            setRemediations(newRemediations);
+            toast.success(`Generated ${res.data.remediations.length} AI fixes!`);
+        } else {
+            toast.error("Invalid response format from AI service");
+        }
+      } else {
+        toast.error('Failed to generate fixes: ' + (res.data?.error || 'Unknown error'));
       }
     } catch (error) {
       console.error('Bulk AI remediation error:', error);
-      toast.error('Bulk generation failed');
+      toast.error('Bulk generation failed - Check console');
     } finally {
       setGeneratingAll(false);
     }
@@ -230,9 +236,22 @@ export default function AIRemediationPanel({ findings, scanType, onRemediationGe
                         <p className="text-sm text-slate-300">
                           {getFindingDescription(finding, scanType)}
                         </p>
-                        <p className="text-xs text-slate-500 mt-1 font-mono">
-                          Location: {getFindingLocation(finding, scanType)}
-                        </p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <p className="text-xs text-slate-500 font-mono">
+                            Location: {getFindingLocation(finding, scanType)}
+                          </p>
+                          {(scanType === 'routes' || scanType === 'sitemaps' || scanType === 'navigation') && (
+                            <a 
+                              href={getFindingLocation(finding, scanType)} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-[10px] bg-slate-800 hover:bg-slate-700 text-blue-400 px-2 py-0.5 rounded border border-slate-700 transition-colors"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                              Open Location
+                            </a>
+                          )}
+                        </div>
                       </div>
 
                       {isLoading ? (
@@ -278,13 +297,13 @@ export default function AIRemediationPanel({ findings, scanType, onRemediationGe
                               <div className="flex items-center justify-between mb-2">
                                 <h5 className="text-xs font-medium text-slate-400">Code Example</h5>
                                 <Button
-                                  variant="ghost"
+                                  variant="secondary"
                                   size="sm"
-                                  className="h-6 text-xs"
+                                  className="h-7 text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700"
                                   onClick={() => copyToClipboard(remediation.code_example)}
                                 >
                                   <Copy className="w-3 h-3 mr-1" />
-                                  Copy
+                                  Copy Code
                                 </Button>
                               </div>
                               <pre className="bg-slate-950 p-3 rounded text-xs overflow-x-auto border border-slate-800">
