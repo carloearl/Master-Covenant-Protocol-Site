@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AlertCircle, CheckCircle2, AlertTriangle, RefreshCw } from "lucide-react";
+import { AlertCircle, CheckCircle2, AlertTriangle, RefreshCw, History, Settings, Bot } from "lucide-react";
+import ScanHistory from "@/components/sie/ScanHistory";
+import ScanAutomation from "@/components/sie/ScanAutomation";
 
 export default function Sie() {
   const [scanRun, setScanRun] = useState(null);
@@ -15,20 +17,23 @@ export default function Sie() {
   const [backendRows, setBackendRows] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const fetchScanDetails = async (run) => {
+    setScanRun(run);
+    const scanId = run.scan_id;
+    const nav = await base44.entities.NavAuditRow.list({ filter: { scan_run_id: scanId } });
+    setNavRows(nav.data);
+    const routes = await base44.entities.RouteAuditRow.list({ filter: { scan_run_id: scanId } });
+    setRouteRows(routes.data);
+    const sitemaps = await base44.entities.SitemapAuditRow.list({ filter: { scan_run_id: scanId } });
+    setSitemapRows(sitemaps.data);
+    const backends = await base44.entities.BackendAuditRow.list({ filter: { scan_run_id: scanId } });
+    setBackendRows(backends.data);
+  };
+
   const fetchLatestScan = async () => {
     const res = await base44.entities.ScanRun.list({ sort: { started_at: -1 }, limit: 1 });
     if (res.data && res.data.length > 0) {
-      setScanRun(res.data[0]);
-      // Fetch details
-      const scanId = res.data[0].scan_id;
-      const nav = await base44.entities.NavAuditRow.list({ filter: { scan_run_id: scanId } });
-      setNavRows(nav.data);
-      const routes = await base44.entities.RouteAuditRow.list({ filter: { scan_run_id: scanId } });
-      setRouteRows(routes.data);
-      const sitemaps = await base44.entities.SitemapAuditRow.list({ filter: { scan_run_id: scanId } });
-      setSitemapRows(sitemaps.data);
-      const backends = await base44.entities.BackendAuditRow.list({ filter: { scan_run_id: scanId } });
-      setBackendRows(backends.data);
+      await fetchScanDetails(res.data[0]);
     }
   };
 
@@ -99,12 +104,14 @@ export default function Sie() {
           </div>
 
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="bg-slate-900 text-slate-400">
+            <TabsList className="bg-slate-900 text-slate-400 w-full justify-start overflow-x-auto">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="navigation">Navigation</TabsTrigger>
               <TabsTrigger value="routes">Routes</TabsTrigger>
               <TabsTrigger value="sitemaps">Sitemaps</TabsTrigger>
               <TabsTrigger value="backend">Backend</TabsTrigger>
+              <TabsTrigger value="history" className="ml-auto"><History className="w-4 h-4 mr-2" /> History</TabsTrigger>
+              <TabsTrigger value="automation"><Settings className="w-4 h-4 mr-2" /> Automation</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview">
@@ -183,10 +190,27 @@ export default function Sie() {
                     <TableCell>{row.function_exists ? 'Yes' : 'No'}</TableCell>
                     <TableCell>{row.responds_correctly ? 'Yes' : 'No'}</TableCell>
                     <TableCell><SeverityBadge severity={row.severity} /></TableCell>
-                    <TableCell className="text-white">{row.required_action}</TableCell>
+                    <TableCell className="text-white">
+                      {row.required_action?.startsWith('[AI]') ? (
+                        <div className="flex items-start gap-2">
+                          <Bot className="w-4 h-4 text-purple-400 mt-1 shrink-0" />
+                          <span className="text-purple-100">{row.required_action.replace('[AI] ', '')}</span>
+                        </div>
+                      ) : (
+                        row.required_action
+                      )}
+                    </TableCell>
                   </TableRow>
                 )}
               />
+            </TabsContent>
+
+            <TabsContent value="history">
+              <ScanHistory onSelectScan={fetchScanDetails} />
+            </TabsContent>
+
+            <TabsContent value="automation">
+              <ScanAutomation />
             </TabsContent>
           </Tabs>
         </CardContent>

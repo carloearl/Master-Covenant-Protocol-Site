@@ -87,6 +87,21 @@ export default async function runFullScan(req) {
                     timestamp: new Date().toISOString()
                 });
 
+                // --- STEP 5: AI ENRICHMENT (OPTIONAL) ---
+                try {
+                    // Trigger AI enrichment silently
+                    // We don't await this to keep the 'completed' status intact, 
+                    // or we await it if we want the data ready immediately.
+                    // Given 'reliability' focus, let's fire and forget or await safely.
+                    // Since the scan is marked 'success', UI might refresh. 
+                    // Let's await it so the initial fetch has AI data if it's fast enough, 
+                    // but wrap in separate try/catch so it doesn't fail the scan.
+                    await base44.functions.invoke("enrichScanWithAI", { scan_id });
+                } catch (aiErr) {
+                    console.error("AI Enrichment Failed:", aiErr);
+                    // Non-critical failure
+                }
+
             } catch (err) {
                 console.error("OMEGA Scan Background Error:", err);
                 
