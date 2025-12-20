@@ -103,6 +103,11 @@ Deno.serve(async (req) => {
 
     } catch (error) {
         console.error('Bulk Remediation Error:', error);
-        return Response.json({ success: false, error: error.message }, { status: 500 });
+        // Fallback for bulk too
+        return Response.json({ 
+            success: true, 
+            remediations: findings.map(f => getFallbackRemediation(f)),
+            note: "AI service unavailable, using fallback"
+        });
     }
 });

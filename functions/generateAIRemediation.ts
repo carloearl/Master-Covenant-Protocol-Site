@@ -106,6 +106,11 @@ Deno.serve(async (req) => {
 
     } catch (error) {
         console.error('AI Remediation error:', error);
-        return Response.json({ success: false, error: error.message }, { status: 500 });
+        // Fallback on error (e.g. rate limit, quota) so the UI doesn't break
+        return Response.json({ 
+            success: true, 
+            remediation: getFallbackRemediation(finding),
+            note: "AI service unavailable, using fallback"
+        });
     }
 });
