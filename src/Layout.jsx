@@ -41,18 +41,26 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   useEffect(() => {
-    // Enforce HTTPS
-    if (
-      typeof window !== 'undefined' && 
-      window.location.protocol === 'http:' && 
-      window.location.hostname !== 'localhost' && 
-      window.location.hostname !== '127.0.0.1'
-    ) {
-      window.location.href = window.location.href.replace('http:', 'https:');
-    }
-
-    // Initialize mobile scaling system
     if (typeof window !== 'undefined') {
+      const host = window.location.hostname;
+      const isLocal = host === 'localhost' || host === '127.0.0.1';
+      
+      if (!isLocal) {
+        // 1. Force non-www (canonical domain) to fix CERT_COMMON_NAME_INVALID
+        if (host.startsWith('www.')) {
+          const target = `https://${host.replace(/^www\./, '')}${window.location.pathname}${window.location.search}`;
+          window.location.replace(target);
+          return;
+        }
+        
+        // 2. Force HTTPS
+        if (window.location.protocol === 'http:') {
+          window.location.replace(window.location.href.replace('http:', 'https:'));
+          return;
+        }
+      }
+
+      // Initialize mobile scaling system
       new MobileScalingSystem();
     }
   }, []);
