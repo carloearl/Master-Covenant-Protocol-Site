@@ -70,6 +70,7 @@ import CaseStudyAIBinding from './pages/CaseStudyAIBinding';
 import sitemapQr from './pages/sitemap-qr';
 import SitemapQr from './pages/SitemapQr';
 import Sie from './pages/Sie';
+import ProjectUpdates from './pages/ProjectUpdates';
 import __Layout from './Layout.jsx';
 
 
@@ -146,6 +147,7 @@ export const PAGES = {
     "sitemap-qr": sitemapQr,
     "SitemapQr": SitemapQr,
     "Sie": Sie,
+    "ProjectUpdates": ProjectUpdates,
 }
 
 export const pagesConfig = {

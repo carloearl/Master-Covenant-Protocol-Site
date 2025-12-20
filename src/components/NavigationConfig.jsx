@@ -68,10 +68,11 @@ export const NAV_SECTIONS = [
     visibility: "public",
     items: [
       { label: "Security Settings", page: "AccountSecurity", visibility: "public" },
-      { label: "Command Center", page: "CommandCenter", visibility: "public" }
-    ]
-  }
-];
+                  { label: "Command Center", page: "CommandCenter", visibility: "public" },
+                  { label: "Project Updates", page: "ProjectUpdates", visibility: "public" }
+                ]
+              }
+            ];
 
 export const FOOTER_LINKS = {
   company: [
