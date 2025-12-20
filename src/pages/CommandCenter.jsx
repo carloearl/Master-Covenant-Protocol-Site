@@ -1793,13 +1793,15 @@ function DomainHealthCheck() {
                  result.a_records.map(ip => (
                    <div key={ip} className="flex items-center gap-2 font-mono text-sm text-slate-300 ml-6">
                      <span>{ip}</span>
-                     {(ip === "198.12.238.234" || ip === "216.24.57.1") && (
-                       <Badge variant="destructive" className="ml-2 text-[10px] h-5">Incorrect</Badge>
+                     {result.suggested_type === "CNAME" && (
+                       <Badge variant="destructive" className="ml-2 text-[10px] h-5">MUST DELETE</Badge>
                      )}
                    </div>
                  ))
               ) : (
-                <p className="text-xs text-slate-500 ml-6 italic">No A records found (Good for CNAME setup)</p>
+                <p className="text-xs text-green-400 ml-6 italic flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3" /> No A records (Ready for CNAME)
+                </p>
               )}
             </div>
             
@@ -1813,6 +1815,7 @@ function DomainHealthCheck() {
                  result.cname_records.map(rec => (
                    <div key={rec} className="flex items-center gap-2 font-mono text-sm text-slate-300 ml-6">
                      <span>{rec}</span>
+                     {rec.includes(result.suggested_target) && <Badge className="ml-2 text-[10px] h-5 bg-green-500/20 text-green-400">Correct</Badge>}
                    </div>
                  ))
               ) : (
@@ -1856,24 +1859,37 @@ function DomainHealthCheck() {
               </div>
             )}
 
-            <ol className="text-xs text-slate-300 space-y-2 list-decimal list-inside">
+            <div className="bg-slate-950/50 p-3 rounded border border-slate-800 mb-3">
+              <p className="text-xs text-yellow-400 font-bold mb-1 flex items-center gap-1">
+                <AlertTriangle className="w-3 h-3" /> IMPORTANT:
+              </p>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                You cannot paste a hostname (like <code>base44.onrender.com</code>) into an <strong>A Record</strong> value. 
+                You MUST use a <strong>CNAME Record</strong> type.
+              </p>
+            </div>
+
+            <ol className="text-xs text-slate-300 space-y-3 list-decimal list-inside">
               <li>Go to your <strong>GoDaddy DNS Management</strong> page.</li>
-              <li><strong>Delete</strong> any existing <strong>A</strong> records with name <strong>@</strong>.</li>
-              <li>Create a new record:
-                <ul className="pl-4 mt-1 space-y-1 text-slate-400 border-l border-slate-700 ml-2">
-                  <li>Type: <strong className="text-white">{result.suggested_type || 'CNAME'}</strong></li>
+              <li>
+                <span className="text-red-400 font-bold">DELETE</span> any existing <strong>A</strong> records with name <strong>@</strong>.
+                <span className="block text-[10px] text-slate-500 ml-4 mt-1">If you don't delete the A record first, GoDaddy will show an error.</span>
+              </li>
+              <li>
+                Click <strong>Add New Record</strong> and select:
+                <ul className="pl-4 mt-2 space-y-1 text-slate-400 border-l-2 border-cyan-500/30 ml-2 py-1">
+                  <li>Type: <strong className="text-cyan-400 text-sm">CNAME</strong> <span className="text-[10px] text-slate-500">(Not A!)</span></li>
                   <li>Name: <strong className="text-white">@</strong></li>
                   <li>Value: <strong className="text-green-400">{result.suggested_target || "base44.onrender.com"}</strong></li>
                   <li>TTL: <strong>600 seconds</strong> (Custom)</li>
                 </ul>
               </li>
-              <li>Ensure <strong>www</strong> CNAME also points to <strong className="text-green-400">{result.suggested_target || "base44.onrender.com"}</strong>.</li>
               <li>Click <strong>Save</strong>.</li>
             </ol>
             
             <div className="mt-3 flex items-center gap-2 text-[10px] text-slate-500">
-              <AlertTriangle className="w-3 h-3" />
-              <span>DNS propagation can take up to 48 hours.</span>
+              <RefreshCw className="w-3 h-3" />
+              <span>It may take a few minutes for changes to reflect here.</span>
             </div>
           </div>
         </div>
