@@ -1823,11 +1823,17 @@ function DomainHealthCheck() {
                    </div>
                  ))
               ) : (
-                <p className="text-xs text-slate-500 ml-6 italic">No CNAME (@) found</p>
+                result.a_records?.includes("216.24.57.1") ? (
+                  <p className="text-xs text-slate-400 ml-6 italic flex items-center gap-1">
+                    <CheckCircle className="w-3 h-3 text-green-400" /> Not Required (Legacy Mode)
+                  </p>
+                ) : (
+                  <p className="text-xs text-slate-500 ml-6 italic">No CNAME (@) found</p>
+                )
               )}
-            </div>
+              </div>
 
-            {/* CNAME WWW Status */}
+              {/* CNAME WWW Status */}
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <Globe className="w-4 h-4 text-blue-400" />
