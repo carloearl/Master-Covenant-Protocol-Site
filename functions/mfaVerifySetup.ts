@@ -36,25 +36,13 @@ Deno.serve(async (req) => {
     // Encrypt the TOTP secret
     const encryptedSecret = encrypt(tempSecret);
     
-    // Get existing user entity or create new entry
-    const userEntities = await base44.entities.User.filter({ email: user.email });
-    
-    if (userEntities.length > 0) {
-      // Update existing
-      await base44.entities.User.update(userEntities[0].id, {
-        mfaEnabled: true,
-        mfaSecretEncrypted: encryptedSecret,
-        mfaRecoveryCodes: hashedCodes
-      });
-    } else {
-      // Create new
-      await base44.entities.User.create({
-        email: user.email,
-        mfaEnabled: true,
-        mfaSecretEncrypted: encryptedSecret,
-        mfaRecoveryCodes: hashedCodes
-      });
-    }
+    // Update user using auth.updateMe()
+    // This is the preferred way to update user attributes
+    await base44.auth.updateMe({
+      mfaEnabled: true,
+      mfaSecretEncrypted: encryptedSecret,
+      mfaRecoveryCodes: hashedCodes
+    });
     
     // Return recovery codes (only time they're shown in plain text)
     return Response.json({
