@@ -67,7 +67,6 @@ import FullExport from './pages/FullExport';
 import EmergencyBackup from './pages/EmergencyBackup';
 import CaseStudyTruthStrike from './pages/CaseStudyTruthStrike';
 import CaseStudyAIBinding from './pages/CaseStudyAIBinding';
-import sitemapQr from './pages/sitemap-qr';
 import SitemapQr from './pages/SitemapQr';
 import Sie from './pages/Sie';
 import ProjectUpdates from './pages/ProjectUpdates';
@@ -144,7 +143,6 @@ export const PAGES = {
     "EmergencyBackup": EmergencyBackup,
     "CaseStudyTruthStrike": CaseStudyTruthStrike,
     "CaseStudyAIBinding": CaseStudyAIBinding,
-    "sitemap-qr": sitemapQr,
     "SitemapQr": SitemapQr,
     "Sie": Sie,
     "ProjectUpdates": ProjectUpdates,

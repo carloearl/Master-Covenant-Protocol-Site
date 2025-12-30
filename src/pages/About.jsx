@@ -86,12 +86,7 @@ export default function About() {
 
   return (
     <>
-      <SEOHead 
-        title="About GlyphLock - Quantum-Resistant Security for a World Already Under Attack"
-        description="Born from a dangerous idea: What if camouflage could hide QR codes? GlyphLock is survival-grade security built to eliminate digital theft, end fraud, and protect creators for 200 years."
-        keywords="GlyphLock about, quantum-resistant security, Carlo Earl DACO, Collin Vanderginst CTO, Master Covenant, steganographic QR, AI governance, IP protection, TruthStrike Protocol, Base44 platform, Dream Team AI"
-        url="/about"
-      />
+      <SEOHead />
       
       <div className="min-h-screen bg-black text-white pt-24 pb-24 relative overflow-hidden">
         {/* Background Elements */}

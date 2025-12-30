@@ -9,6 +9,7 @@ import { Blocks, Hash, Shield, CheckCircle2, Copy, FileCheck, Lock, AlertTriangl
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { motion, useInView } from "framer-motion";
+import SEOHead from "@/components/SEOHead";
 export default function Blockchain() {
   const heroRef = useRef(null);
   const featuresRef = useRef(null);
@@ -189,6 +190,8 @@ export default function Blockchain() {
   };
 
   return (
+    <>
+      <SEOHead />
       <div className="min-h-screen bg-black text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
@@ -713,5 +716,6 @@ export default function Blockchain() {
           </div>
         </div>
       </div>
+    </>
   );
 }

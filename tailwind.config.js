@@ -77,11 +77,57 @@ module.exports = {
   				to: {
   					height: '0'
   				}
-  			}
+			},
+        'spin-slow': {
+          from: { transform: 'rotate(0deg)' },
+          to: { transform: 'rotate(360deg)' },
+        },
+        'spin-reverse': {
+          from: { transform: 'rotate(360deg)' },
+          to: { transform: 'rotate(0deg)' },
+        },
+        'pulse-slow': {
+          '0%, 100%': { opacity: 0.4, transform: 'scale(1)' },
+          '50%': { opacity: 1, transform: 'scale(1.05)' },
+        },
+        'pulse-fast': {
+          '0%, 100%': { opacity: 0.6 },
+          '50%': { opacity: 1 },
+        },
+        dash: {
+          to: { 'stroke-dashoffset': -100 },
+        },
+        'bounce-stagger': {
+          '0%, 80%, 100%': { transform: 'translateY(0)' },
+          '40%': { transform: 'translateY(-10px)' },
+        },
+        'scan-quantum': {
+          '0%, 100%': { transform: 'translateX(-100%)', opacity: 0 },
+          '50%': { opacity: 1 },
+          '100%': { transform: 'translateX(200%)', opacity: 0 },
+        },
+        'scan-quantum-reverse': {
+          '0%, 100%': { transform: 'translateX(200%)', opacity: 0 },
+          '50%': { opacity: 0.6 },
+          '100%': { transform: 'translateX(-100%)', opacity: 0 },
+        },
+        gradient: {
+          '0%, 100%': { 'background-position': '0% 50%' },
+          '50%': { 'background-position': '100% 50%' },
+        },
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+			'accordion-up': 'accordion-up 0.2s ease-out',
+        'spin-slow': 'spin-slow 4s linear infinite',
+        'spin-reverse': 'spin-reverse 6s linear infinite',
+        'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
+        'pulse-fast': 'pulse-fast 1.5s ease-in-out infinite',
+        dash: 'dash 2s linear infinite',
+        'bounce-stagger': 'bounce-stagger 1.4s ease-in-out infinite',
+        'scan-quantum': 'scan-quantum 3s ease-in-out infinite',
+        'scan-quantum-reverse': 'scan-quantum-reverse 3s ease-in-out infinite',
+        gradient: 'gradient 3s ease infinite',
   		}
   	}
   },

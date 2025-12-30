@@ -52,7 +52,14 @@ export default defineConfig(({ mode }) => {
       hmr: {
         protocol: 'wss',
         clientPort: 443
-      }
+      },
+      proxy: {
+        '/api': {
+          target: 'https://base44.com',
+          changeOrigin: true,
+          secure: false,
+        },
+      },
     },
     resolve: {
       alias: {
