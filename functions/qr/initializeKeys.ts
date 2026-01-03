@@ -6,6 +6,7 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
+    console.log('InitKeys User:', user);
 
     // Admin only
     if (user?.role !== 'admin') {
