@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
 
     if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      return Response.json({ error: 'Unauthorized', debug: 'No user found' }, { status: 401 });
     }
 
     const { type, claims, ttl } = await req.json();

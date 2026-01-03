@@ -10,7 +10,7 @@ Deno.serve(async (req) => {
 
     // Admin only
     if (user?.role !== 'admin') {
-      return Response.json({ error: 'Forbidden' }, { status: 403 });
+      return Response.json({ error: 'Forbidden', debugUser: user, debugRole: user?.role }, { status: 403 });
     }
 
     const KID = 'glyphlock-platform-2025-01';
