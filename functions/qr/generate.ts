@@ -4,6 +4,7 @@ import canonicalize from 'npm:canonicalize@1.0.8';
 import QRCode from 'npm:qrcode@1.5.3';
 import { decrypt } from '../utils/encryption.js';
 import { randomBytes } from 'node:crypto';
+import { Buffer } from 'node:buffer';
 
 const QR_TYPE_POLICIES = {
   voucher: { maxTTL: 86400, allowedClaimKeys: ['amount', 'currency', 'merchantId'], scanMode: 'single_use' },

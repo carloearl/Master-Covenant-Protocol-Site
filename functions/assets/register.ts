@@ -2,6 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 import * as ed25519 from 'npm:@noble/ed25519@2.0.0';
 import { createHash } from 'node:crypto';
 import { decrypt } from '../utils/encryption.js';
+import { Buffer } from 'node:buffer';
 
 const ASSET_SIGNATURE_CONTEXT = 'GlyphLock Asset v1';
 
