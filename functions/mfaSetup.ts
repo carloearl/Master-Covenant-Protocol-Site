@@ -18,8 +18,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
     
-    // Check if MFA is already enabled using auth.me() data
-    if (user.mfaEnabled) {
+    // Check if MFA is already enabled
+    const userEntity = await base44.entities.User.filter({ email: user.email });
+    const userData = userEntity[0] || {};
+    
+    if (userData.mfaEnabled) {
       return Response.json({ 
         error: 'MFA is already enabled. Disable it first to reconfigure.' 
       }, { status: 400 });
@@ -29,7 +32,7 @@ Deno.serve(async (req) => {
     const secret = speakeasy.generateSecret({
       name: `${ISSUER} (${user.email})`,
       issuer: ISSUER,
-      length: 20 // Standard Google Authenticator compatible length
+      length: 32
     });
     
     // Generate QR code
