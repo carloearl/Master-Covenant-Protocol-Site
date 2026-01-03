@@ -22,6 +22,26 @@ Deno.serve(async (req) => {
     if (!code || !tempSecret) {
       return Response.json({ error: 'Missing code or secret' }, { status: 400 });
     }
+
+    // Rate Limiting for Setup (10 attempts in 15 minutes)
+    const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+    const recentFailures = await base44.entities.SystemAuditLog.filter({
+      actor_email: user.email,
+      event_type: 'MFA_SETUP_FAILURE',
+      created_date: { $gte: fifteenMinutesAgo }
+    });
+
+    if (recentFailures.length >= 10) {
+      await base44.entities.SystemAuditLog.create({
+        event_type: 'MFA_RATE_LIMIT_HIT',
+        description: 'User exceeded MFA setup verification attempts',
+        actor_email: user.email,
+        ip_address: req.headers.get('x-forwarded-for') || 'unknown',
+        status: 'security_action',
+        severity: 'low'
+      });
+      return Response.json({ error: 'Too many failed attempts. Please try again later.' }, { status: 429 });
+    }
     
     // Verify the TOTP code
     const isValid = verifyTotpCode(tempSecret, code);
