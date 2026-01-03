@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Copy, Download, Shield, CheckCircle, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
+import MFAHelpAssistant from './MFAHelpAssistant';
 
 export default function MFASetupModal({ isOpen, onClose, onSuccess }) {
   const [step, setStep] = useState('qr'); // 'qr' | 'verify' | 'codes'
@@ -119,6 +120,7 @@ export default function MFASetupModal({ isOpen, onClose, onSuccess }) {
 
         {step === 'qr' && (
           <div className="space-y-4">
+            <MFAHelpAssistant step="qr" />
             {isLoading ? (
               <div className="flex justify-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-400" />
@@ -172,6 +174,7 @@ export default function MFASetupModal({ isOpen, onClose, onSuccess }) {
 
         {step === 'verify' && (
           <div className="space-y-4">
+            <MFAHelpAssistant step="verify" />
             <div className="space-y-2">
               <label className="text-sm font-medium">Verification Code</label>
               <Input
@@ -210,6 +213,7 @@ export default function MFASetupModal({ isOpen, onClose, onSuccess }) {
 
         {step === 'codes' && (
           <div className="space-y-4">
+            <MFAHelpAssistant step="codes" />
             <Alert className="bg-amber-500/10 border-amber-500/30">
               <AlertTriangle className="w-4 h-4 text-amber-400" />
               <AlertDescription className="text-amber-200">
