@@ -12,6 +12,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized - Admin only' }, { status: 403 });
     }
 
+    // Force refresh
     const testResults = {
       timestamp: new Date().toISOString(),
       testExecutor: user.email,
