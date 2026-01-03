@@ -72,6 +72,7 @@ import TrustSecurity from './pages/TrustSecurity';
 import VIPContract from './pages/VIPContract';
 import VideoUpload from './pages/VideoUpload';
 import sitemapQr from './pages/sitemap-qr';
+import ComplianceReport from './pages/ComplianceReport';
 import __Layout from './Layout.jsx';
 
 
@@ -150,6 +151,7 @@ export const PAGES = {
     "VIPContract": VIPContract,
     "VideoUpload": VideoUpload,
     "sitemap-qr": sitemapQr,
+    "ComplianceReport": ComplianceReport,
 }
 
 export const pagesConfig = {

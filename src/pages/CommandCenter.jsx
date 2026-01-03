@@ -116,6 +116,7 @@ function SidebarContent({ activeTab, setActiveTab, user, onLogout, threatCount =
     { id: "analytics", label: "Analytics", icon: BarChart3 },
     { id: "tools", label: "Tools", icon: Zap },
     { id: "logs", label: "Logs", icon: FileText },
+    { id: "compliance", label: "Compliance Report", icon: FileCheck },
     { id: "settings", label: "Settings", icon: Settings },
   ];
 
@@ -2196,6 +2197,7 @@ export default function CommandCenter() {
       case "analytics": return <AnalyticsTab />;
       case "tools": return <ToolsTab />;
       case "logs": return <LogsTab />;
+      case "compliance": return <div className="h-full"><iframe src="/ComplianceReport" className="w-full h-full min-h-[800px] border-0 rounded-lg bg-white" title="Compliance Report" /></div>;
       case "settings": return <SettingsTab user={user} />;
       default: return <OverviewTab user={user} threatDetection={threatDetection} />;
     }
