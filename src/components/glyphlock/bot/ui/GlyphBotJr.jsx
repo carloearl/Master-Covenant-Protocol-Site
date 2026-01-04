@@ -58,6 +58,9 @@ function ListenButton({ text }) {
             audioRef.current = null;
           };
 
+          // Speed up playback for more natural, energetic voice
+          audio.playbackRate = 1.25;
+
           setPlaying(true);
           setLoading(false);
           await audio.play();
