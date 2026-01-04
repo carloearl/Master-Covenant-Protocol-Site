@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-import { Loader2, Wand2, Download, Maximize2, Upload, ChevronDown, Check } from 'lucide-react';
+import { Loader2, Wand2, Download, Maximize2, Upload, ChevronDown, Check, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   GlyphImageCard,
@@ -230,6 +230,33 @@ export default function GenerateTab({ user, userPrefs, onImageGenerated }) {
 
   const selectedStyleData = STYLE_PRESETS.find(s => s.id === selectedStyle);
 
+  const saveDefaults = async () => {
+    try {
+      toast.loading('Saving defaults...');
+      if (userPrefs?.id) {
+        await base44.entities.UserPreferences.update(userPrefs.id, {
+          imageLabSettings: {
+            ...userPrefs.imageLabSettings,
+            defaultStyle: selectedStyle,
+            defaultQuality: controls.qualityMode
+          }
+        });
+      } else {
+        await base44.entities.UserPreferences.create({
+          imageLabSettings: {
+            defaultStyle: selectedStyle,
+            defaultQuality: controls.qualityMode
+          }
+        });
+      }
+      toast.dismiss();
+      toast.success('Defaults saved!');
+    } catch (error) {
+      toast.dismiss();
+      toast.error('Failed to save defaults');
+    }
+  };
+
   const handleGenerate = async () => {
     if (!prompt.trim()) {
       toast.error('Please enter a prompt');
@@ -336,6 +363,16 @@ export default function GenerateTab({ user, userPrefs, onImageGenerated }) {
               <Wand2 className="w-5 h-5 text-cyan-400" />
               Prompt & Style
             </CardTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={saveDefaults}
+              className="text-xs text-purple-300 hover:text-white hover:bg-purple-500/20 gap-1 ml-auto"
+              title="Save current style and quality as default"
+            >
+              <Save className="w-3 h-3" />
+              Save Defaults
+            </Button>
           </CardHeader>
           <CardContent className={GlyphImagePanel.primary}>
             <div className="space-y-2">

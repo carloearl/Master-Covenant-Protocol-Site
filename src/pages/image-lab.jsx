@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, Sparkles, Layers, Image as ImageIcon, Database, Zap } from 'lucide-react';
+import { Loader2, Sparkles, Layers, Image as ImageIcon, Database, Zap, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 import SEOHead from '@/components/SEOHead';
@@ -184,6 +184,15 @@ export default function ImageLab() {
                     Premium Lab
                   </p>
                 </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowTour(true)}
+                  className="glyph-glass border border-cyan-500/30 text-cyan-400 hover:text-white hover:bg-cyan-500/20"
+                  title="Start Tour"
+                >
+                  <HelpCircle className="w-5 h-5" />
+                </Button>
               </div>
             </div>
           </div>
