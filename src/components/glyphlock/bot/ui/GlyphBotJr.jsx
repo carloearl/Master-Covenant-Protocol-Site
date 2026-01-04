@@ -188,8 +188,8 @@ When answering questions, use the knowledge bases to provide accurate informatio
               
               {msg.role === "assistant" && (
                 <button
-                  onClick={() => speak(msg.text)}
                   data-glyphbot-jr-listen
+                  data-text={msg.text}
                   className="mt-3 text-xs bg-blue-600/30 hover:bg-blue-600/50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 border border-blue-400/30"
                   style={{ boxShadow: '0 0 10px rgba(37, 99, 235, 0.2)' }}
                   aria-label="Listen"

@@ -25,12 +25,13 @@ export default function ChatMessage({ msg, isAssistant, onReplay }) {
       }}
     >
       {msg.content}
-      {isAssistant && onReplay && msg.ttsMetadata && (
+      {isAssistant && (
         <button
-          onClick={() => onReplay(msg.id, msg.ttsMetadata)}
+          data-glyphbot-jr-listen
+          data-text={msg.content}
           style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', pointerEvents: 'auto', minHeight: '44px', minWidth: '44px' }}
           className="absolute top-2 right-2 p-1.5 rounded-lg bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 hover:bg-cyan-500/30 transition-all"
-          title="Replay with original voice settings"
+          title="Listen"
         >
           <Volume2 className="w-3.5 h-3.5" />
         </button>
