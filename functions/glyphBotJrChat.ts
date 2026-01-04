@@ -1,9 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
-import OpenAI from 'npm:openai';
 
 /**
  * GLYPHBOT JR. — BASE44 AGENT HANDLER
- * Voice: Aurora (en-US-Neural2-F via OpenAI Nova) — Neural Only
+ * Voice: Aurora — Neural TTS via Base44 integrations
  */
 
 Deno.serve(async (req) => {
@@ -15,57 +14,72 @@ Deno.serve(async (req) => {
         const base44 = createClientFromRequest(req);
         const { action, text, messages, systemPrompt } = await req.json();
 
-        const openai = new OpenAI({
-            apiKey: Deno.env.get("OPENAI_API_KEY"),
-        });
-
-        // 🎯 LISTEN ACTION — Generate TTS audio and return
+        // 🎯 LISTEN ACTION — Use Google TTS API
         if (action === 'listen') {
             if (!text || text.length > 1000) {
                 return Response.json({ error: 'Invalid text' }, { status: 400 });
             }
 
-            // Generate Neural Audio (Aurora = Nova)
-            const mp3 = await openai.audio.speech.create({
-                model: "tts-1-hd",
-                voice: "nova",
-                input: text,
-                speed: 0.92
-            });
+            // Use Google Cloud TTS via fetch (free tier available)
+            const apiKey = Deno.env.get("GEMINI_API_KEY"); // Gemini key works for Google TTS
+            
+            const ttsResponse = await fetch(
+                `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        input: { text: text },
+                        voice: {
+                            languageCode: 'en-US',
+                            name: 'en-US-Neural2-F', // Aurora = Female Neural
+                            ssmlGender: 'FEMALE'
+                        },
+                        audioConfig: {
+                            audioEncoding: 'MP3',
+                            speakingRate: 0.92,
+                            pitch: 1.05
+                        }
+                    })
+                }
+            );
 
-            const buffer = await mp3.arrayBuffer();
-            const base64Audio = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+            if (!ttsResponse.ok) {
+                const errorText = await ttsResponse.text();
+                console.error('[TTS Error]:', errorText);
+                throw new Error('TTS generation failed');
+            }
 
+            const ttsData = await ttsResponse.json();
+            
             return Response.json({
                 text: text,
                 speak: {
                     enabled: true,
                     persona: 'Aurora',
-                    audioBase64: base64Audio,
+                    audioBase64: ttsData.audioContent,
                     mimeType: 'audio/mpeg'
                 }
             });
         }
 
-        // 💬 CHAT ACTION — Generate response
-        const conversation = [
-            { role: 'system', content: systemPrompt || 'You are GlyphBot Jr., a helpful AI assistant.' },
-            ...(messages || []).map(m => ({
-                role: m.role,
-                content: m.text || m.content
-            }))
-        ];
+        // 💬 CHAT ACTION — Use Base44 InvokeLLM
+        const conversationContext = systemPrompt || 'You are GlyphBot Jr., a helpful AI assistant for GlyphLock.';
+        
+        const fullPrompt = `${conversationContext}
 
-        const completion = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
-            messages: conversation,
-            max_tokens: 500
+Conversation:
+${(messages || []).map(m => `${m.role}: ${m.text || m.content}`).join('\n')}
+
+Respond helpfully and concisely.`;
+
+        const response = await base44.integrations.Core.InvokeLLM({
+            prompt: fullPrompt,
+            add_context_from_internet: false
         });
 
-        const replyText = completion.choices[0].message.content;
-
         return Response.json({
-            text: replyText,
+            text: response,
             speak: {
                 enabled: false,
                 persona: 'Aurora'
@@ -73,7 +87,7 @@ Deno.serve(async (req) => {
         });
 
     } catch (error) {
-        console.error('[GlyphBot Jr. Error]:', error.message, error.stack);
+        console.error('[GlyphBot Jr. Error]:', error.message);
         return Response.json({
             text: "Sorry, I'm having trouble right now. Please try again!",
             speak: { enabled: false },
