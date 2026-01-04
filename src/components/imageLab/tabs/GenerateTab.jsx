@@ -14,7 +14,7 @@ import {
   Sparkles, Palette, Settings2, Zap, RefreshCw, Copy, Share2, Layers,
   ArrowUpRight, Image as ImageIcon, Brain, Scissors, Paintbrush, ScanLine
 } from 'lucide-react';
-import { toast as toastSonner } from 'sonner';
+import { toast } from 'sonner';
 import {
   GlyphImageCard,
   GlyphImageButton,
@@ -59,7 +59,6 @@ const ASPECT_RATIOS = [
 
 // AI Tools Section Component
 function AIToolsSection({ isMobile, loading, setLoading, images, setImages }) {
-  const toast = toastSonner;
   const [toolImage, setToolImage] = useState(null);
   const [activeTool, setActiveTool] = useState(null);
   const [upscaleLevel, setUpscaleLevel] = useState(2);
