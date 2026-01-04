@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { Sparkles, Send, Loader2, Volume2, RotateCcw } from "lucide-react";
 import ReactMarkdown from "react-markdown";
