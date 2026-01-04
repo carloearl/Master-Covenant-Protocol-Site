@@ -31,7 +31,6 @@ import HSSS from './pages/HSSS';
 import Home from './pages/Home';
 import HotzoneMapper from './pages/HotzoneMapper';
 import ImageGenerator from './pages/ImageGenerator';
-import ImageLab from './pages/ImageLab';
 import IntegrationTests from './pages/IntegrationTests';
 import InteractiveImageStudio from './pages/InteractiveImageStudio';
 import ManageSubscription from './pages/ManageSubscription';
@@ -69,12 +68,13 @@ import SitemapInteractive from './pages/SitemapInteractive';
 import SitemapQr from './pages/SitemapQr';
 import SitemapXml from './pages/SitemapXml';
 import Solutions from './pages/Solutions';
+import SystemStatus from './pages/SystemStatus';
 import Terms from './pages/Terms';
 import TrustSecurity from './pages/TrustSecurity';
 import VIPContract from './pages/VIPContract';
 import VideoUpload from './pages/VideoUpload';
 import sitemapQr from './pages/sitemap-qr';
-import SystemStatus from './pages/SystemStatus';
+import imageLab from './pages/image-lab';
 import __Layout from './Layout.jsx';
 
 
@@ -112,7 +112,6 @@ export const PAGES = {
     "Home": Home,
     "HotzoneMapper": HotzoneMapper,
     "ImageGenerator": ImageGenerator,
-    "ImageLab": ImageLab,
     "IntegrationTests": IntegrationTests,
     "InteractiveImageStudio": InteractiveImageStudio,
     "ManageSubscription": ManageSubscription,
@@ -150,12 +149,13 @@ export const PAGES = {
     "SitemapQr": SitemapQr,
     "SitemapXml": SitemapXml,
     "Solutions": Solutions,
+    "SystemStatus": SystemStatus,
     "Terms": Terms,
     "TrustSecurity": TrustSecurity,
     "VIPContract": VIPContract,
     "VideoUpload": VideoUpload,
     "sitemap-qr": sitemapQr,
-    "SystemStatus": SystemStatus,
+    "image-lab": imageLab,
 }
 
 export const pagesConfig = {

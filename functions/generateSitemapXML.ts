@@ -6,7 +6,7 @@ const SITEMAPS = {
     xml: ["/", "/About", "/Contact"], // Main
     app: ["/Dashboard", "/Login"], // App
     qr: ["/Qr", "/Qr?tab=create"], // Qr
-    images: ["/ImageLab"],
+    images: ["/image-lab"],
     interactive: ["/Interactive"],
     dynamic: ["/Dynamic"]
 };
