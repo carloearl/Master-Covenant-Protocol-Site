@@ -52,13 +52,13 @@ export default function CountdownPill() {
         {/* Title */}
         <div className="relative z-10 flex flex-col items-center">
           <p className="text-[0.7rem] sm:text-xs tracking-[0.3em] text-violet-300 uppercase">
-            Pre-Launch Engineering Mode
+            V2 Beta Testing
           </p>
 
           <p className="text-lg sm:text-xl md:text-2xl font-semibold text-violet-100 mt-1">
-            Launching{" "}
+            Launched successfully
             <span className="font-bold text-violet-300">
-              January 1st, 2026
+              {" "}January 1st, 2026 — Active
             </span>
           </p>
         </div>
@@ -91,7 +91,7 @@ export default function CountdownPill() {
           </div>
         ) : (
           <p className="relative z-10 mt-5 text-center text-violet-200 font-medium text-sm">
-            Launch Phase Activated — Systems Online.
+            V2 beta testing launched successfully on January 1st, 2026 — Active.
           </p>
         )}
 
