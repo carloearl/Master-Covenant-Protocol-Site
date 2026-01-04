@@ -17,11 +17,13 @@ export default function MFASetupModal({ isOpen, onClose, onSuccess }) {
   const [step, setStep] = useState('qr'); // 'qr' | 'verify' | 'codes'
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
   const [manualKey, setManualKey] = useState('');
-  const [tempSecret, setTempSecret] = useState('');
+  const [setupToken, setSetupToken] = useState(''); // Encrypted time-bound token
+  const [expiresIn, setExpiresIn] = useState(0);
   const [verificationCode, setVerificationCode] = useState('');
   const [recoveryCodes, setRecoveryCodes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [timeRemaining, setTimeRemaining] = useState(0);
 
   React.useEffect(() => {
     if (isOpen && step === 'qr') {
