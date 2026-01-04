@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import QrStudio from "@/components/qr/QrStudio";
 import SEOHead from "@/components/SEOHead";
+import PageHeader from "@/components/shared/PageHeader";
+import { QrCode } from "lucide-react";
 
 /**
  * UNIFIED QR PAGE - /qr
@@ -92,6 +94,27 @@ export default function Qr() {
     };
   }, []);
 
+  const HELP_STEPS = [
+    { title: 'Choose payload type', description: 'Select from 90+ QR types (URL, vCard, WiFi, etc.)' },
+    { title: 'Enter content', description: 'Fill in the payload data for your QR code' },
+    { title: 'Customize design', description: 'Style colors, shapes, and add logos' },
+    { title: 'Add hot zones', description: 'Create interactive clickable areas (optional)' },
+    { title: 'Download or share', description: 'Export as PNG/SVG or get a trackable link' }
+  ];
+
+  const SHORTCUTS = [
+    { action: 'Generate QR', keys: 'Cmd/Ctrl + Enter' },
+    { action: 'Download', keys: 'Cmd/Ctrl + D' },
+    { action: 'Copy to clipboard', keys: 'Cmd/Ctrl + C' }
+  ];
+
+  const TIPS = [
+    'Use Dynamic QR for trackable, editable links',
+    'Add hot zones for interactive marketing',
+    'Steganography hides data inside normal images',
+    'Security tab shows threat analysis'
+  ];
+
   return (
     <>
       <SEOHead
@@ -100,8 +123,20 @@ export default function Qr() {
         keywords="QR code generator, secure QR codes, anti-quishing, steganography QR, QR security, hot zones QR, bulk QR generation, GlyphLock QR Studio, dynamic QR codes"
         url="/qr"
       />
+      
+      <PageHeader
+        title="QR Studio"
+        subtitle="Secure QR codes with anti-quishing protection"
+        icon={QrCode}
+        badge="90+ Types"
+        backTo="Home"
+        helpSteps={HELP_STEPS}
+        shortcuts={SHORTCUTS}
+        tips={TIPS}
+      />
+      
       <div className="min-h-screen text-white relative" style={{ background: 'transparent', pointerEvents: 'auto' }}>
-        <div className="relative z-10 py-8" style={{ pointerEvents: 'auto' }}>
+        <div className="relative z-10 py-4" style={{ pointerEvents: 'auto' }}>
           <QrStudio initialTab={initialTab} />
         </div>
       </div>
