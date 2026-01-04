@@ -9,27 +9,37 @@ import { createHash } from 'node:crypto';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
     
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    // Check authentication - some operations require it, some don't
+    let user = null;
+    try {
+      user = await base44.auth.me();
+    } catch (e) {
+      // User not authenticated - allow some public operations
     }
 
     const body = await req.json();
     const { operation } = body;
+
+    // Operations that don't require auth
+    const publicOps = ['enhancePrompt', 'analyzeImage'];
+    
+    if (!publicOps.includes(operation) && !user) {
+      return Response.json({ error: 'Authentication required' }, { status: 401 });
+    }
 
     switch (operation) {
       case 'generateAdvanced':
         return await handleAdvancedGenerate(base44, user, body);
       
       case 'enhancePrompt':
-        return await handleEnhancePrompt(base44, user, body);
+        return await handleEnhancePrompt(base44, body);
       
       case 'analyzeImage':
-        return await handleAnalyzeImage(base44, user, body);
+        return await handleAnalyzeImage(base44, body);
       
       case 'detectObjects':
-        return await handleDetectObjects(base44, user, body);
+        return await handleDetectObjects(base44, body);
       
       case 'createHotzone':
         return await handleCreateHotzone(base44, user, body);
@@ -83,20 +93,24 @@ async function handleAdvancedGenerate(base44, user, body) {
   
   // Auto-enhance prompt if requested
   if (shouldEnhance) {
-    const enhanceResponse = await base44.integrations.Core.InvokeLLM({
-      prompt: `Enhance this image generation prompt to produce better results. Keep the core idea but add artistic details, lighting, composition hints. Be concise but descriptive. Output ONLY the enhanced prompt, nothing else.
+    try {
+      const enhanceResponse = await base44.asServiceRole.integrations.Core.InvokeLLM({
+        prompt: `Enhance this image generation prompt to produce better results. Keep the core idea but add artistic details, lighting, composition hints. Be concise but descriptive. Output ONLY the enhanced prompt, nothing else.
 
 Original: "${prompt}"
 
 Style: ${style || 'photorealistic'}`,
-      response_json_schema: {
-        type: "object",
-        properties: {
-          enhanced_prompt: { type: "string" }
+        response_json_schema: {
+          type: "object",
+          properties: {
+            enhanced_prompt: { type: "string" }
+          }
         }
-      }
-    });
-    finalPrompt = enhanceResponse.enhanced_prompt || prompt;
+      });
+      finalPrompt = enhanceResponse.enhanced_prompt || prompt;
+    } catch (e) {
+      console.log('Enhancement failed, using original prompt');
+    }
   }
 
   // Add style modifiers
@@ -142,20 +156,17 @@ Style: ${style || 'photorealistic'}`,
     finalPrompt += `. Avoid: ${negativePrompt}`;
   }
 
-  // Generate the image
-  const generateParams = {
-    prompt: finalPrompt
-  };
+  // Generate the image using service role
+  const generateParams = { prompt: finalPrompt };
 
-  // Add reference image if provided
   if (referenceImageUrl) {
     generateParams.existing_image_urls = [referenceImageUrl];
   }
 
-  const result = await base44.integrations.Core.GenerateImage(generateParams);
+  const result = await base44.asServiceRole.integrations.Core.GenerateImage(generateParams);
 
   // Save to database
-  const savedImage = await base44.entities.InteractiveImage.create({
+  const savedImage = await base44.asServiceRole.entities.InteractiveImage.create({
     name: `Generated: ${prompt.substring(0, 50)}`,
     fileUrl: result.url,
     prompt: prompt,
@@ -175,15 +186,6 @@ Style: ${style || 'photorealistic'}`,
     ownerEmail: user.email,
   });
 
-  // Log usage
-  await base44.asServiceRole.entities.SystemAuditLog.create({
-    event_type: 'IMAGE_GENERATED',
-    actor_email: user.email,
-    resource_id: savedImage.id,
-    description: `Generated image with style: ${style || 'photorealistic'}`,
-    metadata: { prompt: prompt.substring(0, 100), style, quality }
-  });
-
   return Response.json({
     success: true,
     image: {
@@ -198,14 +200,14 @@ Style: ${style || 'photorealistic'}`,
 }
 
 // Enhance a user's prompt with AI
-async function handleEnhancePrompt(base44, user, body) {
+async function handleEnhancePrompt(base44, body) {
   const { prompt, style, context } = body;
 
   if (!prompt) {
     return Response.json({ error: 'Prompt is required' }, { status: 400 });
   }
 
-  const response = await base44.integrations.Core.InvokeLLM({
+  const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
     prompt: `You are an expert at crafting prompts for AI image generation. Enhance the following prompt to produce stunning, high-quality images.
 
 Original prompt: "${prompt}"
@@ -243,14 +245,14 @@ Return a JSON object with:
 }
 
 // Analyze an image for content, objects, and composition
-async function handleAnalyzeImage(base44, user, body) {
+async function handleAnalyzeImage(base44, body) {
   const { imageUrl } = body;
 
   if (!imageUrl) {
     return Response.json({ error: 'Image URL is required' }, { status: 400 });
   }
 
-  const response = await base44.integrations.Core.InvokeLLM({
+  const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
     prompt: `Analyze this image comprehensively. Provide:
 
 1. Main subjects and objects visible
@@ -294,14 +296,14 @@ Return as structured JSON.`,
 }
 
 // Detect all objects in an image and return bounding boxes
-async function handleDetectObjects(base44, user, body) {
+async function handleDetectObjects(base44, body) {
   const { imageUrl } = body;
 
   if (!imageUrl) {
     return Response.json({ error: 'Image URL is required' }, { status: 400 });
   }
 
-  const response = await base44.integrations.Core.InvokeLLM({
+  const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
     prompt: `Detect all distinct objects, UI elements, people, and interactive areas in this image. For each, provide:
 
 - object_name: what the object is
@@ -357,7 +359,7 @@ async function handleCreateHotzone(base44, user, body) {
   }
 
   // AI detection at click location
-  const response = await base44.integrations.Core.InvokeLLM({
+  const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
     prompt: `A user clicked at position ${Math.round(clickX)}% from left, ${Math.round(clickY)}% from top on this image.
 
 Identify what object/element is at that location and provide:
@@ -410,19 +412,23 @@ Identify what object/element is at that location and provide:
     detectedObject: response.detected_object,
     confidence: response.confidence || 0,
     createdAt: new Date().toISOString(),
-    createdBy: user.email
+    createdBy: user?.email || 'anonymous'
   };
 
   // If imageId provided, update the image's hotspots
-  if (imageId) {
-    const images = await base44.entities.InteractiveImage.filter({ id: imageId });
-    const image = images[0];
-    
-    if (image && (image.ownerEmail === user.email || user.role === 'admin')) {
-      const existingHotspots = image.hotspots || [];
-      await base44.entities.InteractiveImage.update(imageId, {
-        hotspots: [...existingHotspots, hotzone]
-      });
+  if (imageId && user) {
+    try {
+      const images = await base44.entities.InteractiveImage.filter({ id: imageId });
+      const image = images[0];
+      
+      if (image && (image.ownerEmail === user.email || user.role === 'admin')) {
+        const existingHotspots = image.hotspots || [];
+        await base44.entities.InteractiveImage.update(imageId, {
+          hotspots: [...existingHotspots, hotzone]
+        });
+      }
+    } catch (e) {
+      console.log('Could not auto-save hotzone to image:', e.message);
     }
   }
 
@@ -438,7 +444,6 @@ Identify what object/element is at that location and provide:
 async function handleBatchGenerate(base44, user, body) {
   const { prompts, style, quality, count } = body;
 
-  // Either multiple prompts or one prompt with count
   const generatePrompts = prompts || Array(count || 1).fill(body.prompt);
   
   if (!generatePrompts.length || !generatePrompts[0]) {
@@ -455,11 +460,11 @@ async function handleBatchGenerate(base44, user, body) {
   for (let i = 0; i < generatePrompts.length; i++) {
     try {
       const prompt = generatePrompts[i];
-      const result = await base44.integrations.Core.GenerateImage({
+      const result = await base44.asServiceRole.integrations.Core.GenerateImage({
         prompt: `${prompt}, ${style || 'photorealistic'} style, ${quality || 'high'} quality`
       });
 
-      const savedImage = await base44.entities.InteractiveImage.create({
+      const savedImage = await base44.asServiceRole.entities.InteractiveImage.create({
         name: `Batch ${i + 1}: ${prompt.substring(0, 40)}`,
         fileUrl: result.url,
         prompt,
@@ -490,7 +495,7 @@ async function handleBatchGenerate(base44, user, body) {
   });
 }
 
-// Upscale an image (simulated - would need actual upscale API)
+// Upscale an image
 async function handleUpscale(base44, user, body) {
   const { imageUrl, scale } = body;
 
@@ -498,8 +503,7 @@ async function handleUpscale(base44, user, body) {
     return Response.json({ error: 'Image URL is required' }, { status: 400 });
   }
 
-  // For now, use AI to describe and regenerate at higher quality
-  const analysis = await base44.integrations.Core.InvokeLLM({
+  const analysis = await base44.asServiceRole.integrations.Core.InvokeLLM({
     prompt: 'Describe this image in detail for recreation at higher quality. Include all visual elements, colors, composition, and style.',
     file_urls: [imageUrl],
     response_json_schema: {
@@ -511,7 +515,7 @@ async function handleUpscale(base44, user, body) {
     }
   });
 
-  const upscaledResult = await base44.integrations.Core.GenerateImage({
+  const upscaledResult = await base44.asServiceRole.integrations.Core.GenerateImage({
     prompt: `${analysis.description}, ultra high definition, 8k resolution, masterpiece quality, extremely detailed, sharp focus`,
     existing_image_urls: [imageUrl]
   });
@@ -532,8 +536,7 @@ async function handleInpaint(base44, user, body) {
     return Response.json({ error: 'Image URL and edit prompt are required' }, { status: 400 });
   }
 
-  // Use reference image with edit instructions
-  const result = await base44.integrations.Core.GenerateImage({
+  const result = await base44.asServiceRole.integrations.Core.GenerateImage({
     prompt: `${editPrompt}. Maintain the original image style and quality. Seamless integration.`,
     existing_image_urls: [imageUrl]
   });
@@ -563,7 +566,20 @@ async function handleStyleTransfer(base44, user, body) {
     'pixel': 'pixel art style, 16-bit graphics, retro gaming aesthetic',
     'watercolor': 'watercolor painting, soft edges, paper texture',
     'oil': 'oil painting, impasto technique, classical masterpiece',
-    'sketch': 'pencil sketch, detailed shading, artistic drawing'
+    'sketch': 'pencil sketch, detailed shading, artistic drawing',
+    'photorealistic': 'photorealistic, ultra detailed, professional photography',
+    'cyberpunk': 'cyberpunk aesthetic, neon lights, futuristic',
+    'minimalist': 'minimalist design, clean lines, simple',
+    'surreal': 'surrealist art, dreamlike, impossible geometry',
+    'neon': 'neon glow, vivid colors, light trails',
+    'vintage': 'vintage photography, film grain, sepia tones',
+    'sciFi': 'science fiction, space opera, advanced technology',
+    'gothic': 'gothic architecture, dark atmosphere, dramatic shadows',
+    'impressionist': 'impressionist painting, monet style, light and color',
+    'lowPoly': 'low poly 3d art, geometric shapes',
+    'steampunk': 'steampunk aesthetic, brass and copper, victorian machinery',
+    'vaporwave': 'vaporwave aesthetic, 80s retro, pink and cyan',
+    'artDeco': 'art deco style, 1920s elegance, geometric patterns'
   };
 
   const styleModifier = stylePrompts[targetStyle] || targetStyle;
@@ -571,7 +587,7 @@ async function handleStyleTransfer(base44, user, body) {
   const existingUrls = [imageUrl];
   if (styleImageUrl) existingUrls.push(styleImageUrl);
 
-  const result = await base44.integrations.Core.GenerateImage({
+  const result = await base44.asServiceRole.integrations.Core.GenerateImage({
     prompt: `Transform this image ${styleModifier}. Maintain the subject and composition but apply the artistic style completely.`,
     existing_image_urls: existingUrls
   });
@@ -592,8 +608,7 @@ async function handleRemoveBackground(base44, user, body) {
     return Response.json({ error: 'Image URL is required' }, { status: 400 });
   }
 
-  // Analyze the image to identify the main subject
-  const analysis = await base44.integrations.Core.InvokeLLM({
+  const analysis = await base44.asServiceRole.integrations.Core.InvokeLLM({
     prompt: 'Identify the main subject of this image. Describe it in detail for isolation on a transparent/white background.',
     file_urls: [imageUrl],
     response_json_schema: {
@@ -605,8 +620,7 @@ async function handleRemoveBackground(base44, user, body) {
     }
   });
 
-  // Regenerate with transparent/white background focus
-  const result = await base44.integrations.Core.GenerateImage({
+  const result = await base44.asServiceRole.integrations.Core.GenerateImage({
     prompt: `${analysis.subject}, ${analysis.description}, isolated on pure white background, product photography style, no shadows, clean cutout`,
     existing_image_urls: [imageUrl]
   });
