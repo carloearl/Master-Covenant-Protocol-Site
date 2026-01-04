@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles, Layers, Image as ImageIcon, Database, Zap, HelpCircle, Wand2 } from 'lucide-react';
 import { toast } from 'sonner';
 import PageHeader from '@/components/shared/PageHeader';
+import { useResponsive } from '@/components/hooks/useResponsive';
 
 import SEOHead from '@/components/SEOHead';
 import { injectSoftwareSchema } from '@/components/utils/seoHelpers';
@@ -24,6 +25,7 @@ import GalleryTab from '@/components/imageLab/tabs/GalleryTab.jsx';
 import GuidedTour from '@/components/shared/GuidedTour.jsx';
 
 export default function ImageLab() {
+  const { isMobile, isTablet, breakpoint } = useResponsive();
   const [activeTab, setActiveTab] = useState('generate');
   const [user, setUser] = useState(null);
   const [userPrefs, setUserPrefs] = useState(null);
@@ -240,7 +242,7 @@ export default function ImageLab() {
         <div className="glyph-orb fixed top-20 right-20 opacity-20" style={{ animation: 'float-orb 8s ease-in-out infinite', background: 'radial-gradient(circle, rgba(6,182,212,0.3), rgba(59,130,246,0.2))' }}></div>
         <div className="glyph-orb fixed bottom-40 left-40 opacity-15" style={{ animation: 'float-orb 10s ease-in-out infinite', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(168,85,247,0.3), rgba(59,130,246,0.2))' }}></div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 max-w-7xl relative z-10">
+        <div className={`container mx-auto ${isMobile ? 'px-3 py-4' : 'px-4 sm:px-6 lg:px-8 py-6 lg:py-8'} max-w-7xl relative z-10`}>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             {/* Desktop Tabs - Technical Segmented */}
             <TabsList className="hidden lg:flex w-full mb-6 bg-black/40 backdrop-blur-md border-t-2 border-b-2 border-cyan-500/20 p-0 h-auto rounded-none">

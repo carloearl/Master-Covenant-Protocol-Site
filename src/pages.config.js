@@ -32,6 +32,7 @@ import HSSS from './pages/HSSS';
 import Home from './pages/Home';
 import HotzoneMapper from './pages/HotzoneMapper';
 import ImageGenerator from './pages/ImageGenerator';
+import ImageLab from './pages/ImageLab';
 import IntegrationTests from './pages/IntegrationTests';
 import InteractiveImageStudio from './pages/InteractiveImageStudio';
 import ManageSubscription from './pages/ManageSubscription';
@@ -77,7 +78,6 @@ import VIPContract from './pages/VIPContract';
 import VideoUpload from './pages/VideoUpload';
 import ViewInteractive from './pages/ViewInteractive';
 import sitemapQr from './pages/sitemap-qr';
-import ImageLab from './pages/ImageLab';
 import __Layout from './Layout.jsx';
 
 
@@ -116,6 +116,7 @@ export const PAGES = {
     "Home": Home,
     "HotzoneMapper": HotzoneMapper,
     "ImageGenerator": ImageGenerator,
+    "ImageLab": ImageLab,
     "IntegrationTests": IntegrationTests,
     "InteractiveImageStudio": InteractiveImageStudio,
     "ManageSubscription": ManageSubscription,
@@ -161,7 +162,6 @@ export const PAGES = {
     "VideoUpload": VideoUpload,
     "ViewInteractive": ViewInteractive,
     "sitemap-qr": sitemapQr,
-    "ImageLab": ImageLab,
 }
 
 export const pagesConfig = {
