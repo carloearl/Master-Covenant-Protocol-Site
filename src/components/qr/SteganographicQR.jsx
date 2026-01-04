@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { 
   Shield, Lock, Unlock, Upload, Download, Eye, EyeOff, 
   FileKey, Save, RefreshCw, AlertTriangle, CheckCircle, 
-  Cpu, HardDrive, Layers, Scan 
+  Cpu, HardDrive, Layers, Scan, Search, Activity
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,27 +17,87 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
-// Mock encryption for frontend demo (In production, use Web Crypto API)
-const encryptPayload = (payload, key) => {
-  if (!key) return btoa(payload); // Base64 if no key
-  // Simple XOR for demo (Real AES would be used here)
-  let result = '';
-  for(let i = 0; i < payload.length; i++) {
-    result += String.fromCharCode(payload.charCodeAt(i) ^ key.charCodeAt(i % key.length));
-  }
-  return btoa(result);
+// Web Crypto API Implementation for AES-GCM
+const getKeyMaterial = async (password) => {
+  const enc = new TextEncoder();
+  return window.crypto.subtle.importKey(
+    "raw",
+    enc.encode(password),
+    { name: "PBKDF2" },
+    false,
+    ["deriveBits", "deriveKey"]
+  );
 };
 
-const decryptPayload = (encoded, key) => {
+const deriveKey = async (keyMaterial, salt) => {
+  return window.crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      salt: salt,
+      iterations: 100000,
+      hash: "SHA-256"
+    },
+    keyMaterial,
+    { name: "AES-GCM", length: 256 },
+    true,
+    ["encrypt", "decrypt"]
+  );
+};
+
+const encryptPayload = async (payload, password) => {
+  if (!password) return btoa(payload); // Fallback to Base64 if no key
   try {
-    const payload = atob(encoded);
-    if (!key) return payload;
-    let result = '';
-    for(let i = 0; i < payload.length; i++) {
-      result += String.fromCharCode(payload.charCodeAt(i) ^ key.charCodeAt(i % key.length));
-    }
-    return result;
+    const salt = window.crypto.getRandomValues(new Uint8Array(16));
+    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+    const keyMaterial = await getKeyMaterial(password);
+    const key = await deriveKey(keyMaterial, salt);
+    const enc = new TextEncoder();
+    
+    const encrypted = await window.crypto.subtle.encrypt(
+      { name: "AES-GCM", iv: iv },
+      key,
+      enc.encode(payload)
+    );
+
+    // Combine salt + iv + encrypted data
+    const combined = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+    combined.set(salt);
+    combined.set(iv, salt.length);
+    combined.set(new Uint8Array(encrypted), salt.length + iv.length);
+
+    // Convert to Base64
+    return btoa(String.fromCharCode(...combined));
   } catch (e) {
+    console.error("Encryption failed", e);
+    throw new Error("Encryption failed");
+  }
+};
+
+const decryptPayload = async (encoded, password) => {
+  try {
+    const raw = atob(encoded);
+    if (!password) return raw; // Assume unencrypted if no password provided (or fail)
+
+    const data = new Uint8Array(raw.length);
+    for (let i = 0; i < raw.length; i++) data[i] = raw.charCodeAt(i);
+
+    const salt = data.slice(0, 16);
+    const iv = data.slice(16, 28);
+    const ciphertext = data.slice(28);
+
+    const keyMaterial = await getKeyMaterial(password);
+    const key = await deriveKey(keyMaterial, salt);
+
+    const decrypted = await window.crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: iv },
+      key,
+      ciphertext
+    );
+
+    const dec = new TextDecoder();
+    return dec.decode(decrypted);
+  } catch (e) {
+    console.error("Decryption failed", e);
     return null;
   }
 };
@@ -45,6 +105,7 @@ const decryptPayload = (encoded, key) => {
 export default function SteganographicQR({ qrPayload, qrGenerated, onEmbedded }) {
   const [activeMode, setActiveMode] = useState('encode');
   const [processing, setProcessing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState(null);
   
   // Encoding State
   const [coverImage, setCoverImage] = useState(null);
@@ -108,12 +169,12 @@ export default function SteganographicQR({ qrPayload, qrGenerated, onEmbedded })
 
     setProcessing(true);
     try {
-      // 1. Prepare Payload
-      const securePayload = encryptPayload(qrPayload, encryptionKey);
+      // 1. Prepare Payload (Async)
+      const securePayload = await encryptPayload(qrPayload, encryptionKey);
       const header = `GLYPH:${algorithm}:`;
       const fullData = header + securePayload + ':::END';
       
-      // 2. Encode (Client-side LSB simulation for speed)
+      // 2. Encode (Client-side)
       const img = new Image();
       img.src = previewUrl;
       await new Promise(r => img.onload = r);
@@ -210,19 +271,75 @@ export default function SteganographicQR({ qrPayload, qrGenerated, onEmbedded })
       if (match) {
         const alg = match[1];
         const content = match[2];
-        const decoded = decryptPayload(content, decryptionKey);
-        setExtractedData({
-          algorithm: alg,
-          content: decoded,
-          verified: true
-        });
-        toast.success("Data extracted and verified");
+        const decoded = await decryptPayload(content, decryptionKey);
+        
+        if (decoded) {
+          setExtractedData({
+            algorithm: alg,
+            content: decoded,
+            verified: true
+          });
+          toast.success("Data extracted and verified");
+        } else {
+          toast.error("Decryption failed. Check key.");
+        }
       } else {
-        toast.error("No valid GlyphLock signature found or key incorrect");
+        toast.error("No valid GlyphLock signature found");
       }
 
     } catch (error) {
+      console.error(error);
       toast.error("Decoding failed");
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  // Steganalysis Tool
+  const performSteganalysis = async () => {
+    if (!decodePreview) return;
+    setProcessing(true);
+    try {
+      const img = new Image();
+      img.src = decodePreview;
+      await new Promise(r => img.onload = r);
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      
+      // 1. Histogram Analysis of LSBs
+      let ones = 0;
+      let zeros = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        if ((data[i] & 1) === 1) ones++; else zeros++;
+        if ((data[i+1] & 1) === 1) ones++; else zeros++;
+        if ((data[i+2] & 1) === 1) ones++; else zeros++;
+      }
+      
+      const total = ones + zeros;
+      const balance = Math.abs(0.5 - (ones / total));
+      
+      // 2. Chi-Square Attack Simulation (Simplified)
+      // High deviation from random distribution in LSB pairs often indicates hidden data
+      // For this demo, we use the balance metric as a proxy for "randomness"
+      // Natural images rarely have perfectly random LSBs (0.5 balance) but encrypted stego does.
+      
+      const entropy = -((ones/total)*Math.log2(ones/total) + (zeros/total)*Math.log2(zeros/total));
+      const hasHiddenData = balance < 0.05 && entropy > 0.95; // Very simplified heuristic
+
+      setAnalysisResult({
+        lsbEntropy: entropy.toFixed(4),
+        lsbBalance: (ones/total).toFixed(4),
+        verdict: hasHiddenData ? "Hidden Data Suspected" : "Likely Clean",
+        confidence: hasHiddenData ? "High" : "Low"
+      });
+
+    } catch (e) {
+      toast.error("Analysis failed");
     } finally {
       setProcessing(false);
     }
@@ -241,10 +358,11 @@ export default function SteganographicQR({ qrPayload, qrGenerated, onEmbedded })
       </div>
 
       <Tabs value={activeMode} onValueChange={setActiveMode} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-slate-900 border border-slate-800">
-          <TabsTrigger value="encode">Encode (Hide)</TabsTrigger>
-          <TabsTrigger value="decode">Decode (Reveal)</TabsTrigger>
-          <TabsTrigger value="vault">Vault (History)</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4 bg-slate-900 border border-slate-800">
+          <TabsTrigger value="encode">Encode</TabsTrigger>
+          <TabsTrigger value="decode">Decode</TabsTrigger>
+          <TabsTrigger value="analysis">Analyze</TabsTrigger>
+          <TabsTrigger value="vault">Vault</TabsTrigger>
         </TabsList>
 
         {/* ENCODE TAB */}
@@ -395,6 +513,82 @@ export default function SteganographicQR({ qrPayload, qrGenerated, onEmbedded })
               </div>
             </motion.div>
           )}
+        </TabsContent>
+
+        {/* ANALYSIS TAB */}
+        <TabsContent value="analysis" className="space-y-6 mt-6">
+          <Card className="bg-slate-900 border-slate-800">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Activity className="w-5 h-5 text-cyan-400" />
+                Steganalysis & Detection
+              </CardTitle>
+              <CardDescription className="text-slate-400">
+                Analyze images for statistical anomalies that indicate hidden payloads.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  {!decodePreview ? (
+                    <div className="border-2 border-dashed border-slate-700 rounded-lg h-48 flex flex-col items-center justify-center text-slate-500 hover:border-yellow-500/50 hover:bg-slate-800/50 transition-all cursor-pointer relative">
+                      <input 
+                        type="file" 
+                        onChange={(e) => handleImageUpload(e, 'decode')} // Reuse decode upload handler
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        accept="image/png"
+                      />
+                      <Search className="w-8 h-8 mb-2" />
+                      <p className="text-sm">Upload Image for Analysis</p>
+                    </div>
+                  ) : (
+                    <div className="relative rounded-lg overflow-hidden border border-slate-700">
+                      <img src={decodePreview} alt="Analyze" className="w-full h-48 object-cover" />
+                      <Button 
+                        size="icon" 
+                        variant="ghost" 
+                        className="absolute top-2 right-2 h-6 w-6 bg-black/50 text-white"
+                        onClick={() => { setDecodePreview(null); setAnalysisResult(null); }}
+                      >
+                        x
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col justify-center space-y-4">
+                  <Button 
+                    className="w-full bg-yellow-600 hover:bg-yellow-700 text-white"
+                    onClick={performSteganalysis}
+                    disabled={!decodePreview || processing}
+                  >
+                    {processing ? "Scanning..." : "Run Statistical Analysis"}
+                  </Button>
+                  
+                  {analysisResult && (
+                    <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-400 text-sm">Verdict:</span>
+                        <Badge className={analysisResult.verdict === "Likely Clean" ? "bg-green-500" : "bg-red-500"}>
+                          {analysisResult.verdict}
+                        </Badge>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="p-2 bg-slate-900 rounded">
+                          <span className="block text-slate-500">LSB Entropy</span>
+                          <span className="font-mono text-cyan-400">{analysisResult.lsbEntropy}</span>
+                        </div>
+                        <div className="p-2 bg-slate-900 rounded">
+                          <span className="block text-slate-500">LSB Balance</span>
+                          <span className="font-mono text-cyan-400">{analysisResult.lsbBalance}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* DECODE TAB */}

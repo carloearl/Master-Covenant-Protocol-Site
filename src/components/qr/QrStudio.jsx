@@ -35,6 +35,7 @@ import AIInsightsPanel from './AIInsightsPanel';
 import AiArtPanel from './AiArtPanel';
 import CollaborationPanel from './CollaborationPanel';
 import ShareDialog from './ShareDialog';
+import ProjectManager from './ProjectManager';
 
 
 export default function QrStudio({ initialTab = 'create' }) {
@@ -973,21 +974,25 @@ export default function QrStudio({ initialTab = 'create' }) {
 
               {/* Preview Sidebar - Right Side */}
               {currentUser && (
-                <div className="w-full xl:w-72 space-y-4">
+                <div className="w-full xl:w-80 space-y-4">
+                  {/* Project Management Panel - Top priority */}
+                  <div className="h-[400px]">
+                    <ProjectManager 
+                      qrAsset={qrAssetDraft} 
+                      onUpdateAsset={(updated) => setQrAssetDraft(updated)}
+                      onRestoreVersion={(ver) => {
+                        setQrData(prev => ({ ...prev, url: ver.payload }));
+                        if (ver.design_config) setCustomization(ver.design_config);
+                        toast.success(`Restored version v${ver.version_number}`);
+                      }}
+                      onInvite={(email) => setSharedUsers(prev => [...prev, email])}
+                    />
+                  </div>
+
                   <AIInsightsPanel 
                     qrType={qrType} 
                     qrData={qrData} 
                     design={customization} 
-                  />
-                  <QrPreviewSidebar
-                    previews={previews}
-                    loading={previewsLoading}
-                    onSelectPreview={handleSelectPreview}
-                    onSaveToVault={handleSaveToVault}
-                    onDeletePreview={deletePreview}
-                    selectedId={qrAssetDraft?.id}
-                    previewCount={previewCount}
-                    maxPreviews={maxPreviews}
                   />
                   <QrVaultPanel
                     vaultedItems={vaultedItems}
