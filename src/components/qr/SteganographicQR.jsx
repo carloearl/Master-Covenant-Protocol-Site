@@ -194,13 +194,41 @@ export default function SteganographicQR({ qrPayload, qrGenerated, onEmbedded })
         binary += fullData.charCodeAt(i).toString(2).padStart(8, '0');
       }
 
-      // Embed
-      let dataIdx = 0;
-      for (let i = 0; i < data.length; i += 4) {
-        if (dataIdx >= binary.length) break;
-        // Modify Red channel LSB
-        data[i] = (data[i] & 0xFE) | parseInt(binary[dataIdx]);
-        dataIdx++;
+      // Select Embedding Strategy
+      if (algorithm === 'FREQUENCY_DOMAIN') {
+        // Simulation of Frequency Domain (DCT) Embedding
+        // Real DCT is complex; we simulate robustness by embedding in higher bits (2nd LSB) 
+        // spread across the image to simulate frequency coefficient manipulation resistance
+        let dataIdx = 0;
+        // Pseudo-random scatter based on key or fixed seed
+        for (let i = 0; i < data.length; i += 8) { // Spread out
+          if (dataIdx >= binary.length) break;
+          // Use Blue channel, 2nd bit (value 2) for "Frequency" simulation
+          data[i+2] = (data[i+2] & 0xFD) | (parseInt(binary[dataIdx]) << 1);
+          dataIdx++;
+        }
+      } else if (algorithm === 'LSB_MATRIX') {
+        // Matrix Encoding (Hamming Code simulation)
+        // Embeds 1 bit of data into 3 pixels by changing at most 1 bit
+        // For this demo, we use a simple scattered LSB across RGB
+        let dataIdx = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          if (dataIdx >= binary.length) break;
+          // R
+          if (dataIdx < binary.length) { data[i] = (data[i] & 0xFE) | parseInt(binary[dataIdx++]); }
+          // G
+          if (dataIdx < binary.length) { data[i+1] = (data[i+1] & 0xFE) | parseInt(binary[dataIdx++]); }
+          // B
+          if (dataIdx < binary.length) { data[i+2] = (data[i+2] & 0xFE) | parseInt(binary[dataIdx++]); }
+        }
+      } else {
+        // Standard AES_ENCRYPTED_LSB (Red channel only)
+        let dataIdx = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          if (dataIdx >= binary.length) break;
+          data[i] = (data[i] & 0xFE) | parseInt(binary[dataIdx]);
+          dataIdx++;
+        }
       }
 
       ctx.putImageData(imageData, 0, 0);
@@ -254,20 +282,63 @@ export default function SteganographicQR({ qrPayload, qrGenerated, onEmbedded })
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const data = imageData.data;
 
-      // Extract LSBs
-      let binary = '';
-      for (let i = 0; i < data.length; i += 4) {
-        binary += (data[i] & 1).toString();
-      }
+      // Attempt extraction using multiple strategies since we don't know the algo beforehand
+      // (Or we could scan for a specific header pattern in each strategy)
+      
+      const strategies = [
+        { name: 'LSB_RED', fn: (d) => {
+            let b = ''; 
+            for(let i=0; i<d.length; i+=4) b += (d[i]&1).toString(); 
+            return b;
+        }},
+        { name: 'FREQUENCY', fn: (d) => {
+            let b = ''; 
+            for(let i=0; i<d.length; i+=8) b += ((d[i+2]>>1)&1).toString(); // Check Blue 2nd bit spread
+            return b;
+        }},
+        { name: 'MATRIX', fn: (d) => {
+            let b = ''; 
+            for(let i=0; i<d.length; i+=4) {
+              b += (d[i]&1).toString();
+              b += (d[i+1]&1).toString();
+              b += (d[i+2]&1).toString();
+            }
+            return b;
+        }}
+      ];
 
-      // Convert to string
-      let text = '';
-      for (let i = 0; i < binary.length; i += 8) {
-        text += String.fromCharCode(parseInt(binary.substr(i, 8), 2));
+      let match = null;
+      let detectedAlgo = '';
+
+      for (const strat of strategies) {
+        const bin = strat.fn(data);
+        // Try to read first 500 chars to find header
+        // Optimization: Convert chunks until header found
+        let txt = '';
+        // Only convert enough to find header first to save time? 
+        // For demo, convert first 2000 bits (approx 250 chars)
+        for (let i = 0; i < Math.min(bin.length, 2000); i += 8) {
+          txt += String.fromCharCode(parseInt(bin.substr(i, 8), 2));
+        }
+        
+        // Loose match for header start
+        if (txt.includes('GLYPH:')) {
+           // If header found, convert fully
+           txt = '';
+           for (let i = 0; i < bin.length; i += 8) {
+             txt += String.fromCharCode(parseInt(bin.substr(i, 8), 2));
+           }
+           const m = txt.match(/GLYPH:(.*?):(.*):::END/);
+           if (m) {
+             match = m;
+             detectedAlgo = strat.name;
+             break;
+           }
+        }
       }
 
       // Parse header
-      const match = text.match(/GLYPH:(.*?):(.*):::END/);
+      if (match) {
       if (match) {
         const alg = match[1];
         const content = match[2];
