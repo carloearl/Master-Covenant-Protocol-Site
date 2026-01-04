@@ -170,9 +170,9 @@ const STYLE_PRESETS = [
   { id: 'artDeco', label: 'Art Deco', desc: '1920s elegance', color: 'from-yellow-500 to-amber-700' },
 ];
 
-export default function GenerateTab({ user, onImageGenerated }) {
+export default function GenerateTab({ user, userPrefs, onImageGenerated }) {
   const [prompt, setPrompt] = useState('');
-  const [selectedStyle, setSelectedStyle] = useState('photorealistic');
+  const [selectedStyle, setSelectedStyle] = useState(userPrefs?.imageLabSettings?.defaultStyle || 'photorealistic');
   const [batchCount, setBatchCount] = useState(1);
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
@@ -189,9 +189,33 @@ export default function GenerateTab({ user, onImageGenerated }) {
     guidanceScale: 7.5,
     seed: Math.floor(Math.random() * 1000000),
     seedLocked: false,
-    qualityMode: 'Standard',
+    qualityMode: userPrefs?.imageLabSettings?.defaultQuality || 'Standard',
     negativePrompt: '',
   });
+
+  // Load User Preferences on mount/change
+  useEffect(() => {
+    if (userPrefs?.imageLabSettings) {
+      if (userPrefs.imageLabSettings.defaultStyle) setSelectedStyle(userPrefs.imageLabSettings.defaultStyle);
+      if (userPrefs.imageLabSettings.defaultQuality) setControls(prev => ({ ...prev, qualityMode: userPrefs.imageLabSettings.defaultQuality }));
+    }
+  }, [userPrefs]);
+
+  // Keyboard Shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'g') {
+        e.preventDefault();
+        if (prompt.trim() && !loading) {
+          handleGenerate();
+        } else if (!prompt.trim()) {
+          toast.error('Please enter a prompt first');
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [prompt, loading]); // Dependencies needed for closure
 
   // Close dropdown on outside click
   useEffect(() => {
