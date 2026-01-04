@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
-import { Loader2, Wand2, Layers, Shield, Sparkles, Zap, Lock, Eye, Download, Info, BarChart3, Upload, Archive } from 'lucide-react';
+import { Loader2, Wand2, Layers, Shield, Sparkles, Zap, Lock, Eye, Download, Info, BarChart3, Upload, Archive, Palette } from 'lucide-react';
 import { toast } from 'sonner';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -32,6 +32,7 @@ import { useQrPreviewStorage } from './QrPreviewStorage';
 import QrPreviewSidebar from './QrPreviewSidebar';
 import QrVaultPanel from './QrVaultPanel';
 import AIInsightsPanel from './AIInsightsPanel';
+import AiArtPanel from './AiArtPanel';
 
 
 export default function QrStudio({ initialTab = 'create' }) {
@@ -579,9 +580,10 @@ export default function QrStudio({ initialTab = 'create' }) {
               { value: 'customize', icon: Layers, label: '02_Customize' },
               { value: 'preview', icon: Eye, label: '03_Preview' },
               { value: 'stego', icon: Lock, label: '04_Stego' },
-              { value: 'security', icon: Shield, label: '05_Security' },
-              { value: 'analytics', icon: BarChart3, label: '06_Analytics' },
-              { value: 'bulk', icon: Upload, label: '07_Bulk' },
+              { value: 'ai_art', icon: Palette, label: '05_AI_Art' },
+              { value: 'security', icon: Shield, label: '06_Security' },
+              { value: 'analytics', icon: BarChart3, label: '07_Analytics' },
+              { value: 'bulk', icon: Upload, label: '08_Bulk' },
             ].map((tab) => (
               <TabsTrigger
                 key={tab.value}
@@ -602,9 +604,10 @@ export default function QrStudio({ initialTab = 'create' }) {
                 { value: 'customize', icon: Layers, label: 'Customize', num: '02' },
                 { value: 'preview', icon: Eye, label: 'Preview', num: '03' },
                 { value: 'stego', icon: Lock, label: 'Stego', num: '04' },
-                { value: 'security', icon: Shield, label: 'Security', num: '05' },
-                { value: 'analytics', icon: BarChart3, label: 'Analytics', num: '06' },
-                { value: 'bulk', icon: Upload, label: 'Bulk', num: '07' },
+                { value: 'ai_art', icon: Palette, label: 'AI Art', num: '05' },
+                { value: 'security', icon: Shield, label: 'Security', num: '06' },
+                { value: 'analytics', icon: BarChart3, label: 'Analytics', num: '07' },
+                { value: 'bulk', icon: Upload, label: 'Bulk', num: '08' },
               ].map((tab) => {
                 const Icon = tab.icon;
                 return (
@@ -1084,7 +1087,48 @@ export default function QrStudio({ initialTab = 'create' }) {
             </div>
           </TabsContent>
 
-          {/* ========== 05_SECURITY TAB ========== */}
+          {/* ========== 05_AI_ART TAB ========== */}
+          <TabsContent value="ai_art">
+            <div className="grid lg:grid-cols-2 gap-8 relative z-10">
+              <div>
+                <AiArtPanel 
+                  qrPayload={getCurrentPayload()}
+                  customization={customization}
+                  setCustomization={setCustomization}
+                  onArtGenerated={goToPreview}
+                />
+              </div>
+              <div>
+                <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg}`}>
+                  <CardHeader className="border-b border-purple-500/20">
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-cyan-400" />
+                      Artistic Preview
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-6 flex justify-center">
+                    <div className="relative">
+                      {(qrGenerated || getCurrentPayload()) ? (
+                        <CanvasQrRenderer
+                          text={getCurrentPayload()}
+                          size={300}
+                          errorCorrectionLevel={errorCorrectionLevel}
+                          customization={customization}
+                          className="rounded-lg shadow-2xl"
+                        />
+                      ) : (
+                        <div className="h-64 w-64 flex items-center justify-center border-2 border-dashed border-gray-700 rounded-lg text-gray-500">
+                          Generate QR first
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* ========== 06_SECURITY TAB ========== */}
           <TabsContent value="security">
             <div className="space-y-6 relative z-10">
               <Card className={`${GlyphCard.premium} ${GlyphShadows.depth.lg}`}>
