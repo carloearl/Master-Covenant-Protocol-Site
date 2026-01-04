@@ -456,6 +456,12 @@ export default function Navbar({ user, onLogin, onLogout }) {
 
         {/* Desktop Actions */}
         <div className="hidden lg:flex items-center gap-4">
+          <Link to="/system-status">
+            <Button variant="ghost" className="text-gray-300 hover:text-cyan-400 hover:bg-white/5">
+              <Activity className="w-4 h-4 mr-2" />
+              Status
+            </Button>
+          </Link>
           {/* CTA Button with futuristic design */}
           <Link to={createPageUrl("Consultation")}>
             <MagneticButton>
