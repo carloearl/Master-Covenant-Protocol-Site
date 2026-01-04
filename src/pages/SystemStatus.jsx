@@ -49,6 +49,7 @@ const encryptPayload = async (payload, password) => {
     { name: "AES-GCM", iv: iv }, key, enc.encode(payload)
   );
   // ... Returns secure payload ...
+  return btoa(String.fromCharCode(...combined));
 };`,
     'components/qr/QrStudio.js': `// QR Studio - Main Controller
 // Integrates generation, preview, security checks, and real-time collaboration.
