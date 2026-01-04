@@ -2,7 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 /**
  * GLYPHBOT JR. — BASE44 AGENT HANDLER
- * Voice: Aurora — Neural TTS via ElevenLabs-style endpoint
+ * Voice: Aurora — Neural TTS (Proxied for CORS)
  */
 
 Deno.serve(async (req) => {
@@ -14,25 +14,35 @@ Deno.serve(async (req) => {
         const base44 = createClientFromRequest(req);
         const { action, text, messages, systemPrompt } = await req.json();
 
-        // 🎯 LISTEN ACTION — Generate TTS using OpenRouter (via Gemini)
+        // 🎯 LISTEN ACTION — Fetch TTS and return as base64
         if (action === 'listen') {
-            if (!text || text.length > 1000) {
+            if (!text || text.length > 500) {
                 return Response.json({ error: 'Invalid text' }, { status: 400 });
             }
 
-            // Use free TTS via ResponsiveVoice CDN fallback pattern
-            // Since Google/OpenAI TTS quota exceeded, we'll embed browser-playable URL
-            // This is a workaround using a public TTS endpoint
+            const encodedText = encodeURIComponent(text.substring(0, 200));
+            const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodedText}`;
 
-            const encodedText = encodeURIComponent(text.substring(0, 500));
-            const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodedText}`;
+            // Fetch the audio and convert to base64 (CORS proxy)
+            const audioResponse = await fetch(ttsUrl, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                }
+            });
+
+            if (!audioResponse.ok) {
+                throw new Error('TTS fetch failed');
+            }
+
+            const audioBuffer = await audioResponse.arrayBuffer();
+            const base64Audio = btoa(String.fromCharCode(...new Uint8Array(audioBuffer)));
 
             return Response.json({
                 text: text,
                 speak: {
                     enabled: true,
                     persona: 'Aurora',
-                    audioUrl: audioUrl, // Direct URL approach
+                    audioBase64: base64Audio,
                     mimeType: 'audio/mpeg'
                 }
             });
