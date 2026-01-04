@@ -3,8 +3,9 @@ import { base44 } from '@/api/base44Client';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, Sparkles, Layers, Image as ImageIcon, Database, Zap, HelpCircle } from 'lucide-react';
+import { Loader2, Sparkles, Layers, Image as ImageIcon, Database, Zap, HelpCircle, Wand2 } from 'lucide-react';
 import { toast } from 'sonner';
+import PageHeader from '@/components/shared/PageHeader';
 
 import SEOHead from '@/components/SEOHead';
 import { injectSoftwareSchema } from '@/components/utils/seoHelpers';
@@ -141,6 +142,28 @@ export default function ImageLab() {
     }
   ];
 
+  const HELP_STEPS = [
+    { title: 'Enter a prompt', description: 'Describe what you want to create in detail' },
+    { title: 'Select a style', description: 'Choose from 18+ artistic styles' },
+    { title: 'Generate', description: 'Click Generate or press Cmd+G' },
+    { title: 'Add hotspots', description: 'Click Interactive tab to add clickable zones' },
+    { title: 'Share', description: 'Share your interactive image with a link' }
+  ];
+
+  const SHORTCUTS = [
+    { action: 'Generate image', keys: 'Cmd/Ctrl + G' },
+    { action: 'Generate tab', keys: 'Cmd/Ctrl + 1' },
+    { action: 'Interactive tab', keys: 'Cmd/Ctrl + 2' },
+    { action: 'Gallery tab', keys: 'Cmd/Ctrl + 3' }
+  ];
+
+  const TIPS = [
+    'Be specific in your prompts for better results',
+    'Use reference images for style consistency',
+    'AI detects objects automatically when you click',
+    'Save defaults to speed up your workflow'
+  ];
+
   useEffect(() => {
     const cleanup = injectSoftwareSchema(
       'GlyphLock Image Lab',
@@ -188,50 +211,33 @@ export default function ImageLab() {
         url="/image-lab"
       />
 
+      <PageHeader
+        title="GlyphLock Image Lab"
+        subtitle="AI generation, interactive hotspots, cryptographic security"
+        icon={Wand2}
+        badge="Premium"
+        backTo="Home"
+        helpSteps={HELP_STEPS}
+        shortcuts={SHORTCUTS}
+        tips={TIPS}
+      >
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setShowTour(true)}
+          className="text-purple-400 hover:text-white hover:bg-purple-500/20 gap-2"
+        >
+          <Sparkles className="w-4 h-4" />
+          <span className="hidden sm:inline">Tour</span>
+        </Button>
+      </PageHeader>
+
       <div className="min-h-screen bg-gradient-to-br from-black via-purple-950/20 to-black relative">
         {/* Cosmic Background */}
         <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/30 via-cyan-900/10 to-transparent pointer-events-none z-0" />
         <div className="fixed inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDYsIDE4MiwgMjEyLCAwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20 pointer-events-none z-0" />
         <div className="glyph-orb fixed top-20 right-20 opacity-20" style={{ animation: 'float-orb 8s ease-in-out infinite', background: 'radial-gradient(circle, rgba(6,182,212,0.3), rgba(59,130,246,0.2))' }}></div>
         <div className="glyph-orb fixed bottom-40 left-40 opacity-15" style={{ animation: 'float-orb 10s ease-in-out infinite', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(168,85,247,0.3), rgba(59,130,246,0.2))' }}></div>
-
-        {/* Header */}
-        <div className="border-b border-cyan-500/20 glyph-glass-dark sticky top-0 z-50 shadow-2xl glyph-glow">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-              <div className="flex flex-col space-y-2">
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center gap-3">
-                  <Zap className="w-10 h-10 text-cyan-400" style={{ animation: 'pulse-glow 3s ease-in-out infinite' }} />
-                  GlyphLock Image Lab
-                </h1>
-                <p className="text-sm sm:text-base text-gray-400 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-purple-400" />
-                  AI generation, interactive hotspots, cryptographic security & verification
-                </p>
-              </div>
-              <div className="flex items-center gap-3 flex-wrap">
-                <div className="px-4 py-2 glyph-glass border border-cyan-500/50 rounded-lg glyph-glow">
-                  <p className="text-xs text-cyan-300 font-semibold">Generate • Interact • Secure</p>
-                </div>
-                <div className="px-4 py-2 glyph-glass border border-purple-500/50 rounded-lg">
-                  <p className="text-xs text-purple-300 font-semibold flex items-center gap-1">
-                    <Sparkles className="w-3 h-3" />
-                    Premium Lab
-                  </p>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setShowTour(true)}
-                  className="glyph-glass border border-cyan-500/30 text-cyan-400 hover:text-white hover:bg-cyan-500/20"
-                  title="Start Tour"
-                >
-                  <HelpCircle className="w-5 h-5" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 max-w-7xl relative z-10">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
