@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Upload, Save, Lock, Trash2, Sparkles, MousePointer, Link2, ExternalLink, Share2, Users } from 'lucide-react';
+import { Loader2, Upload, Save, Lock, Trash2, Sparkles, MousePointer, Link2, ExternalLink, Share2, Users, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   GlyphImageCard,
@@ -21,6 +21,7 @@ import UniversalAssetPicker from '@/components/shared/UniversalAssetPicker';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useCollaboration } from '@/components/hooks/useCollaboration';
 import CollaborationPanel from '@/components/qr/CollaborationPanel';
+import ShareInteractiveDialog from '@/components/imageLab/ShareInteractiveDialog';
 
 export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
   const [imageAsset, setImageAsset] = useState(selectedImage);
@@ -30,6 +31,7 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
   const [analyzing, setAnalyzing] = useState(false);
   const [pendingClick, setPendingClick] = useState(null);
   const [showAssetPicker, setShowAssetPicker] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
   const [collabSessionId, setCollabSessionId] = useState(null);
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
@@ -463,6 +465,16 @@ Be precise with the bounding box - make it fit the detected object tightly but i
                 <Lock className="w-4 h-4 mr-2" />
                 {imageAsset?.status === 'active' ? 'Finalized' : 'Finalize & Lock'}
               </Button>
+              
+              {/* Share Button */}
+              <Button
+                onClick={() => setShowShareDialog(true)}
+                disabled={!imageAsset || hotspots.length === 0}
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                Share Interactive Image
+              </Button>
             </div>
             {imageAsset?.status === 'active' && (
               <div className={`mt-3 ${GlyphImageBadge.success}`}>
@@ -648,6 +660,14 @@ Be precise with the bounding box - make it fit the detected object tightly but i
           />
         </DialogContent>
       </Dialog>
+
+      {/* Share Dialog */}
+      <ShareInteractiveDialog
+        open={showShareDialog}
+        onOpenChange={setShowShareDialog}
+        imageAsset={imageAsset}
+        hotspots={hotspots}
+      />
     </div>
   );
 }

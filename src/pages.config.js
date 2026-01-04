@@ -8,6 +8,7 @@ import Blockchain from './pages/Blockchain';
 import CaseStudies from './pages/CaseStudies';
 import CaseStudyAIBinding from './pages/CaseStudyAIBinding';
 import CaseStudyCovenantVictory from './pages/CaseStudyCovenantVictory';
+import CaseStudyPerplexity from './pages/CaseStudyPerplexity';
 import CaseStudyTruthStrike from './pages/CaseStudyTruthStrike';
 import CommandCenter from './pages/CommandCenter';
 import ComplianceReport from './pages/ComplianceReport';
@@ -76,7 +77,7 @@ import VIPContract from './pages/VIPContract';
 import VideoUpload from './pages/VideoUpload';
 import imageLab from './pages/image-lab';
 import sitemapQr from './pages/sitemap-qr';
-import CaseStudyPerplexity from './pages/CaseStudyPerplexity';
+import ViewInteractive from './pages/ViewInteractive';
 import __Layout from './Layout.jsx';
 
 
@@ -91,6 +92,7 @@ export const PAGES = {
     "CaseStudies": CaseStudies,
     "CaseStudyAIBinding": CaseStudyAIBinding,
     "CaseStudyCovenantVictory": CaseStudyCovenantVictory,
+    "CaseStudyPerplexity": CaseStudyPerplexity,
     "CaseStudyTruthStrike": CaseStudyTruthStrike,
     "CommandCenter": CommandCenter,
     "ComplianceReport": ComplianceReport,
@@ -159,7 +161,7 @@ export const PAGES = {
     "VideoUpload": VideoUpload,
     "image-lab": imageLab,
     "sitemap-qr": sitemapQr,
-    "CaseStudyPerplexity": CaseStudyPerplexity,
+    "ViewInteractive": ViewInteractive,
 }
 
 export const pagesConfig = {
