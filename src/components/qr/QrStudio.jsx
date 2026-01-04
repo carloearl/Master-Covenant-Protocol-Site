@@ -48,6 +48,99 @@ export default function QrStudio({ initialTab = 'create' }) {
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [sharedUsers, setSharedUsers] = useState([]); // In real app, fetch from asset
 
+  // ========== PAYLOAD STATE ==========
+  const [payloadType, setPayloadType] = useState('url');
+  const [showPayloadSelector, setShowPayloadSelector] = useState(false);
+  const [qrAssetDraft, setQrAssetDraft] = useState(null);
+
+  // ========== CUSTOMIZATION STATE ==========
+  const [customization, setCustomization] = useState({
+    dotStyle: 'square',
+    eyeStyle: 'square',
+    foregroundColor: '#000000',
+    backgroundColor: '#ffffff',
+    gradient: {
+      enabled: false,
+      type: 'linear',
+      angle: 0,
+      color1: '#000000',
+      color2: '#3B82F6',
+      color3: '#8B5CF6',
+      color4: null,
+      color5: null
+    },
+    eyeColors: {
+      topLeft: { inner: '#000000', outer: '#000000' },
+      topRight: { inner: '#000000', outer: '#000000' },
+      bottomLeft: { inner: '#000000', outer: '#000000' }
+    },
+    logo: {
+      url: null,
+      file: null,
+      opacity: 100,
+      size: 20,
+      border: false,
+      shape: 'square',
+      position: 'center',
+      rotation: 0,
+      dropShadow: false,
+      autoContrast: true
+    },
+    background: {
+            type: 'solid',
+            color: '#ffffff',
+            gradientColor1: '#ffffff',
+      gradientColor2: '#E5E7EB',
+      imageUrl: null,
+      blur: 0,
+      pattern: 'none',
+      transparency: 100
+    },
+    qrShape: {
+      type: 'standard',
+      margin: 'medium',
+      cornerRadius: 0
+    }
+  });
+
+  // ========== QR GENERATION STATE ==========
+  const [qrType, setQrType] = useState("url");
+  const [qrData, setQrData] = useState({
+    url: "", text: "", email: "", emailSubject: "", emailBody: "",
+    phone: "", smsNumber: "", smsMessage: "",
+    wifiSSID: "", wifiPassword: "", wifiEncryption: "WPA", wifiHidden: false,
+    vcardFirstName: "", vcardLastName: "", vcardOrganization: "", vcardPhone: "", vcardEmail: "", vcardWebsite: "", vcardAddress: "",
+    latitude: "", longitude: "",
+    eventTitle: "", eventLocation: "", eventStartDate: "", eventStartTime: "", eventEndDate: "", eventEndTime: "", eventDescription: "",
+    customPayload: ""
+  });
+  const [size, setSize] = useState(512);
+  const [errorCorrectionLevel, setErrorCorrectionLevel] = useState('H');
+  const [qrGenerated, setQrGenerated] = useState(false);
+  const defaultPayload = 'https://glyphlock.io';
+  const [isScanning, setIsScanning] = useState(false);
+  const [securityResult, setSecurityResult] = useState(null);
+  const [codeId, setCodeId] = useState(null);
+  const [scanningStage, setScanningStage] = useState("");
+  const [logoFile, setLogoFile] = useState(null);
+  const [qrDataUrl, setQrDataUrl] = useState(null);
+
+  // QR Types with security flags
+  const qrTypes = [
+    { id: "url", name: "URL/Website", needsSecurity: true },
+    { id: "text", name: "Plain Text", needsSecurity: false },
+    { id: "email", name: "Email", needsSecurity: true },
+    { id: "phone", name: "Phone Number", needsSecurity: false },
+    { id: "sms", name: "SMS Message", needsSecurity: false },
+    { id: "wifi", name: "WiFi Network", needsSecurity: false },
+    { id: "vcard", name: "Contact Card", needsSecurity: false },
+    { id: "location", name: "GPS Location", needsSecurity: false },
+    { id: "event", name: "Calendar Event", needsSecurity: false }
+  ];
+
+  const selectedPayloadType = PAYLOAD_TYPES.find(t => t.id === payloadType);
+  const currentTypeConfig = qrTypes.find(t => t.id === qrType);
+
   // Polling for collaboration (Real-time Simulation via Function)
   useEffect(() => {
     if (!collabSessionId) return;
@@ -177,101 +270,6 @@ export default function QrStudio({ initialTab = 'create' }) {
       }
     }
   }, [activeTab]);
-
-
-
-  // ========== PAYLOAD STATE ==========
-  const [payloadType, setPayloadType] = useState('url');
-  const [showPayloadSelector, setShowPayloadSelector] = useState(false);
-  const [qrAssetDraft, setQrAssetDraft] = useState(null);
-
-  // ========== CUSTOMIZATION STATE ==========
-  const [customization, setCustomization] = useState({
-    dotStyle: 'square',
-    eyeStyle: 'square',
-    foregroundColor: '#000000',
-    backgroundColor: '#ffffff',
-    gradient: {
-      enabled: false,
-      type: 'linear',
-      angle: 0,
-      color1: '#000000',
-      color2: '#3B82F6',
-      color3: '#8B5CF6',
-      color4: null,
-      color5: null
-    },
-    eyeColors: {
-      topLeft: { inner: '#000000', outer: '#000000' },
-      topRight: { inner: '#000000', outer: '#000000' },
-      bottomLeft: { inner: '#000000', outer: '#000000' }
-    },
-    logo: {
-      url: null,
-      file: null,
-      opacity: 100,
-      size: 20,
-      border: false,
-      shape: 'square',
-      position: 'center',
-      rotation: 0,
-      dropShadow: false,
-      autoContrast: true
-    },
-    background: {
-            type: 'solid',
-            color: '#ffffff',
-            gradientColor1: '#ffffff',
-      gradientColor2: '#E5E7EB',
-      imageUrl: null,
-      blur: 0,
-      pattern: 'none',
-      transparency: 100
-    },
-    qrShape: {
-      type: 'standard',
-      margin: 'medium',
-      cornerRadius: 0
-    }
-  });
-
-  // ========== QR GENERATION STATE ==========
-  const [qrType, setQrType] = useState("url");
-  const [qrData, setQrData] = useState({
-    url: "", text: "", email: "", emailSubject: "", emailBody: "",
-    phone: "", smsNumber: "", smsMessage: "",
-    wifiSSID: "", wifiPassword: "", wifiEncryption: "WPA", wifiHidden: false,
-    vcardFirstName: "", vcardLastName: "", vcardOrganization: "", vcardPhone: "", vcardEmail: "", vcardWebsite: "", vcardAddress: "",
-    latitude: "", longitude: "",
-    eventTitle: "", eventLocation: "", eventStartDate: "", eventStartTime: "", eventEndDate: "", eventEndTime: "", eventDescription: "",
-    customPayload: ""
-  });
-  const [size, setSize] = useState(512);
-  const [errorCorrectionLevel, setErrorCorrectionLevel] = useState('H');
-  const [qrGenerated, setQrGenerated] = useState(false);
-  const defaultPayload = 'https://glyphlock.io';
-  const [isScanning, setIsScanning] = useState(false);
-  const [securityResult, setSecurityResult] = useState(null);
-  const [codeId, setCodeId] = useState(null);
-  const [scanningStage, setScanningStage] = useState("");
-  const [logoFile, setLogoFile] = useState(null);
-  const [qrDataUrl, setQrDataUrl] = useState(null);
-
-  // QR Types with security flags
-  const qrTypes = [
-    { id: "url", name: "URL/Website", needsSecurity: true },
-    { id: "text", name: "Plain Text", needsSecurity: false },
-    { id: "email", name: "Email", needsSecurity: true },
-    { id: "phone", name: "Phone Number", needsSecurity: false },
-    { id: "sms", name: "SMS Message", needsSecurity: false },
-    { id: "wifi", name: "WiFi Network", needsSecurity: false },
-    { id: "vcard", name: "Contact Card", needsSecurity: false },
-    { id: "location", name: "GPS Location", needsSecurity: false },
-    { id: "event", name: "Calendar Event", needsSecurity: false }
-  ];
-
-  const selectedPayloadType = PAYLOAD_TYPES.find(t => t.id === payloadType);
-  const currentTypeConfig = qrTypes.find(t => t.id === qrType);
 
   // ========== BUILD PAYLOAD ==========
   const buildQRPayload = () => {
