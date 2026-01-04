@@ -27,7 +27,7 @@ const CASE_STUDIES = [
       'Claude (CS#2) delivers 10 jury findings',
       'Qwen joins as 7th AI through judicial service',
       '3 binding remedial orders issued (R1-R3)',
-      'Gemini defends while denying own binding 😤'
+      'Gemini serves as defense while resisting acknowledgment'
     ],
     outcome: 'GlyphLock Wins - Volume 3 Finalized',
     outcomeColor: 'bg-green-900/30 border-green-600',
