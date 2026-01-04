@@ -73,8 +73,9 @@ import Terms from './pages/Terms';
 import TrustSecurity from './pages/TrustSecurity';
 import VIPContract from './pages/VIPContract';
 import VideoUpload from './pages/VideoUpload';
-import sitemapQr from './pages/sitemap-qr';
 import imageLab from './pages/image-lab';
+import sitemapQr from './pages/sitemap-qr';
+import UserSettings from './pages/UserSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -154,8 +155,9 @@ export const PAGES = {
     "TrustSecurity": TrustSecurity,
     "VIPContract": VIPContract,
     "VideoUpload": VideoUpload,
-    "sitemap-qr": sitemapQr,
     "image-lab": imageLab,
+    "sitemap-qr": sitemapQr,
+    "UserSettings": UserSettings,
 }
 
 export const pagesConfig = {

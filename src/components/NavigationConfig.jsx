@@ -67,11 +67,12 @@ export const NAV_SECTIONS = [
     label: "Account",
     visibility: "public",
     items: [
+      { label: "User Settings", page: "UserSettings", visibility: "public" },
       { label: "Security Settings", page: "AccountSecurity", visibility: "public" },
-                  { label: "Command Center", page: "CommandCenter", visibility: "public" },
-                  { label: "Project Updates", page: "ProjectUpdates", visibility: "public" }
-                ]
-              }
+      { label: "Command Center", page: "CommandCenter", visibility: "public" },
+      { label: "Project Updates", page: "ProjectUpdates", visibility: "public" }
+    ]
+  }
             ];
 
 export const FOOTER_LINKS = {
@@ -110,6 +111,7 @@ export const FOOTER_LINKS = {
     { label: "Cookie Policy", page: "Cookies", visibility: "public" }
   ],
   account: [
+    { label: "User Settings", page: "UserSettings", visibility: "public" },
     { label: "Security Settings", page: "AccountSecurity", visibility: "public" },
     { label: "Command Center", page: "CommandCenter", visibility: "public" }
   ]
