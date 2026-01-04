@@ -24,6 +24,7 @@ import CollaborationPanel from '@/components/qr/CollaborationPanel';
 import ShareInteractiveDialog from '@/components/imageLab/ShareInteractiveDialog';
 
 export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const [imageAsset, setImageAsset] = useState(selectedImage);
   const [hotspots, setHotspots] = useState([]);
   const [selectedHotspot, setSelectedHotspot] = useState(null);
@@ -335,9 +336,9 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className={`grid grid-cols-1 ${isMobile ? 'gap-4' : 'lg:grid-cols-3 gap-6'}`}>
       {/* Left - Instructions & Properties */}
-      <div className="lg:col-span-1 space-y-6">
+      <div className={`${isMobile ? 'space-y-4 order-2' : 'lg:col-span-1 space-y-6'}`}>
         {/* AI Click Instructions */}
         <Card className={`${GlyphImageCard.premium} border-cyan-500/30`}>
           <CardHeader className="border-b border-cyan-500/20 pb-3">
@@ -576,7 +577,7 @@ export default function InteractiveTab({ user, selectedImage, onImageSelect }) {
       </div>
 
       {/* Right - Canvas */}
-      <div className="lg:col-span-2">
+      <div className={`${isMobile ? 'order-1' : 'lg:col-span-2'}`}>
         {collabSessionId && (
           <CollaborationPanel 
             activeUsers={activeUsers}
