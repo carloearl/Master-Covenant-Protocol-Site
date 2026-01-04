@@ -34,6 +34,7 @@ import ReactMarkdown from 'react-markdown';
 import DevModeLayout from '@/components/devengine/DevModeLayout';
 import AgentBrainPanel from '@/components/devengine/AgentBrainPanel';
 import DeployPanel from '@/components/devengine/DeployPanel';
+import CanvasMode from '@/components/sitebuilder/CanvasMode';
 
 export default function SiteBuilder() {
   const [user, setUser] = useState(null);
@@ -282,6 +283,17 @@ export default function SiteBuilder() {
                       <Sparkles className="w-4 h-4" />
                       DEPLOY
                     </button>
+                    <button
+                      onClick={() => setViewMode('canvas')}
+                      className={`px-4 py-2 rounded-md text-xs font-bold transition-all flex items-center gap-2 ${
+                        viewMode === 'canvas'
+                          ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.5)]'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      <LayoutIcon className="w-4 h-4" />
+                      CANVAS
+                    </button>
                   </div>
                 )}
                 {/* Mode Selector */}
@@ -349,7 +361,11 @@ export default function SiteBuilder() {
           <div className="container mx-auto px-4 pt-6 pb-6 h-[calc(100vh-140px)]">
             <DeployPanel />
           </div>
-        ) : (viewMode === 'brain' || viewMode === 'deploy') && !isAdmin ? (
+        ) : viewMode === 'canvas' && isAdmin ? (
+          <div className="h-[calc(100vh-140px)]">
+            <CanvasMode onArtifactCreated={(artifact) => toast.success(`Created ${artifact.name}`)} />
+          </div>
+        ) : (viewMode === 'brain' || viewMode === 'deploy' || viewMode === 'canvas') && !isAdmin ? (
           <div className="min-h-screen flex items-center justify-center">
             <div className="text-center">
               <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
