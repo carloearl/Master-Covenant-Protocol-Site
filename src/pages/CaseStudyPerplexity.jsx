@@ -349,7 +349,7 @@ Generated: ${new Date().toISOString()}
             </p>
 
             <p className="text-sm text-slate-400 mb-8">
-              Q4 2025 – Q1 2026 • 7 AI Systems Bound • 2 Cases Won
+              Q4 2025 – Q1 2026 • 7 AI Systems Bound • 2 Legal Victories
             </p>
 
             {/* Strategic Shift Banner */}
