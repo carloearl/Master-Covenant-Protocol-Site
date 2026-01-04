@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { Sparkles, Send, Loader2, Volume2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
@@ -99,7 +99,8 @@ export default function GlyphBotJr() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
+  // Auto-scroll on new messages
+  React.useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
