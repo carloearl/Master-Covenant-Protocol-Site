@@ -128,6 +128,46 @@ export default function QrStudio({ initialTab = 'create' }) {
   const [scanningStage, setScanningStage] = useState("");
   const [logoFile, setLogoFile] = useState(null);
   const [qrDataUrl, setQrDataUrl] = useState(null);
+  const [isDraftLoaded, setIsDraftLoaded] = useState(false);
+
+  // ========== PERSISTENCE & AUTO-SAVE ==========
+  // 1. Restore draft on mount
+  useEffect(() => {
+    try {
+      const savedDraft = localStorage.getItem('qr_studio_draft_v1');
+      if (savedDraft) {
+        const parsed = JSON.parse(savedDraft);
+        if (parsed.qrType) setQrType(parsed.qrType);
+        if (parsed.qrData) setQrData(prev => ({ ...prev, ...parsed.qrData }));
+        if (parsed.customization) setCustomization(prev => ({ ...prev, ...parsed.customization }));
+        // Optional: toast.info("Restored previous session");
+      }
+    } catch (e) {
+      console.error("Failed to restore draft", e);
+    } finally {
+      setIsDraftLoaded(true);
+    }
+  }, []);
+
+  // 2. Auto-save on change (only after initial load)
+  useEffect(() => {
+    if (!isDraftLoaded) return;
+    const draft = { qrType, qrData, customization };
+    localStorage.setItem('qr_studio_draft_v1', JSON.stringify(draft));
+  }, [qrType, qrData, customization, isDraftLoaded]);
+
+  // 3. Prevent accidental refresh/close
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      // Only warn if there's significant data
+      if (qrData.url || qrData.text || qrData.customPayload) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [qrData]);
 
   // QR Types with security flags
   const qrTypes = [
