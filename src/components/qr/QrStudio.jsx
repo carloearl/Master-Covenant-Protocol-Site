@@ -36,7 +36,6 @@ import AiArtPanel from './AiArtPanel';
 import CollaborationPanel from './CollaborationPanel';
 import ShareDialog from './ShareDialog';
 import ProjectManager from './ProjectManager';
-import ProjectManager from './ProjectManager';
 
 
 export default function QrStudio({ initialTab = 'create' }) {
