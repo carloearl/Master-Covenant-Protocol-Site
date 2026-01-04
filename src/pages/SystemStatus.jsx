@@ -15,6 +15,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 export default function SystemStatus() {
   const [health, setHealth] = useState(null);
   const [sieStatus, setSieStatus] = useState(null);
+  const [integrations, setIntegrations] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeFile, setActiveFile] = useState('functions/collaborationOps.js');
 
@@ -76,13 +77,15 @@ export default function QrStudio() {
     const fetchData = async () => {
       try {
         // Parallel fetch for speed
-        const [healthRes, sieRes] = await Promise.allSettled([
+        const [healthRes, sieRes, intRes] = await Promise.allSettled([
           base44.functions.invoke('health', {}),
-          base44.functions.invoke('sieOps', { action: 'get_dashboard' })
+          base44.functions.invoke('sieOps', { action: 'get_dashboard' }),
+          base44.functions.invoke('testIntegrations', {})
         ]);
 
         if (healthRes.status === 'fulfilled') setHealth(healthRes.value.data);
         if (sieRes.status === 'fulfilled') setSieStatus(sieRes.value.data);
+        if (intRes.status === 'fulfilled') setIntegrations(intRes.value.data);
       } catch (error) {
         console.error("Status fetch failed", error);
       } finally {
@@ -174,6 +177,30 @@ export default function QrStudio() {
                     <CheckCircle className="w-4 h-4 inline mr-2" />
                     Web Crypto API Active
                   </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gray-900/50 border-gray-800">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Database className="w-5 h-5 text-emerald-400" />
+                  Integration Tests
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {integrations?.tests?.map((test, i) => (
+                    <div key={i} className="flex justify-between items-center text-sm border-b border-gray-800 pb-2 last:border-0">
+                      <span className="text-gray-300">{test.name}</span>
+                      {test.status === 'PASS' ? (
+                        <Badge className="bg-green-500/20 text-green-400 border-green-500/50 text-[10px]">PASS</Badge>
+                      ) : (
+                        <Badge className="bg-red-500/20 text-red-400 border-red-500/50 text-[10px]">FAIL</Badge>
+                      )}
+                    </div>
+                  ))}
+                  {!integrations && !loading && <div className="text-gray-500 text-sm italic">No integration data available.</div>}
                 </div>
               </CardContent>
             </Card>
