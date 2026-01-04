@@ -143,6 +143,35 @@ export default function QRTypeForm({ qrType, qrData, setQrData, selectedPayloadT
 
   // Handle custom generic payloads (fallback for types without fields)
   if (qrType === 'custom') {
+    return (
+      <div className="space-y-4">
+        <div className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg flex items-start gap-3">
+          <Terminal className="w-5 h-5 text-purple-400 mt-1" />
+          <div>
+            <h4 className="text-sm font-semibold text-purple-300">Advanced Payload Configuration</h4>
+            <p className="text-xs text-purple-200/70 mt-1">
+              Configure the raw data for {selectedPayloadType?.label || 'this type'}.
+              Ensure the format matches the standard schema.
+            </p>
+          </div>
+        </div>
+        <div>
+          <Label htmlFor="customPayload" className="text-white">Payload Data *</Label>
+          <Textarea
+            id="customPayload"
+            value={qrData.customPayload || ''}
+            onChange={(e) => setQrData({...qrData, customPayload: e.target.value})}
+            placeholder={selectedPayloadType?.placeholder || "Enter payload data..."}
+            rows={4}
+            className="bg-gray-900 border-gray-700 text-cyan-400 font-mono text-sm min-h-[100px]"
+          />
+          {selectedPayloadType?.description && (
+            <p className="text-xs text-gray-500 mt-2">{selectedPayloadType.description}</p>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   switch (qrType) {
     case "url":
