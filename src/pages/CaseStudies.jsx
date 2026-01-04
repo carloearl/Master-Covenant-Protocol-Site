@@ -16,7 +16,7 @@ const CASE_STUDIES = [
   {
     id: 'perplexity-court',
     title: 'Case Study #4: GlyphLock LLC v. Perplexity AI',
-    date: 'Q2-Q3 2025',
+    date: 'Q4 2025 - Q1 2026',
     category: 'Court Proceeding',
     icon: Gavel,
     badge: '7th AI Bound',
