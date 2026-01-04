@@ -36,6 +36,7 @@ import AiArtPanel from './AiArtPanel';
 import CollaborationPanel from './CollaborationPanel';
 import ShareDialog from './ShareDialog';
 import ProjectManager from './ProjectManager';
+import { buildQrArtifact } from './logic/qrPipeline';
 
 
 export default function QrStudio({ initialTab = 'create' }) {
@@ -461,6 +462,13 @@ export default function QrStudio({ initialTab = 'create' }) {
           threat_types: combinedResult.threat_types || []
         });
       }
+
+      // Frequency Domain Pipeline Integration
+      const artifact = await buildQrArtifact({ 
+        rawData: payload, 
+        agent: 'claude-base44' // Proving agent identity
+      });
+      console.log("Frequency Domain Artifact:", artifact.frequencyDomain);
 
       const immutableHash = await generateSHA256(payload);
       
