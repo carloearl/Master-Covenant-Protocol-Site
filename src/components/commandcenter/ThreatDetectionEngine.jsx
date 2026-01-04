@@ -327,30 +327,69 @@ export function useThreatDetection(user) {
   const queryClient = useQueryClient();
   const [threats, setThreats] = useState([]);
   const [config, setConfig] = useState(() => {
-    const saved = localStorage.getItem('glyphlock_threat_config');
-    return saved ? JSON.parse(saved) : DEFAULT_THRESHOLDS;
+    try {
+      const saved = localStorage.getItem('glyphlock_threat_config');
+      return saved ? JSON.parse(saved) : DEFAULT_THRESHOLDS;
+    } catch {
+      return DEFAULT_THRESHOLDS;
+    }
   });
   const [isScanning, setIsScanning] = useState(false);
+  const [lastScanTime, setLastScanTime] = useState(null);
 
-  // Fetch data for analysis
-  const { data: apiKeys = [] } = useQuery({
+  // Fetch data for analysis with error handling
+  const { data: apiKeys = [], isLoading: loadingKeys } = useQuery({
     queryKey: ['apiKeys'],
-    queryFn: () => base44.entities.APIKey.list()
+    queryFn: async () => {
+      try {
+        return await base44.entities.APIKey.list();
+      } catch (e) {
+        console.warn('Failed to fetch API keys:', e);
+        return [];
+      }
+    },
+    staleTime: 30000,
+    retry: 2
   });
 
-  const { data: auditLogs = [] } = useQuery({
+  const { data: auditLogs = [], isLoading: loadingLogs } = useQuery({
     queryKey: ['auditLogs'],
-    queryFn: () => base44.entities.SystemAuditLog.list('-created_date', 500)
+    queryFn: async () => {
+      try {
+        return await base44.entities.SystemAuditLog.list('-created_date', 500);
+      } catch (e) {
+        console.warn('Failed to fetch audit logs:', e);
+        return [];
+      }
+    },
+    staleTime: 15000,
+    retry: 2
   });
 
   const { data: qrAssets = [] } = useQuery({
     queryKey: ['qrAssets'],
-    queryFn: () => base44.entities.QrAsset.list('-created_date', 200)
+    queryFn: async () => {
+      try {
+        return await base44.entities.QrAsset.list('-created_date', 200);
+      } catch (e) {
+        console.warn('Failed to fetch QR assets:', e);
+        return [];
+      }
+    },
+    staleTime: 60000
   });
 
   const { data: images = [] } = useQuery({
     queryKey: ['images'],
-    queryFn: () => base44.entities.InteractiveImage.list()
+    queryFn: async () => {
+      try {
+        return await base44.entities.InteractiveImage.list();
+      } catch (e) {
+        console.warn('Failed to fetch images:', e);
+        return [];
+      }
+    },
+    staleTime: 60000
   });
 
   // Save config to localStorage
