@@ -498,7 +498,9 @@ function OverviewTab({ user, threatDetection }) {
       <ThreatSummaryWidget 
         threats={threatDetection.threats}
         isScanning={threatDetection.isScanning}
-        onViewAll={() => {}}
+        isLoading={threatDetection.isLoading}
+        lastScanTime={threatDetection.lastScanTime}
+        onViewAll={() => setActiveTab('threats')}
       />
 
       {/* Activity & Quick Actions */}
