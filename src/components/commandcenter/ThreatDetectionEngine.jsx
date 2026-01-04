@@ -527,11 +527,14 @@ export function useThreatDetection(user) {
     config,
     setConfig,
     isScanning,
+    isLoading: loadingLogs || loadingKeys,
+    lastScanTime,
     runAnalysis,
     dismissThreat,
     handleAction,
     threatCount: threats.length,
-    criticalCount: threats.filter(t => THREAT_TYPES[t.type]?.severity === 'critical').length
+    criticalCount: threats.filter(t => THREAT_TYPES[t.type]?.severity === 'critical').length,
+    highCount: threats.filter(t => THREAT_TYPES[t.type]?.severity === 'high').length
   };
 }
 
