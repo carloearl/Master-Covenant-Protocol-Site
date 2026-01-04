@@ -539,38 +539,50 @@ export function useThreatDetection(user) {
 }
 
 // Threat Summary Widget
-export function ThreatSummaryWidget({ threats, isScanning, onViewAll }) {
-  const criticalCount = threats.filter(t => THREAT_TYPES[t.type]?.severity === 'critical').length;
-  const highCount = threats.filter(t => THREAT_TYPES[t.type]?.severity === 'high').length;
+export function ThreatSummaryWidget({ threats, isScanning, isLoading, lastScanTime, onViewAll }) {
+  const criticalCount = (threats || []).filter(t => THREAT_TYPES[t.type]?.severity === 'critical').length;
+  const highCount = (threats || []).filter(t => THREAT_TYPES[t.type]?.severity === 'high').length;
+  const mediumCount = (threats || []).filter(t => THREAT_TYPES[t.type]?.severity === 'medium').length;
 
   return (
-    <Card className={`bg-slate-900/50 border-slate-800 ${criticalCount > 0 ? 'border-red-500/50' : ''}`}>
+    <Card className={`bg-slate-900/50 border-slate-800 ${criticalCount > 0 ? 'border-red-500/50 animate-pulse' : ''}`}>
       <CardContent className="p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <ShieldAlert className={`w-5 h-5 ${criticalCount > 0 ? 'text-red-400' : 'text-green-400'}`} />
-            <span className="text-sm font-semibold text-white">Threat Detection</span>
+            <ShieldAlert className={`w-5 h-5 ${criticalCount > 0 ? 'text-red-400' : highCount > 0 ? 'text-orange-400' : 'text-green-400'}`} />
+            <span className="text-sm font-semibold text-white">AI Threat Detection</span>
           </div>
-          {isScanning && (
-            <div className="flex items-center gap-1 text-xs text-cyan-400">
-              <Radio className="w-3 h-3 animate-pulse" />
-              Scanning
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            {isLoading ? (
+              <div className="flex items-center gap-1 text-xs text-slate-400">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                Loading
+              </div>
+            ) : isScanning ? (
+              <div className="flex items-center gap-1 text-xs text-cyan-400">
+                <Radio className="w-3 h-3 animate-pulse" />
+                Scanning
+              </div>
+            ) : lastScanTime ? (
+              <span className="text-[10px] text-slate-500">
+                Last: {lastScanTime.toLocaleTimeString()}
+              </span>
+            ) : null}
+          </div>
         </div>
         
-        {threats.length === 0 ? (
+        {(!threats || threats.length === 0) ? (
           <div className="flex items-center gap-2 text-green-400">
             <ShieldCheck className="w-4 h-4" />
             <span className="text-sm">No active threats</span>
           </div>
         ) : (
           <div className="space-y-2">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 flex-wrap">
               {criticalCount > 0 && (
                 <div className="flex items-center gap-1">
                   <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                  <span className="text-xs text-red-400">{criticalCount} Critical</span>
+                  <span className="text-xs text-red-400 font-bold">{criticalCount} Critical</span>
                 </div>
               )}
               {highCount > 0 && (
@@ -579,15 +591,20 @@ export function ThreatSummaryWidget({ threats, isScanning, onViewAll }) {
                   <span className="text-xs text-orange-400">{highCount} High</span>
                 </div>
               )}
+              {mediumCount > 0 && (
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                  <span className="text-xs text-yellow-400">{mediumCount} Medium</span>
+                </div>
+              )}
               <div className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-yellow-500" />
                 <span className="text-xs text-slate-400">{threats.length} Total</span>
               </div>
             </div>
             <Button 
               size="sm" 
               variant="outline" 
-              className="w-full mt-2 border-slate-700 text-xs"
+              className="w-full mt-2 border-slate-700 text-xs hover:border-cyan-500/50 hover:bg-cyan-500/10"
               onClick={onViewAll}
             >
               View All Threats
