@@ -33,6 +33,8 @@ import QrPreviewSidebar from './QrPreviewSidebar';
 import QrVaultPanel from './QrVaultPanel';
 import AIInsightsPanel from './AIInsightsPanel';
 import AiArtPanel from './AiArtPanel';
+import CollaborationPanel from './CollaborationPanel';
+import ShareDialog from './ShareDialog';
 
 
 export default function QrStudio({ initialTab = 'create' }) {
@@ -43,31 +45,61 @@ export default function QrStudio({ initialTab = 'create' }) {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [collabSessionId, setCollabSessionId] = useState(null);
   const [activeCollaborators, setActiveCollaborators] = useState([]);
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  const [sharedUsers, setSharedUsers] = useState([]); // In real app, fetch from asset
 
-  // Polling for collaboration (Simulated Real-time)
+  // Polling for collaboration (Real-time Simulation via Function)
   useEffect(() => {
     if (!collabSessionId) return;
     
-    const interval = setInterval(async () => {
-      // In real app, fetch session from DB
-      // const session = await base44.entities.CollaborationSession.get(collabSessionId);
-      // setQrData(session.currentData);
-      // setActiveCollaborators(session.activeUsers);
-      console.log("Polling collab session:", collabSessionId);
-    }, 5000);
-    
+    const pollSession = async () => {
+      try {
+        const { state, users } = await base44.functions.invoke('collaborationOps', {
+            action: 'sync',
+            data: { projectId: collabSessionId, changes: {} } // Just heartbeat/fetch
+        }).then(res => res.data);
+        
+        if (state) setQrData(prev => ({ ...prev, ...state }));
+        if (users) setActiveCollaborators(users);
+      } catch (err) {
+        console.error("Collab sync error:", err);
+      }
+    };
+
+    const interval = setInterval(pollSession, 3000); // 3s polling
     return () => clearInterval(interval);
   }, [collabSessionId]);
 
+  // Push changes when qrData updates (if session active)
+  useEffect(() => {
+    if (collabSessionId && qrGenerated) { // Only push if we have a valid session and user interaction
+       const pushChanges = async () => {
+          try {
+             await base44.functions.invoke('collaborationOps', {
+                action: 'sync',
+                data: { projectId: collabSessionId, changes: qrData }
+             });
+          } catch(e) { console.error("Failed to push changes", e); }
+       };
+       // Debounce this in production
+       const timer = setTimeout(pushChanges, 1000);
+       return () => clearTimeout(timer);
+    }
+  }, [qrData, collabSessionId, qrGenerated]);
+
   const startCollaboration = async () => {
     try {
-      const sessionId = `collab_${Date.now()}`;
-      setCollabSessionId(sessionId);
-      toast.success("Collaboration session started! ID: " + sessionId);
-      // Create session in DB
-      // await base44.entities.CollaborationSession.create(...)
+      const projectId = codeId || `draft_${Date.now()}`;
+      const { sessionId } = await base44.functions.invoke('collaborationOps', {
+         action: 'join',
+         data: { projectId, initialState: qrData }
+      }).then(res => res.data);
+
+      setCollabSessionId(projectId);
+      toast.success("Live collaboration session active");
+      setShowShareDialog(true); // Prompt to invite others
     } catch(e) {
-      toast.error("Failed to start session");
+      toast.error("Failed to start session: " + e.message);
     }
   };
 
@@ -574,6 +606,21 @@ export default function QrStudio({ initialTab = 'create' }) {
       {/* Header */}
       <div className="border-b border-cyan-500/20 glyph-glass-dark sticky top-0 z-50 shadow-2xl glyph-glow">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+          {collabSessionId && (
+             <CollaborationPanel 
+                activeUsers={activeCollaborators} 
+                isConnected={true} 
+             />
+          )}
+
+          <ShareDialog 
+             open={showShareDialog} 
+             onOpenChange={setShowShareDialog}
+             assetName={qrType}
+             sharedWith={sharedUsers}
+             onInvite={(email) => setSharedUsers(prev => [...prev, email])}
+          />
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex flex-col space-y-2">
               <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center gap-3">
