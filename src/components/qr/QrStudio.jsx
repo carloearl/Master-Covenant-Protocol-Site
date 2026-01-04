@@ -31,6 +31,7 @@ import { generateSHA256, performStaticURLChecks } from '@/components/utils/secur
 import { useQrPreviewStorage } from './QrPreviewStorage';
 import QrPreviewSidebar from './QrPreviewSidebar';
 import QrVaultPanel from './QrVaultPanel';
+import AIInsightsPanel from './AIInsightsPanel';
 
 
 export default function QrStudio({ initialTab = 'create' }) {
@@ -886,6 +887,11 @@ export default function QrStudio({ initialTab = 'create' }) {
               {/* Preview Sidebar - Right Side */}
               {currentUser && (
                 <div className="w-full xl:w-72 space-y-4">
+                  <AIInsightsPanel 
+                    qrType={qrType} 
+                    qrData={qrData} 
+                    design={customization} 
+                  />
                   <QrPreviewSidebar
                     previews={previews}
                     loading={previewsLoading}
