@@ -1,8 +1,19 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Sparkles, Send, Loader2, Volume2 } from "lucide-react";
+import { Sparkles, Send, Loader2, Volume2, RotateCcw } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { PERSONAS } from '../config';
+import FeedbackButtons from './FeedbackButtons';
+import SuggestionChips from './SuggestionChips';
+import { 
+  detectTopic, 
+  loadMemory, 
+  trackTopic, 
+  getPersonalizedGreeting,
+  loadChatHistory,
+  saveChatHistory,
+  getSessionId
+} from '../logic/memoryService';
 
 // 🎙️ AURORA LISTEN BUTTON — Plays TTS from agent response
 function ListenButton({ text }) {
@@ -13,7 +24,6 @@ function ListenButton({ text }) {
   const handleListen = async () => {
     if (loading || playing) return;
     
-    // Stop any existing audio
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
@@ -29,7 +39,6 @@ function ListenButton({ text }) {
       if (data.speak?.enabled) {
         let audioUrl;
         
-        // Handle base64 audio
         if (data.speak.audioBase64) {
           const audioData = atob(data.speak.audioBase64);
           const audioArray = new Uint8Array(audioData.length);
@@ -38,9 +47,7 @@ function ListenButton({ text }) {
           }
           const blob = new Blob([audioArray], { type: data.speak.mimeType || 'audio/mpeg' });
           audioUrl = URL.createObjectURL(blob);
-        } 
-        // Handle direct URL
-        else if (data.speak.audioUrl) {
+        } else if (data.speak.audioUrl) {
           audioUrl = data.speak.audioUrl;
         }
 
@@ -58,9 +65,7 @@ function ListenButton({ text }) {
             audioRef.current = null;
           };
 
-          // Speed up playback for more natural, energetic voice
           audio.playbackRate = 1.25;
-
           setPlaying(true);
           setLoading(false);
           await audio.play();
@@ -77,7 +82,7 @@ function ListenButton({ text }) {
     <button
       onClick={handleListen}
       disabled={loading}
-      className="mt-3 text-xs bg-blue-600/30 hover:bg-blue-600/50 disabled:opacity-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 border border-blue-400/30 group"
+      className="text-xs bg-blue-600/30 hover:bg-blue-600/50 disabled:opacity-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 border border-blue-400/30 group"
       style={{ boxShadow: '0 0 10px rgba(37, 99, 235, 0.2)' }}
       aria-label="Listen with Aurora voice"
     >
@@ -95,27 +100,88 @@ export default function GlyphBotJr() {
   const jrPersona = PERSONAS.find(p => p.id === "glyphbot_jr") || PERSONAS[4];
   
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: "assistant", text: "Hi there! I'm GlyphBot Junior! 🌟 How can I help you today?", timestamp: Date.now() }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [memory, setMemory] = useState(null);
+  const [lastTopic, setLastTopic] = useState(null);
+  const [sessionId] = useState(() => getSessionId());
   const messagesEndRef = useRef(null);
+  const initializedRef = useRef(false);
 
-  // Auto-scroll on new messages
-  React.useEffect(() => {
+  // Load user, memory, and history on mount
+  useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
+    (async () => {
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (isAuth) {
+          const user = await base44.auth.me();
+          setCurrentUser(user);
+          
+          // Load persistent memory
+          const userMemory = await loadMemory(user.email);
+          setMemory(userMemory);
+          
+          // Set last topic from memory
+          if (userMemory?.topics_discussed?.length) {
+            setLastTopic(userMemory.topics_discussed[userMemory.topics_discussed.length - 1]);
+          }
+          
+          // Load chat history
+          const history = loadChatHistory(sessionId);
+          if (history.length > 0) {
+            setMessages(history);
+          } else {
+            const greeting = getPersonalizedGreeting(userMemory);
+            setMessages([{ role: "assistant", text: greeting, timestamp: Date.now() }]);
+          }
+        } else {
+          setMessages([{ 
+            role: "assistant", 
+            text: "Hi there! I'm GlyphBot Junior! 🌟 How can I help you today?", 
+            timestamp: Date.now() 
+          }]);
+        }
+      } catch (err) {
+        console.error('[GlyphBot] Init error:', err);
+        setMessages([{ 
+          role: "assistant", 
+          text: "Hi there! I'm GlyphBot Junior! 🌟 How can I help you today?", 
+          timestamp: Date.now() 
+        }]);
+      }
+    })();
+  }, [sessionId]);
+
+  // Auto-scroll and save history
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (messages.length > 0) {
+      saveChatHistory(sessionId, messages);
+    }
+  }, [messages, sessionId]);
 
+  const handleSend = async (customMessage) => {
+    const userMessage = (customMessage || input).trim();
+    if (!userMessage || loading) return;
 
-
-  const handleSend = async () => {
-    if (!input.trim() || loading) return;
-
-    const userMessage = input.trim();
     setInput("");
-    setMessages(prev => [...prev, { role: "user", text: userMessage, timestamp: Date.now() }]);
+    const userMsg = { role: "user", text: userMessage, timestamp: Date.now() };
+    setMessages(prev => [...prev, userMsg]);
     setLoading(true);
+
+    // Detect and track topic
+    const detectedTopic = detectTopic(userMessage);
+    if (detectedTopic) {
+      setLastTopic(detectedTopic);
+      if (currentUser?.email) {
+        trackTopic(currentUser.email, detectedTopic);
+      }
+    }
 
     try {
       const { QR_KNOWLEDGE_BASE } = await import('@/components/qr/QrKnowledgeBase');
@@ -135,12 +201,22 @@ Navigation Questions:
 ${sitemapKnowledge.commonQuestions.map(q => `Q: ${q.q}\nA: ${q.a}`).join('\n')}
 `;
 
+      // Include memory context
+      const memoryContext = memory ? `
+User Context:
+- Has visited ${memory.interaction_count || 0} times
+- Recent interests: ${memory.topics_discussed?.slice(-3).join(', ') || 'none yet'}
+- Favorite features: ${memory.favorite_features?.join(', ') || 'exploring'}
+` : '';
+
       const conversationHistory = messages.map(msg => ({
         role: msg.role,
         content: msg.text
       })).concat([{ role: "user", content: userMessage }]);
 
       const systemPrompt = `${jrPersona.system}
+
+${memoryContext}
 
 QR Studio Knowledge Base:
 ${QR_KNOWLEDGE_BASE}
@@ -153,12 +229,16 @@ ${faqContext}
 
 ${sitemapContext}
 
-When answering questions, use the knowledge bases to provide accurate information about GlyphLock features, pricing, navigation, and tools. Be friendly, helpful, and explain things simply!`;
+IMPORTANT: After answering, if relevant, suggest a next step the user might want to take. For example:
+- After QR discussion: "Want to try our Image Lab next?"
+- After pricing questions: "Ready to start your free trial?"
+- After security topics: "Would you like me to explain our encryption?"
 
-      // Call Backend Agent
+Be friendly, helpful, and explain things simply!`;
+
       const { data } = await base44.functions.invoke('glyphBotJrChat', {
         action: 'chat',
-        messages: conversationHistory, // Pass history directly
+        messages: conversationHistory,
         systemPrompt: systemPrompt
       });
 
@@ -166,7 +246,7 @@ When answering questions, use the knowledge bases to provide accurate informatio
         role: "assistant", 
         text: data.text, 
         timestamp: Date.now(),
-        // Store speak instruction if needed, though usually false for new chat
+        userQuery: userMessage,
         speak: data.speak
       };
       
@@ -181,6 +261,16 @@ When answering questions, use the knowledge bases to provide accurate informatio
     }
 
     setLoading(false);
+  };
+
+  const handleSuggestionClick = (prompt) => {
+    handleSend(prompt);
+  };
+
+  const clearHistory = () => {
+    const greeting = getPersonalizedGreeting(memory);
+    setMessages([{ role: "assistant", text: greeting, timestamp: Date.now() }]);
+    saveChatHistory(sessionId, []);
   };
 
   if (!isOpen) {
@@ -234,15 +324,26 @@ When answering questions, use the knowledge bases to provide accurate informatio
               </div>
               <div>
                 <h1 className="text-lg font-bold text-white">GlyphBot Jr</h1>
-                <p className="text-xs text-blue-200">24/7 Helper 💠</p>
+                <p className="text-xs text-blue-200">
+                  {memory?.interaction_count > 0 ? `${memory.interaction_count} chats 💠` : '24/7 Helper 💠'}
+                </p>
               </div>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="w-8 h-8 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 flex items-center justify-center text-white transition-colors"
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={clearHistory}
+                className="w-8 h-8 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 flex items-center justify-center text-white/60 hover:text-white transition-colors"
+                title="Clear chat"
+              >
+                <RotateCcw className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="w-8 h-8 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 flex items-center justify-center text-white transition-colors"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -277,11 +378,27 @@ When answering questions, use the knowledge bases to provide accurate informatio
               </ReactMarkdown>
               
               {msg.role === "assistant" && (
-                <ListenButton text={msg.text} />
+                <div className="flex items-center gap-2 mt-3 flex-wrap">
+                  <ListenButton text={msg.text} />
+                  <FeedbackButtons 
+                    messageText={msg.text} 
+                    userQuery={msg.userQuery}
+                    sessionId={sessionId}
+                  />
+                </div>
               )}
             </div>
           </div>
         ))}
+        
+        {/* Suggestion chips after last assistant message */}
+        {!loading && messages.length > 0 && messages[messages.length - 1]?.role === "assistant" && (
+          <SuggestionChips 
+            lastTopic={lastTopic} 
+            onSuggestionClick={handleSuggestionClick}
+          />
+        )}
+        
         {loading && (
           <div className="flex justify-start">
             <div className="bg-blue-950/80 backdrop-blur rounded-2xl px-5 py-3 shadow-lg flex items-center gap-2 border border-blue-400/30" style={{ boxShadow: '0 0 20px rgba(37, 99, 235, 0.3)' }}>
@@ -306,7 +423,7 @@ When answering questions, use the knowledge bases to provide accurate informatio
             style={{ fontSize: "16px" }}
           />
           <button
-            onClick={handleSend}
+            onClick={() => handleSend()}
             disabled={loading || !input.trim()}
             className="bg-gradient-to-br from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 text-white rounded-xl px-6 py-3 font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all min-h-[52px] min-w-[80px] flex items-center justify-center"
             style={{ boxShadow: '0 0 20px rgba(37, 99, 235, 0.4)' }}
