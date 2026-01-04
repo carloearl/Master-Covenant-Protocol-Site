@@ -53,8 +53,7 @@ ${sitemapKnowledge.commonQuestions.map(q => `Q: ${q.q}\nA: ${q.a}`).join('\n')}
         content: msg.text
       })).concat([{ role: "user", content: userMessage }]);
 
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `${jrPersona.system}
+      const systemPrompt = `${jrPersona.system}
 
 QR Studio Knowledge Base:
 ${QR_KNOWLEDGE_BASE}
@@ -67,17 +66,21 @@ ${faqContext}
 
 ${sitemapContext}
 
-Conversation history:
-${conversationHistory.map(m => `${m.role}: ${m.content}`).join('\n')}
+When answering questions, use the knowledge bases to provide accurate information about GlyphLock features, pricing, navigation, and tools. Be friendly, helpful, and explain things simply!`;
 
-When answering questions, use the knowledge bases to provide accurate information about GlyphLock features, pricing, navigation, and tools. Be friendly, helpful, and explain things simply!`,
-        add_context_from_internet: false
+      // Call Backend Agent
+      const { data } = await base44.functions.invoke('glyphBotJrChat', {
+        action: 'chat',
+        messages: conversationHistory, // Pass history directly
+        systemPrompt: systemPrompt
       });
 
       const assistantMessage = { 
         role: "assistant", 
-        text: response, 
-        timestamp: Date.now() 
+        text: data.text, 
+        timestamp: Date.now(),
+        // Store speak instruction if needed, though usually false for new chat
+        speak: data.speak
       };
       
       setMessages(prev => [...prev, assistantMessage]);
@@ -188,9 +191,24 @@ When answering questions, use the knowledge bases to provide accurate informatio
               
               {msg.role === "assistant" && (
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent double trigger if data-attribute listener catches it
-                    speak(msg.text);
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    try {
+                      // Trigger agent "listen" action
+                      const { data } = await base44.functions.invoke('glyphBotJrChat', {
+                        action: 'listen',
+                        text: msg.text
+                      });
+                      
+                      // Execute speak instruction
+                      if (data.speak?.enabled) {
+                        speak(data.text);
+                      }
+                    } catch (err) {
+                      console.error("Listen action failed:", err);
+                      // Fallback just in case
+                      speak(msg.text);
+                    }
                   }}
                   className="mt-3 text-xs bg-blue-600/30 hover:bg-blue-600/50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 border border-blue-400/30 group"
                   style={{ boxShadow: '0 0 10px rgba(37, 99, 235, 0.2)' }}
