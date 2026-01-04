@@ -8,10 +8,10 @@
 export const NAV = [
   { label: "Home", href: "/", visibility: "public" },
   { label: "Solutions", href: "/Solutions", visibility: "public" },
+  { label: "Services", href: "/Services", visibility: "public" },
   { label: "Dream Team", href: "/DreamTeam", visibility: "public" },
   { label: "GlyphBot", href: "/GlyphBot", visibility: "public" },
-  { label: "Media Hub", href: "/VideoUpload", visibility: "public" },
-  { label: "Command Center", href: "/CommandCenter", visibility: "public" }, // Accessible to users, but protected
+  { label: "Command Center", href: "/CommandCenter", visibility: "public" },
   { label: "Protocol Verification", href: "/Consultation", visibility: "public" }
 ];
 
@@ -22,6 +22,7 @@ export const NAV_SECTIONS = [
     items: [
       { label: "About Us", page: "About", visibility: "public" },
       { label: "Solutions", page: "Solutions", visibility: "public" },
+      { label: "Services", page: "Services", visibility: "public" },
       { label: "Founder Story", page: "AboutCarlo", visibility: "public" },
       { label: "Partners", page: "Partners", visibility: "public" },
       { label: "Contact", page: "Contact", visibility: "public" },
@@ -81,6 +82,7 @@ export const FOOTER_LINKS = {
   company: [
     { label: "About Us", page: "About", visibility: "public" },
     { label: "Solutions", page: "Solutions", visibility: "public" },
+    { label: "Services", page: "Services", visibility: "public" },
     { label: "Founder Story", page: "AboutCarlo", visibility: "public" },
     { label: "Partners", page: "Partners", visibility: "public" },
     { label: "Contact", page: "Contact", visibility: "public" },
