@@ -8,9 +8,16 @@ import { PERSONAS } from '../config';
 function ListenButton({ text }) {
   const [loading, setLoading] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const audioRef = useRef(null);
 
   const handleListen = async () => {
     if (loading || playing) return;
+    
+    // Stop any existing audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
     
     setLoading(true);
     try {
@@ -19,39 +26,54 @@ function ListenButton({ text }) {
         text: text
       });
 
-      if (data.speak?.enabled && data.speak?.audioBase64) {
-        // Convert base64 to audio blob and play
-        const audioData = atob(data.speak.audioBase64);
-        const audioArray = new Uint8Array(audioData.length);
-        for (let i = 0; i < audioData.length; i++) {
-          audioArray[i] = audioData.charCodeAt(i);
-        }
-        const blob = new Blob([audioArray], { type: data.speak.mimeType || 'audio/mpeg' });
-        const audioUrl = URL.createObjectURL(blob);
-        const audio = new Audio(audioUrl);
+      if (data.speak?.enabled) {
+        let audioUrl;
         
-        audio.onended = () => {
-          URL.revokeObjectURL(audioUrl);
-          setPlaying(false);
-        };
-        audio.onerror = () => {
-          setPlaying(false);
-        };
+        // Handle base64 audio
+        if (data.speak.audioBase64) {
+          const audioData = atob(data.speak.audioBase64);
+          const audioArray = new Uint8Array(audioData.length);
+          for (let i = 0; i < audioData.length; i++) {
+            audioArray[i] = audioData.charCodeAt(i);
+          }
+          const blob = new Blob([audioArray], { type: data.speak.mimeType || 'audio/mpeg' });
+          audioUrl = URL.createObjectURL(blob);
+        } 
+        // Handle direct URL
+        else if (data.speak.audioUrl) {
+          audioUrl = data.speak.audioUrl;
+        }
 
-        setPlaying(true);
-        await audio.play();
+        if (audioUrl) {
+          const audio = new Audio(audioUrl);
+          audioRef.current = audio;
+          
+          audio.onended = () => {
+            if (data.speak.audioBase64) URL.revokeObjectURL(audioUrl);
+            setPlaying(false);
+            audioRef.current = null;
+          };
+          audio.onerror = () => {
+            setPlaying(false);
+            audioRef.current = null;
+          };
+
+          setPlaying(true);
+          setLoading(false);
+          await audio.play();
+          return;
+        }
       }
     } catch (err) {
       console.error('[Aurora TTS] Failed:', err);
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   return (
     <button
       onClick={handleListen}
-      disabled={loading || playing}
+      disabled={loading}
       className="mt-3 text-xs bg-blue-600/30 hover:bg-blue-600/50 disabled:opacity-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 border border-blue-400/30 group"
       style={{ boxShadow: '0 0 10px rgba(37, 99, 235, 0.2)' }}
       aria-label="Listen with Aurora voice"
