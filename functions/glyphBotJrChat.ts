@@ -1,36 +1,10 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import OpenAI from 'npm:openai';
 
 /**
  * GLYPHBOT JR. — BASE44 AGENT HANDLER
- * Platform: Base44 + Wix Neural Engine 2026
- * Voice: Aurora (en-US-Neural2-F) — Neural Only
- * Security: PII sanitized, GDPR compliant, gesture-gated audio
+ * Voice: Aurora (en-US-Neural2-F via OpenAI Nova) — Neural Only
  */
-
-const QR_KNOWLEDGE_BASE = `QR Studio enables secure QR code generation with:
-- 90+ payload types (URL, WiFi, vCard, dynamic redirects)
-- Advanced customization (gradients, logos, patterns)
-- Security scanning (AI threat detection, phishing prevention)
-- Steganography (hide QR in images)
-- Analytics & tracking
-- Batch generation`;
-
-const IMAGE_LAB_KNOWLEDGE = {
-  features: [
-    "AI image generation with 20+ style presets",
-    "Interactive hotspot editor",
-    "Gallery management with tagging",
-    "Reference image upload",
-    "High-resolution export"
-  ]
-};
-
-const FAQ_CONTEXT = `GlyphLock is an enterprise security platform offering:
-- Quantum-resistant cryptography
-- Zero-trust verification protocols
-- AI-powered threat detection
-- Secure QR code generation
-- Steganographic image encoding`;
 
 Deno.serve(async (req) => {
     try {
@@ -39,82 +13,71 @@ Deno.serve(async (req) => {
         }
 
         const base44 = createClientFromRequest(req);
-        const { action, text, messages } = await req.json();
+        const { action, text, messages, systemPrompt } = await req.json();
 
-        // 🎯 LISTEN ACTION — Trigger speech replay
+        const openai = new OpenAI({
+            apiKey: Deno.env.get("OPENAI_API_KEY"),
+        });
+
+        // 🎯 LISTEN ACTION — Generate TTS audio and return
         if (action === 'listen') {
-            if (!text || text.length > 500) {
-                return Response.json({ error: 'Invalid text for speech' }, { status: 400 });
+            if (!text || text.length > 1000) {
+                return Response.json({ error: 'Invalid text' }, { status: 400 });
             }
 
+            // Generate Neural Audio (Aurora = Nova)
+            const mp3 = await openai.audio.speech.create({
+                model: "tts-1-hd",
+                voice: "nova",
+                input: text,
+                speed: 0.92
+            });
+
+            const buffer = await mp3.arrayBuffer();
+            const base64Audio = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+
             return Response.json({
-                text: '', // Empty to avoid duplicate display
+                text: text,
                 speak: {
-                    persona: 'Aurora',
                     enabled: true,
-                    autoPlay: false, // Gesture-safe
-                    text: text // Explicit text to speak
-                },
-                metadata: {
-                    source: 'glyphbot-jr',
-                    action: 'listen',
-                    version: 'aurora-v3.1'
+                    persona: 'Aurora',
+                    audioBase64: base64Audio,
+                    mimeType: 'audio/mpeg'
                 }
             });
         }
 
-        // 💬 CHAT ACTION — Generate response with knowledge base
-        const conversationContext = `You are GlyphBot Jr., a helpful AI assistant for GlyphLock.
-
-QR Studio Knowledge:
-${QR_KNOWLEDGE_BASE}
-
-Image Lab Knowledge:
-${JSON.stringify(IMAGE_LAB_KNOWLEDGE, null, 2)}
-
-FAQ Knowledge:
-${FAQ_CONTEXT}
-
-Be friendly, concise, and helpful. Use the knowledge bases to answer questions accurately.`;
-
-        // Build conversation with system context
+        // 💬 CHAT ACTION — Generate response
         const conversation = [
-            { role: 'system', content: conversationContext },
+            { role: 'system', content: systemPrompt || 'You are GlyphBot Jr., a helpful AI assistant.' },
             ...(messages || []).map(m => ({
                 role: m.role,
                 content: m.text || m.content
             }))
         ];
 
-        // Use Base44's InvokeLLM (respects quota, logging, compliance)
-        const response = await base44.integrations.Core.InvokeLLM({
-            prompt: conversation.map(m => `${m.role}: ${m.content}`).join('\n\n'),
-            add_context_from_internet: false
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages: conversation,
+            max_tokens: 500
         });
 
-        // 🎙️ Return with Aurora speech capability
+        const replyText = completion.choices[0].message.content;
+
         return Response.json({
-            text: response,
+            text: replyText,
             speak: {
-                persona: 'Aurora',
-                enabled: false, // Default off for new messages
-                autoPlay: false
-            },
-            metadata: {
-                source: 'glyphbot-jr',
-                version: 'aurora-v3.1',
-                timestamp: new Date().toISOString()
+                enabled: false,
+                persona: 'Aurora'
             }
         });
 
     } catch (error) {
         console.error('[GlyphBot Jr. Error]:', error.message);
-        
-        // Graceful degradation
         return Response.json({
-            text: "I'm having trouble right now. Please try again in a moment!",
+            text: "Sorry, I'm having trouble right now. Please try again!",
             speak: { enabled: false },
             error: true
-        }, { status: 200 }); // Return 200 to avoid breaking UI
+        }, { status: 200 });
     }
 });

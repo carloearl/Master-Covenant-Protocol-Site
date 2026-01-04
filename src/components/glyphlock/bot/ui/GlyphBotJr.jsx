@@ -3,7 +3,68 @@ import { base44 } from "@/api/base44Client";
 import { Sparkles, Send, Loader2, Volume2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { PERSONAS } from '../config';
-import { speak, isGenerating } from '@/components/utils/auroraVoice';
+
+// 🎙️ AURORA LISTEN BUTTON — Plays TTS from agent response
+function ListenButton({ text }) {
+  const [loading, setLoading] = useState(false);
+  const [playing, setPlaying] = useState(false);
+
+  const handleListen = async () => {
+    if (loading || playing) return;
+    
+    setLoading(true);
+    try {
+      const { data } = await base44.functions.invoke('glyphBotJrChat', {
+        action: 'listen',
+        text: text
+      });
+
+      if (data.speak?.enabled && data.speak?.audioBase64) {
+        // Convert base64 to audio blob and play
+        const audioData = atob(data.speak.audioBase64);
+        const audioArray = new Uint8Array(audioData.length);
+        for (let i = 0; i < audioData.length; i++) {
+          audioArray[i] = audioData.charCodeAt(i);
+        }
+        const blob = new Blob([audioArray], { type: data.speak.mimeType || 'audio/mpeg' });
+        const audioUrl = URL.createObjectURL(blob);
+        const audio = new Audio(audioUrl);
+        
+        audio.onended = () => {
+          URL.revokeObjectURL(audioUrl);
+          setPlaying(false);
+        };
+        audio.onerror = () => {
+          setPlaying(false);
+        };
+
+        setPlaying(true);
+        await audio.play();
+      }
+    } catch (err) {
+      console.error('[Aurora TTS] Failed:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleListen}
+      disabled={loading || playing}
+      className="mt-3 text-xs bg-blue-600/30 hover:bg-blue-600/50 disabled:opacity-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 border border-blue-400/30 group"
+      style={{ boxShadow: '0 0 10px rgba(37, 99, 235, 0.2)' }}
+      aria-label="Listen with Aurora voice"
+    >
+      {loading ? (
+        <Loader2 className="w-3 h-3 animate-spin" />
+      ) : (
+        <Volume2 className="w-3 h-3 group-active:scale-95 transition-transform" />
+      )}
+      {playing ? '▶️ Playing' : loading ? 'Loading...' : '🎙️ Aurora'}
+    </button>
+  );
+}
 
 export default function GlyphBotJr() {
   const jrPersona = PERSONAS.find(p => p.id === "glyphbot_jr") || PERSONAS[4];
@@ -190,32 +251,7 @@ When answering questions, use the knowledge bases to provide accurate informatio
               </ReactMarkdown>
               
               {msg.role === "assistant" && (
-                <button
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                    try {
-                      // Trigger Base44 agent "listen" action (Aurora replay)
-                      const { data } = await base44.functions.invoke('glyphBotJrChat', {
-                        action: 'listen',
-                        text: msg.text
-                      });
-                      
-                      // Execute Aurora speech if authorized by agent
-                      if (data.speak?.enabled && data.speak?.text) {
-                        speak(data.speak.text);
-                      }
-                    } catch (err) {
-                      console.error('[GlyphBot Jr.] Listen failed:', err);
-                    }
-                  }}
-                  disabled={isGenerating()}
-                  className="mt-3 text-xs bg-blue-600/30 hover:bg-blue-600/50 disabled:opacity-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 border border-blue-400/30 group"
-                  style={{ boxShadow: '0 0 10px rgba(37, 99, 235, 0.2)' }}
-                  aria-label="Listen with Aurora voice"
-                >
-                  <Volume2 className="w-3 h-3 group-active:scale-95 transition-transform" />
-                  🎙️ Aurora
-                </button>
+                <ListenButton text={msg.text} />
               )}
             </div>
           </div>
