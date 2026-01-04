@@ -534,7 +534,7 @@ export default function useTTS(options = {}) {
     setIsLoading(false);
     console.warn('[TTS] All TTS methods failed');
     return false;
-  }, [provider, stop, playWithOpenAI, playWithWebSpeech, currentSettings]);
+  }, [provider, stop, playWithGlyphVoice, playWithWebSpeech, currentSettings]);
 
   const testTTS = useCallback(async () => {
     return playText('Hello! This is GlyphBot, your elite security assistant.');
