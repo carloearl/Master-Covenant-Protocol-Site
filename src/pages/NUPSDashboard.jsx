@@ -24,6 +24,8 @@ const VoucherPrinter4Bill = lazy(() => import("../components/nups/VoucherPrinter
 const VoucherPrinter5Sheet = lazy(() => import("../components/nups/VoucherPrinter5Sheet.jsx"));
 const BatchManagement = lazy(() => import("../components/nups/BatchManagement.jsx"));
 const TransactionHistory = lazy(() => import("../components/nups/TransactionHistory.jsx"));
+const AISalesReports = lazy(() => import("../components/nups/AISalesReports.jsx"));
+const AIStaffPerformance = lazy(() => import("../components/nups/AIStaffPerformance.jsx"));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center py-12">
@@ -466,7 +468,22 @@ export default function NUPSDashboard() {
             {/* Reports Tab (Admin Only) */}
             {isAdmin && (
               <TabsContent value="reports">
-                <ZReportGenerator user={user} />
+                <Tabs defaultValue="zreport" className="space-y-4">
+                  <TabsList className="bg-slate-900 border border-slate-700">
+                    <TabsTrigger value="zreport">Z-Reports</TabsTrigger>
+                    <TabsTrigger value="sales">AI Sales Analytics</TabsTrigger>
+                    <TabsTrigger value="staff">Staff Performance</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="zreport">
+                    <ZReportGenerator user={user} />
+                  </TabsContent>
+                  <TabsContent value="sales">
+                    <AISalesReports />
+                  </TabsContent>
+                  <TabsContent value="staff">
+                    <AIStaffPerformance />
+                  </TabsContent>
+                </Tabs>
               </TabsContent>
             )}
           </Suspense>
