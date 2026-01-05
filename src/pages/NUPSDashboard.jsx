@@ -1,6 +1,6 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -36,6 +36,243 @@ const LoadingFallback = () => (
     <Loader2 className="w-8 h-8 animate-spin text-cyan-400" />
   </div>
 );
+
+// VIP Members Management Tab
+function VIPMembersTab() {
+  const queryClient = useQueryClient();
+  const [showForm, setShowForm] = React.useState(false);
+  const [editingMember, setEditingMember] = React.useState(null);
+  const [selectedMember, setSelectedMember] = React.useState(null);
+  const [viewMode, setViewMode] = React.useState('list'); // list | profile | contract
+
+  const { data: vipMembers = [], refetch } = useQuery({
+    queryKey: ['vip-members-all'],
+    queryFn: () => base44.entities.VIPGuest.list('-created_date', 200)
+  });
+
+  const { data: allTransactions = [] } = useQuery({
+    queryKey: ['all-transactions'],
+    queryFn: () => base44.entities.POSTransaction.list('-created_date', 500)
+  });
+
+  const { data: entertainers = [] } = useQuery({
+    queryKey: ['entertainers-list'],
+    queryFn: () => base44.entities.Entertainer.list()
+  });
+
+  const { data: roomSessions = [] } = useQuery({
+    queryKey: ['all-room-sessions'],
+    queryFn: () => base44.entities.VIPRoom.list('-created_date', 200)
+  });
+
+  const todayDate = new Date().toDateString();
+  const activeMembers = vipMembers.filter(m => m.status === 'in_building');
+
+  const getMemberStats = (member) => {
+    const memberTxns = allTransactions.filter(t => 
+      t.customer_id === member.id || t.notes?.toLowerCase().includes(member.guest_name?.toLowerCase())
+    );
+    const todayTxns = memberTxns.filter(t => new Date(t.created_date).toDateString() === todayDate);
+    const todayRooms = roomSessions.filter(r => 
+      r.guest_name?.toLowerCase().includes(member.guest_name?.toLowerCase()) &&
+      new Date(r.start_time).toDateString() === todayDate
+    );
+    return {
+      todaySpend: todayTxns.reduce((sum, t) => sum + (t.total || 0), 0),
+      lifetimeSpend: memberTxns.reduce((sum, t) => sum + (t.total || 0), 0),
+      todayTransactions: todayTxns,
+      todayRooms,
+      totalVisits: memberTxns.length
+    };
+  };
+
+  if (showForm || editingMember) {
+    return (
+      <Card className="bg-slate-900/50 border-cyan-500/30">
+        <CardHeader>
+          <CardTitle className="text-white">
+            {editingMember ? 'Edit VIP Member' : 'Register New VIP Member'}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <VIPMemberForm 
+            guest={editingMember}
+            onSave={() => {
+              setShowForm(false);
+              setEditingMember(null);
+              refetch();
+            }}
+            onCancel={() => {
+              setShowForm(false);
+              setEditingMember(null);
+            }}
+          />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (selectedMember && viewMode === 'profile') {
+    const stats = getMemberStats(selectedMember);
+    return (
+      <div className="space-y-6">
+        <Button variant="outline" onClick={() => setSelectedMember(null)} className="border-slate-600">
+          ← Back to Members
+        </Button>
+        <div className="grid lg:grid-cols-2 gap-6">
+          <VIPReceiptCard 
+            guest={selectedMember}
+            transactions={stats.todayTransactions}
+            roomSessions={stats.todayRooms}
+            entertainers={entertainers}
+            date={new Date()}
+          />
+          <Card className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-purple-500/30">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Brain className="w-5 h-5 text-purple-400" />
+                AI Recommendations
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <VIPAIRecommendations 
+                guest={selectedMember}
+                todaySpend={stats.todaySpend}
+                lifetimeSpend={stats.lifetimeSpend}
+                roomSessions={stats.todayRooms}
+              />
+            </CardContent>
+          </Card>
+        </div>
+        <VIPContractCard guest={selectedMember} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <Crown className="w-6 h-6 text-amber-400" />
+            VIP Member Management
+          </h2>
+          <p className="text-sm text-slate-400">{vipMembers.length} total members • {activeMembers.length} currently here</p>
+        </div>
+        <Button onClick={() => setShowForm(true)} className="bg-gradient-to-r from-amber-500 to-pink-500">
+          <Plus className="w-4 h-4 mr-2" />
+          Register VIP
+        </Button>
+      </div>
+
+      {/* Active Members Highlight */}
+      {activeMembers.length > 0 && (
+        <Card className="bg-gradient-to-r from-green-900/30 to-cyan-900/30 border-green-500/30">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-green-400">Currently In Building</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {activeMembers.map(m => (
+                <Badge 
+                  key={m.id} 
+                  className="bg-green-500/20 text-green-300 cursor-pointer hover:bg-green-500/30"
+                  onClick={() => { setSelectedMember(m); setViewMode('profile'); }}
+                >
+                  {m.display_name || m.guest_name} • {m.current_location}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Members Grid */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {vipMembers.map(member => {
+          const stats = getMemberStats(member);
+          return (
+            <Card 
+              key={member.id} 
+              className={`bg-slate-900/50 border-slate-700 hover:border-amber-500/50 transition-all cursor-pointer ${
+                member.status === 'in_building' ? 'ring-1 ring-green-500/50' : ''
+              }`}
+              onClick={() => { setSelectedMember(member); setViewMode('profile'); }}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                      member.vip_tier === 'Diamond' ? 'bg-gradient-to-br from-cyan-400 to-blue-500' :
+                      member.vip_tier === 'Platinum' ? 'bg-gradient-to-br from-slate-300 to-slate-500' :
+                      member.vip_tier === 'Gold' ? 'bg-gradient-to-br from-amber-400 to-yellow-500' :
+                      member.vip_tier === 'Silver' ? 'bg-gradient-to-br from-slate-400 to-slate-600' :
+                      'bg-gradient-to-br from-slate-600 to-slate-800'
+                    }`}>
+                      <Crown className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-white">{member.display_name || member.guest_name}</h3>
+                      <p className="text-xs text-slate-400">{member.membership_number || 'No ID'}</p>
+                    </div>
+                  </div>
+                  {member.status === 'in_building' && (
+                    <Badge className="bg-green-500/20 text-green-400 text-xs">HERE</Badge>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2 mb-3">
+                  <Badge className={
+                    member.vip_tier === 'Diamond' ? 'bg-cyan-500/20 text-cyan-300' :
+                    member.vip_tier === 'Platinum' ? 'bg-slate-500/20 text-slate-300' :
+                    member.vip_tier === 'Gold' ? 'bg-amber-500/20 text-amber-300' :
+                    member.vip_tier === 'Silver' ? 'bg-slate-400/20 text-slate-300' :
+                    'bg-slate-600/20 text-slate-400'
+                  }>
+                    {member.vip_tier || 'Standard'}
+                  </Badge>
+                  {member.contract_signed && (
+                    <Badge className="bg-purple-500/20 text-purple-400 text-xs">Contract ✓</Badge>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div>
+                    <p className="text-slate-500 text-xs">Today</p>
+                    <p className="text-green-400 font-medium">${stats.todaySpend.toFixed(0)}</p>
+                  </div>
+                  <div>
+                    <p className="text-slate-500 text-xs">Lifetime</p>
+                    <p className="text-amber-400 font-medium">${stats.lifetimeSpend.toFixed(0)}</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 mt-3 pt-3 border-t border-slate-700">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="flex-1 text-xs h-8"
+                    onClick={(e) => { e.stopPropagation(); setEditingMember(member); }}
+                  >
+                    Edit
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    className="flex-1 text-xs h-8 bg-purple-600"
+                    onClick={(e) => { e.stopPropagation(); setSelectedMember(member); setViewMode('profile'); }}
+                  >
+                    Profile
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 // Redemption Analytics Component
 function RedemptionAnalyticsTab() {
