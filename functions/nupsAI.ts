@@ -816,6 +816,75 @@ Provide scheduling insights in JSON:
         return Response.json({ success: true, peakAnalysis: result });
       }
 
+      // ═══════════════════════════════════════════════════════════════
+      // VIP AI - Personalized recommendations for VIP profile page
+      // ═══════════════════════════════════════════════════════════════
+      case 'getVIPRecommendations': {
+        const { guestId, guestName, todaySpend, lifetimeSpend, vipTier, roomSessionsToday, preferences, notes } = data;
+        const transactions = await base44.asServiceRole.entities.POSTransaction.list('-created_date', 200);
+        const products = await base44.asServiceRole.entities.POSProduct.list();
+        const rooms = await base44.asServiceRole.entities.VIPRoom.list();
+        
+        // Analyze guest's purchase history
+        const guestTxns = transactions.filter(t => 
+          t.customer_id === guestId || t.notes?.toLowerCase().includes(guestName?.toLowerCase())
+        );
+        
+        const purchaseHistory = {};
+        guestTxns.forEach(t => {
+          (t.items || []).forEach(item => {
+            purchaseHistory[item.product_name] = (purchaseHistory[item.product_name] || 0) + (item.quantity || 1);
+          });
+        });
+        
+        const favoriteItems = Object.entries(purchaseHistory)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5)
+          .map(([name]) => name);
+        
+        const avgSpend = guestTxns.length > 0 
+          ? guestTxns.reduce((sum, t) => sum + (t.total || 0), 0) / guestTxns.length 
+          : 50;
+
+        const prompt = `Generate personalized VIP recommendations for this guest:
+
+Guest Profile:
+- Name: ${guestName}
+- VIP Tier: ${vipTier || 'Standard'}
+- Today's Spend: $${todaySpend || 0}
+- Lifetime Value: $${lifetimeSpend || 0}
+- Total Visits: ${guestTxns.length}
+- Average Spend: $${avgSpend.toFixed(2)}
+- VIP Sessions Today: ${roomSessionsToday || 0}
+- Favorite Items: ${favoriteItems.join(', ') || 'No history yet'}
+- Preferences: ${preferences || 'None recorded'}
+- Notes: ${notes || 'None'}
+
+Available Products: ${JSON.stringify(products.slice(0, 10).map(p => ({ name: p.name, price: p.price, category: p.category })))}
+Available VIP Rooms: ${JSON.stringify(rooms.filter(r => r.status === 'available').map(r => ({ name: r.room_name, rate: r.rate_per_hour })))}
+
+Provide detailed personalized recommendations in JSON:
+{
+  "loyaltyLevel": string,
+  "engagementScore": number,
+  "preferredCategory": string,
+  "upsellLikelihood": "High" | "Medium" | "Low",
+  "welcomeScript": string,
+  "conversationStarters": [string],
+  "immediateActions": [{"action": string, "type": "drink|upgrade|service|gift", "priority": "high|medium|low", "reason": string, "expectedRevenue": number}],
+  "upsellOpportunities": [{"product": string, "price": number, "pitch": string, "confidence": number}],
+  "specialConsiderations": [string]
+}`;
+
+        const result = await callOpenAI(
+          "You are a luxury VIP concierge AI. Generate warm, personalized recommendations that will delight the guest and maximize their experience. Be specific with product names and prices.",
+          prompt,
+          true
+        );
+
+        return Response.json({ success: true, recommendations: result });
+      }
+
       default:
         return Response.json({ error: 'Unknown action' }, { status: 400 });
     }
