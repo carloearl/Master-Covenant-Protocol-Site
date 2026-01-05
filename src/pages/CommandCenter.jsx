@@ -2102,8 +2102,8 @@ export default function CommandCenter() {
         onLogout={handleLogout}
       />
 
-      <div className="min-h-screen bg-slate-950 text-white flex flex-col lg:flex-row">
-        <aside className="hidden lg:flex w-56 bg-slate-900/30 border-r border-slate-800 flex-col">
+      <div className="min-h-screen bg-slate-950 text-white flex flex-col lg:flex-row touch-action-manipulation">
+        <aside className="hidden lg:flex w-56 bg-slate-900/30 border-r border-slate-800 flex-col overflow-y-auto">
           <div className="p-4 border-b border-slate-800">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
@@ -2130,7 +2130,7 @@ export default function CommandCenter() {
             <div className="w-10" />
           </header>
 
-          <main className="flex-1 overflow-auto p-4 md:p-6">
+          <main className="flex-1 overflow-auto p-3 sm:p-4 md:p-6 pb-20 sm:pb-6">
             {renderTab()}
           </main>
         </div>

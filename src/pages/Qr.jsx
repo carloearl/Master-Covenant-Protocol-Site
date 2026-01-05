@@ -136,7 +136,7 @@ export default function Qr() {
       />
       
       <div className="min-h-screen text-white relative" style={{ background: 'transparent', pointerEvents: 'auto' }}>
-        <div className="relative z-10 py-4" style={{ pointerEvents: 'auto' }}>
+        <div className="relative z-10 py-4 px-2 sm:px-4" style={{ pointerEvents: 'auto' }}>
           <QrStudio initialTab={initialTab} />
         </div>
       </div>

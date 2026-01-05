@@ -67,18 +67,15 @@ export default function SiteBuilder() {
     try {
       const isAuth = await base44.auth.isAuthenticated();
       if (!isAuth) {
-        toast.error('Please sign in to use Site Builder');
+        toast.error('Authentication required');
         window.location.href = '/';
         return;
       }
       const userData = await base44.auth.me();
       
-      // Check if user is authorized for Site Builder
-      const authorizedUsers = ['carloearl@glyphlock.com', 'carloearl@gmail.com'];
-      const isAuthorized = userData.role === 'admin' || authorizedUsers.includes(userData.email);
-      
-      if (!isAuthorized) {
-        toast.error('Site Builder access denied. Contact admin for access.');
+      // Admin-only access
+      if (userData.role !== 'admin') {
+        toast.error('Admin access required');
         window.location.href = '/';
         return;
       }

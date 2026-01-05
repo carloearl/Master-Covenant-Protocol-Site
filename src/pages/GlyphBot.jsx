@@ -687,7 +687,7 @@ export default function GlyphBotPage() {
   const currentProviderLabel = lastMeta?.providerLabel || providers.find(p => p.id === (lastMeta?.providerUsed || provider))?.label || 'Awaiting Response...';
 
   return (
-    <div className="min-h-screen text-white flex flex-col pt-16 pb-0 relative" style={{ color: '#ffffff', background: 'transparent', zIndex: 200, position: 'relative', pointerEvents: 'auto' }}>
+    <div className="min-h-screen text-white flex flex-col pt-12 sm:pt-16 pb-0 relative touch-action-manipulation" style={{ color: '#ffffff', background: 'transparent', zIndex: 200, position: 'relative', pointerEvents: 'auto' }}>
       <SEOHead 
         title="GlyphBot - Elite AI Security Assistant | GlyphLock"
         description="Chat with GlyphBot, your elite AI security assistant for code auditing, blockchain analysis, threat detection, and debugging."
@@ -901,7 +901,7 @@ export default function GlyphBotPage() {
             {/* Messages */}
             <div 
                     ref={chatContainerRef}
-                    className="flex-1 min-h-0 overflow-y-auto px-4 py-6 space-y-4"
+                    className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-4 py-4 sm:py-6 space-y-3 sm:space-y-4 pb-20 sm:pb-6"
                   >
                     {messages.filter(msg => msg && msg.content).map((msg, idx) => {
                       const msgId = msg.id || `msg-${idx}`;

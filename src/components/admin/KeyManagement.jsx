@@ -13,19 +13,27 @@ export default function KeyManagement() {
 
   const { data: keys = [], isLoading } = useQuery({
     queryKey: ['qrKeys'],
-    queryFn: () => base44.entities.QRKeyRegistry.list('-created_date')
+    queryFn: async () => {
+      try {
+        return await base44.entities.QRKeyRegistry.list('-created_date');
+      } catch (e) {
+        console.warn('QRKeyRegistry not found, returning empty array');
+        return [];
+      }
+    }
   });
 
   const initializeKey = async () => {
     try {
       setIsInitializing(true);
       const { data } = await base44.functions.invoke('initializeKeys');
-      if (data.error) throw new Error(data.error);
+      if (data?.error) throw new Error(data.error);
       
       toast.success('Platform key initialized successfully');
       queryClient.invalidateQueries(['qrKeys']);
     } catch (error) {
-      toast.error(error.message || 'Failed to initialize key');
+      console.error('Key init error:', error);
+      toast.error('Failed to initialize key - backend function may not be available');
     } finally {
       setIsInitializing(false);
     }
