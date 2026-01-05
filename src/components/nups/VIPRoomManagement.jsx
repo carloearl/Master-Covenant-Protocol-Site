@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { DoorOpen, Video, Clock, DollarSign, User, UserCheck } from "lucide-react";
+import { DoorOpen, Video, Clock, DollarSign, User, UserCheck, Sparkles, Loader2, ArrowUp } from "lucide-react";
+import { toast } from "sonner";
 
 export default function VIPRoomManagement() {
   const queryClient = useQueryClient();
@@ -32,6 +33,30 @@ export default function VIPRoomManagement() {
       return shifts.filter(s => !s.check_out_time);
     }
   });
+
+  const { data: guests = [] } = useQuery({
+    queryKey: ['vip-guests-all'],
+    queryFn: () => base44.entities.VIPGuest.list('-created_date', 100)
+  });
+
+  const [upgradeAnalysis, setUpgradeAnalysis] = useState(null);
+  const [loadingUpgrade, setLoadingUpgrade] = useState(false);
+
+  const getUpgradeSuggestion = async (guestId, currentRoom) => {
+    if (!guestId) return;
+    setLoadingUpgrade(true);
+    try {
+      const { data } = await base44.functions.invoke('nupsAI', {
+        action: 'suggestVIPUpgrade',
+        data: { guestId, currentRoom }
+      });
+      setUpgradeAnalysis(data.upgradeAnalysis);
+    } catch (err) {
+      console.error('Upgrade suggestion failed:', err);
+    } finally {
+      setLoadingUpgrade(false);
+    }
+  };
 
   const startSession = useMutation({
     mutationFn: (data) => {
@@ -92,7 +117,7 @@ export default function VIPRoomManagement() {
 
   return (
     <div className="space-y-6">
-      <Card className="glass-card-dark border-purple-500/30">
+      <Card className="bg-slate-800/50 border-purple-500/30">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <DoorOpen className="w-5 h-5 text-purple-400" />
@@ -211,15 +236,60 @@ export default function VIPRoomManagement() {
             </div>
 
             <div>
-              <Label className="text-white">Guest Name *</Label>
+              <Label className="text-white">Select Guest</Label>
+              <Select 
+                value={sessionForm.guest_name} 
+                onValueChange={(value) => {
+                  setSessionForm({...sessionForm, guest_name: value});
+                  const guest = guests.find(g => g.guest_name === value);
+                  if (guest) {
+                    getUpgradeSuggestion(guest.id, selectedRoom?.room_name);
+                  }
+                }}
+              >
+                <SelectTrigger className="bg-slate-800 border-slate-600">
+                  <SelectValue placeholder="Select or type guest name..." />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-900 border-gray-700">
+                  {guests.filter(g => g.status === 'in_building').map(g => (
+                    <SelectItem key={g.id} value={g.guest_name}>
+                      {g.guest_name} {g.vip_tier && `(${g.vip_tier})`}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <Input
                 value={sessionForm.guest_name}
                 onChange={(e) => setSessionForm({...sessionForm, guest_name: e.target.value})}
-                placeholder="Guest name or membership #"
-                className="glass-input"
-                required
+                placeholder="Or type new guest name"
+                className="bg-slate-800 border-slate-600 mt-2"
               />
             </div>
+
+            {/* AI Upgrade Suggestion */}
+            {loadingUpgrade && (
+              <div className="flex items-center gap-2 text-purple-400 text-sm">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Analyzing guest for upgrades...
+              </div>
+            )}
+            {upgradeAnalysis && upgradeAnalysis.shouldUpgrade && (
+              <div className="p-3 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-4 h-4 text-purple-400" />
+                  <span className="text-sm font-medium text-white">AI Upgrade Suggestion</span>
+                </div>
+                <p className="text-sm text-purple-300 mb-2">{upgradeAnalysis.suggestedRoom}</p>
+                <p className="text-xs text-slate-400 italic">"{upgradeAnalysis.upsellPitch}"</p>
+                {upgradeAnalysis.complementaryOffers?.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {upgradeAnalysis.complementaryOffers.slice(0, 2).map((offer, i) => (
+                      <Badge key={i} className="bg-pink-500/20 text-pink-400 text-xs">{offer}</Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             <div>
               <Label className="text-white">Duration (minutes) *</Label>
