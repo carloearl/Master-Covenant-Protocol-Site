@@ -32,7 +32,7 @@ export const NAV_SECTIONS = [
       { label: "QR Verification", page: "Qr", visibility: "public" },
       { label: "Image Lab", page: "ImageLab", visibility: "public" },
       { label: "GlyphBot Intelligence", page: "GlyphBot", visibility: "public" },
-      { label: "Site Builder", page: "SiteBuilder", visibility: "admin" }, // Admin only
+
       { label: "NUPS Transaction Verification", page: "NUPSLogin", visibility: "public" },
       { label: "Security Modules", page: "SecurityTools", visibility: "public" },
       { label: "Media Processing Hub", page: "VideoUpload", visibility: "public" },

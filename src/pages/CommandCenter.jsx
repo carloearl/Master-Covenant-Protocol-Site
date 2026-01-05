@@ -112,12 +112,10 @@ function SidebarContent({ activeTab, setActiveTab, user, onLogout, threatCount =
     { id: "threats", label: "Threat Detection", icon: ShieldAlert, badge: threatCount, tour: "nav-threats" },
     { id: "resources", label: "Resources", icon: Layers },
     { id: "api-keys", label: "API Keys", icon: Key, tour: "nav-api-keys" },
-    { id: "trust-anchors", label: "Trust Anchors", icon: Lock },
     { id: "security", label: "Security", icon: Shield },
     { id: "analytics", label: "Analytics", icon: BarChart3, tour: "nav-analytics" },
     { id: "tools", label: "Tools", icon: Zap },
     { id: "logs", label: "Logs", icon: FileText },
-    { id: "compliance", label: "Compliance Report", icon: FileCheck },
     { id: "settings", label: "Settings", icon: Settings },
   ];
 
@@ -564,13 +562,7 @@ function OverviewTab({ user, threatDetection }) {
             <Link to={createPageUrl('GlyphBot')}>
               <Button variant="outline" className="w-full justify-start border-slate-700 hover:border-purple-500/50 hover:bg-purple-500/5 h-12">
                 <Bot className="w-4 h-4 text-purple-400 mr-3" />
-                <span className="text-sm">GlyphBot</span>
-              </Button>
-            </Link>
-            <Link to={createPageUrl('SiteBuilder')}>
-              <Button variant="outline" className="w-full justify-start border-slate-700 hover:border-green-500/50 hover:bg-green-500/5 h-12">
-                <Code className="w-4 h-4 text-green-400 mr-3" />
-                <span className="text-sm">Site Builder</span>
+                <span className="text-sm">GlyphBot AI</span>
               </Button>
             </Link>
           </CardContent>
@@ -902,196 +894,7 @@ function SecurityTab({ threatDetection }) {
   );
 }
 
-// API Keys Tab
-function APIKeysTab({ user }) {
-  const queryClient = useQueryClient();
-  const [showCreate, setShowCreate] = useState(false);
-  const [visibleKeys, setVisibleKeys] = useState({});
-  const [newKeyName, setNewKeyName] = useState("");
-  const [newKeyEnv, setNewKeyEnv] = useState("live");
 
-  const { data: keys = [], isLoading } = useQuery({
-    queryKey: ['apiKeys'],
-    queryFn: () => base44.entities.APIKey.list()
-  });
-
-  const createKeyMutation = useMutation({
-    mutationFn: async (data) => {
-      const publicKey = `glk_pub_${crypto.randomUUID().replace(/-/g, '').substring(0, 24)}`;
-      const secretKey = `glk_sec_${crypto.randomUUID().replace(/-/g, '')}${crypto.randomUUID().replace(/-/g, '').substring(0, 8)}`;
-      
-      return base44.entities.APIKey.create({
-        name: data.name,
-        public_key: publicKey,
-        secret_key: secretKey,
-        environment: data.environment,
-        status: 'active',
-        last_rotated: new Date().toISOString()
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['apiKeys']);
-      setShowCreate(false);
-      setNewKeyName("");
-      toast.success("API key created");
-    }
-  });
-
-  const rotateKeyMutation = useMutation({
-    mutationFn: async (keyId) => {
-      const newSecret = `glk_sec_${crypto.randomUUID().replace(/-/g, '')}${crypto.randomUUID().replace(/-/g, '').substring(0, 8)}`;
-      return base44.entities.APIKey.update(keyId, {
-        secret_key: newSecret,
-        last_rotated: new Date().toISOString()
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['apiKeys']);
-      toast.success("API key rotated");
-    }
-  });
-
-  const deleteKeyMutation = useMutation({
-    mutationFn: (keyId) => base44.entities.APIKey.delete(keyId),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['apiKeys']);
-      toast.success("API key deleted");
-    }
-  });
-
-  const copyToClipboard = (text, label) => {
-    navigator.clipboard.writeText(text);
-    toast.success(`${label} copied`);
-  };
-
-  const maskKey = (key) => key ? `${key.substring(0, 12)}••••••••${key.substring(key.length - 4)}` : "••••••••";
-
-  if (isLoading) {
-    return <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-cyan-400" /></div>;
-  }
-
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-bold text-white">API Keys</h2>
-          <p className="text-sm text-slate-400">Manage your API credentials</p>
-        </div>
-        <Button onClick={() => setShowCreate(!showCreate)} className="bg-cyan-600 hover:bg-cyan-700">
-          <Plus className="w-4 h-4 mr-2" />
-          Create Key
-        </Button>
-      </div>
-
-      {showCreate && (
-        <Card className="bg-slate-900/50 border-cyan-500/30">
-          <CardContent className="p-6">
-            <form onSubmit={(e) => { e.preventDefault(); createKeyMutation.mutate({ name: newKeyName, environment: newKeyEnv }); }} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-white text-sm">Key Name</Label>
-                  <Input
-                    value={newKeyName}
-                    onChange={(e) => setNewKeyName(e.target.value)}
-                    placeholder="My API Key"
-                    required
-                    className="bg-slate-800 border-slate-700 text-white mt-1"
-                  />
-                </div>
-                <div>
-                  <Label className="text-white text-sm">Environment</Label>
-                  <Select value={newKeyEnv} onValueChange={setNewKeyEnv}>
-                    <SelectTrigger className="bg-slate-800 border-slate-700 text-white mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="live">Live</SelectItem>
-                      <SelectItem value="test">Test</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <Button type="submit" disabled={createKeyMutation.isPending}>
-                  {createKeyMutation.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                  Generate
-                </Button>
-                <Button type="button" variant="outline" onClick={() => setShowCreate(false)}>Cancel</Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      )}
-
-      <div className="space-y-3">
-        {keys.length === 0 ? (
-          <Card className="bg-slate-900/50 border-slate-800">
-            <CardContent className="p-12 text-center">
-              <Key className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-              <p className="text-slate-400">No API keys yet</p>
-              <p className="text-slate-500 text-sm mt-1">Create your first API key to get started</p>
-            </CardContent>
-          </Card>
-        ) : (
-          keys.map((key) => (
-            <Card key={key.id} className="bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all">
-              <CardContent className="p-4">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
-                      <Key className="w-5 h-5 text-cyan-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-medium">{key.name}</h3>
-                      <p className="text-xs text-slate-500">Created {new Date(key.created_date).toLocaleDateString()}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className={key.environment === 'live' ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400'}>
-                      {key.environment}
-                    </Badge>
-                    <Button size="sm" variant="ghost" onClick={() => rotateKeyMutation.mutate(key.id)} disabled={rotateKeyMutation.isPending}>
-                      <RefreshCw className={`w-4 h-4 ${rotateKeyMutation.isPending ? 'animate-spin' : ''}`} />
-                    </Button>
-                    <Button size="sm" variant="ghost" onClick={() => deleteKeyMutation.mutate(key.id)} className="text-red-400 hover:text-red-300">
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <div>
-                    <Label className="text-xs text-slate-500">Public Key</Label>
-                    <div className="flex items-center gap-2 mt-1">
-                      <code className="flex-1 bg-slate-800 px-3 py-2 rounded text-xs text-white font-mono truncate">{key.public_key}</code>
-                      <Button size="sm" variant="ghost" onClick={() => copyToClipboard(key.public_key, "Public key")}>
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  <div>
-                    <Label className="text-xs text-slate-500">Secret Key</Label>
-                    <div className="flex items-center gap-2 mt-1">
-                      <code className="flex-1 bg-slate-800 px-3 py-2 rounded text-xs text-white font-mono truncate">
-                        {visibleKeys[key.id] ? key.secret_key : maskKey(key.secret_key)}
-                      </code>
-                      <Button size="sm" variant="ghost" onClick={() => setVisibleKeys(prev => ({ ...prev, [key.id]: !prev[key.id] }))}>
-                        {visibleKeys[key.id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </Button>
-                      <Button size="sm" variant="ghost" onClick={() => copyToClipboard(key.secret_key, "Secret key")}>
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        )}
-      </div>
-    </div>
-  );
-}
 
 // Analytics Tab - REAL DATA ONLY
 function AnalyticsTab() {
@@ -2219,6 +2022,19 @@ export default function CommandCenter() {
     }
   }, []);
 
+  // Mobile viewport fix
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleResize = () => {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+      };
+      handleResize();
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
   useEffect(() => {
     (async () => {
       try {
@@ -2260,12 +2076,10 @@ export default function CommandCenter() {
       case "threats": return <ThreatDetectionTab user={user} threatDetection={threatDetection} />;
       case "resources": return <ResourcesTab user={user} />;
       case "security": return <SecurityTab threatDetection={threatDetection} />;
-      case "trust-anchors": return <KeyManagement />;
-      case "api-keys": return <APIKeysTab user={user} />;
+      case "api-keys": return <KeyManagement />;
       case "analytics": return <AnalyticsTab />;
       case "tools": return <ToolsTab />;
       case "logs": return <LogsTab />;
-      case "compliance": return <div className="h-full"><iframe src="/ComplianceReport" className="w-full h-full min-h-[800px] border-0 rounded-lg bg-white" title="Compliance Report" /></div>;
       case "settings": return <SettingsTab user={user} />;
       default: return <OverviewTab user={user} threatDetection={threatDetection} />;
     }
@@ -2288,7 +2102,7 @@ export default function CommandCenter() {
         onLogout={handleLogout}
       />
 
-      <div className="min-h-screen bg-slate-950 text-white flex">
+      <div className="min-h-screen bg-slate-950 text-white flex flex-col lg:flex-row">
         <aside className="hidden lg:flex w-56 bg-slate-900/30 border-r border-slate-800 flex-col">
           <div className="p-4 border-b border-slate-800">
             <div className="flex items-center gap-3">
