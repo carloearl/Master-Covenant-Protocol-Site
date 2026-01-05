@@ -10,6 +10,7 @@ export const NAV = [
   { label: "Dream Team", href: "/DreamTeam", visibility: "public" },
   { label: "GlyphBot", href: "/GlyphBot", visibility: "public" },
   { label: "Command Center", href: "/CommandCenter", visibility: "public" },
+  { label: "NUPS", href: "/NUPSDashboard", visibility: "public" },
   { label: "Protocol Verification", href: "/Consultation", visibility: "public" }
 ];
 
@@ -33,7 +34,7 @@ export const NAV_SECTIONS = [
       { label: "Image Lab", page: "ImageLab", visibility: "public" },
       { label: "GlyphBot Intelligence", page: "GlyphBot", visibility: "public" },
 
-      { label: "NUPS Transaction Verification", page: "NUPSLogin", visibility: "public" },
+      { label: "NUPS Dashboard", page: "NUPSDashboard", visibility: "public" },
       { label: "Security Modules", page: "SecurityTools", visibility: "public" },
       { label: "Media Processing Hub", page: "VideoUpload", visibility: "public" },
       { label: "SDK Documentation", page: "SDKDocs", visibility: "public" },
