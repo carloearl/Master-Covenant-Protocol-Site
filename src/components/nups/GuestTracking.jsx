@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { UserPlus, MapPin, DollarSign, Clock, LogIn, LogOut } from "lucide-react";
+import { UserPlus, MapPin, DollarSign, Clock, LogIn, LogOut, Brain, Sparkles } from "lucide-react";
+import { VIPGuestInsightsPanel, PeakTimePredictor } from "./AIInsightsPanel";
 
 export default function GuestTracking() {
   const queryClient = useQueryClient();
@@ -72,10 +73,15 @@ export default function GuestTracking() {
     return colors[location] || 'bg-gray-500/20 text-gray-400 border-gray-500/50';
   };
 
+  const [selectedGuestForAI, setSelectedGuestForAI] = useState(null);
+
   return (
     <div className="space-y-6">
+      {/* AI Peak Time Predictor */}
+      <PeakTimePredictor />
+
       {/* Check In Button */}
-      <Card className="glass-card-dark border-cyan-500/30">
+      <Card className="bg-slate-800/50 border-cyan-500/30">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-white">
@@ -94,17 +100,26 @@ export default function GuestTracking() {
         <CardContent>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {activeGuests.map((guest) => {
-              const duration = Math.floor((new Date() - new Date(guest.check_in_time)) / 60000);
-              return (
-                <Card key={guest.id} className="bg-gray-800/50 border-gray-700">
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="font-bold text-white text-lg">{guest.guest_name}</h3>
-                        {guest.membership_number && (
-                          <p className="text-xs text-gray-400">#{guest.membership_number}</p>
-                        )}
-                      </div>
+            const duration = Math.floor((new Date() - new Date(guest.check_in_time)) / 60000);
+            return (
+              <Card key={guest.id} className="bg-gray-800/50 border-gray-700">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="font-bold text-white text-lg">{guest.guest_name}</h3>
+                      {guest.membership_number && (
+                        <p className="text-xs text-gray-400">#{guest.membership_number}</p>
+                      )}
+                    </div>
+                    <div className="flex gap-1">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setSelectedGuestForAI(selectedGuestForAI?.id === guest.id ? null : guest)}
+                        className="border-purple-500/50 text-purple-400"
+                      >
+                        <Brain className="w-3 h-3" />
+                      </Button>
                       <Button
                         size="sm"
                         variant="outline"
@@ -114,6 +129,7 @@ export default function GuestTracking() {
                         <LogOut className="w-3 h-3" />
                       </Button>
                     </div>
+                  </div>
 
                     <Badge className={`mb-3 ${getLocationColor(guest.current_location)}`}>
                       <MapPin className="w-3 h-3 mr-1" />
@@ -153,6 +169,13 @@ export default function GuestTracking() {
                         </SelectContent>
                       </Select>
                     </div>
+
+                    {/* AI Insights Panel - Expanded */}
+                    {selectedGuestForAI?.id === guest.id && (
+                      <div className="mt-3 pt-3 border-t border-gray-700">
+                        <VIPGuestInsightsPanel guestId={guest.id} guestName={guest.guest_name} />
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               );
