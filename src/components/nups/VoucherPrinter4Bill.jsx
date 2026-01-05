@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Printer, Download, Upload, RotateCcw, Eye, Settings, DollarSign, Hash } from "lucide-react";
+import { Printer, Download, Upload, RotateCcw, Eye, Settings, DollarSign, Hash, Brain } from "lucide-react";
 import { toast } from "sonner";
+import { VoucherAIPanel } from "./AIInsightsPanel";
 
 const VENUES = [
   { id: 'SK', name: 'Skin Cabaret', color: '#EC4899' },
@@ -233,6 +234,11 @@ export default function VoucherPrinter4Bill() {
     }
   };
 
+  const applyAIRecommendation = (value, quantity) => {
+    setDenomination(value);
+    toast.success(`Applied $${value} denomination`);
+  };
+
   return (
     <div className="space-y-6">
       {/* Stats Row */}
@@ -293,6 +299,9 @@ export default function VoucherPrinter4Bill() {
           </CardContent>
         </Card>
       </div>
+
+      {/* AI Panel */}
+      <VoucherAIPanel venue={venueData?.name} onApplyRecommendation={applyAIRecommendation} />
 
       <div className="grid lg:grid-cols-5 gap-6">
         {/* Config Panel */}
