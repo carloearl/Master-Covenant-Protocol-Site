@@ -60,12 +60,12 @@ const ASPECT_RATIOS = [
 // AI Tools Section Component
 function AIToolsSection({ isMobile, loading, setLoading, images, setImages }) {
   const [toolImage, setToolImage] = React.useState(null);
-  const [activeTool, setActiveTool] = useState(null);
-  const [upscaleLevel, setUpscaleLevel] = useState(2);
-  const [inpaintPrompt, setInpaintPrompt] = useState('');
-  const [styleTarget, setStyleTarget] = useState('van_gogh');
-  const [styleIntensity, setStyleIntensity] = useState(80);
-  const [processedImage, setProcessedImage] = useState(null);
+  const [activeTool, setActiveTool] = React.useState(null);
+  const [upscaleLevel, setUpscaleLevel] = React.useState(2);
+  const [inpaintPrompt, setInpaintPrompt] = React.useState('');
+  const [styleTarget, setStyleTarget] = React.useState('van_gogh');
+  const [styleIntensity, setStyleIntensity] = React.useState(80);
+  const [processedImage, setProcessedImage] = React.useState(null);
 
   const handleToolUpload = async (e) => {
     const file = e.target.files?.[0];
