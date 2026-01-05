@@ -59,7 +59,7 @@ const ASPECT_RATIOS = [
 
 // AI Tools Section Component
 function AIToolsSection({ isMobile, loading, setLoading, images, setImages }) {
-  const [toolImage, setToolImage] = useState(null);
+  const [toolImage, setToolImage] = React.useState(null);
   const [activeTool, setActiveTool] = useState(null);
   const [upscaleLevel, setUpscaleLevel] = useState(2);
   const [inpaintPrompt, setInpaintPrompt] = useState('');
