@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -8,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   ShoppingCart, Plus, Minus, X, DollarSign, CreditCard,
-  Trash2, Calculator, User, Receipt, Search, Barcode
+  Trash2, Calculator, User, Receipt, Search, Barcode, Brain
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
@@ -17,7 +16,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label"; // Ensure Label is imported
+import { Label } from "@/components/ui/label";
+import { POSRecommendationsPanel, FraudAlertPanel, PopularItemsPredictor } from "./AIInsightsPanel";
 
 export default function POSCashRegister({ user }) {
   const queryClient = useQueryClient();
@@ -156,7 +156,7 @@ export default function POSCashRegister({ user }) {
     <div className="grid lg:grid-cols-5 gap-6">
       {/* Product Selection */}
       <div className="lg:col-span-3 space-y-4">
-        <Card className="glass-card-dark border-cyan-500/30">
+        <Card className="bg-slate-800/50 border-cyan-500/30">
           <CardContent className="p-4">
             <div className="flex gap-2 mb-4">
               <div className="relative flex-1">
@@ -203,8 +203,38 @@ export default function POSCashRegister({ user }) {
 
       {/* Cart & Checkout */}
       <div className="lg:col-span-2 space-y-4">
+        {/* AI Recommendations */}
+        {cart.length > 0 && (
+          <POSRecommendationsPanel 
+            currentCart={cart} 
+            onAddItem={(productName) => {
+              const product = products.find(p => p.name === productName);
+              if (product) addToCart(product);
+            }}
+          />
+        )}
+
+        {/* Popular Items AI */}
+        <PopularItemsPredictor 
+          onHighlight={(productName) => {
+            setSearchTerm(productName);
+          }}
+        />
+
+        {/* Fraud Alert - appears for high-value transactions */}
+        {total > 500 && cart.length > 0 && (
+          <FraudAlertPanel 
+            transaction={{
+              total,
+              items: cart,
+              payment_method: paymentMethod,
+              cashier: user?.email
+            }}
+          />
+        )}
+
         {/* Customer Selection */}
-        <Card className="glass-card-dark border-purple-500/30">
+        <Card className="bg-slate-800/50 border-purple-500/30">
           <CardContent className="p-4">
             <Label className="text-sm text-gray-400 mb-2 block">Customer (Optional)</Label>
             <Select
@@ -227,7 +257,7 @@ export default function POSCashRegister({ user }) {
         </Card>
 
         {/* Cart */}
-        <Card className="glass-card-dark border-green-500/30">
+        <Card className="bg-slate-800/50 border-green-500/30">
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-white flex items-center gap-2">
