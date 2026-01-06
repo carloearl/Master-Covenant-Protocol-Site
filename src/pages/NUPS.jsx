@@ -123,7 +123,16 @@ export default function NUPS() {
   ];
 
   const currentRole = userRole?.toLowerCase() || 'user';
-  const visibleTabs = tabs.filter(t => t.roles.includes(currentRole) || isAdmin);
+  const visibleTabs = tabs.filter(t => t.roles?.includes(currentRole) || isAdmin) || [];
+
+  // Show loader while auth is loading
+  if (!visibleTabs || visibleTabs.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900 flex items-center justify-center">
+        <Loader2 className="w-10 h-10 text-cyan-400 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900">
