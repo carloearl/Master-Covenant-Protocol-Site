@@ -261,7 +261,7 @@ export default function NUPS() {
                   </TabsList>
                   <TabsContent value="sales"><AISalesReports /></TabsContent>
                   <TabsContent value="staff"><AIStaffPerformance /></TabsContent>
-                  <TabsContent value="zreports"><ZReportGenerator /></TabsContent>
+                  <TabsContent value="zreports"><ZReportGenerator user={user} /></TabsContent>
                 </Tabs>
               </div>
             </TabsContent>
