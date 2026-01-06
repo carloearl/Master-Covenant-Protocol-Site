@@ -488,7 +488,8 @@ export default function NUPSBillEditor() {
               <Badge className={colorMode === 'color' ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-500/20 text-slate-400'}>{colorMode === 'color' ? '🎨 Color' : '⚫ Mono'}</Badge>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-6">
+            {/* Single Bill Editor */}
             <div className="bg-slate-800 rounded-lg p-4 flex justify-center">
               <canvas
                 ref={canvasRef}
@@ -502,9 +503,58 @@ export default function NUPSBillEditor() {
                 style={{ maxWidth: '100%' }}
               />
             </div>
-            <p className="text-xs text-slate-500 mt-2 text-center">
+            <p className="text-xs text-slate-500 text-center">
               {selectedElement ? `Selected: ${selectedElement} — Drag to move, corner to resize` : 'Click an element to select'}
             </p>
+
+            {/* 4-Bill Stacked Print Preview */}
+            <div className="border-t border-slate-700 pt-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-white text-sm font-semibold flex items-center gap-2">
+                  <Printer className="w-4 h-4 text-green-400" />
+                  Print Preview (4-Bill Sheet)
+                </h3>
+                <Badge className="bg-green-500/20 text-green-400">2×2 Layout</Badge>
+              </div>
+              <div 
+                className="bg-white rounded-lg p-3 mx-auto overflow-auto"
+                style={{ 
+                  maxWidth: '100%',
+                  maxHeight: '400px',
+                  aspectRatio: '8.5/11'
+                }}
+              >
+                <div 
+                  className="grid grid-cols-2 gap-2 w-full h-full"
+                  style={{ minHeight: '300px' }}
+                >
+                  {[1, 2, 3, 4].map((num) => (
+                    <div 
+                      key={num} 
+                      className="relative border border-gray-300 rounded overflow-hidden bg-white"
+                      style={{ 
+                        aspectRatio: `${CANVAS_WIDTH}/${CANVAS_HEIGHT}`,
+                        filter: colorMode === 'monochrome' ? 'grayscale(100%)' : 'none'
+                      }}
+                    >
+                      {canvasRef.current && (
+                        <img 
+                          src={canvasRef.current.toDataURL('image/png')} 
+                          alt={`Bill ${num}`}
+                          className="w-full h-full object-contain"
+                        />
+                      )}
+                      <div className="absolute bottom-1 right-1 bg-black/50 text-white text-[8px] px-1 rounded">
+                        #{num}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 mt-2 text-center">
+                This is how your 4 bills will appear on a printed page (8.5" × 11")
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
