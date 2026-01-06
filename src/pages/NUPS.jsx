@@ -123,7 +123,10 @@ export default function NUPS() {
   ];
 
   const currentRole = userRole?.toLowerCase() || 'user';
-  const visibleTabs = tabs.filter(t => t.roles?.includes(currentRole) || isAdmin) || [];
+  const visibleTabs = tabs.filter(t => {
+    if (!t.roles || !Array.isArray(t.roles)) return isAdmin;
+    return t.roles.includes(currentRole) || isAdmin;
+  });
 
   // Show loader while auth is loading
   if (!visibleTabs || visibleTabs.length === 0) {
