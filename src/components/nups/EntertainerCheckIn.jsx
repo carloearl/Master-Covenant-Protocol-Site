@@ -89,13 +89,14 @@ export default function EntertainerCheckIn() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid md:grid-cols-3 gap-4">
-            <Select value={selectedEntertainer || ""} onValueChange={setSelectedEntertainer}>
+            <Select value={selectedEntertainer || "none"} onValueChange={(val) => setSelectedEntertainer(val === "none" ? null : val)}>
               <SelectTrigger className="glass-input">
                 <SelectValue placeholder="Select entertainer..." />
               </SelectTrigger>
               <SelectContent className="bg-gray-900 border-gray-700">
-                {entertainers
-                  .filter(e => !activeShifts.some(shift => shift.entertainer_id === e.id))
+                <SelectItem value="none">Select entertainer...</SelectItem>
+                {(entertainers || [])
+                  .filter(e => !(activeShifts || []).some(shift => shift.entertainer_id === e.id))
                   .map(entertainer => (
                     <SelectItem key={entertainer.id} value={entertainer.id}>
                       {entertainer.stage_name}
