@@ -123,7 +123,7 @@ export default function NUPS() {
   ];
 
   const currentRole = userRole?.toLowerCase() || 'user';
-  const visibleTabs = tabs.filter(t => {
+  const visibleTabs = (tabs || []).filter(t => {
     if (!t.roles || !Array.isArray(t.roles)) return isAdmin;
     return t.roles.includes(currentRole) || isAdmin;
   });
@@ -189,7 +189,7 @@ export default function NUPS() {
                   </TabsList>
                   <TabsContent value="register"><POSCashRegister /></TabsContent>
                   <TabsContent value="batch"><BatchManagement /></TabsContent>
-                  <TabsContent value="history"><TransactionHistory /></TabsContent>
+                  <TabsContent value="history"><TransactionHistory transactions={[]} /></TabsContent>
                   <TabsContent value="zreport"><ZReportGenerator /></TabsContent>
                 </Tabs>
               </div>
