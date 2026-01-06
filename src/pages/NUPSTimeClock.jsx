@@ -15,6 +15,8 @@ import {
   CheckCircle, Wifi, WifiOff, Download
 } from 'lucide-react';
 import { toast } from 'sonner';
+import OnlineStatusIndicator from '@/components/nups/OnlineStatusIndicator';
+import InstallPrompt from '@/components/nups/InstallPrompt';
 
 // IndexedDB inline implementation
 const DB_NAME = 'NUPS_TimeClock';
@@ -217,7 +219,11 @@ export default function NUPSTimeClock() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900 p-4 md:p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900">
+      {/* Install Banner */}
+      <InstallPrompt variant="banner" />
+      
+      <div className="p-4 md:p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <div>
@@ -230,14 +236,7 @@ export default function NUPSTimeClock() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${
-            isOnline ? 'bg-green-500/20 border border-green-500/50' : 'bg-red-500/20 border border-red-500/50'
-          }`}>
-            {isOnline ? <Wifi className="w-4 h-4 text-green-400" /> : <WifiOff className="w-4 h-4 text-red-400" />}
-            <span className={`text-xs font-medium ${isOnline ? 'text-green-400' : 'text-red-400'}`}>
-              {isOnline ? 'Online' : 'Offline'}
-            </span>
-          </div>
+          <OnlineStatusIndicator />
           <Button variant="outline" size="sm" onClick={exportData} className="border-slate-600">
             <Download className="w-4 h-4 mr-1" /> Export
           </Button>
@@ -432,6 +431,7 @@ export default function NUPSTimeClock() {
           </CardContent>
         </Card>
       )}
+      </div>
     </div>
   );
 }

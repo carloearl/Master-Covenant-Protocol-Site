@@ -15,9 +15,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
   FileText, Printer, Search, Fingerprint, PenTool, 
-  CheckCircle, Shield, Scale, Download, Lock
+  CheckCircle, Shield, Scale, Download, Lock, Eye
 } from 'lucide-react';
 import { toast } from 'sonner';
+import OnlineStatusIndicator from '@/components/nups/OnlineStatusIndicator';
+import ProtectedField, { useAccessControl } from '@/components/nups/ProtectedField';
+import InstallPrompt from '@/components/nups/InstallPrompt';
 
 const VENUE_NAME = 'THE ESTABLISHMENT';
 const VENUE_LEGAL = 'GlyphLock Entertainment LLC';
@@ -42,6 +45,7 @@ export default function NUPSContractPrint() {
   const [thumbprint, setThumbprint] = useState(false);
   const [contractHash, setContractHash] = useState('');
   const [signed, setSigned] = useState(false);
+  const { canViewSensitive, isAdmin } = useAccessControl();
   const [terms, setTerms] = useState({
     age: false,
     conduct: false,
@@ -253,13 +257,19 @@ export default function NUPSContractPrint() {
   `;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900 p-4 md:p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          <FileText className="w-6 h-6 text-purple-400" />
-          VIP Contract Print
-        </h1>
-        <p className="text-slate-400 text-sm">Sign and print membership agreements</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900">
+      <InstallPrompt variant="banner" />
+      
+      <div className="p-4 md:p-6">
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+            <FileText className="w-6 h-6 text-purple-400" />
+            VIP Contract Print
+          </h1>
+          <p className="text-slate-400 text-sm">Sign and print membership agreements</p>
+        </div>
+        <OnlineStatusIndicator />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -315,13 +325,48 @@ export default function NUPSContractPrint() {
           <CardContent>
             {guest ? (
               <div className="space-y-6">
-                {/* Guest Info */}
+                {/* Guest Info - Sensitive fields protected */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-slate-800/50 rounded-lg text-sm">
                   <div><p className="text-slate-500 text-xs">Name</p><p className="text-white">{guest.guest_name}</p></div>
                   <div><p className="text-slate-500 text-xs">ID</p><p className="text-white">{guest.membership_number || '—'}</p></div>
                   <div><p className="text-slate-500 text-xs">Tier</p><p className="text-amber-400">{guest.vip_tier || 'Standard'}</p></div>
-                  <div><p className="text-slate-500 text-xs">DOB</p><p className="text-white">{guest.date_of_birth || '—'}</p></div>
+                  <div>
+                    <p className="text-slate-500 text-xs">DOB</p>
+                    <ProtectedField requireRole="manager" mask maskLength={10}>
+                      <p className="text-white">{guest.date_of_birth || '—'}</p>
+                    </ProtectedField>
+                  </div>
                 </div>
+                
+                {/* Admin-only sensitive fields */}
+                {guest.government_id_number && (
+                  <div className="p-3 bg-slate-800/30 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Eye className="w-4 h-4 text-amber-400" />
+                      <span className="text-xs text-amber-400">Sensitive Information</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <p className="text-slate-500 text-xs">Gov ID Type</p>
+                        <p className="text-white">{guest.government_id_type || '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-slate-500 text-xs">Gov ID Number</p>
+                        <ProtectedField requireRole="admin" mask maskLength={12}>
+                          <p className="text-white font-mono">{guest.government_id_number}</p>
+                        </ProtectedField>
+                      </div>
+                      {guest.ssn_last_four && (
+                        <div>
+                          <p className="text-slate-500 text-xs">SSN Last 4</p>
+                          <ProtectedField requireRole="admin" mask maskLength={4}>
+                            <p className="text-white font-mono">{guest.ssn_last_four}</p>
+                          </ProtectedField>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 {/* Terms */}
                 <div>
@@ -462,6 +507,7 @@ export default function NUPSContractPrint() {
             )}
           </CardContent>
         </Card>
+      </div>
       </div>
     </div>
   );

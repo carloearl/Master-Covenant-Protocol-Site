@@ -12,8 +12,11 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Printer, Settings, Receipt, DollarSign, History, Scan, CheckCircle } from 'lucide-react';
+import { Printer, Settings, Receipt, DollarSign, History, Scan, CheckCircle, Lock } from 'lucide-react';
 import { toast } from 'sonner';
+import OnlineStatusIndicator from '@/components/nups/OnlineStatusIndicator';
+import { ProtectedSection, useAccessControl } from '@/components/nups/ProtectedField';
+import InstallPrompt from '@/components/nups/InstallPrompt';
 
 const DENOMINATIONS = [5, 10, 20, 50, 100];
 const VENUES = [
@@ -131,6 +134,7 @@ export default function NUPSVoucherPrint() {
   const [batches, setBatches] = useState([]);
   const [scanInput, setScanInput] = useState('');
   const [tab, setTab] = useState('print');
+  const { isManager, canExport } = useAccessControl();
 
   useEffect(() => {
     loadSettings();
@@ -344,13 +348,19 @@ export default function NUPSVoucherPrint() {
   const previewSerial = generateSerial(venue, serialStart, String(new Date().getFullYear()).slice(-2));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900 p-4 md:p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          <Receipt className="w-6 h-6 text-amber-400" />
-          Voucher System
-        </h1>
-        <p className="text-slate-400 text-sm">Configure, print, and redeem vouchers</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900">
+      <InstallPrompt variant="banner" />
+      
+      <div className="p-4 md:p-6">
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+            <Receipt className="w-6 h-6 text-amber-400" />
+            Voucher System
+          </h1>
+          <p className="text-slate-400 text-sm">Configure, print, and redeem vouchers</p>
+        </div>
+        <OnlineStatusIndicator />
       </div>
 
       {/* Tab Navigation */}
@@ -367,8 +377,9 @@ export default function NUPSVoucherPrint() {
         ))}
       </div>
 
-      {/* Print Tab */}
+      {/* Print Tab - Manager/Admin Only */}
       {tab === 'print' && (
+        <ProtectedSection requireRole="manager" fallbackMessage="Voucher printing requires Manager access">
         <Card className="bg-slate-900/50 border-green-500/30">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
@@ -412,9 +423,10 @@ export default function NUPSVoucherPrint() {
             )}
           </CardContent>
         </Card>
+        </ProtectedSection>
       )}
 
-      {/* Settings Tab */}
+      {/* Settings Tab - Manager/Admin Only */}
       {tab === 'settings' && (
         <Card className="bg-slate-900/50 border-amber-500/30">
           <CardHeader>
@@ -487,12 +499,13 @@ export default function NUPSVoucherPrint() {
 
             <Button onClick={saveSettings} className="bg-amber-600 hover:bg-amber-700">
               Save Settings
-            </Button>
-          </CardContent>
-        </Card>
-      )}
+              </Button>
+              </CardContent>
+              </Card>
+              </ProtectedSection>
+              )}
 
-      {/* Redeem Tab */}
+              {/* Redeem Tab - All Staff */}
       {tab === 'redeem' && (
         <Card className="bg-slate-900/50 border-purple-500/30">
           <CardHeader>
@@ -551,6 +564,7 @@ export default function NUPSVoucherPrint() {
           </CardContent>
         </Card>
       )}
+      </div>
     </div>
   );
 }
