@@ -428,7 +428,7 @@ export default function NUPSVoucherEditor() {
                     <Icon className="w-3 h-3 text-slate-400" />
                     <span className="text-white text-xs">{label}</span>
                   </div>
-                  <Switch checked={elements[key].enabled} onCheckedChange={(c) => updateElement(key, 'enabled', c)} />
+                  <Switch checked={elements?.[key]?.enabled || false} onCheckedChange={(c) => updateElement(key, 'enabled', c)} />
                 </div>
               ))}
             </div>
