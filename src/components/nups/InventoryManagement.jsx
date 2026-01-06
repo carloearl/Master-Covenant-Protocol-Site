@@ -294,11 +294,12 @@ export default function InventoryManagement({ products = [] }) {
           }} className="space-y-4">
             <div>
               <Label>Select Product *</Label>
-              <Select value={batchForm.product_id} onValueChange={handleProductSelect}>
+              <Select value={batchForm.product_id || "none"} onValueChange={(value) => value !== "none" && handleProductSelect(value)}>
                 <SelectTrigger className="bg-gray-800 border-gray-700">
                   <SelectValue placeholder="Choose a product" />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-800 border-gray-700">
+                  <SelectItem value="none">Choose a product...</SelectItem>
                   {(products || []).map(p => (
                     <SelectItem key={p.id} value={p.id}>
                       {p.name} (Current: {p.stock_quantity})
