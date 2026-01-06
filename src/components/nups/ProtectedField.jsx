@@ -8,12 +8,14 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Lock, EyeOff } from 'lucide-react';
 
-// Role hierarchy: STAFF=1, MANAGER=2, ADMIN=3
+// Role hierarchy: ENTERTAINER=1, STAFF=2, MANAGER=3, ADMIN=4
 const ROLE_LEVELS = {
+  'guest': 0,
   'user': 1,
-  'staff': 1,
-  'manager': 2,
-  'admin': 3
+  'entertainer': 1,
+  'staff': 2,
+  'manager': 3,
+  'admin': 4
 };
 
 function getRoleLevel(role) {
@@ -90,11 +92,12 @@ export function useAccessControl() {
     user,
     userRole: user?.role || 'guest',
     isAdmin: user?.role === 'admin',
-    isManager: userLevel >= 2,
-    isStaff: userLevel >= 1,
+    isManager: userLevel >= 3,
+    isStaff: userLevel >= 2,
+    isEntertainer: userLevel >= 1,
     canAccess: (role) => userLevel >= getRoleLevel(role),
-    canExport: () => userLevel >= 2,
-    canViewSensitive: () => userLevel >= 3
+    canExport: () => userLevel >= 3,
+    canViewSensitive: () => userLevel >= 4
   };
 }
 

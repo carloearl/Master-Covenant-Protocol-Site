@@ -1,15 +1,16 @@
 /**
  * NUPS 2.0 - Unified Operations Module
- * All POS, VIP, Staff, Vouchers, Contracts, Reports consolidated
+ * OMEGA DIRECTIVE: SOLE authoritative operational interface
+ * All POS, VIP, Staff, Vouchers, Contracts, Reports, Inventory consolidated
  */
 
-import React, { useState, Suspense, lazy } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
   Clock, Receipt, FileText, HelpCircle, Shield, ShoppingCart, 
-  Package, Users, DoorOpen, BarChart3, Brain, UserCheck, Loader2
+  Package, Users, DoorOpen, BarChart3, Brain, UserCheck, Loader2, Boxes
 } from 'lucide-react';
 import OnlineStatusIndicator from '@/components/nups/OnlineStatusIndicator';
 import InstallPrompt from '@/components/nups/InstallPrompt';
@@ -34,6 +35,45 @@ const EntertainerContract = lazy(() => import('@/components/nups/EntertainerCont
 const AISalesReports = lazy(() => import('@/components/nups/AISalesReports'));
 const AIStaffPerformance = lazy(() => import('@/components/nups/AIStaffPerformance'));
 const AIInsightsPanel = lazy(() => import('@/components/nups/AIInsightsPanel'));
+const InventoryManagement = lazy(() => import('@/components/nups/InventoryManagement'));
+
+// Audit logging utility
+async function logAuditEvent(action, details, role, sessionId) {
+  const entry = {
+    id: crypto.randomUUID(),
+    action,
+    details,
+    role,
+    sessionId: sessionId || sessionStorage.getItem('nups_session_id') || crypto.randomUUID(),
+    timestamp: new Date().toISOString(),
+    deviceInfo: navigator.userAgent
+  };
+  
+  // Store in IndexedDB
+  try {
+    const db = await openAuditDB();
+    const tx = db.transaction('auditLog', 'readwrite');
+    tx.objectStore('auditLog').add(entry);
+    await new Promise((r, e) => { tx.oncomplete = r; tx.onerror = e; });
+  } catch (err) {
+    console.error('Audit log failed:', err);
+  }
+  return entry;
+}
+
+async function openAuditDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('NUPS_AuditLog', 1);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    request.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('auditLog')) {
+        db.createObjectStore('auditLog', { keyPath: 'id' });
+      }
+    };
+  });
+}
 
 function TabLoader() {
   return (
@@ -45,23 +85,45 @@ function TabLoader() {
 
 export default function NUPS() {
   const [activeTab, setActiveTab] = useState('timeclock');
-  const { isAdmin, isManager } = useAccessControl();
+  const { isAdmin, isManager, isStaff, user, userRole } = useAccessControl();
+  const [sessionId] = useState(() => {
+    let sid = sessionStorage.getItem('nups_session_id');
+    if (!sid) {
+      sid = crypto.randomUUID();
+      sessionStorage.setItem('nups_session_id', sid);
+    }
+    return sid;
+  });
 
+  // Log session start
+  useEffect(() => {
+    if (user?.email) {
+      logAuditEvent('SESSION_START', `User ${user.email} opened NUPS`, userRole, sessionId);
+    }
+  }, [user?.email]);
+
+  // Role-based tab configuration
+  // Admin: all tabs
+  // Manager: all except AI Insights
+  // Staff: Time Clock, POS, VIP Members, VIP Rooms, Entertainers, Help
+  // Entertainer: Time Clock, Help only
   const tabs = [
-    { id: 'timeclock', label: 'Time Clock', icon: Clock, color: 'cyan' },
-    { id: 'pos', label: 'POS', icon: ShoppingCart, color: 'green' },
-    { id: 'vouchers', label: 'Vouchers', icon: Receipt, color: 'amber' },
-    { id: 'contracts', label: 'Contracts', icon: FileText, color: 'purple' },
-    { id: 'vip', label: 'VIP Members', icon: Users, color: 'pink' },
-    { id: 'rooms', label: 'VIP Rooms', icon: DoorOpen, color: 'indigo' },
-    { id: 'entertainers', label: 'Entertainers', icon: UserCheck, color: 'rose' },
-    { id: 'products', label: 'Products', icon: Package, color: 'orange', admin: true },
-    { id: 'reports', label: 'Reports', icon: BarChart3, color: 'blue', admin: true },
-    { id: 'ai', label: 'AI Insights', icon: Brain, color: 'violet', admin: true },
-    { id: 'help', label: 'Help', icon: HelpCircle, color: 'slate' },
+    { id: 'timeclock', label: 'Time Clock', icon: Clock, color: 'cyan', roles: ['admin', 'manager', 'staff', 'entertainer', 'user'] },
+    { id: 'pos', label: 'POS', icon: ShoppingCart, color: 'green', roles: ['admin', 'manager', 'staff'] },
+    { id: 'vouchers', label: 'Vouchers', icon: Receipt, color: 'amber', roles: ['admin', 'manager'] },
+    { id: 'contracts', label: 'Contracts', icon: FileText, color: 'purple', roles: ['admin', 'manager'] },
+    { id: 'vip', label: 'VIP Members', icon: Users, color: 'pink', roles: ['admin', 'manager', 'staff'] },
+    { id: 'rooms', label: 'VIP Rooms', icon: DoorOpen, color: 'indigo', roles: ['admin', 'manager', 'staff'] },
+    { id: 'entertainers', label: 'Entertainers', icon: UserCheck, color: 'rose', roles: ['admin', 'manager', 'staff'] },
+    { id: 'inventory', label: 'Inventory', icon: Boxes, color: 'teal', roles: ['admin', 'manager'] },
+    { id: 'products', label: 'Products', icon: Package, color: 'orange', roles: ['admin', 'manager'] },
+    { id: 'reports', label: 'Reports', icon: BarChart3, color: 'blue', roles: ['admin', 'manager'] },
+    { id: 'ai', label: 'AI Insights', icon: Brain, color: 'violet', roles: ['admin'] },
+    { id: 'help', label: 'Help', icon: HelpCircle, color: 'slate', roles: ['admin', 'manager', 'staff', 'entertainer', 'user'] },
   ];
 
-  const visibleTabs = tabs.filter(t => !t.admin || isManager || isAdmin);
+  const currentRole = userRole?.toLowerCase() || 'user';
+  const visibleTabs = tabs.filter(t => t.roles.includes(currentRole) || isAdmin);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900">
@@ -88,10 +150,11 @@ export default function NUPS() {
                 key={tab.id} 
                 value={tab.id} 
                 className={`flex items-center gap-1.5 text-xs sm:text-sm data-[state=active]:bg-${tab.color}-600`}
+                onClick={() => logAuditEvent('TAB_ACCESS', `Accessed ${tab.label}`, userRole, sessionId)}
               >
                 <tab.icon className="w-4 h-4" />
                 <span className="hidden sm:inline">{tab.label}</span>
-                {tab.admin && <Badge className="ml-1 text-[10px] bg-slate-600 px-1">Admin</Badge>}
+                {tab.roles.length <= 2 && <Badge className="ml-1 text-[10px] bg-slate-600 px-1">Admin</Badge>}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -165,12 +228,17 @@ export default function NUPS() {
               <EntertainerCheckIn />
             </TabsContent>
 
-            {/* Products (Admin) */}
+            {/* Inventory (Admin/Manager) */}
+            <TabsContent value="inventory">
+              <InventoryManagement />
+            </TabsContent>
+
+            {/* Products (Admin/Manager) */}
             <TabsContent value="products">
               <ProductManagement />
             </TabsContent>
 
-            {/* Reports (Admin) */}
+            {/* Reports (Admin/Manager) */}
             <TabsContent value="reports">
               <div className="space-y-6">
                 <Tabs defaultValue="sales" className="space-y-4">
