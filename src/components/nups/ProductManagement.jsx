@@ -157,7 +157,7 @@ export default function ProductManagement() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label>Category</Label>
-                    <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
+                    <Select value={formData.category || "Other"} onValueChange={(value) => setFormData({...formData, category: value})}>
                       <SelectTrigger className="bg-gray-800 border-gray-700">
                         <SelectValue />
                       </SelectTrigger>

@@ -59,7 +59,7 @@ export default function AISalesReports() {
             <div className="flex items-center gap-4">
               <div>
                 <label className="text-xs text-slate-400 block mb-1">Report Period</label>
-                <Select value={reportPeriod} onValueChange={setReportPeriod}>
+                <Select value={reportPeriod || "weekly"} onValueChange={setReportPeriod}>
                   <SelectTrigger className="w-40 bg-slate-800 border-slate-600">
                     <SelectValue />
                   </SelectTrigger>
