@@ -83,6 +83,7 @@ import sitemapQr from './pages/sitemap-qr';
 import NUPSTimeClock from './pages/NUPSTimeClock';
 import NUPSVoucherPrint from './pages/NUPSVoucherPrint';
 import NUPSContractPrint from './pages/NUPSContractPrint';
+import NUPSOfflineHelp from './pages/NUPSOfflineHelp';
 import __Layout from './Layout.jsx';
 
 
@@ -172,6 +173,7 @@ export const PAGES = {
     "NUPSTimeClock": NUPSTimeClock,
     "NUPSVoucherPrint": NUPSVoucherPrint,
     "NUPSContractPrint": NUPSContractPrint,
+    "NUPSOfflineHelp": NUPSOfflineHelp,
 }
 
 export const pagesConfig = {
