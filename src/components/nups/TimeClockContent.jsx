@@ -84,6 +84,13 @@ export default function NUPSTimeClockContent() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [showContractModal, setShowContractModal] = useState(false);
   const [pendingClockIn, setPendingClockIn] = useState(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Real-time clock update
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const { data: entertainers = [] } = useQuery({
     queryKey: ['entertainers-timeclock'],
@@ -254,6 +261,18 @@ export default function NUPSTimeClockContent() {
 
   return (
     <div className="space-y-6">
+      {/* Real-Time Clock Display */}
+      <Card className="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-cyan-500/50">
+        <CardContent className="p-6 text-center">
+          <div className="text-5xl font-mono font-bold text-cyan-400 tracking-wider">
+            {currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+          </div>
+          <div className="text-slate-400 mt-2">
+            {currentTime.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="flex items-center justify-between">
         <p className="text-slate-400 text-sm">{activeShifts.length} active • {todayShifts.length} today</p>
         <Button variant="outline" size="sm" onClick={exportData} className="border-slate-600">
