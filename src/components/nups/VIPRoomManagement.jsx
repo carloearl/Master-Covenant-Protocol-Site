@@ -231,7 +231,7 @@ export default function VIPRoomManagement() {
                 required
               >
                 <SelectTrigger className="glass-input">
-                  <SelectValue placeholder="Select entertainer..." />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-900 border-gray-700">
                   <SelectItem value="none">Select entertainer...</SelectItem>
@@ -258,7 +258,7 @@ export default function VIPRoomManagement() {
                 }}
               >
                 <SelectTrigger className="bg-slate-800 border-slate-600">
-                  <SelectValue placeholder="Select or type guest name..." />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-900 border-gray-700">
                   <SelectItem value="none">Select guest...</SelectItem>

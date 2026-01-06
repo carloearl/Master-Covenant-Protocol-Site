@@ -242,7 +242,7 @@ export default function POSCashRegister({ user = {} }) {
               onValueChange={(id) => setSelectedCustomer(id === "walk-in" ? null : (customers || []).find(c => c.id === id) || null)}
             >
               <SelectTrigger className="glass-input text-white">
-                <SelectValue placeholder="Walk-in Customer" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent className="glass-card-dark border-gray-700">
                 <SelectItem value="walk-in">Walk-in Customer</SelectItem>
