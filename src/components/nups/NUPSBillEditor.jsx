@@ -279,11 +279,11 @@ export default function NUPSBillEditor() {
   };
 
   const getElementAtPoint = (x, y) => {
-    if (elements.customImage.enabled && elements.customImage.image && x >= elements.customImage.x && x <= elements.customImage.x + elements.customImage.width && y >= elements.customImage.y && y <= elements.customImage.y + elements.customImage.height) return 'customImage';
-    if (elements.qrCode.enabled && x >= elements.qrCode.x && x <= elements.qrCode.x + elements.qrCode.size && y >= elements.qrCode.y && y <= elements.qrCode.y + elements.qrCode.size) return 'qrCode';
-    if (elements.barcode.enabled && x >= elements.barcode.x && x <= elements.barcode.x + elements.barcode.width && y >= elements.barcode.y && y <= elements.barcode.y + elements.barcode.height) return 'barcode';
-    if (elements.denomination.enabled && x >= elements.denomination.x - 5 && x <= elements.denomination.x + 150 && y >= elements.denomination.y - elements.denomination.fontSize && y <= elements.denomination.y + 5) return 'denomination';
-    if (elements.serial.enabled && x >= elements.serial.x - 5 && x <= elements.serial.x + 250 && y >= elements.serial.y - elements.serial.fontSize && y <= elements.serial.y + 5) return 'serial';
+    if (elements?.customImage?.enabled && elements?.customImage?.image && x >= elements.customImage.x && x <= elements.customImage.x + elements.customImage.width && y >= elements.customImage.y && y <= elements.customImage.y + elements.customImage.height) return 'customImage';
+    if (elements?.qrCode?.enabled && x >= elements.qrCode.x && x <= elements.qrCode.x + elements.qrCode.size && y >= elements.qrCode.y && y <= elements.qrCode.y + elements.qrCode.size) return 'qrCode';
+    if (elements?.barcode?.enabled && x >= elements.barcode.x && x <= elements.barcode.x + elements.barcode.width && y >= elements.barcode.y && y <= elements.barcode.y + elements.barcode.height) return 'barcode';
+    if (elements?.denomination?.enabled && x >= elements.denomination.x - 5 && x <= elements.denomination.x + 150 && y >= elements.denomination.y - elements.denomination.fontSize && y <= elements.denomination.y + 5) return 'denomination';
+    if (elements?.serial?.enabled && x >= elements.serial.x - 5 && x <= elements.serial.x + 250 && y >= elements.serial.y - elements.serial.fontSize && y <= elements.serial.y + 5) return 'serial';
     return null;
   };
 
@@ -428,7 +428,7 @@ export default function NUPSBillEditor() {
               ))}
             </div>
 
-            {elements.customImage.enabled && (
+            {elements?.customImage?.enabled && (
               <div>
                 <Label className="text-slate-400 text-xs">Custom Overlay</Label>
                 <label className="flex items-center gap-2 mt-1 px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded cursor-pointer text-white text-xs">
