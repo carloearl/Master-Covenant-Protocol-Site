@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { 
   Shield, DollarSign, ShoppingCart, Users, LogOut, 
-  Printer, CreditCard, DoorOpen, FileText, UserCheck,
+  Printer, Wallet, DoorOpen, FileText, UserCheck,
   Package, BarChart3, Settings, Loader2, Brain, Crown, Plus
 } from "lucide-react";
 import { Link } from "react-router-dom";

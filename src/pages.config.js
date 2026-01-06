@@ -39,10 +39,14 @@ import ManageSubscription from './pages/ManageSubscription';
 import MasterCovenant from './pages/MasterCovenant';
 import Mobile from './pages/Mobile';
 import NISTChallenge from './pages/NISTChallenge';
+import NUPSContractPrint from './pages/NUPSContractPrint';
 import NUPSDashboard from './pages/NUPSDashboard';
 import NUPSLogin from './pages/NUPSLogin';
+import NUPSOfflineHelp from './pages/NUPSOfflineHelp';
 import NUPSOwner from './pages/NUPSOwner';
 import NUPSStaff from './pages/NUPSStaff';
+import NUPSTimeClock from './pages/NUPSTimeClock';
+import NUPSVoucherPrint from './pages/NUPSVoucherPrint';
 import NotFound from './pages/NotFound';
 import PartnerPortal from './pages/PartnerPortal';
 import Partners from './pages/Partners';
@@ -80,10 +84,6 @@ import VIPMemberProfile from './pages/VIPMemberProfile';
 import VideoUpload from './pages/VideoUpload';
 import ViewInteractive from './pages/ViewInteractive';
 import sitemapQr from './pages/sitemap-qr';
-import NUPSTimeClock from './pages/NUPSTimeClock';
-import NUPSVoucherPrint from './pages/NUPSVoucherPrint';
-import NUPSContractPrint from './pages/NUPSContractPrint';
-import NUPSOfflineHelp from './pages/NUPSOfflineHelp';
 import __Layout from './Layout.jsx';
 
 
@@ -129,10 +129,14 @@ export const PAGES = {
     "MasterCovenant": MasterCovenant,
     "Mobile": Mobile,
     "NISTChallenge": NISTChallenge,
+    "NUPSContractPrint": NUPSContractPrint,
     "NUPSDashboard": NUPSDashboard,
     "NUPSLogin": NUPSLogin,
+    "NUPSOfflineHelp": NUPSOfflineHelp,
     "NUPSOwner": NUPSOwner,
     "NUPSStaff": NUPSStaff,
+    "NUPSTimeClock": NUPSTimeClock,
+    "NUPSVoucherPrint": NUPSVoucherPrint,
     "NotFound": NotFound,
     "PartnerPortal": PartnerPortal,
     "Partners": Partners,
@@ -170,10 +174,6 @@ export const PAGES = {
     "VideoUpload": VideoUpload,
     "ViewInteractive": ViewInteractive,
     "sitemap-qr": sitemapQr,
-    "NUPSTimeClock": NUPSTimeClock,
-    "NUPSVoucherPrint": NUPSVoucherPrint,
-    "NUPSContractPrint": NUPSContractPrint,
-    "NUPSOfflineHelp": NUPSOfflineHelp,
 }
 
 export const pagesConfig = {
