@@ -497,7 +497,8 @@ export default function NUPSVoucherEditor() {
               <Badge className={colorMode === 'color' ? 'bg-cyan-500/20 text-cyan-400' : 'bg-slate-500/20 text-slate-400'}>{colorMode === 'color' ? '🎨 Color' : '⚫ Mono'}</Badge>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-6">
+            {/* Single Voucher Editor */}
             <div className="bg-slate-800 rounded-lg p-4 flex justify-center">
               <canvas
                 ref={canvasRef}
@@ -511,9 +512,58 @@ export default function NUPSVoucherEditor() {
                 style={{ maxWidth: '100%' }}
               />
             </div>
-            <p className="text-xs text-slate-500 mt-2 text-center">
+            <p className="text-xs text-slate-500 text-center">
               {selectedElement ? `Selected: ${selectedElement} — Drag to move, corner to resize` : 'Click an element to select'}
             </p>
+
+            {/* 5-Voucher Stacked Print Preview */}
+            <div className="border-t border-slate-700 pt-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-white text-sm font-semibold flex items-center gap-2">
+                  <Printer className="w-4 h-4 text-green-400" />
+                  Print Preview (5-Voucher Sheet)
+                </h3>
+                <Badge className="bg-green-500/20 text-green-400">1×5 Layout</Badge>
+              </div>
+              <div 
+                className="bg-white rounded-lg p-3 mx-auto overflow-auto"
+                style={{ 
+                  maxWidth: '100%',
+                  maxHeight: '450px'
+                }}
+              >
+                <div 
+                  className="flex flex-col gap-2 items-center"
+                  style={{ minWidth: '340px' }}
+                >
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <div 
+                      key={num} 
+                      className="relative border border-gray-300 rounded overflow-hidden bg-white flex-shrink-0"
+                      style={{ 
+                        width: `${CANVAS_WIDTH}px`,
+                        height: `${CANVAS_HEIGHT}px`,
+                        filter: colorMode === 'monochrome' ? 'grayscale(100%)' : 'none'
+                      }}
+                    >
+                      {canvasRef.current && (
+                        <img 
+                          src={canvasRef.current.toDataURL('image/png')} 
+                          alt={`Voucher ${num}`}
+                          className="w-full h-full object-contain"
+                        />
+                      )}
+                      <div className="absolute bottom-1 right-1 bg-black/50 text-white text-[8px] px-1 rounded">
+                        #{num}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 mt-2 text-center">
+                This is how your 5 vouchers will appear stacked on a printed page
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
