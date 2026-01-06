@@ -76,10 +76,11 @@ import Terms from './pages/Terms';
 import TrustSecurity from './pages/TrustSecurity';
 import UserSettings from './pages/UserSettings';
 import VIPContract from './pages/VIPContract';
+import VIPMemberProfile from './pages/VIPMemberProfile';
 import VideoUpload from './pages/VideoUpload';
 import ViewInteractive from './pages/ViewInteractive';
 import sitemapQr from './pages/sitemap-qr';
-import VIPMemberProfile from './pages/VIPMemberProfile';
+import NUPSTimeClock from './pages/NUPSTimeClock';
 import __Layout from './Layout.jsx';
 
 
@@ -162,10 +163,11 @@ export const PAGES = {
     "TrustSecurity": TrustSecurity,
     "UserSettings": UserSettings,
     "VIPContract": VIPContract,
+    "VIPMemberProfile": VIPMemberProfile,
     "VideoUpload": VideoUpload,
     "ViewInteractive": ViewInteractive,
     "sitemap-qr": sitemapQr,
-    "VIPMemberProfile": VIPMemberProfile,
+    "NUPSTimeClock": NUPSTimeClock,
 }
 
 export const pagesConfig = {
