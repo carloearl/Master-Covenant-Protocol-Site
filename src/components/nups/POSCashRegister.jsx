@@ -385,7 +385,7 @@ export default function POSCashRegister({ user = {} }) {
 
             <div>
               <Label className="text-sm text-gray-400 mb-2 block">Payment Method</Label>
-              <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+              <Select value={paymentMethod || "Cash"} onValueChange={setPaymentMethod}>
                 <SelectTrigger className="glass-input">
                   <SelectValue />
                 </SelectTrigger>

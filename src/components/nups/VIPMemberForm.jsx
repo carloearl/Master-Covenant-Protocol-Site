@@ -260,7 +260,7 @@ export default function VIPMemberForm({ guest, onSave, onCancel }) {
                 </div>
                 <div>
                   <Label className="text-slate-300">Preferred Language</Label>
-                  <Select value={form.language_preference} onValueChange={(v) => handleChange('language_preference', v)}>
+                  <Select value={form.language_preference || "English"} onValueChange={(v) => handleChange('language_preference', v)}>
                     <SelectTrigger className="bg-slate-900 border-slate-600">
                       <SelectValue />
                     </SelectTrigger>
@@ -641,7 +641,7 @@ export default function VIPMemberForm({ guest, onSave, onCancel }) {
                 </div>
                 <div>
                   <Label className="text-slate-300">VIP Tier</Label>
-                  <Select value={form.vip_tier} onValueChange={(v) => handleChange('vip_tier', v)}>
+                  <Select value={form.vip_tier || "Standard"} onValueChange={(v) => handleChange('vip_tier', v)}>
                     <SelectTrigger className="bg-slate-900 border-slate-600">
                       <SelectValue />
                     </SelectTrigger>
