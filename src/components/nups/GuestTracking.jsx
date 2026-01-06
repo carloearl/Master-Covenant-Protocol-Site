@@ -99,6 +99,13 @@ export default function GuestTracking() {
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {activeGuests.length === 0 && (
+              <div className="col-span-full text-center py-12 text-slate-500">
+                <UserPlus className="w-12 h-12 mx-auto mb-4 opacity-30" />
+                <p>No VIP guests currently in building</p>
+                <p className="text-sm">Check in a guest to begin tracking</p>
+              </div>
+            )}
             {activeGuests.map((guest) => {
             const duration = Math.floor((new Date() - new Date(guest.check_in_time)) / 60000);
             return (

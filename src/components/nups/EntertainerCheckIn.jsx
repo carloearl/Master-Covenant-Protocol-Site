@@ -139,6 +139,13 @@ export default function EntertainerCheckIn() {
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {activeShifts.length === 0 && (
+              <div className="col-span-full text-center py-12 text-slate-500">
+                <Users className="w-12 h-12 mx-auto mb-4 opacity-30" />
+                <p>No entertainers currently on shift</p>
+                <p className="text-sm">Check in an entertainer above</p>
+              </div>
+            )}
             {activeShifts.map((shift) => {
               const duration = Math.floor((new Date() - new Date(shift.check_in_time)) / 60000);
               return (
