@@ -189,20 +189,37 @@ p {
   max-height: inherit !important;
 }
 
-/* Ensure dialog content doesn't block scroll */
+/* Ensure dialog content allows internal scroll */
 [data-radix-dialog-content] {
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+  max-height: 85vh;
 }
 
 /* Contract modal specific scroll fix */
 .contract-scroll-area {
-  overflow-y: auto !important;
+  overflow-y: scroll !important;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   scrollbar-width: thin;
+}
+
+/* CRITICAL: Fix pointer-events on dialog overlays blocking scroll */
+[data-radix-dialog-overlay] {
+  pointer-events: auto;
+}
+
+/* Allow scroll inside dialog children */
+[data-radix-dialog-content] > div {
+  pointer-events: auto;
+}
+
+/* Force scrollable areas in dialogs to work */
+[role="dialog"] div[style*="overflow"] {
+  overflow-y: scroll !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
 }
 
 .chat-scroll-container::-webkit-scrollbar {

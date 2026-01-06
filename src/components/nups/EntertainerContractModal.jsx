@@ -183,7 +183,7 @@ export default function EntertainerContractModal({ open, onOpenChange, entertain
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-slate-900 border-purple-500/50 max-w-3xl max-h-[85vh] flex flex-col overflow-hidden">
+      <DialogContent className="bg-slate-900 border-purple-500/50 max-w-3xl max-h-[85vh] flex flex-col" style={{ overflow: 'visible' }}>
         <DialogHeader>
           <DialogTitle className="text-white flex items-center gap-2">
             <AlertTriangle className="w-5 h-5 text-amber-400" />
@@ -194,15 +194,20 @@ export default function EntertainerContractModal({ open, onOpenChange, entertain
         <div 
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex-1 min-h-[250px] max-h-[40vh] border border-slate-700 rounded-lg p-4 bg-slate-950 overflow-y-auto overscroll-contain"
+          className="flex-1 min-h-[200px] border border-slate-700 rounded-lg p-4 bg-slate-950"
           style={{ 
+            overflowY: 'scroll',
+            overscrollBehavior: 'contain',
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'thin',
-            scrollbarColor: 'rgba(168,85,247,0.5) transparent'
+            scrollbarColor: 'rgba(168,85,247,0.5) transparent',
+            maxHeight: 'calc(40vh - 20px)',
+            touchAction: 'pan-y',
+            position: 'relative'
           }}
         >
-          <pre className="text-slate-300 text-xs whitespace-pre-wrap font-mono leading-relaxed">{CONTRACT_TEXT}</pre>
-          <div className="h-8" />
+          <pre className="text-slate-300 text-xs whitespace-pre-wrap font-mono leading-relaxed select-text">{CONTRACT_TEXT}</pre>
+          <div className="h-12" />
         </div>
 
         {!scrolledToEnd && (
