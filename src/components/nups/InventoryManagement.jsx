@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Package, AlertTriangle, TrendingDown, Plus, Search } from "lucide-react";
 
-export default function InventoryManagement({ products }) {
+export default function InventoryManagement({ products = [] }) {
   const queryClient = useQueryClient();
   const [showBatchDialog, setShowBatchDialog] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -40,7 +40,7 @@ export default function InventoryManagement({ products }) {
     onSuccess: () => {
       queryClient.invalidateQueries(['pos-inventory-batches']);
       // Update product stock
-      const product = products.find(p => p.id === batchForm.product_id);
+      const product = (products || []).find(p => p.id === batchForm.product_id);
       if (product) {
         base44.entities.POSProduct.update(product.id, {
           stock_quantity: product.stock_quantity + batchForm.quantity
@@ -64,11 +64,11 @@ export default function InventoryManagement({ products }) {
     }
   });
 
-  const lowStockProducts = products.filter(p => 
+  const lowStockProducts = (products || []).filter(p => 
     p.stock_quantity <= (p.low_stock_threshold || 10)
   );
 
-  const filteredProducts = products.filter(p => {
+  const filteredProducts = (products || []).filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          p.sku?.toLowerCase().includes(searchTerm.toLowerCase());
     
@@ -81,7 +81,7 @@ export default function InventoryManagement({ products }) {
   });
 
   const handleProductSelect = (productId) => {
-    const product = products.find(p => p.id === productId);
+    const product = (products || []).find(p => p.id === productId);
     if (product) {
       setSelectedProduct(product);
       setBatchForm({
@@ -299,7 +299,7 @@ export default function InventoryManagement({ products }) {
                   <SelectValue placeholder="Choose a product" />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-800 border-gray-700">
-                  {products.map(p => (
+                  {(products || []).map(p => (
                     <SelectItem key={p.id} value={p.id}>
                       {p.name} (Current: {p.stock_quantity})
                     </SelectItem>
