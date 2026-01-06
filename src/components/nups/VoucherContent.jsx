@@ -13,6 +13,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Printer, Settings, Receipt, DollarSign, History, Scan, Upload, Image, Move } from 'lucide-react';
 import { toast } from 'sonner';
 import { ProtectedSection, useAccessControl } from '@/components/nups/ProtectedField';
+import NUPSVoucherEditor from '@/components/nups/NUPSVoucherEditor';
+import NUPSBillEditor from '@/components/nups/NUPSBillEditor';
 
 const DENOMINATIONS = [5, 10, 20, 50, 100];
 const VENUES = [
@@ -471,85 +473,24 @@ export default function NUPSVoucherContent() {
   return (
     <div className="space-y-6">
       <div className="flex gap-2 mb-6 flex-wrap">
-        {['print', 'template', 'settings', 'redeem', 'history'].map(t => (
+        {['print', 'editor5', 'editor4', 'settings', 'redeem', 'history'].map(t => (
           <Button key={t} variant={tab === t ? 'default' : 'outline'} onClick={() => setTab(t)} className={tab === t ? 'bg-amber-600' : 'border-slate-600'}>
             {t.charAt(0).toUpperCase() + t.slice(1)}
           </Button>
         ))}
       </div>
 
-      {/* Template Upload Tab - Manager Only */}
-      {tab === 'template' && (
-        <ProtectedSection requireRole="manager" fallbackMessage="Template configuration requires Manager access">
-          <Card className="bg-slate-900/50 border-purple-500/30">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Image className="w-5 h-5 text-purple-400" />
-                Voucher Template Configuration
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Image Upload */}
-              <div>
-                <Label className="text-white mb-2 block">Upload Voucher Design (5-voucher layout)</Label>
-                <div className="flex items-center gap-4">
-                  <label className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg cursor-pointer">
-                    <Upload className="w-4 h-4" />
-                    <span>Choose File</span>
-                    <input type="file" accept="image/*" onChange={handleTemplateUpload} className="hidden" />
-                  </label>
-                  {templateLoaded && <Badge className="bg-green-500/20 text-green-400">Template Loaded</Badge>}
-                </div>
-              </div>
+      {/* 5-Voucher Visual Editor - Manager Only */}
+      {tab === 'editor5' && (
+        <ProtectedSection requireRole="manager" fallbackMessage="Visual editor requires Manager access">
+          <NUPSVoucherEditor />
+        </ProtectedSection>
+      )}
 
-              {/* Template Preview */}
-              {voucherTemplate && (
-                <div className="p-4 bg-slate-800/50 rounded-lg">
-                  <Label className="text-slate-400 text-sm mb-2 block">Template Preview (Monochrome)</Label>
-                  <img src={voucherTemplate} alt="Voucher Template" className="max-w-full h-auto rounded border border-slate-600 grayscale" style={{ maxHeight: '300px' }} />
-                </div>
-              )}
-
-              {/* Overlay Positions */}
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <Label className="text-white flex items-center gap-2"><Move className="w-4 h-4 text-cyan-400" />Barcode Position</Label>
-                  <div className="flex gap-2">
-                    <Input type="number" value={overlayPositions.barcodeX} onChange={e => setOverlayPositions({...overlayPositions, barcodeX: parseInt(e.target.value) || 0})} placeholder="X" className="bg-slate-800 border-slate-600" />
-                    <Input type="number" value={overlayPositions.barcodeY} onChange={e => setOverlayPositions({...overlayPositions, barcodeY: parseInt(e.target.value) || 0})} placeholder="Y" className="bg-slate-800 border-slate-600" />
-                  </div>
-                </div>
-                
-                <div className="space-y-3">
-                  <Label className="text-white flex items-center gap-2"><Move className="w-4 h-4 text-cyan-400" />Serial Number Position</Label>
-                  <div className="flex gap-2">
-                    <Input type="number" value={overlayPositions.serialX} onChange={e => setOverlayPositions({...overlayPositions, serialX: parseInt(e.target.value) || 0})} placeholder="X" className="bg-slate-800 border-slate-600" />
-                    <Input type="number" value={overlayPositions.serialY} onChange={e => setOverlayPositions({...overlayPositions, serialY: parseInt(e.target.value) || 0})} placeholder="Y" className="bg-slate-800 border-slate-600" />
-                  </div>
-                </div>
-                
-                <div className="space-y-3">
-                  <Label className="text-white flex items-center gap-2"><Move className="w-4 h-4 text-cyan-400" />Denomination Position</Label>
-                  <div className="flex gap-2">
-                    <Input type="number" value={overlayPositions.denomX} onChange={e => setOverlayPositions({...overlayPositions, denomX: parseInt(e.target.value) || 0})} placeholder="X" className="bg-slate-800 border-slate-600" />
-                    <Input type="number" value={overlayPositions.denomY} onChange={e => setOverlayPositions({...overlayPositions, denomY: parseInt(e.target.value) || 0})} placeholder="Y" className="bg-slate-800 border-slate-600" />
-                  </div>
-                </div>
-                
-                <div className="space-y-3">
-                  <Label className="text-white flex items-center gap-2"><Move className="w-4 h-4 text-cyan-400" />QR Code Position (Optional)</Label>
-                  <div className="flex gap-2">
-                    <Input type="number" value={overlayPositions.qrX} onChange={e => setOverlayPositions({...overlayPositions, qrX: parseInt(e.target.value) || 0})} placeholder="X" className="bg-slate-800 border-slate-600" />
-                    <Input type="number" value={overlayPositions.qrY} onChange={e => setOverlayPositions({...overlayPositions, qrY: parseInt(e.target.value) || 0})} placeholder="Y" className="bg-slate-800 border-slate-600" />
-                  </div>
-                </div>
-              </div>
-
-              <Button onClick={saveOverlayPositions} className="bg-purple-600 hover:bg-purple-700">
-                Save Overlay Positions
-              </Button>
-            </CardContent>
-          </Card>
+      {/* 4-Bill Visual Editor - Manager Only */}
+      {tab === 'editor4' && (
+        <ProtectedSection requireRole="manager" fallbackMessage="Visual editor requires Manager access">
+          <NUPSBillEditor />
         </ProtectedSection>
       )}
 
