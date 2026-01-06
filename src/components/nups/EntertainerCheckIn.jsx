@@ -105,7 +105,7 @@ export default function EntertainerCheckIn() {
               </SelectContent>
             </Select>
 
-            <Select value={location} onValueChange={setLocation}>
+            <Select value={location || "Main Floor"} onValueChange={setLocation}>
               <SelectTrigger className="glass-input">
                 <SelectValue />
               </SelectTrigger>
