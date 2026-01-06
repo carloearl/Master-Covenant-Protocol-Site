@@ -91,7 +91,7 @@ export default function EntertainerCheckIn() {
           <div className="grid md:grid-cols-3 gap-4">
             <Select value={selectedEntertainer || "none"} onValueChange={(val) => setSelectedEntertainer(val === "none" ? null : val)}>
               <SelectTrigger className="glass-input">
-                <SelectValue placeholder="Select entertainer..." />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-gray-900 border-gray-700">
                 <SelectItem value="none">Select entertainer...</SelectItem>
