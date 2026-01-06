@@ -552,7 +552,7 @@ export default function NUPSVoucherContent() {
               </div>
               <div>
                 <Label className="text-white mb-2 block">Venue</Label>
-                <Select value={venue} onValueChange={setVenue}>
+                <Select value={venue || "DP"} onValueChange={setVenue}>
                   <SelectTrigger className="bg-slate-800 border-slate-600"><SelectValue /></SelectTrigger>
                   <SelectContent className="bg-slate-900 border-slate-700">
                     {VENUES.map(v => (<SelectItem key={v.id} value={v.id}>{v.id} - {v.name}</SelectItem>))}
@@ -561,7 +561,7 @@ export default function NUPSVoucherContent() {
               </div>
               <div>
                 <Label className="text-white mb-2 block">Denomination</Label>
-                <Select value={String(denomination)} onValueChange={v => setDenomination(Number(v))}>
+                <Select value={String(denomination || 20)} onValueChange={v => setDenomination(Number(v))}>
                   <SelectTrigger className="bg-slate-800 border-slate-600"><SelectValue /></SelectTrigger>
                   <SelectContent className="bg-slate-900 border-slate-700">
                     {DENOMINATIONS.map(d => (<SelectItem key={d} value={String(d)}>${d}</SelectItem>))}
