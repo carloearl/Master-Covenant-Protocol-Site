@@ -225,7 +225,7 @@ export default function NUPS() {
                   </TabsList>
                   <TabsContent value="tracking"><GuestTracking /></TabsContent>
                   <TabsContent value="register"><VIPMemberForm /></TabsContent>
-                  <TabsContent value="ai"><VIPAIRecommendations guest={null} /></TabsContent>
+                  <TabsContent value="ai"><VIPAIRecommendations /></TabsContent>
                 </Tabs>
               </div>
             </TabsContent>
