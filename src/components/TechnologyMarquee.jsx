@@ -124,40 +124,65 @@ export default function TechnologyMarquee() {
         </div>
       ))}
 
-      <style>{`
-        .marquee-container {
-          overflow: hidden;
-          padding: 0.75rem 0;
-        }
-        .marquee-content {
-          display: flex;
-          gap: 2rem;
-          width: max-content;
-          animation: marquee-left var(--marquee-speed) linear infinite;
-        }
-        .marquee-right {
-          animation-name: marquee-right;
-        }
-        .logo-item {
-          width: 120px;
-          height: 60px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .logo-img {
-          max-width: 100%;
-          max-height: 100%;
-          filter: brightness(0) invert(1) opacity(0.75);
-        }
-        @keyframes marquee-left {
-          to { transform: translateX(calc(-1 * var(--marquee-distance))); }
-        }
-        @keyframes marquee-right {
-          from { transform: translateX(calc(-1 * var(--marquee-distance))); }
-          to { transform: translateX(0); }
-        }
-      `}</style>
-    </div>
-  );
-}
+<style>{`
+  .marquee-container {
+    overflow: hidden;
+    padding: 0.75rem 0;
+    position: relative;
+  }
+
+  .marquee-content {
+    display: flex;
+    gap: 2rem;
+    width: max-content;
+    animation: marquee-left var(--marquee-speed) linear infinite;
+    will-change: transform;
+  }
+
+  .marquee-right {
+    animation-name: marquee-right;
+  }
+
+  .logo-item {
+    width: 120px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+  }
+
+  .logo-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: brightness(0) invert(1) opacity(0.65);
+    transition:
+      filter 0.35s ease,
+      transform 0.35s ease,
+      filter 0.35s ease;
+  }
+
+  /* 🔥 HOVER MAGIC */
+  .logo-item:hover {
+    transform: translateY(-2px) scale(1.12);
+    z-index: 5;
+  }
+
+  .logo-item:hover .logo-img {
+    filter: brightness(1) invert(0) opacity(1)
+      drop-shadow(0 0 18px rgba(99, 102, 241, 0.85))
+      drop-shadow(0 0 36px rgba(99, 102, 241, 0.55));
+  }
+
+  @keyframes marquee-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-1 * var(--marquee-distance))); }
+  }
+
+  @keyframes marquee-right {
+    from { transform: translateX(calc(-1 * var(--marquee-distance))); }
+    to { transform: translateX(0); }
+  }
+`}</style>
