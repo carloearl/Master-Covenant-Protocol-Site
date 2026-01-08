@@ -514,4 +514,101 @@ export default function TechnologyMarqueeEEE() {
     </section>
   );
 }
+import React, { useMemo } from "react";
+
+export default function TechnologyMarqueeEEE() {
+
+  /* =========================
+     LOGO DATA (ALL COMPANIES)
+     ========================= */
+
+  const row1Logos = [
+    { name: "AWS", logo: "https://www.vectorlogo.zone/logos/amazon_aws/amazon_aws-ar21.svg" },
+    { name: "Google Cloud", logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" },
+    { name: "Microsoft Azure", logo: "https://www.vectorlogo.zone/logos/microsoft_azure/microsoft_azure-ar21.svg" },
+    { name: "Vercel", logo: "https://www.vectorlogo.zone/logos/vercel/vercel-ar21.svg" },
+    { name: "Docker", logo: "https://www.vectorlogo.zone/logos/docker/docker-ar21.svg" },
+    { name: "PostgreSQL", logo: "https://www.vectorlogo.zone/logos/postgresql/postgresql-ar21.svg" },
+    { name: "MongoDB", logo: "https://www.vectorlogo.zone/logos/mongodb/mongodb-ar21.svg" },
+    { name: "Redis", logo: "https://www.vectorlogo.zone/logos/redis/redis-ar21.svg" },
+    { name: "OpenAI", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
+    { name: "NVIDIA", logo: "https://www.vectorlogo.zone/logos/nvidia/nvidia-ar21.svg" },
+    { name: "Stripe", logo: "https://logo.clearbit.com/stripe.com" },
+    { name: "Square", logo: "https://logo.clearbit.com/squareup.com" },
+    { name: "Cloudflare", logo: "https://www.vectorlogo.zone/logos/cloudflare/cloudflare-ar21.svg" },
+    { name: "GitHub", logo: "https://www.vectorlogo.zone/logos/github/github-ar21.svg" },
+    { name: "Base44", logo: "https://avatars.githubusercontent.com/u/145019558?s=200&v=4" }
+  ];
+
+  const row2Logos = [
+    { name: "Salesforce", logo: "https://www.vectorlogo.zone/logos/salesforce/salesforce-ar21.svg" },
+    { name: "Oracle", logo: "https://www.vectorlogo.zone/logos/oracle/oracle-ar21.svg" },
+    { name: "SAP", logo: "https://www.vectorlogo.zone/logos/sap/sap-ar21.svg" },
+    { name: "IBM", logo: "https://www.vectorlogo.zone/logos/ibm/ibm-ar21.svg" },
+    { name: "ServiceNow", logo: "https://upload.wikimedia.org/wikipedia/commons/5/57/ServiceNow_logo.svg" },
+    { name: "Snowflake", logo: "https://www.vectorlogo.zone/logos/snowflake/snowflake-ar21.svg" },
+    { name: "Databricks", logo: "https://www.vectorlogo.zone/logos/databricks/databricks-ar21.svg" },
+    { name: "Perplexity", logo: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/perplexity-ai-icon.png" },
+    { name: "Anthropic", logo: "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg" }
+  ];
+
+  const row3Logos = [
+    { name: "Apple", logo: "https://www.vectorlogo.zone/logos/apple/apple-ar21.svg" },
+    { name: "Microsoft", logo: "https://www.vectorlogo.zone/logos/microsoft/microsoft-ar21.svg" },
+    { name: "Google", logo: "https://www.vectorlogo.zone/logos/google/google-ar21.svg" },
+    { name: "Amazon", logo: "https://www.vectorlogo.zone/logos/amazon/amazon-ar21.svg" },
+    { name: "Meta", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" },
+    { name: "Visa", logo: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" },
+    { name: "Mastercard", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" }
+  ];
+
+  /* =========================
+     CATEGORY GLOW LOGIC
+     ========================= */
+
+  const categories = useMemo(() => {
+    const AI = new Set(["OpenAI", "Anthropic", "Perplexity", "NVIDIA"]);
+    const FIN = new Set(["Stripe", "Square", "Visa", "Mastercard"]);
+    const pick = (name) => (AI.has(name) ? "ai" : FIN.has(name) ? "fin" : "core");
+    return { pick };
+  }, []);
+
+  const repeat = (arr, n) => Array.from({ length: n }, () => arr).flat();
+
+  /* =========================
+     RENDER
+     ========================= */
+
+  return (
+    <section className="eee-wrap">
+
+      {/* === GLYPH HEADER === */}
+      <div className="eee-glyph-wrap">
+        <div className="eee-glyph">
+          <span className="eee-g">E</span>
+          <span className="eee-g">E</span>
+          <span className="eee-g">E</span>
+        </div>
+        <h2 className="eee-title">Enterprise Engineering Excellence</h2>
+        <p className="eee-sub">Triple-E Standard · Enterprise · Engineering · Ecosystem</p>
+      </div>
+
+      {/* === MARQUEE === */}
+      <div className="eee-fullbleed">
+        {[row1Logos, row2Logos, row3Logos].map((row, r) => (
+          <div className="marquee-container" key={r}>
+            <div className={`marquee-track ${r % 2 ? "right" : "left"}`}>
+              {repeat(row, 5).map((c, i) => (
+                <div key={`${c.name}-${i}`} className={`logo-item glow-${categories.pick(c.name)}`}>
+                  <img src={c.logo} alt={c.name} />
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </section>
+  );
+}
 
