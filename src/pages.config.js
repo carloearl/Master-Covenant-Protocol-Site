@@ -35,6 +35,7 @@ import ImageGenerator from './pages/ImageGenerator';
 import ImageLab from './pages/ImageLab';
 import IntegrationTests from './pages/IntegrationTests';
 import InteractiveImageStudio from './pages/InteractiveImageStudio';
+import Login from './pages/Login';
 import ManageSubscription from './pages/ManageSubscription';
 import MasterCovenant from './pages/MasterCovenant';
 import Mobile from './pages/Mobile';
@@ -126,6 +127,7 @@ export const PAGES = {
     "ImageLab": ImageLab,
     "IntegrationTests": IntegrationTests,
     "InteractiveImageStudio": InteractiveImageStudio,
+    "Login": Login,
     "ManageSubscription": ManageSubscription,
     "MasterCovenant": MasterCovenant,
     "Mobile": Mobile,
