@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 
-export default function TechnologyMarqueeEEE() {
+export default function TechnologyMarquee() {
 
   /* =====================================================
      CANONICAL COMPANY LIST — EDIT HERE ONLY
