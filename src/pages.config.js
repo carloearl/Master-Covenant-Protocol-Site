@@ -21,7 +21,6 @@ import Dashboard from './pages/Dashboard';
 import DeveloperAPI from './pages/DeveloperAPI';
 import DreamTeam from './pages/DreamTeam';
 import EmergencyBackup from './pages/EmergencyBackup';
-import EntertainerCheckIn from './pages/EntertainerCheckIn';
 import FAQ from './pages/FAQ';
 import FullExport from './pages/FullExport';
 import GlyphBot from './pages/GlyphBot';
@@ -40,15 +39,6 @@ import ManageSubscription from './pages/ManageSubscription';
 import MasterCovenant from './pages/MasterCovenant';
 import Mobile from './pages/Mobile';
 import NISTChallenge from './pages/NISTChallenge';
-import NUPS from './pages/NUPS';
-import NUPSContractPrint from './pages/NUPSContractPrint';
-import NUPSDashboard from './pages/NUPSDashboard';
-import NUPSLogin from './pages/NUPSLogin';
-import NUPSOfflineHelp from './pages/NUPSOfflineHelp';
-import NUPSOwner from './pages/NUPSOwner';
-import NUPSStaff from './pages/NUPSStaff';
-import NUPSTimeClock from './pages/NUPSTimeClock';
-import NUPSVoucherPrint from './pages/NUPSVoucherPrint';
 import NotFound from './pages/NotFound';
 import PartnerPortal from './pages/PartnerPortal';
 import Partners from './pages/Partners';
@@ -81,12 +71,9 @@ import SystemStatus from './pages/SystemStatus';
 import Terms from './pages/Terms';
 import TrustSecurity from './pages/TrustSecurity';
 import UserSettings from './pages/UserSettings';
-import VIPContract from './pages/VIPContract';
-import VIPMemberProfile from './pages/VIPMemberProfile';
 import VideoUpload from './pages/VideoUpload';
 import ViewInteractive from './pages/ViewInteractive';
 import sitemapQr from './pages/sitemap-qr';
-import NUPSRoute from './pages/NUPSRoute';
 import __Layout from './Layout.jsx';
 
 
@@ -114,7 +101,6 @@ export const PAGES = {
     "DeveloperAPI": DeveloperAPI,
     "DreamTeam": DreamTeam,
     "EmergencyBackup": EmergencyBackup,
-    "EntertainerCheckIn": EntertainerCheckIn,
     "FAQ": FAQ,
     "FullExport": FullExport,
     "GlyphBot": GlyphBot,
@@ -133,15 +119,6 @@ export const PAGES = {
     "MasterCovenant": MasterCovenant,
     "Mobile": Mobile,
     "NISTChallenge": NISTChallenge,
-    "NUPS": NUPS,
-    "NUPSContractPrint": NUPSContractPrint,
-    "NUPSDashboard": NUPSDashboard,
-    "NUPSLogin": NUPSLogin,
-    "NUPSOfflineHelp": NUPSOfflineHelp,
-    "NUPSOwner": NUPSOwner,
-    "NUPSStaff": NUPSStaff,
-    "NUPSTimeClock": NUPSTimeClock,
-    "NUPSVoucherPrint": NUPSVoucherPrint,
     "NotFound": NotFound,
     "PartnerPortal": PartnerPortal,
     "Partners": Partners,
@@ -174,12 +151,9 @@ export const PAGES = {
     "Terms": Terms,
     "TrustSecurity": TrustSecurity,
     "UserSettings": UserSettings,
-    "VIPContract": VIPContract,
-    "VIPMemberProfile": VIPMemberProfile,
     "VideoUpload": VideoUpload,
     "ViewInteractive": ViewInteractive,
     "sitemap-qr": sitemapQr,
-    "NUPSRoute": NUPSRoute,
 }
 
 export const pagesConfig = {
