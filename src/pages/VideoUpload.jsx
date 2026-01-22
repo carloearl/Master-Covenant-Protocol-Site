@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Upload, Copy, CheckCircle2, AlertCircle, QrCode, Image, Music, Video, Download } from 'lucide-react';
 import { toast } from 'sonner';
