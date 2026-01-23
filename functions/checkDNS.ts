@@ -69,8 +69,8 @@ Deno.serve(async (req) => {
         routing.www = wwwRouting;
 
         // 3. Propagation Analysis
-        const expectedIP = "216.24.57.1";
-        const rootPropagated = aRecords.includes(expectedIP);
+        const expectedIPs = ["216.24.57.7", "216.24.57.251"];
+        const rootPropagated = expectedIPs.some(ip => aRecords.includes(ip));
         
         // Check for common GoDaddy Parking IPs (causes SSL mismatch)
         const isGoDaddyParked = (ip) => {
@@ -83,8 +83,9 @@ Deno.serve(async (req) => {
         const hasAAAARecords = aaaaRecords.length > 0;
         const hasCAARecords = caaRecords.length > 0;
 
-        // Verify exactly the Render IP
-        const isRenderIP = aRecords.includes(expectedIP) && aRecords.length === 1;
+        // Verify exactly the Render IPs
+        const hasCorrectIPs = expectedIPs.every(ip => aRecords.includes(ip));
+        const isRenderIP = hasCorrectIPs && aRecords.length === 2;
 
         // For WWW, check if it points to something that looks like render or base44
         const wwwPropagated = wwwRecords.some(r => 
