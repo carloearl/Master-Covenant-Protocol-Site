@@ -433,15 +433,20 @@ User Context:
 
       <footer className="glyph-glass-dark border-t border-blue-400/20 px-4 py-4 relative z-10">
         <div className="flex items-center gap-3">
-          <input
-            type="text"
+          <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
             placeholder="Ask me anything! 💠"
             disabled={loading}
-            className="flex-1 bg-blue-950/50 border-2 border-blue-400/30 rounded-xl px-4 py-3 text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent min-h-[52px]"
-            style={{ fontSize: "16px" }}
+            rows={1}
+            className="flex-1 bg-blue-950/50 border-2 border-blue-400/30 rounded-xl px-4 py-3 text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent min-h-[52px] resize-none"
+            style={{ fontSize: "16px", maxHeight: "120px" }}
           />
           <button
             onClick={() => handleSend()}
@@ -452,7 +457,7 @@ User Context:
             <Send className="w-5 h-5" />
           </button>
         </div>
-        <p className="text-center text-blue-300 text-xs mt-2">Press Enter to send</p>
+        <p className="text-center text-blue-300 text-xs mt-2">Enter to send • Shift+Enter for new line</p>
       </footer>
     </div>
   );
