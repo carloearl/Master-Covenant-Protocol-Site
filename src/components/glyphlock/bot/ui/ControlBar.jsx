@@ -192,25 +192,25 @@ export default function ControlBar({
                   {/* Voice Profile - Native Select */}
                   <div className="space-y-2">
                     <label className="text-xs text-slate-400 flex items-center justify-between">
-                      <span>Voice Profile</span>
-                      <span className="text-[9px] text-purple-400 font-mono">{voiceSettings?.voiceProfile || 'neutral_female'}</span>
+                      <span>Voice Profile (Google Neural2)</span>
+                      <span className="text-[9px] text-purple-400 font-mono">{voiceSettings?.voiceProfile || 'aurora'}</span>
                     </label>
                     <select 
-                      value={voiceSettings?.voiceProfile || 'neutral_female'} 
+                      value={voiceSettings?.voiceProfile || 'aurora'} 
                       onChange={(e) => {
                         const val = e.target.value;
-                        console.log('[ControlBar] Voice profile selected:', val);
+                        console.log('[ControlBar] 🎙️ Voice profile selected:', val);
                         handleVoiceChange('voiceProfile', val);
                       }}
                       className="w-full bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 cursor-pointer"
                       style={{ pointerEvents: 'auto', touchAction: 'manipulation', minHeight: '44px' }}
                     >
-                      <option value="neutral_female">Nova (Neutral Female)</option>
-                      <option value="neutral_male">Onyx (Neutral Male)</option>
-                      <option value="warm_female">Shimmer (Warm Female)</option>
-                      <option value="warm_male">Echo (Warm Male)</option>
-                      <option value="professional_female">Alloy (Professional)</option>
-                      <option value="professional_male">Fable (Storyteller)</option>
+                      <option value="aurora">🌟 Aurora (Premium Female) - Best Quality</option>
+                      <option value="neutral_female">💎 Nova (Clear Female)</option>
+                      <option value="warm_female">✨ Shimmer (Friendly Female)</option>
+                      <option value="neutral_male">🎙️ Onyx (Deep Male)</option>
+                      <option value="warm_male">🔊 Echo (Smooth Male)</option>
+                      <option value="professional_male">📖 Fable (Storyteller)</option>
                     </select>
                   </div>
 
