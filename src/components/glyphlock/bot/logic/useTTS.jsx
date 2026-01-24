@@ -500,8 +500,8 @@ export default function useTTS(options = {}) {
     const voiceProfile = VOICE_PROFILES[settings.voiceProfile] || VOICE_PROFILES.neutral_female;
     const voiceId = voiceProfile.id;
 
-    // GLYPHLOCK: Try Web Speech API first (built-in, most reliable)
-    console.log('[TTS] Attempting Web Speech API with settings:', {
+    // GLYPHLOCK: Try GlyphBot Neural Voice FIRST (Google Cloud Neural2 - premium quality)
+    console.log('[TTS] PRIORITY 1: Attempting GlyphBot Neural Voice (Google Cloud TTS) with settings:', {
       speed: settings.speed,
       pitch: settings.pitch,
       volume: settings.volume,
@@ -510,25 +510,27 @@ export default function useTTS(options = {}) {
     });
     
     try {
+      const neuralResult = await playWithGlyphVoice(cleanText, settings, settings.voiceProfile);
+      if (neuralResult) {
+        console.log('[TTS] ✅ Google Cloud Neural2 TTS succeeded');
+        return true;
+      }
+    } catch (neuralErr) {
+      console.warn('[TTS] ⚠️ Neural Voice failed, falling back to Web Speech:', neuralErr);
+    }
+    
+    // FALLBACK: Web Speech API (system voices - lower quality but reliable)
+    console.log('[TTS] FALLBACK: Attempting Web Speech API...');
+    try {
       const webSpeechResult = await playWithWebSpeech(cleanText, settings);
       
       if (webSpeechResult) {
-        console.log('[TTS] Web Speech succeeded');
+        console.log('[TTS] Web Speech succeeded (fallback)');
         return true;
       }
     } catch (webErr) {
-      console.warn('[TTS] Web Speech failed:', webErr);
-    }
-    
-    // If Web Speech fails, try GlyphBot Neural Voice (Google Cloud TTS)
-    if (provider === 'glyphbot' || provider === 'neural' || provider === 'auto') {
-      try {
-        console.log('[TTS] Trying GlyphBot Neural Voice (Google Cloud TTS)...');
-        return await playWithGlyphVoice(cleanText, settings, settings.voiceProfile);
-      } catch (err) {
-        console.error('[TTS] GlyphBot Neural Voice also failed:', err);
-        setLastError(err.message);
-      }
+      console.warn('[TTS] Web Speech also failed:', webErr);
+      setLastError('All TTS providers failed');
     }
     
     setIsLoading(false);
