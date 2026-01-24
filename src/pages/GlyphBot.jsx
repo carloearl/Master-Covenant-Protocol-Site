@@ -129,14 +129,14 @@ export default function GlyphBotPage() {
       console.warn('Failed to load voice settings:', e);
     }
     return {
-      voiceProfile: 'neutral_female',
+      voiceProfile: 'aurora', // Default to premium Google Cloud Neural2
       speed: 1.0,
       pitch: 1.0,
       volume: 1.0,
       bass: 0,
       clarity: 0,
       emotion: 'neutral',
-      provider: 'auto'
+      provider: 'glyphbot' // Force neural voice engine
     };
   });
 
