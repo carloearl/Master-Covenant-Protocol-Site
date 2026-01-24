@@ -87,55 +87,57 @@ function buildSSML(text, voiceConfig, emotion = 'neutral') {
   </speak>`;
 }
 
-// Google Cloud TTS synthesis (requires API key)
-async function synthesizeWithGoogleCloud(text, voiceProfile, emotion, speed) {
-  const apiKey = Deno.env.get('GOOGLE_CLOUD_TTS_API_KEY') || Deno.env.get('GEMINI_API_KEY');
+// OpenAI TTS synthesis (premium HD voices)
+async function synthesizeWithOpenAI(text, voiceProfile, speed) {
+  const apiKey = Deno.env.get('OPENAI_API_KEY');
   
   if (!apiKey) {
-    throw new Error('Google Cloud TTS API key not configured');
+    throw new Error('OpenAI API key not configured');
   }
   
-  const voiceConfig = VOICE_PROFILES[voiceProfile] || VOICE_PROFILES.neutral_female;
-  const ssml = buildSSML(text, voiceConfig, emotion);
+  // Map voice profiles to OpenAI voices
+  const openAIVoiceMap = {
+    'aurora': 'nova',
+    'neutral_female': 'nova',
+    'warm_female': 'shimmer',
+    'professional_female': 'alloy',
+    'energetic_female': 'shimmer',
+    'neutral_male': 'onyx',
+    'warm_male': 'echo',
+    'professional_male': 'fable',
+    'deep_male': 'onyx',
+    'nova': 'nova',
+    'echo': 'echo',
+    'onyx': 'onyx',
+    'alloy': 'alloy',
+    'shimmer': 'shimmer',
+    'fable': 'fable'
+  };
   
-  const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`, {
+  const openAIVoice = openAIVoiceMap[voiceProfile] || 'nova';
+  
+  console.log('[OpenAI TTS] Using voice:', openAIVoice, 'for profile:', voiceProfile);
+  
+  const response = await fetch('https://api.openai.com/v1/audio/speech', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({
-      input: { ssml },
-      voice: {
-        languageCode: 'en-US',
-        name: voiceConfig.name,
-        ssmlGender: voiceConfig.gender
-      },
-      audioConfig: {
-        audioEncoding: 'MP3',
-        speakingRate: Math.max(0.25, Math.min(4.0, speed || 1.0)),
-        pitch: voiceConfig.pitch || 0,
-        effectsProfileId: ['headphone-class-device']
-      }
+      model: 'tts-1-hd',
+      input: text,
+      voice: openAIVoice,
+      speed: Math.max(0.25, Math.min(4.0, speed || 1.0))
     })
   });
   
   if (!response.ok) {
     const error = await response.text();
-    throw new Error(`Google Cloud TTS failed: ${error}`);
+    throw new Error(`OpenAI TTS failed: ${error}`);
   }
   
-  const data = await response.json();
-  
-  if (!data.audioContent) {
-    throw new Error('No audio content returned');
-  }
-  
-  // Convert base64 to binary
-  const binaryString = atob(data.audioContent);
-  const bytes = new Uint8Array(binaryString.length);
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-  
-  return bytes.buffer;
+  return await response.arrayBuffer();
 }
 
 // Fallback: Google Translate TTS (free, lower quality)
