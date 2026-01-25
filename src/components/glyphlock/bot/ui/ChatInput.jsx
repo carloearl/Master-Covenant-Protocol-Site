@@ -10,12 +10,14 @@ export default function ChatInput({
   onRegenerate,
   isSending,
   disabled,
-  onFileUpload 
+  uploadedFiles,
+  onFilesChange
 }) {
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
   const [isListening, setIsListening] = useState(false);
-  const [attachedFiles, setAttachedFiles] = useState([]);
+  const attachedFiles = uploadedFiles || [];
+  const setAttachedFiles = onFilesChange || (() => {});
   const recognitionRef = useRef(null);
 
   useEffect(() => {
