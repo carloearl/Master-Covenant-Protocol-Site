@@ -493,12 +493,18 @@ section, main {
   }
 }
 
-/* Prevent scroll bounce and overscroll issues on mobile */
+/* CRITICAL: Enable scroll on mobile */
 html, body {
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
   pointer-events: auto !important;
   scroll-snap-type: none !important;
+  touch-action: pan-y pan-x !important;
+}
+
+/* Ensure all scrollable containers allow touch scroll */
+main, section, article, div {
+  touch-action: pan-y pan-x !important;
 }
 
 /* ========== MOBILE-FIRST COMPLETE REDESIGN ========== */

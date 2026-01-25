@@ -80,11 +80,15 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   useEffect(() => {
-    // Disable scroll snap on mobile
+    // CRITICAL: Enable mobile scroll
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (isMobile) {
       document.body.style.scrollSnapType = 'none';
       document.documentElement.style.scrollSnapType = 'none';
+      document.body.style.touchAction = 'pan-y pan-x';
+      document.documentElement.style.touchAction = 'pan-y pan-x';
+      document.body.style.overflowY = 'scroll';
+      document.body.style.webkitOverflowScrolling = 'touch';
     }
     
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -161,7 +165,9 @@ export default function Layout({ children, currentPageName }) {
           background: 'transparent',
           paddingBottom: 'env(safe-area-inset-bottom)',
           overscrollBehavior: 'none',
-          position: 'relative'
+          position: 'relative',
+          touchAction: 'pan-y pan-x',
+          WebkitOverflowScrolling: 'touch'
         }}
       >
         <MobileTouchOptimizer />
@@ -173,7 +179,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
 
         {/* Main content */}
-        <main className="flex-1 relative pt-4" style={{ background: 'transparent', zIndex: 10, pointerEvents: 'auto', position: 'relative' }}>
+        <main className="flex-1 relative pt-4" style={{ background: 'transparent', zIndex: 10, pointerEvents: 'auto', position: 'relative', touchAction: 'pan-y pan-x', WebkitOverflowScrolling: 'touch' }}>
           {children}
         </main>
 

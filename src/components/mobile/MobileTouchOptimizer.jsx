@@ -12,7 +12,7 @@ export default function MobileTouchOptimizer() {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (!isMobile) return;
 
-    // Viewport setup
+    // Viewport setup - CRITICAL for mobile scroll
     const setViewport = () => {
       let viewport = document.querySelector('meta[name=viewport]');
       if (!viewport) {
@@ -21,6 +21,11 @@ export default function MobileTouchOptimizer() {
         document.head.appendChild(viewport);
       }
       viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover';
+      
+      // Force scroll enable
+      document.body.style.touchAction = 'pan-y pan-x';
+      document.documentElement.style.touchAction = 'pan-y pan-x';
+      document.body.style.overflowY = 'scroll';
     };
 
     // Prevent iOS zoom on input focus
