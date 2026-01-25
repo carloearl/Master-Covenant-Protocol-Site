@@ -59,6 +59,23 @@ export default function Layout({ children, currentPageName }) {
         new MobileScalingSystem();
         window.glyphMobileSystemInitialized = true;
       }
+      
+      // CRITICAL ANDROID FIX: Force 300ms tap delay removal
+      document.addEventListener('touchstart', function(){}, {passive: true});
+      
+      // ANDROID: Prevent zoom on input focus
+      const viewport = document.querySelector('meta[name=viewport]');
+      if (viewport) {
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+      }
+      
+      // ANDROID: Fix 100vh issue
+      const setVH = () => {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      };
+      setVH();
+      window.addEventListener('resize', setVH);
+      window.addEventListener('orientationchange', setVH);
     }
   }, []);
 

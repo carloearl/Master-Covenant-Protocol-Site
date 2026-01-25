@@ -7,6 +7,16 @@ css
 * {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection in inputs */
+input, textarea, [contenteditable] {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
 }
 
 :root {
@@ -32,6 +42,9 @@ html {
   text-rendering: optimizeLegibility;
   background: transparent;
   color: #ffffff !important;
+  height: 100%;
+  height: calc(var(--vh, 1vh) * 100);
+  overflow-x: hidden;
 }
 
 html.dark {
@@ -76,15 +89,24 @@ body, #root, #__next, main, section {
   }
 }
 
-/* Minimum Touch Target Sizes (44x44px) */
+/* Minimum Touch Target Sizes (48x48px for Android) */
 button,
 a,
 input[type="checkbox"],
 input[type="radio"],
 select {
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 48px;
+  min-height: 48px;
   touch-action: manipulation;
+  cursor: pointer;
+}
+
+/* ANDROID: Ensure all clickable elements are touch-optimized */
+button, a, [role="button"], [onclick] {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 /* Input Enhancement for Mobile */
@@ -477,12 +499,25 @@ html, body {
   scroll-snap-type: none !important;
 }
 
-/* Mobile-specific fixes for Samsung and Android */
+/* ANDROID-SPECIFIC FIXES */
 @media (max-width: 768px) {
   * {
     -webkit-tap-highlight-color: transparent !important;
   }
   
+  /* CRITICAL: Force immediate touch response (remove 300ms delay) */
+  html {
+    touch-action: manipulation;
+  }
+  
+  body {
+    height: 100%;
+    height: calc(var(--vh, 1vh) * 100);
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  /* ANDROID: All interactive elements */
   button, a, [role="button"], [onclick], .cursor-pointer, input[type="button"], input[type="submit"] {
     min-width: 48px !important;
     min-height: 48px !important;
@@ -491,23 +526,39 @@ html, body {
     cursor: pointer !important;
     -webkit-user-select: none !important;
     user-select: none !important;
+    position: relative;
+    z-index: 1;
   }
   
-  /* Disable scroll snap on mobile */
+  /* ANDROID: Fix inputs */
+  input, textarea, select {
+    font-size: 16px !important;
+    touch-action: pan-y !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+  }
+  
+  /* ANDROID: Disable scroll snap */
   html, body, main, section, div {
     scroll-snap-type: none !important;
     scroll-snap-align: none !important;
   }
 
-  /* Prevent double-tap zoom */
+  /* ANDROID: Prevent double-tap zoom */
   a, button, [role="button"] {
     touch-action: manipulation !important;
   }
 
-  /* Fix card flip containers */
+  /* ANDROID: Fix card flip containers */
   [style*="perspective"] {
     -webkit-tap-highlight-color: transparent !important;
     touch-action: manipulation !important;
+  }
+  
+  /* ANDROID: Fix viewport units */
+  .min-h-screen {
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
   }
 }
 
