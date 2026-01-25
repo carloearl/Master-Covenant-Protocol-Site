@@ -40,8 +40,8 @@ export default function MobileTouchOptimizer() {
 
     // Enhanced touch event normalization with scroll detection
     const normalizeTouchEvents = () => {
-      const interactiveElements = document.querySelectorAll('button, a, input, textarea, select, [role="button"], [onclick], [class*="cursor-pointer"]');
-      
+      const interactiveElements = document.querySelectorAll('button, a, input, textarea, select, [role="button"], [onclick], [class*="cursor-pointer"], [class*="card"]');
+
       interactiveElements.forEach(el => {
         // Set proper touch action based on element type
         if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') {
@@ -51,6 +51,17 @@ export default function MobileTouchOptimizer() {
         }
         el.style.webkitTapHighlightColor = 'transparent';
         el.style.userSelect = el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' ? 'text' : 'none';
+
+        // Add active state for visual feedback
+        el.addEventListener('touchstart', () => {
+          el.style.opacity = '0.7';
+        }, { passive: true });
+
+        el.addEventListener('touchend', () => {
+          setTimeout(() => {
+            el.style.opacity = '';
+          }, 100);
+        }, { passive: true });
         
         // Ensure minimum touch target for buttons/links only
         if (el.tagName === 'BUTTON' || el.tagName === 'A' || el.getAttribute('role') === 'button') {

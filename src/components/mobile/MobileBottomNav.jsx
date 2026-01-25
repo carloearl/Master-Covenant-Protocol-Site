@@ -14,8 +14,11 @@ export default function MobileBottomNav({ onMenuOpen }) {
   ];
   
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[10000] bg-slate-950/95 backdrop-blur-xl border-t-2 border-purple-500/40 pb-safe">
-      <div className="flex items-center justify-around px-2 py-2">
+    <nav 
+      className="md:hidden fixed bottom-0 left-0 right-0 z-[10000] bg-slate-950/95 backdrop-blur-xl border-t-2 border-purple-500/40 pb-safe shadow-[0_-4px_30px_rgba(168,85,247,0.3)]"
+      style={{ touchAction: 'manipulation' }}
+    >
+      <div className="flex items-center justify-around px-2 py-2 safe-area-inset-bottom">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = location.pathname === tab.path;

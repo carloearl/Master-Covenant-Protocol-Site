@@ -34,7 +34,8 @@ export default function MobileSlideMenu({ isOpen, onClose, user, onLogin, onLogo
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-slate-950/98 backdrop-blur-xl border-l-2 border-purple-500/40 z-[9999] md:hidden overflow-y-auto"
+            className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-slate-950/98 backdrop-blur-xl border-l-2 border-purple-500/40 z-[9999] md:hidden overflow-y-auto shadow-[-8px_0_40px_rgba(168,85,247,0.3)]"
+            style={{ touchAction: 'pan-y' }}
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b-2 border-purple-500/30">
