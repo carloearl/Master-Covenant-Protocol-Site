@@ -99,11 +99,11 @@ export default function Layout({ children, currentPageName }) {
       <CrawlerFallback />
       <PrerenderHints />
       
-      {/* Background layers - hidden on mobile */}
-      <div className="hidden md:block" style={{ position: 'fixed', inset: 0, zIndex: -1, pointerEvents: 'none' }}>
+      {/* Background layers - ALWAYS VISIBLE ON DESKTOP */}
+      <div className="hidden md:block" style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
         <NebulaLayer intensity={1.0} />
       </div>
-      <div className="hidden md:block" style={{ position: 'fixed', inset: 0, zIndex: -1, pointerEvents: 'none' }}>
+      <div className="hidden md:block" style={{ position: 'fixed', inset: 0, zIndex: 2, pointerEvents: 'none' }}>
         <CursorOrb />
       </div>
 
@@ -113,8 +113,7 @@ export default function Layout({ children, currentPageName }) {
           background: 'transparent',
           paddingBottom: 'env(safe-area-inset-bottom)',
           position: 'relative',
-          zIndex: 1,
-          isolation: 'isolate',
+          zIndex: 3,
           WebkitOverflowScrolling: 'touch'
         }}
       >
