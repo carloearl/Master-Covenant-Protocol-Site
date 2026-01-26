@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Shield, Zap, Eye, Brain, Lock, FileCode, Image } from "lucide-react";
+import { Shield, Zap, Eye, Brain, Lock, FileCode, Image, KeyRound } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 
 /**
@@ -11,6 +11,13 @@ import { motion, useInView } from "framer-motion";
  */
 
 const services = [
+  {
+    title: "Authenticator",
+    description: "Secure 2FA module – TOTP credential storage with QR scanning and encrypted vault protection",
+    link: "Authenticator",
+    image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902128ac3c5c94a82446585/9774d266e_openai-logo-inspired-abstract.png",
+    icon: KeyRound
+  },
   {
     title: "NEXUS N.U.P.S.",
     description: "Transaction verification module – governed by protocol, accessible only with provisioned credentials",
@@ -93,7 +100,7 @@ export default function ServicesGrid() {
         </motion.p>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {services.map((service, idx) => {
           const anim = cardAnimations[idx];
           return (
