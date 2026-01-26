@@ -47,7 +47,7 @@ function ListenButton({ text }) {
         voiceSettings: voiceSettings
       });
 
-      if (data.speak?.enabled) {
+      if (data.speak?.enabled && !data.speak?.error) {
         let audioUrl;
         
         if (data.speak.audioBase64) {
@@ -77,7 +77,7 @@ function ListenButton({ text }) {
             audioRef.current = null;
           };
 
-          audio.playbackRate = 1.25;
+          audio.playbackRate = voiceSettings?.speed || 1.0;
           setPlaying(true);
           setLoading(false);
           await audio.play();
@@ -85,7 +85,12 @@ function ListenButton({ text }) {
         }
       }
       
-      setError(true);
+      if (data.speak?.error) {
+        setError(true);
+        setLoading(false);
+      } else {
+        setError(true);
+      }
     } catch (err) {
       console.error('[Aurora TTS] Failed:', err);
       setError(true);
