@@ -24,6 +24,7 @@ import {
   THREAT_TYPES 
 } from "@/components/commandcenter/ThreatDetectionEngine";
 import KeyManagement from "@/components/admin/KeyManagement";
+import StatusReport from "@/components/admin/StatusReport";
 import {
   Shield, Key, Activity, Zap, Settings, Users, FileText, FileCheck, 
   TrendingUp, Clock, AlertTriangle, CheckCircle, Lock,
@@ -107,8 +108,11 @@ function MobileSidebar({ isOpen, onClose, activeTab, setActiveTab, user, onLogou
 
 // Sidebar content
 function SidebarContent({ activeTab, setActiveTab, user, onLogout, threatCount = 0 }) {
+  const isAdmin = user?.role === 'admin';
+  
   const navItems = [
     { id: "overview", label: "Overview", icon: Home, tour: "nav-overview" },
+    { id: "status", label: "24h Status", icon: Activity },
     { id: "threats", label: "Threat Detection", icon: ShieldAlert, badge: threatCount, tour: "nav-threats" },
     { id: "resources", label: "Resources", icon: Layers },
     { id: "api-keys", label: "API Keys", icon: Key, tour: "nav-api-keys" },
@@ -116,6 +120,7 @@ function SidebarContent({ activeTab, setActiveTab, user, onLogout, threatCount =
     { id: "analytics", label: "Analytics", icon: BarChart3, tour: "nav-analytics" },
     { id: "tools", label: "Tools", icon: Zap },
     { id: "logs", label: "Logs", icon: FileText },
+    ...(isAdmin ? [{ id: "sie", label: "SIE Admin", icon: Server }] : []),
     { id: "settings", label: "Settings", icon: Settings },
   ];
 
@@ -2073,6 +2078,7 @@ export default function CommandCenter() {
   const renderTab = () => {
     switch (activeTab) {
       case "overview": return <OverviewTab user={user} threatDetection={threatDetection} />;
+      case "status": return <StatusReport />;
       case "threats": return <ThreatDetectionTab user={user} threatDetection={threatDetection} />;
       case "resources": return <ResourcesTab user={user} />;
       case "security": return <SecurityTab threatDetection={threatDetection} />;
@@ -2080,6 +2086,12 @@ export default function CommandCenter() {
       case "analytics": return <AnalyticsTab />;
       case "tools": return <ToolsTab />;
       case "logs": return <LogsTab />;
+      case "sie": 
+        if (user?.role === 'admin') {
+          window.location.href = createPageUrl('Sie');
+          return null;
+        }
+        return <OverviewTab user={user} threatDetection={threatDetection} />;
       case "settings": return <SettingsTab user={user} />;
       default: return <OverviewTab user={user} threatDetection={threatDetection} />;
     }

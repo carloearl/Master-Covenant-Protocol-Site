@@ -367,16 +367,9 @@ export default function Navbar({ user, onLogin, onLogout }) {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
       setScrolled(currentScrollY > 20);
-      
-      // Hide navbar on scroll down, show on scroll up
-      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-        setHidden(true);
-      } else {
-        setHidden(false);
-      }
-      
+      // ALWAYS SHOW NAVBAR - Never hide on scroll
+      setHidden(false);
       lastScrollY.current = currentScrollY;
     };
 
@@ -517,6 +510,14 @@ export default function Navbar({ user, onLogin, onLogout }) {
                     Command Center
                   </Link>
                 </DropdownMenuItem>
+                {user.role === 'admin' && (
+                  <DropdownMenuItem asChild className="text-gray-300 focus:bg-purple-500/10 focus:text-white rounded-lg cursor-pointer mb-1">
+                    <Link to={createPageUrl("Sie")} className="flex items-center gap-2">
+                      <Shield className="w-4 h-4 text-purple-400" />
+                      SIE Admin
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem asChild className="text-gray-300 focus:bg-blue-500/10 focus:text-white rounded-lg cursor-pointer mb-1">
                   <Link to={createPageUrl("UserSettings")} className="flex items-center gap-2">
                     <User className="w-4 h-4 text-blue-400" />

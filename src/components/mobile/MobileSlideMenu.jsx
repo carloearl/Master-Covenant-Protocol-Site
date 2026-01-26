@@ -1,17 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { X, Info, Phone, FileText, Book, Shield, Users, LogIn, LogOut, User } from 'lucide-react';
+import { X, Info, Phone, FileText, Book, Shield, Users, LogIn, LogOut, User, Terminal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function MobileSlideMenu({ isOpen, onClose, user, onLogin, onLogout }) {
+    const isAdmin = user?.role === 'admin';
+  
   const menuLinks = [
     { label: 'About', icon: Info, page: 'About' },
     { label: 'Contact', icon: Phone, page: 'Contact' },
     { label: 'Master Covenant', icon: Shield, page: 'MasterCovenant' },
     { label: 'NUPS POS', icon: FileText, page: 'NUPS' },
     { label: 'Case Studies', icon: Book, page: 'CaseStudies' },
-    { label: 'Dream Team', icon: Users, page: 'DreamTeam' }
+    { label: 'Dream Team', icon: Users, page: 'DreamTeam' },
+    ...(isAdmin ? [{ label: 'SIE Admin', icon: Shield, page: 'Sie' }] : [])
   ];
   
   return (
@@ -62,8 +65,14 @@ export default function MobileSlideMenu({ isOpen, onClose, user, onLogin, onLogo
                       <p className="text-white font-semibold">{user.full_name || user.email}</p>
                       <p className="text-sm text-slate-400">{user.email}</p>
                     </div>
-                  </div>
-                  <button
+                    </div>
+                    <Link to={createPageUrl("CommandCenter")} onClick={onClose}>
+                    <button className="w-full min-h-[56px] flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-600/30 to-purple-600/30 border-2 border-cyan-500/50 text-cyan-300 hover:bg-cyan-500/40 transition-all font-semibold shadow-[0_0_20px_rgba(6,182,212,0.3)] mb-3">
+                      <Terminal className="w-5 h-5" />
+                      Command Center
+                    </button>
+                    </Link>
+                    <button
                     onClick={() => {
                       onLogout();
                       onClose();
