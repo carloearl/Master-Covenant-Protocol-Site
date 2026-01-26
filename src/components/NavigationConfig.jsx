@@ -1,4 +1,3 @@
-
 /**
  * UNIFIED NAVIGATION CONFIGURATION
  * Single source of truth for Navbar and Footer
@@ -69,6 +68,7 @@ export const NAV_SECTIONS = [
     items: [
       { label: "User Settings", page: "UserSettings", visibility: "public" },
       { label: "Security Settings", page: "AccountSecurity", visibility: "public" },
+      { label: "Authenticator", page: "Authenticator", visibility: "authenticated" },
       { label: "Command Center", page: "CommandCenter", visibility: "public" },
       { label: "Project Updates", page: "ProjectUpdates", visibility: "public" }
     ]
@@ -113,6 +113,7 @@ export const FOOTER_LINKS = {
   account: [
     { label: "User Settings", page: "UserSettings", visibility: "public" },
     { label: "Security Settings", page: "AccountSecurity", visibility: "public" },
+    { label: "Authenticator", page: "Authenticator", visibility: "authenticated" },
     { label: "Command Center", page: "CommandCenter", visibility: "public" }
   ]
 };

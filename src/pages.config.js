@@ -2,6 +2,7 @@ import About from './pages/About';
 import AboutCarlo from './pages/AboutCarlo';
 import Accessibility from './pages/Accessibility';
 import AccountSecurity from './pages/AccountSecurity';
+import Authenticator from './pages/Authenticator';
 import AuditTrail from './pages/AuditTrail';
 import BillingAndPayments from './pages/BillingAndPayments';
 import Blockchain from './pages/Blockchain';
@@ -85,7 +86,6 @@ import VIPMemberProfile from './pages/VIPMemberProfile';
 import VideoUpload from './pages/VideoUpload';
 import ViewInteractive from './pages/ViewInteractive';
 import sitemapQr from './pages/sitemap-qr';
-import Authenticator from './pages/Authenticator';
 import __Layout from './Layout.jsx';
 
 
@@ -94,6 +94,7 @@ export const PAGES = {
     "AboutCarlo": AboutCarlo,
     "Accessibility": Accessibility,
     "AccountSecurity": AccountSecurity,
+    "Authenticator": Authenticator,
     "AuditTrail": AuditTrail,
     "BillingAndPayments": BillingAndPayments,
     "Blockchain": Blockchain,
@@ -177,7 +178,6 @@ export const PAGES = {
     "VideoUpload": VideoUpload,
     "ViewInteractive": ViewInteractive,
     "sitemap-qr": sitemapQr,
-    "Authenticator": Authenticator,
 }
 
 export const pagesConfig = {
