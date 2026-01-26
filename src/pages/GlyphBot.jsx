@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { injectSoftwareSchema } from '@/components/utils/seoHelpers';
 import GuidedTour from '@/components/shared/GuidedTour';
 import FileAnalyzer from '@/components/glyphbot/FileAnalyzer';
+import AuditReportManager from '@/components/glyphbot/AuditReportManager';
 import { useUnifiedVoice } from '@/components/shared/UnifiedVoiceProvider';
 
 const { 
@@ -45,6 +46,7 @@ export default function GlyphBotPage() {
   const [currentUser, setCurrentUser] = useState(null);
   const [isProcessingAudit, setIsProcessingAudit] = useState(false);
   const [showFileAnalyzer, setShowFileAnalyzer] = useState(false);
+  const [showReportManager, setShowReportManager] = useState(false);
 
   const [modes, setModes] = useState({
     voice: false,
@@ -1097,8 +1099,17 @@ export default function GlyphBotPage() {
             onPlaySummary={handlePlayAuditSummary}
             onArchive={handleArchiveAudit}
             onDownload={handleDownloadAudit}
+            onGenerateReport={() => setShowReportManager(selectedAuditView)}
           />
         </div>
+      )}
+
+      {/* PDF Report Manager Modal */}
+      {showReportManager && (
+        <AuditReportManager
+          auditData={showReportManager}
+          onClose={() => setShowReportManager(null)}
+        />
       )}
       <GuidedTour 
         isOpen={showTour}
