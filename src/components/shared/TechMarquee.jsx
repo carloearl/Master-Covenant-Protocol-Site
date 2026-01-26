@@ -13,7 +13,8 @@ const LOGO_DATA = [
 export default function TechMarquee({ title, subtitle, logos = LOGO_DATA }) {
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.2 });
-  const repeated = [...logos, ...logos, ...logos];
+  // Triple the logos for seamless infinite scroll
+  const repeated = [...logos, ...logos, ...logos, ...logos];
 
   return (
     <div ref={containerRef} className="w-full max-w-7xl mx-auto px-4 py-16">
@@ -106,8 +107,8 @@ export default function TechMarquee({ title, subtitle, logos = LOGO_DATA }) {
           filter: brightness(1) invert(0) opacity(1);
         }
         @keyframes marquee-scroll {
-          from { transform: translateX(0); }
-          to { transform: translateX(calc(-100% / 3)); }
+          0% { transform: translateX(0); }
+          100% { transform: translateX(calc(-100% / 4)); }
         }
       `}</style>
     </div>

@@ -93,8 +93,8 @@ export default function FaqSectionGlyphPanel() {
   }, [query, category])
 
   return (
-    <section className="w-full px-4 sm:px-6 md:px-8 py-10 md:py-14">
-      <div className="mx-auto w-full max-w-5xl">
+    <section className="w-full py-10 md:py-14">
+      <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
         <div className="mb-6 md:mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="space-y-2">
             <h2 className="text-2xl md:text-3xl font-semibold text-[#c7a7ff] tracking-tight">
@@ -196,8 +196,8 @@ export default function FaqSectionGlyphPanel() {
           </div>
         </Card>
 
-        <div className="mt-6 text-xs md:text-sm text-gray-500">
-          Tip: This knowledge base is mirrored inside GlyphBot Jr and the AI chat page so users can ask in plain language and get the same answers.
+        <div className="mt-6 text-xs md:text-sm text-gray-500 px-4">
+          💡 GlyphLock is 100% open source. All features are free forever - no trials, no limits, no paywalls.
         </div>
       </div>
     </section>
