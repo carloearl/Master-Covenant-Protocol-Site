@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { injectSoftwareSchema } from '@/components/utils/seoHelpers';
 import GuidedTour from '@/components/shared/GuidedTour';
 import FileAnalyzer from '@/components/glyphbot/FileAnalyzer';
+import { useUnifiedVoice } from '@/components/shared/UnifiedVoiceProvider';
 
 const { 
   useGlyphBotPersistence, 
@@ -123,25 +124,25 @@ export default function GlyphBotPage() {
     }
   ];
   
-  // Phase 7: TTS settings state with ENHANCED CONTROLS
-  const [voiceSettings, setVoiceSettings] = useState(() => {
-    try {
-      const saved = localStorage.getItem('glyphbot_voice_settings');
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.warn('Failed to load voice settings:', e);
-    }
-    return {
-      voiceProfile: 'aurora', // Default to premium Google Cloud Neural2
-      speed: 1.0,
-      pitch: 1.0,
-      volume: 1.0,
-      bass: 0,
-      clarity: 0,
-      emotion: 'neutral',
-      provider: 'glyphbot' // Force neural voice engine
-    };
+  // 🎙️ UNIFIED VOICE: Use context instead of local state
+  const { voiceSettings: contextVoiceSettings, saveVoiceSettings } = useUnifiedVoice();
+  const [voiceSettings, setVoiceSettings] = useState(contextVoiceSettings || {
+    voiceProfile: 'aurora',
+    speed: 1.0,
+    pitch: 1.0,
+    volume: 1.0,
+    bass: 0.2,
+    clarity: 0.15,
+    emotion: 'friendly',
+    provider: 'google_cloud'
   });
+
+  // Sync voice settings with unified provider
+  useEffect(() => {
+    if (contextVoiceSettings) {
+      setVoiceSettings(contextVoiceSettings);
+    }
+  }, [contextVoiceSettings]);
 
   // Phase 7C: TTS Hook (production-ready)
   const { 
@@ -794,26 +795,18 @@ export default function GlyphBotPage() {
               onClear={handleClear}
               onVoiceSettingsChange={{
                 playText: (text, settings) => {
-                  console.log('[GlyphBot] Testing voice with settings:', settings);
-                  // CRITICAL: Pass the actual settings, not voiceSettings state
                   const testSettings = settings || voiceSettings;
-                  console.log('[GlyphBot] Actual test settings being used:', testSettings);
                   try {
                     playText(text, testSettings);
                   } catch (e) {
-                    console.warn('[TTS Test]', e);
+                    console.warn('[TTS]', e);
                   }
                 },
                 setVoiceSettings: (updater) => {
                   setVoiceSettings(prev => {
                     const updated = typeof updater === 'function' ? updater(prev) : updater;
-                    console.log('[GlyphBot] Voice settings updated:', JSON.stringify(updated, null, 2));
-                    // Save immediately to localStorage
-                    try {
-                      localStorage.setItem('glyphbot_voice_settings', JSON.stringify(updated));
-                    } catch (e) {
-                      console.warn('[GlyphBot] Failed to save voice settings:', e);
-                    }
+                    // Save to unified provider
+                    saveVoiceSettings(updated);
                     return updated;
                   });
                 }
