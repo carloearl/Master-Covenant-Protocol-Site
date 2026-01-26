@@ -169,7 +169,11 @@ const NavItem = ({ section, isOpen, onToggle, index }) => {
             exit={{ opacity: 0, y: 10, scale: 0.98, filter: "blur(5px)" }}
             transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-80"
-            style={{ zIndex: 10001 }}
+            style={{ 
+              zIndex: 99999,
+              pointerEvents: 'auto',
+              isolation: 'isolate'
+            }}
           >
             <div className="relative overflow-hidden rounded-2xl">
               {/* Outer glow - Vivid Royal Blue pulsing */}
@@ -370,8 +374,7 @@ export default function Navbar({ user, onLogin, onLogout }) {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrolled(currentScrollY > 20);
-      // ALWAYS SHOW NAVBAR - Never hide on scroll
-      setHidden(false);
+      setHidden(false); // Always visible
       lastScrollY.current = currentScrollY;
     };
 
@@ -518,12 +521,26 @@ export default function Navbar({ user, onLogin, onLogout }) {
                   </Link>
                 </DropdownMenuItem>
                 {user.role === 'admin' && (
-                  <DropdownMenuItem asChild className="text-gray-300 focus:bg-purple-500/10 focus:text-white rounded-lg cursor-pointer mb-1">
-                    <Link to={createPageUrl("Sie")} className="flex items-center gap-2">
-                      <Shield className="w-4 h-4 text-purple-400" />
-                      SIE Admin
-                    </Link>
-                  </DropdownMenuItem>
+                  <>
+                    <DropdownMenuItem asChild className="text-gray-300 focus:bg-purple-500/10 focus:text-white rounded-lg cursor-pointer mb-1">
+                      <Link to={createPageUrl("Console")} className="flex items-center gap-2">
+                        <Terminal className="w-4 h-4 text-purple-400" />
+                        Admin Console
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="text-gray-300 focus:bg-blue-500/10 focus:text-white rounded-lg cursor-pointer mb-1">
+                      <Link to={createPageUrl("NUPS")} className="flex items-center gap-2">
+                        <Shield className="w-4 h-4 text-blue-400" />
+                        NUPS System
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="text-gray-300 focus:bg-cyan-500/10 focus:text-white rounded-lg cursor-pointer mb-1">
+                      <Link to={createPageUrl("Sie")} className="flex items-center gap-2">
+                        <Shield className="w-4 h-4 text-cyan-400" />
+                        SIE Admin
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
                 )}
                 <DropdownMenuItem asChild className="text-gray-300 focus:bg-blue-500/10 focus:text-white rounded-lg cursor-pointer mb-1">
                   <Link to={createPageUrl("UserSettings")} className="flex items-center gap-2">
