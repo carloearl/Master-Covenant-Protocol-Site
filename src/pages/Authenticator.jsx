@@ -426,10 +426,8 @@ export default function AuthenticatorPage() {
             </Card>
           </TabsContent>
         </Tabs>
-      </div>
-      </div>
 
-      {/* QR Scanner Modal */}
+        {/* QR Scanner Modal */}
       {showScanner && (
         <QRScanner
           onScan={handleQRScan}
