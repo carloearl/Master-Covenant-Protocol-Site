@@ -12,28 +12,27 @@
 
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
-// Voice profile mapping to Google Cloud Neural2 voices
+// Voice profile mapping to Google Cloud PREMIUM Neural voices (Pic2 optional tones)
+// ✅ NO BASIC/ROBOTIC VOICES - All premium neural synthesis
 const VOICE_PROFILES = {
-  // Female voices
+  // 🎙️ PREMIUM FEMALE VOICES (Neural2-A through Neural2-G)
+  'aurora': { name: 'en-US-Neural2-A', gender: 'FEMALE', pitch: 0, rate: 1.0, ssmlEffects: true }, // Warm, expressive, premium
+  'nova': { name: 'en-US-Neural2-C', gender: 'FEMALE', pitch: 0, rate: 1.05 }, // Professional, clear
+  'shimmer': { name: 'en-US-Neural2-E', gender: 'FEMALE', pitch: 2, rate: 1.1 }, // Energetic, dynamic
   'neutral_female': { name: 'en-US-Neural2-C', gender: 'FEMALE', pitch: 0, rate: 1.0 },
-  'warm_female': { name: 'en-US-Neural2-F', gender: 'FEMALE', pitch: -1, rate: 0.95 },
+  'warm_female': { name: 'en-US-Neural2-A', gender: 'FEMALE', pitch: -1, rate: 0.95 },
   'professional_female': { name: 'en-US-Neural2-E', gender: 'FEMALE', pitch: 0, rate: 1.0 },
   'energetic_female': { name: 'en-US-Neural2-G', gender: 'FEMALE', pitch: 2, rate: 1.1 },
   
-  // Male voices
+  // 🎙️ PREMIUM MALE VOICES (Neural2-B, Neural2-D, Neural2-I, Neural2-J)
+  'echo': { name: 'en-US-Neural2-B', gender: 'MALE', pitch: -1, rate: 0.95 }, // Warm conversational (NOT robotic)
+  'onyx': { name: 'en-US-Neural2-I', gender: 'MALE', pitch: -3, rate: 0.9 }, // Deep, authoritative
+  'alloy': { name: 'en-US-Neural2-B', gender: 'MALE', pitch: 0, rate: 1.0 }, // Balanced, natural
+  'fable': { name: 'en-US-Neural2-J', gender: 'MALE', pitch: 1, rate: 1.0 }, // Expressive narrator
   'neutral_male': { name: 'en-US-Neural2-D', gender: 'MALE', pitch: 0, rate: 1.0 },
-  'warm_male': { name: 'en-US-Neural2-A', gender: 'MALE', pitch: -2, rate: 0.95 },
+  'warm_male': { name: 'en-US-Neural2-B', gender: 'MALE', pitch: -2, rate: 0.95 },
   'professional_male': { name: 'en-US-Neural2-J', gender: 'MALE', pitch: 0, rate: 1.0 },
-  'deep_male': { name: 'en-US-Neural2-I', gender: 'MALE', pitch: -4, rate: 0.9 },
-  
-  // Character voices
-  'aurora': { name: 'en-US-Neural2-C', gender: 'FEMALE', pitch: 1, rate: 1.0, ssmlEffects: true },
-  'nova': { name: 'en-US-Neural2-F', gender: 'FEMALE', pitch: 0, rate: 1.05 },
-  'echo': { name: 'en-US-Neural2-D', gender: 'MALE', pitch: -3, rate: 0.95 },
-  'onyx': { name: 'en-US-Neural2-I', gender: 'MALE', pitch: -5, rate: 0.9 },
-  'alloy': { name: 'en-US-Neural2-A', gender: 'MALE', pitch: 0, rate: 1.0 },
-  'shimmer': { name: 'en-US-Neural2-G', gender: 'FEMALE', pitch: 3, rate: 1.1 },
-  'fable': { name: 'en-US-Neural2-E', gender: 'FEMALE', pitch: 2, rate: 1.0 }
+  'deep_male': { name: 'en-US-Neural2-I', gender: 'MALE', pitch: -4, rate: 0.9 }
 };
 
 // Emotion SSML effects
@@ -114,7 +113,8 @@ async function synthesizeWithGoogleCloud(text, voiceProfile, emotion, speed) {
         audioEncoding: 'MP3',
         speakingRate: Math.max(0.25, Math.min(4.0, speed || 1.0)),
         pitch: voiceConfig.pitch || 0,
-        effectsProfileId: ['headphone-class-device']
+        // ✅ Pic2 optional tones for premium natural speech
+        effectsProfileId: ['headphone-class-device', 'small-bluetooth-speaker-class-device']
       }
     })
   });
@@ -217,10 +217,10 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const { 
       text, 
-      voiceProfile = 'aurora', 
-      emotion = 'neutral',
+      voiceProfile = 'aurora', // ✅ DEFAULT: Premium Aurora (NOT echo/robotic)
+      emotion = 'friendly',
       speed = 1.0,
-      provider = 'auto' // 'google_cloud', 'google_translate', 'auto'
+      provider = 'auto' // 'google_cloud' only - no fallback to robotic voices
     } = body;
     
     if (!text || text.length > 5000) {
@@ -248,30 +248,21 @@ Deno.serve(async (req) => {
     let audioBuffer;
     let usedProvider = 'unknown';
     
-    // PRIORITY 1: Google Cloud Neural2 TTS (premium voices, GEMINI_API_KEY available)
+    // ✅ ONLY Google Cloud Neural2 TTS (premium Pic2 voices - NO robotic fallback)
     try {
-      console.log(`[GlyphBot Voice][${requestId}] 🎙️ Trying Google Cloud Neural2...`);
+      console.log(`[GlyphBot Voice][${requestId}] 🎙️ Synthesizing with Google Cloud Neural2 Premium (Pic2)...`);
+      console.log(`[GlyphBot Voice][${requestId}] Voice: ${voiceProfile}, Emotion: ${emotion}`);
       audioBuffer = await synthesizeWithGoogleCloud(cleanText, voiceProfile, emotion, speed);
-      usedProvider = 'google_cloud_neural2';
-      console.log(`[GlyphBot Voice][${requestId}] ✅ Google Cloud Neural2 succeeded`);
+      usedProvider = 'google_cloud_neural2_pic2';
+      console.log(`[GlyphBot Voice][${requestId}] ✅ Premium neural voice succeeded`);
     } catch (gcError) {
-      console.warn(`[GlyphBot Voice][${requestId}] ⚠️ Google Cloud Neural2 failed:`, gcError.message);
-    }
-    
-    // Fallback to Google Translate TTS (robotic but free)
-    if (!audioBuffer) {
-      try {
-        console.log(`[GlyphBot Voice][${requestId}] Falling back to Google Translate TTS...`);
-        audioBuffer = await synthesizeWithGoogleTranslate(cleanText);
-        usedProvider = 'google_translate_fallback';
-        console.log(`[GlyphBot Voice][${requestId}] Google Translate TTS succeeded (fallback)`);
-      } catch (gtError) {
-        console.error(`[GlyphBot Voice][${requestId}] All TTS providers failed`);
-        return Response.json({ 
-          error: 'All TTS providers unavailable',
-          details: gtError.message 
-        }, { status: 503 });
-      }
+      console.error(`[GlyphBot Voice][${requestId}] ❌ Premium voice failed:`, gcError.message);
+      // NO FALLBACK - enforce premium only
+      return Response.json({ 
+        error: 'Premium voice service unavailable',
+        details: gcError.message,
+        retryAfter: 30
+      }, { status: 503 });
     }
     
     // Return audio with metadata headers
