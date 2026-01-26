@@ -67,12 +67,15 @@ export default function TechMarquee({ title, subtitle, logos = LOGO_DATA }) {
           position: relative;
           width: 100%;
           padding: 0.75rem 0;
+          -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
           mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
         }
         .marquee-content {
           display: flex;
           gap: 2rem;
-          animation: marquee-left 120s linear infinite;
+          width: max-content;
+          animation: marquee-scroll 60s linear infinite;
+          will-change: transform;
         }
         .marquee-container:hover .marquee-content {
           animation-play-state: paused;
@@ -82,11 +85,16 @@ export default function TechMarquee({ title, subtitle, logos = LOGO_DATA }) {
           width: 120px;
           height: 60px;
           padding: 0.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           transition: all 0.3s;
         }
         .logo-img {
           max-width: 100%;
           max-height: 100%;
+          width: auto;
+          height: auto;
           object-fit: contain;
           filter: brightness(0) invert(1) opacity(0.7);
           transition: all 0.4s;
@@ -97,9 +105,9 @@ export default function TechMarquee({ title, subtitle, logos = LOGO_DATA }) {
         .logo-item:hover .logo-img {
           filter: brightness(1) invert(0) opacity(1);
         }
-        @keyframes marquee-left {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-33.333%); }
+        @keyframes marquee-scroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(calc(-100% / 3)); }
         }
       `}</style>
     </div>

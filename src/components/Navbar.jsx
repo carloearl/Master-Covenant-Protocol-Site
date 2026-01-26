@@ -509,7 +509,10 @@ export default function Navbar({ user, onLogin, onLogout }) {
                   <ChevronDown size={14} className="text-gray-400" />
                 </motion.button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-slate-950/95 backdrop-blur-2xl border border-cyan-500/20 shadow-[0_0_50px_rgba(0,228,255,0.2)] rounded-xl p-2 mt-2 w-60">
+              <DropdownMenuContent 
+                className="bg-slate-950/95 backdrop-blur-2xl border border-cyan-500/20 shadow-[0_0_50px_rgba(0,228,255,0.2)] rounded-xl p-2 mt-2 w-60"
+                style={{ zIndex: 99999 }}
+              >
                 <div className="px-3 py-2.5 mb-2 border-b border-white/10">
                   <p className="text-xs text-gray-500">Signed in as</p>
                   <p className="text-sm font-semibold text-white truncate">{user.email}</p>

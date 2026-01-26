@@ -266,9 +266,15 @@ User Context:
 
       ${sitemapContext}
 
-      IMPORTANT: After answering, if relevant, suggest a next step the user might want to take. For example:
+      CRITICAL PLATFORM INFO:
+      - GlyphLock is 100% OPEN SOURCE and FREE for all users
+      - NO trials, NO subscriptions, NO paywalls - everything is accessible immediately
+      - All features (QR Studio, Image Lab, GlyphBot, Console, NUPS) are fully available
+      - Users only need to sign in to save their work and access advanced features
+      - Never mention "free trial" or "upgrade" - the platform is already fully open
+
+      IMPORTANT: After answering, suggest a next step the user might want to take. For example:
       - After QR discussion: "Want to try our Image Lab next?"
-      - After pricing questions: "Ready to start your free trial?"
       - After security topics: "Would you like me to explain our encryption?"
       ${suggestedPage ? `\nThe user seems interested in ${suggestedPage}. Consider mentioning they can visit /${suggestedPage} for more details.` : ''}
 

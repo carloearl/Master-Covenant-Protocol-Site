@@ -40,6 +40,7 @@ const AIInsightsPanelLazy = lazy(() => import('@/components/nups/AIInsightsPanel
 const InventoryManagement = lazy(() => import('@/components/nups/InventoryManagement'));
 const UserManagement = lazy(() => import('@/components/nups/UserManagement'));
 const AdvancedZReport = lazy(() => import('@/components/nups/AdvancedZReport'));
+const StaffPerformanceAnalytics = lazy(() => import('@/components/nups/StaffPerformanceAnalytics'));
 
 // Audit logging utility
 async function logAuditEvent(action, details, role, sessionId) {
@@ -266,7 +267,11 @@ export default function NUPS() {
                     <TabsTrigger value="zreports">Advanced Z-Reports</TabsTrigger>
                   </TabsList>
                   <TabsContent value="sales"><AISalesReports /></TabsContent>
-                  <TabsContent value="staff"><AIStaffPerformance /></TabsContent>
+                  <TabsContent value="staff">
+                    <Suspense fallback={<TabLoader />}>
+                      <StaffPerformanceAnalytics />
+                    </Suspense>
+                  </TabsContent>
                   <TabsContent value="zreports">
                     <Suspense fallback={<TabLoader />}>
                       <AdvancedZReport user={user} />
