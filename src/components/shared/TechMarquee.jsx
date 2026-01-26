@@ -175,10 +175,25 @@ export default function TechMarquee({ title, subtitle, logos = TECH_LOGOS }) {
           object-fit: contain;
           filter: brightness(0) invert(1) opacity(0.65);
           transition: all 0.4s;
+          background: rgba(87, 61, 255, 0.1);
+          border-radius: 8px;
+          padding: 0.5rem;
         }
         
         .logo-card:hover .logo-image {
           filter: brightness(1) invert(0) opacity(1);
+        }
+        
+        .logo-image:not([src]), .logo-image[src=""] {
+          background: linear-gradient(135deg, rgba(87, 61, 255, 0.15), rgba(168, 85, 247, 0.1));
+          min-width: 80px;
+          min-height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: rgba(168, 85, 247, 0.3);
+          font-size: 0.75rem;
+          font-weight: 600;
         }
         
         @keyframes scroll-left {
