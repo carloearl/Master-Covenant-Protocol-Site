@@ -2,7 +2,6 @@ import About from './pages/About';
 import AboutCarlo from './pages/AboutCarlo';
 import Accessibility from './pages/Accessibility';
 import AccountSecurity from './pages/AccountSecurity';
-import Authenticator from './pages/Authenticator';
 import AuditTrail from './pages/AuditTrail';
 import BillingAndPayments from './pages/BillingAndPayments';
 import Blockchain from './pages/Blockchain';
@@ -16,29 +15,21 @@ import ComplianceReport from './pages/ComplianceReport';
 import Consultation from './pages/Consultation';
 import ConsultationSuccess from './pages/ConsultationSuccess';
 import Contact from './pages/Contact';
-import ContentGenerator from './pages/ContentGenerator';
 import Cookies from './pages/Cookies';
-import Dashboard from './pages/Dashboard';
 import DeveloperAPI from './pages/DeveloperAPI';
 import DreamTeam from './pages/DreamTeam';
-import EmergencyBackup from './pages/EmergencyBackup';
 import EntertainerCheckIn from './pages/EntertainerCheckIn';
 import FAQ from './pages/FAQ';
-import FullExport from './pages/FullExport';
 import GlyphBot from './pages/GlyphBot';
-import GlyphBotJunior from './pages/GlyphBotJunior';
-import GlyphLockPlayground from './pages/GlyphLockPlayground';
 import GovernanceHub from './pages/GovernanceHub';
 import HSSS from './pages/HSSS';
 import Home from './pages/Home';
 import HotzoneMapper from './pages/HotzoneMapper';
-import ImageGenerator from './pages/ImageGenerator';
 import ImageLab from './pages/ImageLab';
 import IntegrationTests from './pages/IntegrationTests';
 import InteractiveImageStudio from './pages/InteractiveImageStudio';
 import ManageSubscription from './pages/ManageSubscription';
 import MasterCovenant from './pages/MasterCovenant';
-import Mobile from './pages/Mobile';
 import NISTChallenge from './pages/NISTChallenge';
 import NUPS from './pages/NUPS';
 import NUPSContractPrint from './pages/NUPSContractPrint';
@@ -86,6 +77,7 @@ import VIPMemberProfile from './pages/VIPMemberProfile';
 import VideoUpload from './pages/VideoUpload';
 import ViewInteractive from './pages/ViewInteractive';
 import sitemapQr from './pages/sitemap-qr';
+import Authenticator from './pages/Authenticator';
 import __Layout from './Layout.jsx';
 
 
@@ -94,7 +86,6 @@ export const PAGES = {
     "AboutCarlo": AboutCarlo,
     "Accessibility": Accessibility,
     "AccountSecurity": AccountSecurity,
-    "Authenticator": Authenticator,
     "AuditTrail": AuditTrail,
     "BillingAndPayments": BillingAndPayments,
     "Blockchain": Blockchain,
@@ -108,29 +99,21 @@ export const PAGES = {
     "Consultation": Consultation,
     "ConsultationSuccess": ConsultationSuccess,
     "Contact": Contact,
-    "ContentGenerator": ContentGenerator,
     "Cookies": Cookies,
-    "Dashboard": Dashboard,
     "DeveloperAPI": DeveloperAPI,
     "DreamTeam": DreamTeam,
-    "EmergencyBackup": EmergencyBackup,
     "EntertainerCheckIn": EntertainerCheckIn,
     "FAQ": FAQ,
-    "FullExport": FullExport,
     "GlyphBot": GlyphBot,
-    "GlyphBotJunior": GlyphBotJunior,
-    "GlyphLockPlayground": GlyphLockPlayground,
     "GovernanceHub": GovernanceHub,
     "HSSS": HSSS,
     "Home": Home,
     "HotzoneMapper": HotzoneMapper,
-    "ImageGenerator": ImageGenerator,
     "ImageLab": ImageLab,
     "IntegrationTests": IntegrationTests,
     "InteractiveImageStudio": InteractiveImageStudio,
     "ManageSubscription": ManageSubscription,
     "MasterCovenant": MasterCovenant,
-    "Mobile": Mobile,
     "NISTChallenge": NISTChallenge,
     "NUPS": NUPS,
     "NUPSContractPrint": NUPSContractPrint,
@@ -178,6 +161,7 @@ export const PAGES = {
     "VideoUpload": VideoUpload,
     "ViewInteractive": ViewInteractive,
     "sitemap-qr": sitemapQr,
+    "Authenticator": Authenticator,
 }
 
 export const pagesConfig = {
