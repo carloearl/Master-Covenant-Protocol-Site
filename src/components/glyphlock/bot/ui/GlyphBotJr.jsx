@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { PERSONAS } from '../config';
 import FeedbackButtons from './FeedbackButtons';
 import SuggestionChips from './SuggestionChips';
+import { useUnifiedVoice } from '@/components/shared/UnifiedVoiceProvider';
 import { 
   detectTopic, 
   loadMemory, 
@@ -22,6 +23,7 @@ import {
 
 // 🎙️ AURORA LISTEN BUTTON — Plays TTS from agent response
 function ListenButton({ text }) {
+  const { voiceSettings } = useUnifiedVoice();
   const [loading, setLoading] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [error, setError] = useState(false);
@@ -41,7 +43,8 @@ function ListenButton({ text }) {
     try {
       const { data } = await base44.functions.invoke('glyphBotJrChat', {
         action: 'listen',
-        text: text
+        text: text,
+        voiceSettings: voiceSettings
       });
 
       if (data.speak?.enabled) {
@@ -96,6 +99,7 @@ function ListenButton({ text }) {
         onClick={handleListen}
         className="text-xs bg-red-600/30 hover:bg-red-600/50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 border border-red-400/30"
         title="Audio failed. Click to retry."
+        aria-label="Retry voice playback"
       >
         <AlertCircle className="w-3 h-3" />
         Retry Audio
@@ -109,8 +113,13 @@ function ListenButton({ text }) {
       disabled={loading}
       className="text-xs bg-blue-600/30 hover:bg-blue-600/50 disabled:opacity-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 border border-blue-400/30 group"
       style={{ boxShadow: '0 0 10px rgba(37, 99, 235, 0.2)' }}
-      aria-label="Listen with Aurora voice"
+      aria-label={`Listen with ${voiceSettings?.voiceProfile || 'Aurora'} voice. ${loading ? 'Loading' : playing ? 'Playing' : 'Activate'}`}
+      role="button"
+      aria-pressed={playing}
     >
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {loading ? 'Loading audio' : playing ? 'Audio playing' : error ? 'Audio playback failed' : ''}
+      </div>
       {loading ? (
         <Loader2 className="w-3 h-3 animate-spin" />
       ) : (

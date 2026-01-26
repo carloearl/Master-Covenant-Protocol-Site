@@ -13,7 +13,7 @@ const VoiceContext = createContext(null);
 export function UnifiedVoiceProvider({ children }) {
   const [user, setUser] = useState(null);
   const [voiceSettings, setVoiceSettings] = useState({
-    voiceProfile: 'echo', // 🎙️ DEFAULT: Warm, conversational male voice
+    voiceProfile: 'aurora', // 🎙️ DEFAULT: Warm, expressive PREMIUM female voice (Neural2-A)
     emotion: 'friendly', // Natural, human-like emotion
     speed: 1.0,
     pitch: 1.0,
@@ -37,7 +37,7 @@ export function UnifiedVoiceProvider({ children }) {
 
         if (prefs.length > 0 && prefs[0].voiceSettings) {
           setVoiceSettings({
-            voiceProfile: prefs[0].voiceSettings.voice || 'echo',
+            voiceProfile: prefs[0].voiceSettings.voiceProfile || 'aurora',
             emotion: prefs[0].voiceSettings.emotion || 'friendly',
             speed: prefs[0].voiceSettings.speed || 1.0,
             pitch: prefs[0].voiceSettings.pitch || 1.0,
@@ -74,7 +74,7 @@ export function UnifiedVoiceProvider({ children }) {
       });
 
       const voiceData = {
-        voice: merged.voiceProfile,
+        voiceProfile: merged.voiceProfile,
         emotion: merged.emotion,
         speed: merged.speed,
         pitch: merged.pitch,
