@@ -89,7 +89,7 @@ export default function MobileSlideMenu({ isOpen, onClose, user, onLogin, onLogo
             </div>
             
             {/* Menu Links */}
-            <div className="p-4 space-y-2">
+            <div className="p-5 space-y-3">
               {menuLinks.map((link) => {
                 const Icon = link.icon;
                 return (
@@ -97,10 +97,11 @@ export default function MobileSlideMenu({ isOpen, onClose, user, onLogin, onLogo
                     key={link.page}
                     to={createPageUrl(link.page)}
                     onClick={onClose}
-                    className="flex items-center gap-4 min-h-[56px] px-5 rounded-xl bg-slate-800/30 border border-slate-700/50 text-white hover:bg-slate-700/50 hover:border-purple-500/50 transition-all"
+                    className="flex items-center gap-5 min-h-[68px] px-6 rounded-2xl bg-gradient-to-r from-slate-800/50 to-slate-800/30 border-2 border-slate-700/60 text-white active:bg-gradient-to-r active:from-purple-900/40 active:to-cyan-900/30 active:border-purple-500/70 active:scale-[0.98] transition-all duration-200 shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
+                    style={{ touchAction: 'manipulation' }}
                   >
-                    <Icon className="w-5 h-5 text-cyan-400" />
-                    <span className="font-medium text-base">{link.label}</span>
+                    <Icon className="w-7 h-7 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]" />
+                    <span className="font-semibold text-lg">{link.label}</span>
                   </Link>
                 );
               })}

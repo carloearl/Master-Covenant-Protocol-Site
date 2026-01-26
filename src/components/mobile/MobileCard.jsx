@@ -15,12 +15,12 @@ export default function MobileCard({
   const Component = as === 'a' ? motion.a : motion.div;
   
   const baseClasses = `
-    relative block w-full min-h-[80px] p-4 rounded-xl
-    bg-slate-900/60 backdrop-blur-xl
-    border-2 border-purple-500/30
-    shadow-[0_0_30px_rgba(168,85,247,0.15)]
-    transition-all duration-300
-    active:scale-[0.98] active:shadow-[0_0_15px_rgba(168,85,247,0.3)]
+    relative block w-full min-h-[96px] p-6 rounded-2xl
+    bg-gradient-to-br from-slate-900/80 via-slate-900/70 to-slate-900/60 backdrop-blur-2xl
+    border-3 border-purple-500/40
+    shadow-[0_8px_40px_rgba(168,85,247,0.25),0_0_20px_rgba(6,182,212,0.15)]
+    transition-all duration-200
+    active:scale-[0.96] active:shadow-[0_4px_20px_rgba(168,85,247,0.4)]
     ${onClick || href ? 'cursor-pointer' : ''}
     ${className}
   `;
