@@ -3,20 +3,14 @@ css
 @tailwind components;
 @tailwind utilities;
 
-/* Mobile-First Responsive Base */
+/* CRITICAL FIX: Scope aggressive mobile styles ONLY to mobile */
+
+/* Universal user-select reset */
 * {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
-  -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
-}
-
-/* Allow text selection in inputs */
-input, textarea, [contenteditable] {
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  user-select: text !important;
 }
 
 :root {
@@ -35,15 +29,15 @@ input, textarea, [contenteditable] {
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
+  text-size-adjust: 100%; /* Preserve original property */
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  text-rendering: optimizeLegibility; /* Preserve original property */
   background: transparent;
   color: #ffffff !important;
-  height: 100%;
-  height: calc(var(--vh, 1vh) * 100);
+  height: 100%; /* Preserve original property */
+  height: calc(var(--vh, 1vh) * 100); /* Preserve original property */
   overflow-x: hidden;
 }
 
@@ -55,135 +49,93 @@ body {
   @apply antialiased;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: scroll; /* Preserve original property */
   min-height: 100vh;
-  touch-action: pan-y pan-x;
-  -webkit-overflow-scrolling: touch;
-  will-change: auto;
-  contain: layout style;
-  transform: translateZ(0);
-  backface-visibility: hidden;
+  touch-action: pan-y pan-x; /* Preserve original property */
+  -webkit-overflow-scrolling: touch; /* Preserve original property */
+  will-change: auto; /* Preserve original property */
+  contain: layout style; /* Preserve original property */
+  transform: translateZ(0); /* Preserve original property */
+  backface-visibility: hidden; /* Preserve original property */
   background: transparent;
   color: #ffffff !important;
 }
 
 /* CRITICAL: Enable scroll on mobile */
+/* Note: Original overscroll-behavior and pointer-events are too broad, using more targeted touch-action below */
 html, body {
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
-  pointer-events: auto !important;
-  scroll-snap-type: none !important;
-  touch-action: pan-y pan-x !important;
+  overscroll-behavior: none; /* Keep from original */
+  -webkit-overflow-scrolling: touch; /* Keep from original */
+  pointer-events: auto !important; /* Keep from original */
+  scroll-snap-type: none !important; /* Keep from original */
+  touch-action: pan-y pan-x !important; /* Keep from original */
 }
 
-/* ========== MOBILE-FIRST EXTREME SCALING ========== */
+
+/* Allow text selection in inputs */
+input, textarea, [contenteditable] {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+}
+
+/* ========== MOBILE-ONLY ENHANCEMENTS ========== */
 @media (max-width: 768px) {
   * {
     -webkit-tap-highlight-color: transparent !important;
   }
   
-  /* CRITICAL: Enable one-finger scroll */
   html, body {
     touch-action: pan-y pan-x !important;
     -webkit-overflow-scrolling: touch !important;
-    overflow-y: scroll !important;
-    overflow-x: hidden !important;
+    /* Specific overrides for mobile-first aggressive scaling - reset to more reasonable values */
+    font-size: 16px !important; /* Resetting original aggressive mobile font-size */
   }
-  
+
   body {
-    height: 100%;
-    height: calc(var(--vh, 1vh) * 100);
-    position: relative;
+    height: 100%; /* Preserve original */
+    height: calc(var(--vh, 1vh) * 100); /* Preserve original */
+    position: relative; /* Preserve original */
   }
   
-  /* MOBILE: Scale up all text */
-  html {
-    font-size: 18px !important;
-  }
-  
-  h1 {
-    font-size: 2rem !important;
-    line-height: 1.2 !important;
-  }
-  
-  h2 {
-    font-size: 1.75rem !important;
-    line-height: 1.3 !important;
-  }
-  
-  h3 {
-    font-size: 1.5rem !important;
-    line-height: 1.3 !important;
-  }
-  
-  p, span, div {
-    font-size: 1.125rem !important;
-    line-height: 1.6 !important;
-  }
-  
-  /* MOBILE: Buttons MEGA SIZE */
+  /* MOBILE: Minimum touch targets */
   button, .btn, [role="button"] {
-    min-width: 80px !important;
-    min-height: 80px !important;
-    padding: 24px 32px !important;
-    font-size: 1.4rem !important;
-    font-weight: 700 !important;
-    border-radius: 18px !important;
+    min-height: 44px !important;
+    min-width: 44px !important;
     touch-action: manipulation !important;
-    -webkit-tap-highlight-color: transparent !important;
-    cursor: pointer !important;
-    -webkit-user-select: none !important;
-    user-select: none !important;
-    position: relative;
-    z-index: 1;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    white-space: normal !important;
-    line-height: 1.3 !important;
+    /* Resetting original aggressive mobile button styles */
+    padding: initial !important; /* Reset padding */
+    font-size: initial !important; /* Reset font size */
+    font-weight: initial !important; /* Reset font weight */
+    border-radius: initial !important; /* Reset border radius */
+    display: initial !important; /* Reset display */
+    align-items: initial !important; /* Reset align-items */
+    justify-content: initial !important; /* Reset justify-content */
+    white-space: initial !important; /* Reset white-space */
+    line-height: initial !important; /* Reset line-height */
   }
-  
+
   /* MOBILE: Links scale up */
   a {
-    min-height: 48px !important;
-    padding: 12px 16px !important;
-    font-size: 1.125rem !important;
-    display: inline-flex !important;
-    align-items: center !important;
+    min-height: 44px !important; /* Changed from 48px to 44px for consistency with touch targets */
+    padding: initial !important; /* Reset padding */
+    font-size: initial !important; /* Reset font size */
+    display: initial !important; /* Reset display */
+    align-items: initial !important; /* Reset align-items */
     touch-action: manipulation !important;
   }
   
-  /* MOBILE: Cards MEGA SIZE */
-  [class*="card"], .card, .rounded-xl, .rounded-2xl {
-    padding: 32px !important;
-    margin: 24px 0 !important;
-    border-radius: 24px !important;
-    min-height: 160px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-  }
-  
-  /* MOBILE: Badges scale up */
-  [class*="badge"], .badge {
-    padding: 8px 16px !important;
-    font-size: 0.875rem !important;
-    font-weight: 600 !important;
-    border-radius: 8px !important;
-    white-space: nowrap !important;
-  }
-  
-  /* MOBILE: Inputs MEGA SIZE */
+  /* MOBILE: Readable inputs */
   input, textarea, select {
-    font-size: 22px !important;
-    min-height: 80px !important;
-    padding: 24px !important;
-    border-radius: 16px !important;
+    font-size: 16px !important;
+    min-height: 44px !important;
     touch-action: pan-y !important;
-    -webkit-user-select: text !important;
-    user-select: text !important;
+    /* Resetting original aggressive mobile input styles */
+    padding: initial !important; /* Reset padding */
+    border-radius: initial !important; /* Reset border radius */
   }
-  
-  /* MOBILE: File inputs CRITICAL - MASSIVE and VISIBLE */
+
+  /* MOBILE: File inputs - keep the custom file input styling */
   input[type="file"] {
     display: block !important;
     opacity: 1 !important;
@@ -213,56 +165,100 @@ html, body {
     box-shadow: 0 8px 24px rgba(6,182,212,0.4) !important;
   }
   
-  /* MOBILE: Container spacing */
+  /* MOBILE: Container spacing - keep original */
   .container, [class*="max-w-"], [class*="mx-auto"] {
     padding-left: 24px !important;
     padding-right: 24px !important;
   }
   
-  /* MOBILE: Section spacing */
+  /* MOBILE: Section spacing - keep original */
   section {
     padding-top: 48px !important;
     padding-bottom: 48px !important;
   }
-  
-  /* ANDROID: Disable scroll snap completely */
+
+  /* ANDROID: Disable scroll snap completely - keep original */
   html, body, main, section, div {
     scroll-snap-type: none !important;
     scroll-snap-align: none !important;
   }
 
-  /* ANDROID: Prevent double-tap zoom on interactive elements */
+  /* ANDROID: Prevent double-tap zoom on interactive elements - keep original */
   a, button, [role="button"], input[type="button"], input[type="submit"] {
     touch-action: manipulation !important;
   }
 
-  /* ANDROID: Fix card flip containers */
+  /* ANDROID: Fix card flip containers - keep original */
   [style*="perspective"] {
     -webkit-tap-highlight-color: transparent !important;
     touch-action: manipulation !important;
   }
   
-  /* ANDROID: Fix viewport units */
+  /* ANDROID: Fix viewport units - keep original */
   .min-h-screen {
     min-height: 100vh;
     min-height: calc(var(--vh, 1vh) * 100);
   }
   
-  /* MOBILE: Stack everything vertically */
-  .flex {
+  /* MOBILE: Stack flex containers */
+  .flex:not(.flex-row):not(.flex-col) { /* Added :not() for more control */
     flex-direction: column !important;
-    gap: 16px !important;
+    gap: 12px !important; /* Changed from 16px to 12px for consistency with outline */
   }
-  
-  .grid {
+
+  /* MOBILE: Stack grid containers */
+  .grid { /* Keep original */
     grid-template-columns: 1fr !important;
     gap: 16px !important;
   }
   
   /* MOBILE: Full width CTAs */
-  [class*="cta"], [class*="hero"] button, [class*="hero"] a {
+  [class*="cta"], [class*="hero"] button, [class*="hero"] a { /* Keep original */
     width: 100% !important;
     max-width: 100% !important;
+  }
+  
+  /* MOBILE: Card resets - resetting original aggressive mobile card styles */
+  [class*="card"], .card, .rounded-xl, .rounded-2xl {
+    padding: initial !important;
+    margin: initial !important;
+    border-radius: initial !important;
+    min-height: initial !important;
+    width: initial !important;
+    box-sizing: initial !important;
+  }
+
+  /* MOBILE: Badge resets - resetting original aggressive mobile badge styles */
+  [class*="badge"], .badge {
+    padding: initial !important;
+    font-size: initial !important;
+    font-weight: initial !important;
+    border-radius: initial !important;
+    white-space: initial !important;
+  }
+
+  /* MOBILE: Text resets - resetting original aggressive mobile text styles */
+  h1 { font-size: initial !important; line-height: initial !important; }
+  h2 { font-size: initial !important; line-height: initial !important; }
+  h3 { font-size: initial !important; line-height: initial !important; }
+  p, span, div { font-size: initial !important; line-height: initial !important; }
+}
+
+/* Interactive elements - ALL DEVICES */
+button, a, input, textarea, select, [role="button"], [type="button"], [type="submit"], label { /* Added label from original */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer; /* Preserve from original global rules */
+}
+
+/* DESKTOP: Keep normal sizing */
+@media (min-width: 769px) {
+  button, .btn, [role="button"] {
+    cursor: pointer;
+  }
+  
+  button:hover, a:hover, [role="button"]:hover {
+    opacity: 0.9;
   }
 }
 
@@ -281,13 +277,6 @@ html, body {
     animation-play-state: running !important;
     isolation: isolate;
   }
-}
-
-/* Interactive elements */
-button, a, input, textarea, select, [role="button"], [type="button"], [type="submit"], label {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  cursor: pointer;
 }
 
 /* Scroll containers */
@@ -579,6 +568,7 @@ a:hover {
   color: #ffffff !important;
   transition: all 0.3s ease !important;
   border-radius: 12px !important;
+  padding: 12px 16px !important; /* Added padding from outline */
 }
 
 .input-glow-blue:focus, input:focus, textarea:focus, select:focus {
@@ -918,7 +908,7 @@ html {
   height: 14px;
 }
 
-/* Vertical Slider Support */
+/* Vertical Slider Support (duplicate from original, keeping both) */
 [data-orientation="vertical"] {
   flex-direction: column;
   width: 20px;
@@ -967,7 +957,7 @@ html {
 .animate-glyph-pulse { animation: glyphSeverityPulse 2s ease-in-out infinite; }
 
 /* Glowing Chat Animation */
-@keyframes shimmer {
+@keyframes shimmer { /* Duplicated shimmer animation, keeping this instance */
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
@@ -1026,12 +1016,12 @@ html {
 }
 
 /* Neon Glow Effect */
-.glyph-glow {
+.glyph-glow { /* This one uses --uv and --blue-glyph, will be overridden by the later definition */
   box-shadow: 0 0 25px var(--uv), 0 0 45px var(--blue-glyph);
 }
 
 /* Floating Cosmic Orbs */
-.glyph-orb {
+.glyph-orb { /* This one uses --blue-light-glyph and --blue-dark-glyph, will be overridden by the later definition */
   width: 200px;
   height: 200px;
   border-radius: 100%;
@@ -1066,7 +1056,7 @@ html {
   50% { box-shadow: 0 0 40px var(--uv), 0 0 80px var(--blue-glyph); }
 }
 
-/* GlyphLock Theme */
+/* GlyphLock Theme (Re-defining variables and related classes) */
 :root {
   --uv: #6a00ff;
   --uv-light: #b27dff;
@@ -1231,18 +1221,18 @@ html {
   animation: tickerMove 14s linear infinite;
 }
 
-.glyph-glass {
+.glyph-glass { /* This definition appears twice, keeping the latest one as it relies on updated variables */
   background: var(--white-soft);
   backdrop-filter: var(--blur);
   border: 1px solid var(--white-glass);
   border-radius: 20px;
 }
 
-.glyph-glow {
+.glyph-glow { /* This definition appears twice, keeping the latest one as it relies on updated variables */
   box-shadow: 0 0 25px var(--uv), 0 0 45px var(--blue);
 }
 
-.glyph-orb {
+.glyph-orb { /* This definition appears twice, keeping the latest one as it relies on updated variables */
   width: 200px;
   height: 200px;
   border-radius: 100%;
@@ -1251,7 +1241,7 @@ html {
   animation: float 6s ease-in-out infinite;
 }
 
-@keyframes float {
+@keyframes float { /* This float animation duplicates an earlier one, keeping this specific keyframe */
   0% { transform: translateY(0px); }
   50% { transform: translateY(-16px); }
   100% { transform: translateY(0px); }
