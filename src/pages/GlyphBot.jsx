@@ -11,7 +11,6 @@ import { injectSoftwareSchema } from '@/components/utils/seoHelpers';
 import GuidedTour from '@/components/shared/GuidedTour';
 import FileAnalyzer from '@/components/glyphbot/FileAnalyzer';
 import { useUnifiedVoice } from '@/components/shared/UnifiedVoiceProvider';
-import { useUnifiedVoice } from '@/components/shared/UnifiedVoiceProvider';
 
 const { 
   useGlyphBotPersistence, 
