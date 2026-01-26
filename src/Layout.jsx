@@ -11,7 +11,7 @@ import GlyphLoader from "@/components/GlyphLoader";
 import MobileCore from "@/components/mobile/MobileCore";
 import MobileBottomNav from "@/components/mobile/MobileBottomNav";
 import MobileSlideMenu from "@/components/mobile/MobileSlideMenu";
-import DesktopModeToggle from "@/components/mobile/DesktopModeToggle";
+
 import ThemeProvider from "@/components/ThemeProvider";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import StructuredDataOrg from "@/components/StructuredDataOrg";
@@ -112,7 +112,6 @@ export default function Layout({ children, currentPageName }) {
       >
         <MobileCore />
         <SecurityMonitor />
-        <DesktopModeToggle />
 
         {/* Desktop Navbar */}
         <div className="hidden md:block">
