@@ -8,9 +8,7 @@ import CursorOrb from "@/components/global/CursorOrb";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GlyphLoader from "@/components/GlyphLoader";
-import MobileScalingSystem from "@/components/mobile/mobile-utils";
-import MobileTouchOptimizer from "@/components/mobile/MobileTouchOptimizer";
-import MobileOptimizer from "@/components/mobile/MobileOptimizer";
+import MobileCore from "@/components/mobile/MobileCore";
 import MobileBottomNav from "@/components/mobile/MobileBottomNav";
 import MobileSlideMenu from "@/components/mobile/MobileSlideMenu";
 import DesktopModeToggle from "@/components/mobile/DesktopModeToggle";
@@ -49,53 +47,19 @@ export default function Layout({ children, currentPageName }) {
     if (typeof window !== 'undefined') {
       const host = window.location.hostname;
       const isLocal = host === 'localhost' || host === '127.0.0.1';
-      
+
       if (!isLocal) {
-        // 1. Force non-www (canonical domain) to fix CERT_COMMON_NAME_INVALID
+        // Force non-www (canonical domain)
         if (host.startsWith('www.')) {
           const target = `https://${host.replace(/^www\./, '')}${window.location.pathname}${window.location.search}`;
           window.location.replace(target);
           return;
         }
       }
-
-      // Initialize mobile scaling system - only once
-      if (!window.glyphMobileSystemInitialized) {
-        new MobileScalingSystem();
-        window.glyphMobileSystemInitialized = true;
-      }
-      
-      // CRITICAL ANDROID FIX: Force 300ms tap delay removal
-      document.addEventListener('touchstart', function(){}, {passive: true});
-      
-      // ANDROID: Prevent zoom on input focus
-      const viewport = document.querySelector('meta[name=viewport]');
-      if (viewport) {
-        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-      }
-      
-      // ANDROID: Fix 100vh issue
-      const setVH = () => {
-        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-      };
-      setVH();
-      window.addEventListener('resize', setVH);
-      window.addEventListener('orientationchange', setVH);
     }
   }, []);
 
   useEffect(() => {
-    // CRITICAL: Enable mobile scroll
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (isMobile) {
-      document.body.style.scrollSnapType = 'none';
-      document.documentElement.style.scrollSnapType = 'none';
-      document.body.style.touchAction = 'pan-y pan-x';
-      document.documentElement.style.touchAction = 'pan-y pan-x';
-      document.body.style.overflowY = 'scroll';
-      document.body.style.webkitOverflowScrolling = 'touch';
-    }
-    
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [location.pathname]);
 
@@ -146,8 +110,7 @@ export default function Layout({ children, currentPageName }) {
           WebkitOverflowScrolling: 'touch'
         }}
       >
-        <MobileTouchOptimizer />
-        <MobileOptimizer />
+        <MobileCore />
         <SecurityMonitor />
         <DesktopModeToggle />
 

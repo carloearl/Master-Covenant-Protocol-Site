@@ -5,12 +5,9 @@ css
 
 /* CRITICAL FIX: Scope aggressive mobile styles ONLY to mobile */
 
-/* Universal user-select reset */
+/* Universal user-select reset - allow selection by default */
 * {
   -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  -moz-user-select: none;
-  user-select: none;
 }
 
 :root {
@@ -72,67 +69,56 @@ html, body {
 }
 
 
-/* Allow text selection in inputs */
-input, textarea, [contenteditable] {
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  user-select: text !important;
+/* Allow text selection in inputs and text content */
+input, textarea, [contenteditable], p, span, h1, h2, h3, h4, h5, h6, li, td, th {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  user-select: text;
 }
 
 /* ========== MOBILE-ONLY ENHANCEMENTS ========== */
 @media (max-width: 768px) {
   * {
-    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: transparent;
   }
-  
-  html, body {
-    touch-action: pan-y pan-x !important;
-    -webkit-overflow-scrolling: touch !important;
-    /* Specific overrides for mobile-first aggressive scaling - reset to more reasonable values */
-    font-size: 16px !important; /* Resetting original aggressive mobile font-size */
+
+  html {
+    font-size: 16px;
+    touch-action: pan-y pan-x;
+    -webkit-overflow-scrolling: touch;
   }
 
   body {
-    height: 100%; /* Preserve original */
-    height: calc(var(--vh, 1vh) * 100); /* Preserve original */
-    position: relative; /* Preserve original */
+    height: 100%;
+    height: calc(var(--vh, 1vh) * 100);
+    position: relative;
   }
   
   /* MOBILE: Minimum touch targets */
-  button, .btn, [role="button"] {
-    min-height: 44px !important;
-    min-width: 44px !important;
-    touch-action: manipulation !important;
-    /* Resetting original aggressive mobile button styles */
-    padding: initial !important; /* Reset padding */
-    font-size: initial !important; /* Reset font size */
-    font-weight: initial !important; /* Reset font weight */
-    border-radius: initial !important; /* Reset border radius */
-    display: initial !important; /* Reset display */
-    align-items: initial !important; /* Reset align-items */
-    justify-content: initial !important; /* Reset justify-content */
-    white-space: initial !important; /* Reset white-space */
-    line-height: initial !important; /* Reset line-height */
+  button:not(.preserve-size), .btn:not(.preserve-size), [role="button"]:not(.preserve-size) {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
   }
 
-  /* MOBILE: Links scale up */
-  a {
-    min-height: 44px !important; /* Changed from 48px to 44px for consistency with touch targets */
-    padding: initial !important; /* Reset padding */
-    font-size: initial !important; /* Reset font size */
-    display: initial !important; /* Reset display */
-    align-items: initial !important; /* Reset align-items */
-    touch-action: manipulation !important;
+  /* MOBILE: Links - minimum touch target for standalone links */
+  a:not(.inline-link) {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    touch-action: manipulation;
   }
   
   /* MOBILE: Readable inputs */
-  input, textarea, select {
-    font-size: 16px !important;
-    min-height: 44px !important;
-    touch-action: pan-y !important;
-    /* Resetting original aggressive mobile input styles */
-    padding: initial !important; /* Reset padding */
-    border-radius: initial !important; /* Reset border radius */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), textarea, select {
+    font-size: 16px;
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+
+  input[type="checkbox"], input[type="radio"] {
+    min-width: 20px;
+    min-height: 20px;
   }
 
   /* MOBILE: File inputs - keep the custom file input styling */
@@ -165,16 +151,16 @@ input, textarea, [contenteditable] {
     box-shadow: 0 8px 24px rgba(6,182,212,0.4) !important;
   }
   
-  /* MOBILE: Container spacing - keep original */
-  .container, [class*="max-w-"], [class*="mx-auto"] {
-    padding-left: 24px !important;
-    padding-right: 24px !important;
+  /* MOBILE: Container spacing */
+  .container, [class*="max-w-"] {
+    padding-left: 16px;
+    padding-right: 16px;
   }
-  
-  /* MOBILE: Section spacing - keep original */
-  section {
-    padding-top: 48px !important;
-    padding-bottom: 48px !important;
+
+  /* MOBILE: Section spacing */
+  section:not(.preserve-spacing) {
+    padding-top: 32px;
+    padding-bottom: 32px;
   }
 
   /* ANDROID: Disable scroll snap completely - keep original */
@@ -200,55 +186,47 @@ input, textarea, [contenteditable] {
     min-height: calc(var(--vh, 1vh) * 100);
   }
   
-  /* MOBILE: Stack flex containers */
-  .flex:not(.flex-row):not(.flex-col) { /* Added :not() for more control */
-    flex-direction: column !important;
-    gap: 12px !important; /* Changed from 16px to 12px for consistency with outline */
+  /* MOBILE: Stack flex containers - only apply to explicitly mobile-responsive ones */
+  .flex.mobile-stack {
+    flex-direction: column;
+    gap: 12px;
   }
 
-  /* MOBILE: Stack grid containers */
-  .grid { /* Keep original */
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
+  /* MOBILE: Stack grid containers - only apply to explicitly mobile-responsive ones */
+  .grid.mobile-stack {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
   
   /* MOBILE: Full width CTAs */
-  [class*="cta"], [class*="hero"] button, [class*="hero"] a { /* Keep original */
-    width: 100% !important;
-    max-width: 100% !important;
+  .mobile-full-width {
+    width: 100%;
+    max-width: 100%;
   }
   
-  /* MOBILE: Card resets - resetting original aggressive mobile card styles */
-  [class*="card"], .card, .rounded-xl, .rounded-2xl {
-    padding: initial !important;
-    margin: initial !important;
-    border-radius: initial !important;
-    min-height: initial !important;
-    width: initial !important;
-    box-sizing: initial !important;
-  }
-
-  /* MOBILE: Badge resets - resetting original aggressive mobile badge styles */
-  [class*="badge"], .badge {
-    padding: initial !important;
-    font-size: initial !important;
-    font-weight: initial !important;
-    border-radius: initial !important;
-    white-space: initial !important;
-  }
-
-  /* MOBILE: Text resets - resetting original aggressive mobile text styles */
-  h1 { font-size: initial !important; line-height: initial !important; }
-  h2 { font-size: initial !important; line-height: initial !important; }
-  h3 { font-size: initial !important; line-height: initial !important; }
-  p, span, div { font-size: initial !important; line-height: initial !important; }
+  /* MOBILE: Responsive typography */
+  h1 { font-size: clamp(1.75rem, 5vw, 2.5rem); }
+  h2 { font-size: clamp(1.5rem, 4vw, 2rem); }
+  h3 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
 }
 
 /* Interactive elements - ALL DEVICES */
-button, a, input, textarea, select, [role="button"], [type="button"], [type="submit"], label { /* Added label from original */
+button, [role="button"], [type="button"], [type="submit"] {
   touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  cursor: pointer; /* Preserve from original global rules */
+  cursor: pointer;
+}
+
+a {
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  touch-action: auto;
+}
+
+label {
+  cursor: pointer;
 }
 
 /* DESKTOP: Keep normal sizing */
@@ -560,26 +538,26 @@ a:hover {
 }
 
 /* GLASSMORPHISM INPUT FIELDS */
-.input-glow-blue, input, textarea, select {
-  background: rgba(255, 255, 255, 0.04) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border: 2px solid rgba(255, 255, 255, 0.15) !important;
-  color: #ffffff !important;
-  transition: all 0.3s ease !important;
-  border-radius: 12px !important;
-  padding: 12px 16px !important; /* Added padding from outline */
+.input-glow-blue, input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), textarea, select {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  padding: 12px 16px;
 }
 
-.input-glow-blue:focus, input:focus, textarea:focus, select:focus {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(87, 61, 255, 0.6) !important;
-  box-shadow: 0 0 30px rgba(87, 61, 255, 0.5) !important;
-  outline: none !important;
+.input-glow-blue:focus, input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus, textarea:focus, select:focus {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(87, 61, 255, 0.6);
+  box-shadow: 0 0 30px rgba(87, 61, 255, 0.5);
+  outline: none;
 }
 
 input::placeholder, textarea::placeholder {
-  color: rgba(255, 255, 255, 0.4) !important;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 /* Page Container Glow */
