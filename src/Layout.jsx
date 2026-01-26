@@ -13,6 +13,7 @@ import MobileTouchOptimizer from "@/components/mobile/MobileTouchOptimizer";
 import MobileOptimizer from "@/components/mobile/MobileOptimizer";
 import MobileBottomNav from "@/components/mobile/MobileBottomNav";
 import MobileSlideMenu from "@/components/mobile/MobileSlideMenu";
+import DesktopModeToggle from "@/components/mobile/DesktopModeToggle";
 import ThemeProvider from "@/components/ThemeProvider";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import StructuredDataOrg from "@/components/StructuredDataOrg";
@@ -148,6 +149,7 @@ export default function Layout({ children, currentPageName }) {
         <MobileTouchOptimizer />
         <MobileOptimizer />
         <SecurityMonitor />
+        <DesktopModeToggle />
 
         {/* Desktop Navbar */}
         <div className="hidden md:block">

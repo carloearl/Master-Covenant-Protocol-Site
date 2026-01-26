@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useAutoSave, useRestoreState, usePreventNavigation } from '@/components/hooks/useAutoSave';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -438,9 +439,13 @@ function AIToolsSection({ isMobile, loading, setLoading, images, setImages }) {
 
 export default function GenerateTab({ user, userPrefs, onImageGenerated }) {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const [prompt, setPrompt] = useState('');
-  const [negativePrompt, setNegativePrompt] = useState('');
-  const [selectedStyle, setSelectedStyle] = useState(userPrefs?.imageLabSettings?.defaultStyle || 'photorealistic');
+  
+  // RESTORE previous session
+  const restored = useRestoreState('imagelab_generate_draft', {});
+  
+  const [prompt, setPrompt] = useState(restored.prompt || '');
+  const [negativePrompt, setNegativePrompt] = useState(restored.negativePrompt || '');
+  const [selectedStyle, setSelectedStyle] = useState(restored.selectedStyle || userPrefs?.imageLabSettings?.defaultStyle || 'photorealistic');
   const [aspectRatio, setAspectRatio] = useState('1:1');
   const [quality, setQuality] = useState(userPrefs?.imageLabSettings?.defaultQuality || 'HD');
   const [creativity, setCreativity] = useState(70);
@@ -459,6 +464,20 @@ export default function GenerateTab({ user, userPrefs, onImageGenerated }) {
   const [enhancedPrompt, setEnhancedPrompt] = useState('');
   const [promptSuggestions, setPromptSuggestions] = useState([]);
   const dropdownRef = useRef(null);
+  
+  // AUTO-SAVE state (debounced)
+  useAutoSave('imagelab_generate_draft', { 
+    prompt, 
+    negativePrompt, 
+    selectedStyle,
+    aspectRatio,
+    quality,
+    creativity,
+    styleStrength
+  }, 2000);
+  
+  // PREVENT accidental navigation
+  usePreventNavigation(prompt.length > 10);
 
   // Load User Preferences
   useEffect(() => {
