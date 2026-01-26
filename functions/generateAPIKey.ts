@@ -9,6 +9,10 @@ export default Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    if (user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    }
+
     const { name = "Default Key", environment = "live" } = await req.json();
     const envTag = environment.toUpperCase();
 
