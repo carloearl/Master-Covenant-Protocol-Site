@@ -37,6 +37,7 @@ const AIStaffPerformance = lazy(() => import('@/components/nups/AIStaffPerforman
 // AIInsightsPanel exports named components - import the VoucherAIPanel for AI tab
 const AIInsightsPanelLazy = lazy(() => import('@/components/nups/AIInsightsPanel').then(mod => ({ default: mod.VoucherAIPanel })));
 const InventoryManagement = lazy(() => import('@/components/nups/InventoryManagement'));
+const UserManagement = lazy(() => import('@/components/nups/UserManagement'));
 
 // Audit logging utility
 async function logAuditEvent(action, details, role, sessionId) {
@@ -118,6 +119,7 @@ export default function NUPS() {
     { id: 'entertainers', label: 'Entertainers', icon: UserCheck, color: 'rose', roles: ['admin', 'manager', 'staff'] },
     { id: 'inventory', label: 'Inventory', icon: Boxes, color: 'teal', roles: ['admin', 'manager'] },
     { id: 'products', label: 'Products', icon: Package, color: 'orange', roles: ['admin', 'manager'] },
+    { id: 'users', label: 'Users', icon: Users, color: 'sky', roles: ['admin', 'manager'] },
     { id: 'reports', label: 'Reports', icon: BarChart3, color: 'blue', roles: ['admin', 'manager'] },
     { id: 'ai', label: 'AI Insights', icon: Brain, color: 'violet', roles: ['admin'] },
     { id: 'help', label: 'Help', icon: HelpCircle, color: 'slate', roles: ['admin', 'manager', 'staff', 'entertainer', 'user'] },
@@ -265,6 +267,11 @@ export default function NUPS() {
                   <TabsContent value="zreports"><ZReportGenerator user={user} /></TabsContent>
                 </Tabs>
               </div>
+            </TabsContent>
+
+            {/* Users (Admin/Manager) */}
+            <TabsContent value="users">
+              <UserManagement />
             </TabsContent>
 
             {/* AI Insights (Admin) */}

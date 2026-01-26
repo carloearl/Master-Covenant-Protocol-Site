@@ -207,8 +207,25 @@ export default function NUPSTimeClockContent() {
       details: `Clocked in at ${new Date().toLocaleTimeString()} (Agreement on file)`
     };
     try {
+      // Save to local IndexedDB
       await saveShift(shift);
       await addAuditEntry(audit);
+      
+      // Sync to cloud database
+      if (isOnline) {
+        try {
+          await base44.entities.EntertainerShift.create({
+            entertainer_id: entertainer.id,
+            stage_name: entertainer.stage_name,
+            check_in_time: new Date().toISOString(),
+            status: 'checked_in',
+            location: 'Main Floor'
+          });
+        } catch (err) {
+          console.error('Cloud sync failed:', err);
+        }
+      }
+      
       toast.success(`${entertainer.stage_name} clocked in`);
       setSelectedId(null);
       loadData();
@@ -235,8 +252,28 @@ export default function NUPSTimeClockContent() {
       details: `Clocked out after ${formatDuration(duration)}`
     };
     try {
+      // Save to local IndexedDB
       await saveShift(updated);
       await addAuditEntry(audit);
+      
+      // Sync to cloud database
+      if (isOnline) {
+        try {
+          const cloudShifts = await base44.entities.EntertainerShift.filter({
+            entertainer_id: shift.entertainerId,
+            status: 'checked_in'
+          });
+          if (cloudShifts.length > 0) {
+            await base44.entities.EntertainerShift.update(cloudShifts[0].id, {
+              check_out_time: clockOutTime.toISOString(),
+              status: 'checked_out'
+            });
+          }
+        } catch (err) {
+          console.error('Cloud sync failed:', err);
+        }
+      }
+      
       toast.success(`${shift.name} clocked out - ${formatDuration(duration)}`);
       loadData();
     } catch (err) {
