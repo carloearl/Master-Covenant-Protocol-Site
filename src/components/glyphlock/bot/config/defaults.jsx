@@ -3,14 +3,14 @@ export const DEFAULT_PERSONA = 'GENERAL';
 export const DEFAULT_PROVIDER = 'AUTO';
 
 export const DEFAULT_VOICE_SETTINGS = {
-  voiceProfile: 'echo', // 🎙️ Warm, conversational male voice (NOT robotic)
+  voiceProfile: 'aurora', // 🎙️ PREMIUM: Warm, expressive (Google Cloud Neural2 Pic2)
   speed: 1.0,
   pitch: 1.0,
   volume: 1.0,
   bass: 0.2, // Slight warmth
   clarity: 0.15, // Natural speech clarity
   emotion: 'friendly', // Human-like emotion
-  provider: 'auto'
+  provider: 'google_cloud' // Premium only
 };
 
 export const DEFAULT_MODES = {
