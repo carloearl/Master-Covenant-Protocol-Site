@@ -1,9 +1,9 @@
 import React from 'react';
-import { X, Shield, AlertTriangle, CheckCircle, Volume2, Download, Archive, Globe, User, Building2 } from 'lucide-react';
+import { X, Shield, AlertTriangle, CheckCircle, Volume2, Download, Archive, Globe, User, Building2, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
-export default function AuditReportView({ audit, onClose, onPlaySummary, onArchive, onDownload }) {
+export default function AuditReportView({ audit, onClose, onPlaySummary, onArchive, onDownload, onGenerateReport }) {
   if (!audit) return null;
 
   const getTargetTypeIcon = (type) => {
@@ -87,6 +87,17 @@ export default function AuditReportView({ audit, onClose, onPlaySummary, onArchi
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {onGenerateReport && (
+              <Button
+                onClick={() => onGenerateReport(audit)}
+                size="sm"
+                variant="outline"
+                className="border-cyan-500/50 text-cyan-300 hover:bg-cyan-500/20"
+              >
+                <FileText className="w-4 h-4 mr-1" />
+                Generate PDF
+              </Button>
+            )}
             <Button
               onClick={handleDownload}
               size="sm"
