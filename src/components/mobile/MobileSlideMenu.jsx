@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { X, Info, Phone, FileText, Book, Shield, Users, LogIn, LogOut, User, Terminal } from 'lucide-react';
+import { X, Info, Phone, FileText, Book, Shield, Users, LogIn, LogOut, User, Terminal, Server } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function MobileSlideMenu({ isOpen, onClose, user, onLogin, onLogout }) {
@@ -14,7 +14,7 @@ export default function MobileSlideMenu({ isOpen, onClose, user, onLogin, onLogo
     { label: 'NUPS POS', icon: FileText, page: 'NUPS' },
     { label: 'Case Studies', icon: Book, page: 'CaseStudies' },
     { label: 'Dream Team', icon: Users, page: 'DreamTeam' },
-    ...(isAdmin ? [{ label: 'SIE Admin', icon: Shield, page: 'Sie' }] : [])
+    ...(isAdmin ? [{ label: 'SIE Admin', icon: Server, page: 'Sie' }] : [])
   ];
   
   return (
