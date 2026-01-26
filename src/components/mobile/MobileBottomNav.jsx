@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Home, Shield, QrCode, Bot, Menu } from 'lucide-react';
+import { Home, Shield, QrCode, Bot, Menu, Sparkles } from 'lucide-react';
 
 export default function MobileBottomNav({ onMenuOpen }) {
   const location = useLocation();
@@ -10,6 +10,7 @@ export default function MobileBottomNav({ onMenuOpen }) {
     { id: 'home', label: 'Home', icon: Home, path: '/', page: 'Home' },
     { id: 'services', label: 'Services', icon: Shield, path: '/services', page: 'Services' },
     { id: 'qr', label: 'QR Studio', icon: QrCode, path: '/qr', page: 'Qr' },
+    { id: 'imagelab', label: 'Image Lab', icon: Sparkles, path: '/imagelab', page: 'ImageLab' },
     { id: 'glyphbot', label: 'GlyphBot', icon: Bot, path: '/glyphbot', page: 'GlyphBot' }
   ];
   
