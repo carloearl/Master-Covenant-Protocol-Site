@@ -12,5 +12,6 @@ server injects app related data to __app.config.js__, which is used by App.jsx t
 Run `npm run migrate:base44` to generate a `base44-workspace/` folder containing:
 - `__pages__` (copied from `src/pages`)
 - `__components__` (copied from `src/components`)
+- supporting directories (`api`, `assets`, `config`, `content`, `entities`, `hooks`, `lib`, `public`, `styles`, `supabase`, `utils`)
 - `Layout.jsx` and `globals.css` (copied from `src/`)
 - `__app.config.js__` (auto-generated file index)

@@ -7,6 +7,19 @@ const pagesDir = path.join(rootDir, 'src', 'pages');
 const componentsDir = path.join(rootDir, 'src', 'components');
 const layoutFile = path.join(rootDir, 'src', 'Layout.jsx');
 const globalsFile = path.join(rootDir, 'src', 'globals.css');
+const supportingDirs = [
+  'api',
+  'assets',
+  'config',
+  'content',
+  'entities',
+  'hooks',
+  'lib',
+  'public',
+  'styles',
+  'supabase',
+  'utils',
+];
 
 const exists = async (target) => {
   try {
@@ -60,6 +73,15 @@ const main = async () => {
     await copyDirectory(componentsDir, path.join(outputDir, '__components__'));
   }
 
+  await Promise.all(
+    supportingDirs.map(async (dir) => {
+      const sourceDir = path.join(rootDir, 'src', dir);
+      if (await exists(sourceDir)) {
+        await copyDirectory(sourceDir, path.join(outputDir, dir));
+      }
+    })
+  );
+
   if (await exists(layoutFile)) {
     await fs.copyFile(layoutFile, path.join(outputDir, 'Layout.jsx'));
   }
@@ -75,6 +97,7 @@ const main = async () => {
     generatedAt: new Date().toISOString(),
     pages: pageFiles.map((file) => toRelativePosix(file, pagesDir)),
     components: componentFiles.map((file) => toRelativePosix(file, componentsDir)),
+    supportingDirs,
     layout: (await exists(layoutFile)) ? 'Layout.jsx' : null,
     globals: (await exists(globalsFile)) ? 'globals.css' : null,
   };
