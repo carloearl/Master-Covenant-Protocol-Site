@@ -3,52 +3,163 @@ import { motion, useInView } from "framer-motion";
 import { ArrowRight, Zap } from "lucide-react";
 import { createPageUrl } from "@/utils";
 
-const ENGINEERING_COMPANIES = [
-  "Vercel", "Supabase", "Replit", "Base44", "Lovable", "Twilio", "SendGrid",
-  "Perplexity AI", "Qwen", "Hugging Face", "Pinecone", "Weaviate", "Milvus",
-  "LangChain", "LlamaIndex", "Render", "Railway", "Fly.io", "Netlify",
-  "PlanetScale", "Amazon Web Services", "Microsoft Azure", "Google Cloud",
-  "IBM Cloud", "Oracle Cloud", "Snowflake", "Databricks", "NVIDIA", "Intel",
-  "AMD", "OpenAI", "Anthropic", "Mistral AI", "Cohere", "Scale AI",
-  "DigitalOcean", "Fastly", "Akamai", "MongoDB", "Elastic", "HashiCorp",
-  "Docker", "Kubernetes", "JetBrains", "Postman", "Sentry", "New Relic",
-  "Datadog", "GitHub", "GitLab", "Atlassian", "Slack", "Figma", "Notion",
-  "Airtable", "Linear", "Retool", "Webflow", "Framer", "Bubble", "Make.com",
-  "Zapier", "IFTTT", "Shopify", "Wix", "Squarespace", "Stripe"
+const ENGINEERING_LOGOS = [
+  { name: "Vercel", logo: "https://www.vectorlogo.zone/logos/vercel/vercel-ar21.svg" },
+  { name: "Supabase", logo: "https://www.vectorlogo.zone/logos/supabase/supabase-ar21.svg" },
+  { name: "Replit", logo: "https://logo.clearbit.com/replit.com" },
+  { name: "Base44", logo: "https://avatars.githubusercontent.com/u/145019558?s=200&v=4" },
+  { name: "Twilio", logo: "https://www.vectorlogo.zone/logos/twilio/twilio-ar21.svg" },
+  { name: "SendGrid", logo: "https://www.vectorlogo.zone/logos/sendgrid/sendgrid-ar21.svg" },
+  { name: "Hugging Face", logo: "https://www.vectorlogo.zone/logos/huggingface/huggingface-ar21.svg" },
+  { name: "Render", logo: "https://logo.clearbit.com/render.com" },
+  { name: "Railway", logo: "https://railway.app/brand/logo-light.svg" },
+  { name: "Fly.io", logo: "https://fly.io/static/images/brand/logo.svg" },
+  { name: "Netlify", logo: "https://www.vectorlogo.zone/logos/netlify/netlify-ar21.svg" },
+  { name: "AWS", logo: "https://www.vectorlogo.zone/logos/amazon_aws/amazon_aws-ar21.svg" },
+  { name: "Azure", logo: "https://www.vectorlogo.zone/logos/microsoft_azure/microsoft_azure-ar21.svg" },
+  { name: "Google Cloud", logo: "https://www.vectorlogo.zone/logos/google_cloud/google_cloud-ar21.svg" },
+  { name: "IBM Cloud", logo: "https://www.vectorlogo.zone/logos/ibm_cloud/ibm_cloud-ar21.svg" },
+  { name: "Oracle", logo: "https://www.vectorlogo.zone/logos/oracle/oracle-ar21.svg" },
+  { name: "Snowflake", logo: "https://logo.clearbit.com/snowflake.com" },
+  { name: "Databricks", logo: "https://logo.clearbit.com/databricks.com" },
+  { name: "NVIDIA", logo: "https://www.vectorlogo.zone/logos/nvidia/nvidia-ar21.svg" },
+  { name: "Intel", logo: "https://www.vectorlogo.zone/logos/intel/intel-ar21.svg" },
+  { name: "AMD", logo: "https://logo.clearbit.com/amd.com" },
+  { name: "OpenAI", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
+  { name: "MongoDB", logo: "https://www.vectorlogo.zone/logos/mongodb/mongodb-ar21.svg" },
+  { name: "Elastic", logo: "https://www.vectorlogo.zone/logos/elastic/elastic-ar21.svg" },
+  { name: "HashiCorp", logo: "https://www.vectorlogo.zone/logos/hashicorp/hashicorp-ar21.svg" },
+  { name: "Docker", logo: "https://www.vectorlogo.zone/logos/docker/docker-ar21.svg" },
+  { name: "Kubernetes", logo: "https://www.vectorlogo.zone/logos/kubernetes/kubernetes-ar21.svg" },
+  { name: "JetBrains", logo: "https://www.vectorlogo.zone/logos/jetbrains/jetbrains-ar21.svg" },
+  { name: "Postman", logo: "https://www.vectorlogo.zone/logos/getpostman/getpostman-ar21.svg" },
+  { name: "Sentry", logo: "https://www.vectorlogo.zone/logos/sentry/sentry-ar21.svg" },
+  { name: "New Relic", logo: "https://www.vectorlogo.zone/logos/newrelic/newrelic-ar21.svg" },
+  { name: "Datadog", logo: "https://www.vectorlogo.zone/logos/datadoghq/datadoghq-ar21.svg" },
+  { name: "GitHub", logo: "https://www.vectorlogo.zone/logos/github/github-ar21.svg" },
+  { name: "GitLab", logo: "https://www.vectorlogo.zone/logos/gitlab/gitlab-ar21.svg" },
+  { name: "Atlassian", logo: "https://www.vectorlogo.zone/logos/atlassian/atlassian-ar21.svg" },
+  { name: "Slack", logo: "https://www.vectorlogo.zone/logos/slack/slack-ar21.svg" },
+  { name: "Figma", logo: "https://www.vectorlogo.zone/logos/figma/figma-ar21.svg" },
+  { name: "Notion", logo: "https://www.vectorlogo.zone/logos/notion/notion-ar21.svg" },
+  { name: "Airtable", logo: "https://logo.clearbit.com/airtable.com" },
+  { name: "Linear", logo: "https://logo.clearbit.com/linear.app" },
+  { name: "Retool", logo: "https://logo.clearbit.com/retool.com" },
+  { name: "Webflow", logo: "https://www.vectorlogo.zone/logos/webflow/webflow-ar21.svg" },
+  { name: "Framer", logo: "https://logo.clearbit.com/framer.com" },
+  { name: "Zapier", logo: "https://www.vectorlogo.zone/logos/zapier/zapier-ar21.svg" },
+  { name: "Shopify", logo: "https://www.vectorlogo.zone/logos/shopify/shopify-ar21.svg" },
+  { name: "Wix", logo: "https://www.vectorlogo.zone/logos/wix/wix-ar21.svg" },
+  { name: "Squarespace", logo: "https://logo.clearbit.com/squarespace.com" },
+  { name: "Stripe", logo: "https://www.vectorlogo.zone/logos/stripe/stripe-ar21.svg" },
+  { name: "DigitalOcean", logo: "https://www.vectorlogo.zone/logos/digitalocean/digitalocean-ar21.svg" },
+  { name: "React", logo: "https://www.vectorlogo.zone/logos/reactjs/reactjs-ar21.svg" },
+  { name: "Node.js", logo: "https://www.vectorlogo.zone/logos/nodejs/nodejs-ar21.svg" },
+  { name: "Python", logo: "https://www.vectorlogo.zone/logos/python/python-ar21.svg" },
+  { name: "Go", logo: "https://www.vectorlogo.zone/logos/golang/golang-ar21.svg" },
+  { name: "Rust", logo: "https://www.vectorlogo.zone/logos/rust-lang/rust-lang-ar21.svg" }
 ];
 
-const SECURITY_COMPANIES = [
-  "CrowdStrike", "Palo Alto Networks", "Okta", "Zscaler", "SentinelOne",
-  "Fortinet", "CyberArk", "Proofpoint", "Darktrace", "Rapid7", "Tenable",
-  "Duo Security", "Ping Identity", "Thales Group", "Check Point", "Trend Micro",
-  "Sophos", "McAfee", "RSA Security", "Splunk", "Sumo Logic", "Imperva",
-  "Veracode", "OneSpan", "Auth0", "Yubico", "Snyk", "Aqua Security", "Wiz",
-  "Lacework", "Illumio", "Armis", "Cybereason", "Onfido", "Jumio", "Trulioo",
-  "Prove", "TeleSign", "Kount", "Riskified", "Forter", "Plaid", "PayPal",
-  "Square", "Visa", "Mastercard", "American Express", "Discover", "Stripe Radar"
+const SECURITY_LOGOS = [
+  { name: "CrowdStrike", logo: "https://logo.clearbit.com/crowdstrike.com" },
+  { name: "Palo Alto", logo: "https://logo.clearbit.com/paloaltonetworks.com" },
+  { name: "Okta", logo: "https://www.vectorlogo.zone/logos/okta/okta-ar21.svg" },
+  { name: "Zscaler", logo: "https://logo.clearbit.com/zscaler.com" },
+  { name: "Fortinet", logo: "https://logo.clearbit.com/fortinet.com" },
+  { name: "CyberArk", logo: "https://logo.clearbit.com/cyberark.com" },
+  { name: "Proofpoint", logo: "https://logo.clearbit.com/proofpoint.com" },
+  { name: "Darktrace", logo: "https://logo.clearbit.com/darktrace.com" },
+  { name: "Rapid7", logo: "https://logo.clearbit.com/rapid7.com" },
+  { name: "Tenable", logo: "https://logo.clearbit.com/tenable.com" },
+  { name: "Duo Security", logo: "https://logo.clearbit.com/duo.com" },
+  { name: "Ping Identity", logo: "https://logo.clearbit.com/pingidentity.com" },
+  { name: "Check Point", logo: "https://logo.clearbit.com/checkpoint.com" },
+  { name: "Trend Micro", logo: "https://logo.clearbit.com/trendmicro.com" },
+  { name: "Sophos", logo: "https://logo.clearbit.com/sophos.com" },
+  { name: "McAfee", logo: "https://logo.clearbit.com/mcafee.com" },
+  { name: "Splunk", logo: "https://www.vectorlogo.zone/logos/splunk/splunk-ar21.svg" },
+  { name: "Imperva", logo: "https://logo.clearbit.com/imperva.com" },
+  { name: "Veracode", logo: "https://logo.clearbit.com/veracode.com" },
+  { name: "Auth0", logo: "https://www.vectorlogo.zone/logos/auth0/auth0-ar21.svg" },
+  { name: "Yubico", logo: "https://logo.clearbit.com/yubico.com" },
+  { name: "Snyk", logo: "https://www.vectorlogo.zone/logos/snyk/snyk-ar21.svg" },
+  { name: "Wiz", logo: "https://logo.clearbit.com/wiz.io" },
+  { name: "Plaid", logo: "https://logo.clearbit.com/plaid.com" },
+  { name: "PayPal", logo: "https://www.vectorlogo.zone/logos/paypal/paypal-ar21.svg" },
+  { name: "Square", logo: "https://www.vectorlogo.zone/logos/square/square-ar21.svg" },
+  { name: "Visa", logo: "https://www.vectorlogo.zone/logos/visa/visa-ar21.svg" },
+  { name: "Mastercard", logo: "https://www.vectorlogo.zone/logos/mastercard/mastercard-ar21.svg" },
+  { name: "Amex", logo: "https://logo.clearbit.com/americanexpress.com" },
+  { name: "Discover", logo: "https://logo.clearbit.com/discover.com" }
 ];
 
-const REALWORLD_COMPANIES = [
-  "JPMorgan Chase", "Bank of America", "Wells Fargo", "Citigroup", "Goldman Sachs",
-  "Morgan Stanley", "Capital One", "Walmart", "Target", "Costco", "Kroger",
-  "Walgreens", "CVS Health", "Home Depot", "Lowe's", "Best Buy", "FedEx",
-  "UPS", "DHL", "American Airlines", "Delta Air Lines", "United Airlines",
-  "Marriott", "Hilton", "Hyatt", "Airbnb", "Uber", "Lyft", "DoorDash",
-  "Instacart", "Intuit", "QuickBooks", "Xero", "Sage", "Bloomberg", "Tesla",
-  "Samsung", "LG", "Sony", "Panasonic", "Netflix", "Spotify", "TikTok",
-  "YouTube", "Twitch", "GE Healthcare", "Medtronic", "Pfizer", "Moderna",
-  "Johnson & Johnson", "Merck", "Novartis", "Roche", "AstraZeneca"
+const REALWORLD_LOGOS = [
+  { name: "JPMorgan", logo: "https://logo.clearbit.com/jpmorganchase.com" },
+  { name: "Bank of America", logo: "https://logo.clearbit.com/bankofamerica.com" },
+  { name: "Wells Fargo", logo: "https://logo.clearbit.com/wellsfargo.com" },
+  { name: "Citigroup", logo: "https://logo.clearbit.com/citi.com" },
+  { name: "Goldman Sachs", logo: "https://logo.clearbit.com/goldmansachs.com" },
+  { name: "Morgan Stanley", logo: "https://logo.clearbit.com/morganstanley.com" },
+  { name: "Capital One", logo: "https://logo.clearbit.com/capitalone.com" },
+  { name: "Walmart", logo: "https://logo.clearbit.com/walmart.com" },
+  { name: "Target", logo: "https://logo.clearbit.com/target.com" },
+  { name: "Costco", logo: "https://logo.clearbit.com/costco.com" },
+  { name: "Kroger", logo: "https://logo.clearbit.com/kroger.com" },
+  { name: "Walgreens", logo: "https://logo.clearbit.com/walgreens.com" },
+  { name: "CVS Health", logo: "https://logo.clearbit.com/cvs.com" },
+  { name: "Home Depot", logo: "https://logo.clearbit.com/homedepot.com" },
+  { name: "Best Buy", logo: "https://logo.clearbit.com/bestbuy.com" },
+  { name: "FedEx", logo: "https://www.vectorlogo.zone/logos/fedex/fedex-ar21.svg" },
+  { name: "UPS", logo: "https://www.vectorlogo.zone/logos/ups/ups-ar21.svg" },
+  { name: "DHL", logo: "https://www.vectorlogo.zone/logos/dhl/dhl-ar21.svg" },
+  { name: "American Airlines", logo: "https://logo.clearbit.com/aa.com" },
+  { name: "Delta", logo: "https://logo.clearbit.com/delta.com" },
+  { name: "United", logo: "https://logo.clearbit.com/united.com" },
+  { name: "Marriott", logo: "https://logo.clearbit.com/marriott.com" },
+  { name: "Hilton", logo: "https://logo.clearbit.com/hilton.com" },
+  { name: "Hyatt", logo: "https://logo.clearbit.com/hyatt.com" },
+  { name: "Airbnb", logo: "https://www.vectorlogo.zone/logos/airbnb/airbnb-ar21.svg" },
+  { name: "Uber", logo: "https://www.vectorlogo.zone/logos/uber/uber-ar21.svg" },
+  { name: "Lyft", logo: "https://logo.clearbit.com/lyft.com" },
+  { name: "DoorDash", logo: "https://logo.clearbit.com/doordash.com" },
+  { name: "Instacart", logo: "https://logo.clearbit.com/instacart.com" },
+  { name: "Intuit", logo: "https://logo.clearbit.com/intuit.com" },
+  { name: "Bloomberg", logo: "https://logo.clearbit.com/bloomberg.com" },
+  { name: "Tesla", logo: "https://www.vectorlogo.zone/logos/tesla/tesla-ar21.svg" },
+  { name: "Samsung", logo: "https://www.vectorlogo.zone/logos/samsung/samsung-ar21.svg" },
+  { name: "Sony", logo: "https://www.vectorlogo.zone/logos/sony/sony-ar21.svg" },
+  { name: "Netflix", logo: "https://www.vectorlogo.zone/logos/netflix/netflix-ar21.svg" },
+  { name: "Spotify", logo: "https://www.vectorlogo.zone/logos/spotify/spotify-ar21.svg" },
+  { name: "YouTube", logo: "https://www.vectorlogo.zone/logos/youtube/youtube-ar21.svg" },
+  { name: "Twitch", logo: "https://www.vectorlogo.zone/logos/twitch/twitch-ar21.svg" },
+  { name: "Pfizer", logo: "https://logo.clearbit.com/pfizer.com" },
+  { name: "Moderna", logo: "https://logo.clearbit.com/modernatx.com" },
+  { name: "Johnson & Johnson", logo: "https://logo.clearbit.com/jnj.com" }
 ];
 
-const CompanyLogo = ({ name }) => (
-  <div className="flex-shrink-0 px-6 py-4">
-    <div className="flex items-center justify-center h-16 rounded-lg bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-slate-700/50 hover:border-cyan-400/50 transition-all duration-300 backdrop-blur-sm group cursor-default hover:shadow-[0_0_20px_rgba(6,182,212,0.3)]">
-      <span className="text-xs font-bold text-slate-300 group-hover:text-cyan-300 transition-colors text-center px-3">
-        {name}
-      </span>
+const CompanyLogo = ({ name, logo }) => {
+  const [imgError, setImgError] = React.useState(false);
+
+  return (
+    <div className="flex-shrink-0 px-6 py-4">
+      <div className="flex items-center justify-center h-16 w-32 rounded-lg bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-slate-700/50 hover:border-cyan-400/50 transition-all duration-300 backdrop-blur-sm group cursor-default hover:shadow-[0_0_20px_rgba(6,182,212,0.3)]">
+        {!imgError && logo ? (
+          <img 
+            src={logo} 
+            alt={name}
+            className="h-10 w-auto max-w-[100px] object-contain filter brightness-90 group-hover:brightness-110 transition-all"
+            onError={() => setImgError(true)}
+            loading="lazy"
+          />
+        ) : (
+          <span className="text-xs font-bold text-slate-300 group-hover:text-cyan-300 transition-colors text-center px-3">
+            {name}
+          </span>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const CarouselRow = ({ companies, title, tagline, speed = 50 }) => {
   const scrollDuration = speed;
@@ -85,11 +196,11 @@ const CarouselRow = ({ companies, title, tagline, speed = 50 }) => {
           >
             {/* Original set */}
             {companies.map((company, idx) => (
-              <CompanyLogo key={`${company}-${idx}`} name={company} />
+              <CompanyLogo key={`${company.name}-${idx}`} name={company.name} logo={company.logo} />
             ))}
             {/* Duplicated set for seamless loop */}
             {companies.map((company, idx) => (
-              <CompanyLogo key={`dup-${company}-${idx}`} name={company} />
+              <CompanyLogo key={`dup-${company.name}-${idx}`} name={company.name} logo={company.logo} />
             ))}
           </motion.div>
         </div>
@@ -167,21 +278,21 @@ export default function TrustedByMarquee() {
           className="space-y-12"
         >
           <CarouselRow
-            companies={ENGINEERING_COMPANIES}
+            companies={ENGINEERING_LOGOS}
             title="Engineering Excellence"
             tagline="Companies that BUILD the digital world"
             speed={80}
           />
 
           <CarouselRow
-            companies={SECURITY_COMPANIES}
+            companies={SECURITY_LOGOS}
             title="Security & Governance"
             tagline="Companies that PROTECT, VERIFY, and GOVERN"
             speed={90}
           />
 
           <CarouselRow
-            companies={REALWORLD_COMPANIES}
+            companies={REALWORLD_LOGOS}
             title="Real-World Systems"
             tagline="Companies that OPERATE in the physical, regulated, or consumer world"
             speed={100}
