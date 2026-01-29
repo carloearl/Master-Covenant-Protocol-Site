@@ -1,7 +1,6 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { buildSitemapXml } from './sitemapShared.ts';
 
-Deno.serve(async (req) => {
-    const base44 = createClientFromRequest(req);
-    const { data } = await base44.functions.invoke("generateSitemapXML", { type: "dynamic" });
-    return new Response(data.xml, { headers: { "Content-Type": "application/xml" } });
+Deno.serve(() => {
+    const xml = buildSitemapXml();
+    return new Response(xml, { headers: { "Content-Type": "application/xml" } });
 });
